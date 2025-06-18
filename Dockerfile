@@ -52,7 +52,7 @@ ENV APP_CONFIG_TITLE_VBCC='Văn bằng chứng chỉ'
 # Set working directory
 WORKDIR /app
 
-COPY package.json /app/
+COPY package.json yarn.lock /app/
 RUN yarn install
 
 COPY . /app
