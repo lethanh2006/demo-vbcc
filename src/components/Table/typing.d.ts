@@ -140,6 +140,8 @@ export type TableBaseProps = {
 
 	hideChildrenRows?: boolean;
 
+	extra?: any;
+
 	/** Hàm reload dữ liệu
 	 * @default getData
 	 */

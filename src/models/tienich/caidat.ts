@@ -1,11 +1,13 @@
 import { createSetting, getByKey, getSettingByKey, putSetting, updateSetting } from '@/services/base/api';
 import type { ESettingKey } from '@/services/base/constant';
 import type { ISetting } from '@/services/base/typing';
+import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { message } from 'antd';
 import { useState } from 'react';
 
 type TSettingType = Partial<{
 	[ESettingKey.KEY]: any; // Some type has `_id`
+	[ESettingKey.INFO_TENANT_VBCC]: PhuLucVanBang.TSetting;
 }>;
 
 export default () => {

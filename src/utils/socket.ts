@@ -35,6 +35,10 @@ export enum ESocketType {
 	DINH_CHI = 'DINH_CHI',
 	TRANG_THAI_THI = 'TRANG_THAI_THI',
 	XEM_PHONG_THI = 'xem-phong-thi',
+	// Văn bằng chứng chỉ
+	SIGNATURE_UPDATED = 'SIGNATURE_UPDATED',
+	BLOCKCHAIN_PUSHED = 'BLOCKCHAIN_PUSHED',
+	DATA_EXPORTED = 'DATA_EXPORTED',
 }
 
 export default socket;

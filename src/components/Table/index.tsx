@@ -609,7 +609,7 @@ const TableBase = (props: TableBaseProps) => {
 			{props.hideCard ? (
 				mainContent
 			) : (
-				<Card title={title || false} bordered={props.border || false}>
+				<Card title={title || false} bordered={props.border || false} extra={props.extra}>
 					{mainContent}
 				</Card>
 			)}
