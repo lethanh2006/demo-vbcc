@@ -106,7 +106,7 @@ const QuyetDinhTotNghiepPage = () => {
 				columns={columns}
 				dependencies={[page, limit, recHocKy?.ma]}
 				modelName='vbcc.quyetdinhtotnghiep'
-				title={intl.formatMessage({ id: 'totnghiep.quyetdinhtotnghiep.title' })}
+				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
 				widthDrawer={1200}
 				Form={ModalQuyetDinhTotNghiep}
 				formProps={{ getData }}

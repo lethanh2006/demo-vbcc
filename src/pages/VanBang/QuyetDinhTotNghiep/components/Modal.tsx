@@ -26,8 +26,8 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 				onChange={record?._id ? onChangeStep : undefined}
 				type='navigation'
 			>
-				<Steps.Step title={intl.formatMessage({ id: 'totnghiep.quyetdinhtotnghiep.step1' })} />
-				<Steps.Step title={intl.formatMessage({ id: 'totnghiep.quyetdinhtotnghiep.step2' })} disabled={!record?._id} />
+				<Steps.Step title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.step1' })} />
+				<Steps.Step title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.step2' })} disabled={!record?._id} />
 			</Steps>
 
 			{currentStep === 0 ? (

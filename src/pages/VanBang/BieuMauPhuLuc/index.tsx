@@ -60,7 +60,7 @@ const BieuMauPhuLucPage = () => {
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='vbcc.bieumauphuluc'
-			title={intl.formatMessage({ id: 'totnghiep.bieumauphuluc.title' })}
+			title={intl.formatMessage({ id: 'vanbang.bieumauphuluc.title' })}
 			Form={Form}
 			widthDrawer={800}
 		/>

@@ -1,4 +1,4 @@
-import { primaryColor, unitName } from '@/services/base/constant';
+import { coQuanChuQuan, primaryColor, unitName } from '@/services/base/constant';
 
 const Header = (props: { subTitle?: string }) => {
 	const { subTitle = '' } = props;
@@ -24,8 +24,9 @@ const Header = (props: { subTitle?: string }) => {
 				</div>
 
 				<div style={{ textAlign: 'center', flex: 1 }}>
-					<b style={{ fontSize: 'calc(1vw + 10px)', color: primaryColor }}>{unitName.toUpperCase()}</b>
-					<h3>{subTitle?.toUpperCase()}</h3>
+					<b style={{ fontSize: 'calc(1vw + 7px)', color: 'rgb(17, 94, 171)' }}>{coQuanChuQuan.toUpperCase()}</b> <br />
+					<b style={{ fontSize: 'calc(1vw + 7px)', color: primaryColor }}> {unitName.toUpperCase()}</b>
+					<h3 style={{ fontSize: 'calc(0.9vw + 6px)', color: primaryColor }}>{subTitle?.toUpperCase()}</h3>
 				</div>
 			</div>
 		</div>

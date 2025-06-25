@@ -277,7 +277,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 				columns={columns}
 				dependencies={[page, limit, recQuyetDinh?._id]}
 				modelName='vbcc.phulucvanbang'
-				title={intl.formatMessage({ id: 'totnghiep.phulucvanbang.title' })}
+				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
 				widthDrawer={800}
 				Form={Form}
 				formProps={{ getData, isQuyetDinh }}

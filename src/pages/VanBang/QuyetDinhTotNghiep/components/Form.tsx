@@ -1,5 +1,7 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
+import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
+import { ELoaiQuyetDinh } from '@/services/DaoTao/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import rules from '@/utils/rules';
@@ -8,7 +10,6 @@ import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectBieuMauPhuLuc from '../../BieuMauPhuLuc/components/Select';
-import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
 
 const FormQuyetDinhTotNghiep = (props: {
 	afterAddNew?: (rec: QuyetDinhTotNghiep.IRecord) => void;
@@ -51,7 +52,7 @@ const FormQuyetDinhTotNghiep = (props: {
 				.then()
 				.catch((er) => console.log(er));
 		} else
-			postModel(values, getData, false)
+			postModel({ ...values, loai: ELoaiQuyetDinh.TOT_NGHIEP }, getData, false)
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);

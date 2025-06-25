@@ -3,6 +3,7 @@ import { Col, Descriptions, Divider, Empty, Row } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
+import Footer from './Footer';
 import Header from './Header';
 import './style.less';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
@@ -129,6 +130,7 @@ const ChiTietTraCuuVanBang = ({
 					<Empty description='Không có thông tin sinh viên' style={{ marginBottom: 32, marginTop: 32 }} />
 				)}
 			</div>
+			<Footer />
 		</>
 	);
 };
