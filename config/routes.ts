@@ -31,19 +31,60 @@
 		hideInMenu: true,
 	},
 
-	// DANH MUC HE THONG
 	{
-		name: 'DanhMuc',
-		path: '/danh-muc',
-		icon: 'copy',
-		routes: [
-			{
-				name: 'ChucVu',
-				path: 'chuc-vu',
-				component: './DanhMuc/ChucVu',
-			},
-		],
+		name: 'QuyetDinhTotNghiep',
+		path: './quyet-dinh',
+		component: 'VanBang/QuyetDinhTotNghiep',
+		icon: 'FileDoneOutlined',
 	},
+	{
+		name: 'PhuLucVanBang',
+		path: './phu-luc',
+		component: 'VanBang/PhuLuc',
+		icon: 'ProfileOutlined',
+	},
+	{
+		name: 'BieuMauPhuLuc',
+		path: './bieu-mau',
+		component: 'VanBang/BieuMauPhuLuc',
+		icon: 'FormOutlined',
+	},
+	{
+		name: 'NguoiKy',
+		path: './nguoi-ky',
+		component: 'VanBang/NguoiKy',
+		icon: 'UserOutlined',
+	},
+
+	{
+		name: 'TraCuuVanBangPublic',
+		path: '/tra-cuu-van-bang',
+		component: './VanBang/TraCuuPublic',
+		layout: false,
+		hideInMenu: true,
+	},
+
+	{
+		name: 'ChiTietVanBangPublic',
+		path: '/tra-cuu-van-bang/chi-tiet/:id',
+		component: './VanBang/TraCuuPublic/ChiTiet.tsx',
+		layout: false,
+		hideInMenu: true,
+	},
+
+	// DANH MUC HE THONG
+	// {
+	// 	name: 'DanhMuc',
+	// 	path: '/danh-muc',
+	// 	icon: 'copy',
+	// 	routes: [
+	// 		{
+	// 			name: 'ChucVu',
+	// 			path: 'chuc-vu',
+	// 			component: './DanhMuc/ChucVu',
+	// 		},
+	// 	],
+	// },
 
 	{
 		path: '/notification',

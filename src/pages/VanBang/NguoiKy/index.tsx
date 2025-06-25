@@ -64,7 +64,7 @@ const NguoiKyVanBangPage = () => {
 			modelName='vbcc.nguoiky'
 			title={
 				<>
-					{intl.formatMessage({ id: 'totnghiep.nguoiky.title' })}{' '}
+					{intl.formatMessage({ id: 'vanbang.nguoiky.title' })}{' '}
 					<Popover
 						content={
 							<>
