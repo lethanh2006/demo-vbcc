@@ -54,8 +54,9 @@
 		path: './nguoi-ky',
 		component: 'VanBang/NguoiKy',
 		icon: 'UserOutlined',
+		access: 'accessFilter',
+		maChucNang: 'van-bang-chung-chi|quan-tri-vien',
 	},
-
 	{
 		name: 'TraCuuVanBangPublic',
 		path: '/tra-cuu-van-bang',
