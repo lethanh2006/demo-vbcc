@@ -8,6 +8,9 @@ declare module QuyetDinhTotNghiep {
 		maBieuMau: string;
 		bieuMau?: BieuMauPhuLuc.IRecord;
 
+		dotCapBangId?: string | null;
+		dotCapBang?: DotCapBangTotNghiep.IRecord;
+
 		ngayBanHanh: string;
 		kichHoat: boolean;
 		noiDung?: string;

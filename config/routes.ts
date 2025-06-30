@@ -38,6 +38,12 @@
 		icon: 'FileDoneOutlined',
 	},
 	{
+		name: 'DotCapBangTotNghiep',
+		path: './dot-cap-bang',
+		component: 'VanBang/DotCapBangTotNghiep',
+		icon: 'CalendarOutlined',
+	},
+	{
 		name: 'PhuLucVanBang',
 		path: './phu-luc',
 		component: 'VanBang/PhuLuc',
