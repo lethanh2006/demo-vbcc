@@ -8,6 +8,7 @@ export default {
 
 	'menu.QuyetDinhTotNghiep': 'QĐ tốt nghiệp',
 	'menu.PhuLucVanBang': 'Phụ lục văn bằng',
+	'menu.SoVanBang': 'Sổ văn bằng',
 	'menu.NguoiKy': 'Người ký văn bằng',
 	'menu.BieuMauPhuLuc': 'Biểu mẫu phụ lục',
 	'menu.TraCuuVanBangPublic': 'Tra cứu văn bằng',
