@@ -14,7 +14,7 @@ const ipDaoTao = ipRoot + 'qldt'; // ip dev
 const ipIPFS = 'https://ipfs.aisenote.com/api/v0/add';
 const preIPFS = 'https://ipfs.aisenote.com/ipfs/';
 
-const currentRole = EModuleKey.VBCC;
+const currentRole = EModuleKey.QLDT;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
 

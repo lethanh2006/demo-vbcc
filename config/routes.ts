@@ -38,6 +38,12 @@
 		icon: 'FileDoneOutlined',
 	},
 	{
+		name: 'MucDichTraCuuPhuLuc',
+		path: './muc-dich-tra-cuu-phu-luc',
+		component: 'VanBang/MucDichTraCuuPhuLuc',
+		icon: 'SearchOutlined',
+	},
+	{
 		name: 'PhuLucVanBang',
 		path: './phu-luc',
 		component: 'VanBang/PhuLuc',
