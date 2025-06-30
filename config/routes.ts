@@ -1,4 +1,6 @@
-﻿export default [
+﻿import path from 'path';
+
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -36,6 +38,12 @@
 		path: './quyet-dinh',
 		component: 'VanBang/QuyetDinhTotNghiep',
 		icon: 'FileDoneOutlined',
+	},
+	{
+		name: 'XacMinhVanBang',
+		path: './xac-minh-van-bang',
+		component: 'VanBang/XacMinhVanBang',
+		icon: 'InfoCircleOutlined',
 	},
 	{
 		name: 'PhuLucVanBang',
