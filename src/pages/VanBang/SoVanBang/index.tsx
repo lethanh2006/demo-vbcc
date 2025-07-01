@@ -6,8 +6,8 @@ import { useModel } from 'umi';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ExpandText from '@/components/ExpandText';
-import SelectTrinhDo from '@/pages/DanhMuc/CoSo/TrinhDo/components/Select';
-import SelectHinhThuc from '@/pages/DanhMuc/CoSo/HinhThucDaoTao/components/Select';
+import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
+import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
 import { colorTrangThaiSoVanBang, ETrangThaiSoVanBang } from '@/services/VanBang/constant';
 import { useEffect } from 'react';
 

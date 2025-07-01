@@ -3,8 +3,8 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, message } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectTrinhDo from '@/pages/DanhMuc/CoSo/TrinhDo/components/Select';
-import SelectHinhThuc from '@/pages/DanhMuc/CoSo/HinhThucDaoTao/components/Select';
+import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
+import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
 import { ETrangThaiSoVanBang } from '@/services/VanBang/constant';
 import moment from 'moment';
 
