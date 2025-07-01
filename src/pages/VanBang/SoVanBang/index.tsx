@@ -13,8 +13,8 @@ import { useEffect } from 'react';
 
 const SoVanBangPage = () => {
 	const { page, limit, handleEdit, deleteModel, duyetModel, getModel } = useModel('vbcc.sovanbang');
-	const { getAllModel: hinhThucDaoTaoModel, danhSach: dsHinhThuc } = useModel('danhmuc.hinhthucdaotao');
-	const { getAllModel: trinhDoDaoTaoModel, danhSach: dsTrinhDo } = useModel('danhmuc.trinhdo');
+	const { getAllModel: hinhThucDaoTaoModel, danhSach: dsHinhThuc } = useModel('daotao.hinhthucdaotao');
+	const { getAllModel: trinhDoDaoTaoModel, danhSach: dsTrinhDo } = useModel('daotao.trinhdo');
 
 	useEffect(() => {
 		hinhThucDaoTaoModel();

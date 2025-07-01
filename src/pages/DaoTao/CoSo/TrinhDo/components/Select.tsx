@@ -18,7 +18,7 @@ const SelectTrinhDo = (props: {
 	disabled?: boolean;
 }) => {
 	const { value, onChange, multiple, allowClear, placeholder, hasDefault, style, selectMa, disabled } = props;
-	const { danhSach, getAllModel, loading, record, setRecord } = useModel('danhmuc.trinhdo');
+	const { danhSach, getAllModel, loading, record, setRecord } = useModel('daotao.trinhdo');
 
 	useEffect(() => {
 		if (!danhSach.length)

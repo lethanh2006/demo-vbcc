@@ -13,8 +13,8 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		useModel('vbcc.sovanbang');
 
 	// Dùng để lấy danh sách trình độ và hình thức đào tạo từ model khác
-	const { danhSach: dsTrinhDo } = useModel('danhmuc.trinhdo');
-	const { danhSach: dsHinhThuc } = useModel('danhmuc.hinhthucdaotao');
+	const { danhSach: dsTrinhDo } = useModel('daotao.trinhdo');
+	const { danhSach: dsHinhThuc } = useModel('daotao.hinhthucdaotao');
 	const intl = useIntl();
 	const [form] = Form.useForm();
 

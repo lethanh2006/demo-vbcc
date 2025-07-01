@@ -19,7 +19,7 @@ const SelectHinhThuc = (props: {
 	hideAll?: boolean;
 }) => {
 	const { value, onChange, multiple, allowClear, placeholder, style, selectMa, hasDefault, disabled, hideAll } = props;
-	const { danhSach, getAllModel, loading, record, setRecord } = useModel('danhmuc.hinhthucdaotao');
+	const { danhSach, getAllModel, loading, record, setRecord } = useModel('daotao.hinhthucdaotao');
 	const dataHienThi =
 		hasDefault || hideAll ? danhSach : [{ _id: null, ten: 'Tất cả hình thức đào tạo', ma: null }, ...danhSach];
 
