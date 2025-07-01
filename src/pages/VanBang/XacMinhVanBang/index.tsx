@@ -226,13 +226,13 @@ const XacMinhVanBangPage = () => {
 				widthDrawer={800}
 				dependencies={[page, limit]}
 				title=' Xác minh văn bằng'
-				otherButtons={[
+				extra={[
 					<ButtonExtend
 						key='add'
 						type='link'
 						onClick={() => setIsFormBieuMauVisible(true)}
 						icon={<SettingOutlined />}
-						tooltip='Thêm biểu mẫu xuất file'
+						tooltip='Biểu mẫu'
 					/>,
 				]}
 			/>
