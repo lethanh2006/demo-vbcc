@@ -81,7 +81,13 @@ const TongHopVanBang = () => {
 					<CardQuyetDinhTotNghiep chartData={data?.soPhuLucTheoDotTN ?? []} />
 				</Col>
 			</Row>
-			<ModalTongLuotTraCuu visible={visibleForm} maHocKy='' idSoVanBang='' onClose={() => setVisibleForm(false)} />
+			<ModalTongLuotTraCuu
+				visible={visibleForm}
+				maHocKy={recHocKy?.ma}
+				idSoVanBang={recSoVanBang?._id}
+				ten={recSoVanBang}
+				onClose={() => setVisibleForm(false)}
+			/>
 		</Spin>
 	);
 };

@@ -14,11 +14,12 @@ interface ChiTietTraCuu {
 interface ModalTraCuuProps {
 	visible: boolean;
 	onClose: () => void;
-	maHocKy: string;
-	idSoVanBang: string;
+	maHocKy: string | undefined;
+	idSoVanBang: string | undefined;
+	ten: SoVanBang.IRecord | undefined;
 }
 
-const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ visible, onClose, maHocKy, idSoVanBang }) => {
+const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ visible, onClose, maHocKy, idSoVanBang, ten }) => {
 	const [data, setData] = useState<ChiTietTraCuu[]>([]);
 	const [loading, setLoading] = useState(false);
 
@@ -77,6 +78,9 @@ const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ visible, onClose, maH
 				</Button>,
 			]}
 		>
+			<div style={{ marginBottom: 16, fontWeight: 600, fontSize: 16 }}>
+				Sổ văn bằng: {ten?.ten || <span style={{ fontWeight: 400, color: '#888' }}>(Chưa có tên)</span>}
+			</div>
 			<Table<ChiTietTraCuu>
 				rowKey='soQuyetDinh'
 				dataSource={data}
