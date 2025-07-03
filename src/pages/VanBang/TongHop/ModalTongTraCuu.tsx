@@ -2,35 +2,28 @@ import { Modal, Table, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { genExcelFile } from '@/utils/utils';
 import { getChiTietLuotTraCuu } from '@/services/VanBang/PhuLucVanBang';
-
-interface ChiTietTraCuu {
-	soQuyetDinh: string;
-	tongTraCuu: number;
-	mucDich: {
-		[mucDich: string]: number;
-	};
-}
+import { useModel } from 'umi';
+import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 
 interface ModalTraCuuProps {
-	visible: boolean;
-	onClose: () => void;
 	maHocKy: string | undefined;
 	idSoVanBang: string | undefined;
 	ten: SoVanBang.IRecord | undefined;
 }
 
-const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ visible, onClose, maHocKy, idSoVanBang, ten }) => {
-	const [data, setData] = useState<ChiTietTraCuu[]>([]);
+const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ maHocKy, idSoVanBang, ten }) => {
+	const { visibleForm, setVisibleForm } = useModel('vbcc.phulucvanbang');
+	const [data, setData] = useState<PhuLucVanBang.IChiTietTraCuu[]>([]);
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		if (visible && maHocKy && idSoVanBang) {
+		if (visibleForm && maHocKy && idSoVanBang) {
 			setLoading(true);
 			getChiTietLuotTraCuu(maHocKy, idSoVanBang)
 				.then((res) => setData(res?.data || []))
 				.finally(() => setLoading(false));
 		}
-	}, [visible, maHocKy, idSoVanBang]);
+	}, [visibleForm, maHocKy, idSoVanBang]);
 
 	const allMucDichs = Array.from(new Set(data.flatMap((item) => Object.keys(item.mucDich))));
 
@@ -49,7 +42,7 @@ const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ visible, onClose, maH
 			title: mucDich,
 			dataIndex: ['mucDich', mucDich],
 			key: mucDich,
-			render: (_: any, record: ChiTietTraCuu) => record.mucDich[mucDich] || 0,
+			render: (_: any, record: PhuLucVanBang.IChiTietTraCuu) => record.mucDich[mucDich] || 0,
 		})),
 	];
 
@@ -66,14 +59,14 @@ const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ visible, onClose, maH
 	return (
 		<Modal
 			title={`Chi tiết lượt tra cứu`}
-			visible={visible}
-			onCancel={onClose}
+			visible={visibleForm}
+			onCancel={() => setVisibleForm(false)}
 			width={900}
 			footer={[
 				<Button key='export' type='primary' onClick={handleExport} disabled={!data.length}>
 					Xuất dữ liệu
 				</Button>,
-				<Button key='close' onClick={onClose}>
+				<Button key='close' onClick={() => setVisibleForm(false)}>
 					Đóng
 				</Button>,
 			]}
@@ -81,7 +74,7 @@ const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ visible, onClose, maH
 			<div style={{ marginBottom: 16, fontWeight: 600, fontSize: 16 }}>
 				Sổ văn bằng: {ten?.ten || <span style={{ fontWeight: 400, color: '#888' }}>(Chưa có tên)</span>}
 			</div>
-			<Table<ChiTietTraCuu>
+			<Table<PhuLucVanBang.IChiTietTraCuu>
 				rowKey='soQuyetDinh'
 				dataSource={data}
 				columns={columns}

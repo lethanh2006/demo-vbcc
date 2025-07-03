@@ -14,7 +14,8 @@ import ModalTongLuotTraCuu from './ModalTongTraCuu';
 const TongHopVanBang = () => {
 	const [data, setData] = useState<PhuLucVanBang.TTongHop>();
 	const { record: recHocKy } = useModel('daotao.hocky');
-	const { record: recSoVanBang, visibleForm, setVisibleForm } = useModel('vbcc.sovanbang');
+	const { record: recSoVanBang } = useModel('vbcc.sovanbang');
+	const { visibleForm, setVisibleForm } = useModel('vbcc.phulucvanbang');
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const fetchData = async () => {
@@ -81,13 +82,7 @@ const TongHopVanBang = () => {
 					<CardQuyetDinhTotNghiep chartData={data?.soPhuLucTheoDotTN ?? []} />
 				</Col>
 			</Row>
-			<ModalTongLuotTraCuu
-				visible={visibleForm}
-				maHocKy={recHocKy?.ma}
-				idSoVanBang={recSoVanBang?._id}
-				ten={recSoVanBang}
-				onClose={() => setVisibleForm(false)}
-			/>
+			<ModalTongLuotTraCuu maHocKy={recHocKy?.ma} idSoVanBang={recSoVanBang?._id} ten={recSoVanBang} />
 		</Spin>
 	);
 };
