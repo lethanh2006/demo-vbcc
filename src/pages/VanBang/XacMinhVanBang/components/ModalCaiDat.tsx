@@ -33,7 +33,6 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 				.catch(() => (value.bieuMauId = null))
 				.finally(() => setFormSubmiting(false));
 		}
-		console.log(value);
 		await updateSettingModel({ key: ESettingKey.XAC_MINH_VAN_BANG, value }).catch((er) => console.log(er));
 		onClose();
 	};
