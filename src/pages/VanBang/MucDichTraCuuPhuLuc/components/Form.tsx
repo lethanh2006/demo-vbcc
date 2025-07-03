@@ -1,6 +1,6 @@
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, Row } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -42,7 +42,7 @@ const FormMucDichTraCuuPhuLuc = (props: { title?: string; [key: string]: any }) 
 					</Col>
 					<Col span={24} md={12}>
 						<Form.Item name='soThuTu' label='Thứ tự hiển thị' rules={[...rules.required, ...rules.number()]}>
-							<Input placeholder='Nhập thứ tự hiển thị' />
+							<InputNumber placeholder='Nhập thứ tự hiển thị' />
 						</Form.Item>
 					</Col>
 				</Row>
