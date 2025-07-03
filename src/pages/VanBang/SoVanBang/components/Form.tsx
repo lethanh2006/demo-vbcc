@@ -1,12 +1,13 @@
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
 import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
 import { ETrangThaiSoVanBang } from '@/services/VanBang/constant';
 import moment from 'moment';
+import MyDatePicker from '@/components/MyDatePicker';
 
 const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, setFormSubmiting } =
@@ -96,7 +97,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 					</Col>
 					<Col span={24} md={12}>
 						<Form.Item name='namHanhChinh' label='Năm hành chính' rules={[...rules.required]}>
-							<DatePicker picker='year' style={{ width: '100%' }} placeholder='Chọn năm' format='YYYY' />
+							<MyDatePicker pickerStyle='year' style={{ width: '100%' }} placeholder='Chọn năm' format='YYYY' />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
