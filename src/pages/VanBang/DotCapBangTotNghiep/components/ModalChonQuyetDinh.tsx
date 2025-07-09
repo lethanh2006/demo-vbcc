@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { useModel } from 'umi';
 import moment from 'moment';
 import ExpandText from '@/components/ExpandText';
-import { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
+import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import TableStaticData from '@/components/Table/TableStaticData';
-import { IColumn } from '@/components/Table/typing';
+import type { IColumn } from '@/components/Table/typing';
 
 type TProps = {
 	visible: boolean;
@@ -50,7 +50,6 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, onSuccess }) 
 
 			message.success('Thêm quyết định vào đợt cấp bằng thành công');
 
-			// Gọi callback onSuccess để báo hiệu cập nhật thành công
 			if (onSuccess) {
 				onSuccess();
 			}
@@ -58,7 +57,6 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, onSuccess }) 
 			// Cập nhật lại danh sách quyết định chưa được gán
 			getData();
 		} catch (error) {
-			console.log(error);
 			message.error('Có lỗi xảy ra khi thêm quyết định');
 		}
 	};

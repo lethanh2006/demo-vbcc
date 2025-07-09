@@ -1,8 +1,8 @@
 import { Modal, Button, message, Tag } from 'antd';
 import { useModel } from 'umi';
 import moment from 'moment';
-import { IColumn } from '@/components/Table/typing';
-import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import type { IColumn } from '@/components/Table/typing';
+import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 
@@ -19,7 +19,6 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, dotCapBangId, on
 		getModel: getPhuLuc,
 		putManyModel,
 		formSubmiting,
-		loading,
 		selectedIds = [],
 		page,
 		limit,

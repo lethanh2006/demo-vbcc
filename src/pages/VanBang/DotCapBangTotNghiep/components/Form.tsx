@@ -1,9 +1,10 @@
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Col, DatePicker, Form, Input, Row } from 'antd';
+import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import moment from 'moment';
+import MyDatePicker from '@/components/MyDatePicker';
 
 const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) => {
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
@@ -19,8 +20,6 @@ const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) 
 			const formData = {
 				...record,
 				nam: record.nam ? moment(record.nam) : undefined,
-				ngayBatDau: record.ngayBatDau ? moment(record.ngayBatDau) : undefined,
-				ngayKetThuc: record.ngayKetThuc ? moment(record.ngayKetThuc) : undefined,
 			};
 			form.setFieldsValue(formData);
 		}
@@ -31,8 +30,6 @@ const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) 
 			...values,
 			// Convert moment objects to proper format
 			nam: values.nam?.format('YYYY'),
-			ngayBatDau: values.ngayBatDau?.format('YYYY-MM-DD'),
-			ngayKetThuc: values.ngayKetThuc?.format('YYYY-MM-DD'),
 		};
 
 		if (edit) {
@@ -60,19 +57,19 @@ const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) 
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item name='nam' label='Năm hành chính' rules={[...rules.required]}>
-						<DatePicker.YearPicker style={{ width: '100%' }} placeholder='Chọn năm' format='YYYY' />
+						<MyDatePicker placeholder='Chọn năm' />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item name='ngayBatDau' label='Thời gian bắt đầu' rules={[...rules.required]}>
-						<DatePicker style={{ width: '100%' }} placeholder='Chọn thời gian bắt đầu' format='DD/MM/YYYY' />
+					<Form.Item name='ngayBatDau' label='Thời gian bắt đầu cấp bằng từ' rules={[...rules.required]}>
+						<MyDatePicker placeholder='Chọn thời gian bắt đầu' />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
 					<Form.Item name='ngayKetThuc' label='Thời gian kết thúc' rules={[...rules.required]}>
-						<DatePicker style={{ width: '100%' }} placeholder='Chọn thời gian kết thúc' format='DD/MM/YYYY' />
+						<MyDatePicker placeholder='Chọn thời gian kết thúc' />
 					</Form.Item>
 				</Col>
 			</Row>

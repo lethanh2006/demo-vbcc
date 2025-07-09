@@ -5,15 +5,15 @@ import FilterHocKy from '../../../DaoTao/HocKy/FilterHocKy';
 // import { ESettingKey } from '@/services/base/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { DeleteOutlined, ImportOutlined, PlusCircleOutlined, UserAddOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Form, Input, message, Modal, Popconfirm, Tag, Tooltip } from 'antd';
+import { Button, Form, Input, message, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectQuyetDinh from '../../QuyetDinhTotNghiep/components/Select';
-
 import ModalImportPhuLucVanBang from '../../PhuLuc/components/ModalImportPhuLuc';
 import ExpandText from '@/components/ExpandText';
 import ModalChonPhuLuc from './ModalChonPhuLuc';
+import MyDatePicker from '@/components/MyDatePicker';
 
 interface PhuLucVanBangPageProps {
 	isQuyetDinh?: boolean;
@@ -94,7 +94,6 @@ const ModalPhuLucVanBang: React.FC<PhuLucVanBangPageProps> = (props) => {
 				ghiChu: '',
 			});
 		} catch (error) {
-			console.log(error);
 			message.error('Có lỗi xảy ra khi cập nhật trạng thái cấp bằng');
 		}
 	};
@@ -176,7 +175,6 @@ const ModalPhuLucVanBang: React.FC<PhuLucVanBangPageProps> = (props) => {
 									...rec,
 									dotCapBangId: null,
 								});
-								console.log(rec);
 								message.success('Đã gỡ quyết định khỏi đợt cấp bằng');
 								getModel({ dotCapBangId });
 							} catch {
@@ -290,11 +288,14 @@ const ModalPhuLucVanBang: React.FC<PhuLucVanBangPageProps> = (props) => {
 				</div>
 
 				<Form.Item label='Ngày cấp bằng' required style={{ marginBottom: 16 }}>
-					<DatePicker
-						style={{ width: '100%' }}
+					<MyDatePicker
 						value={formCapBang.ngayCapBang}
-						onChange={(date) => setFormCapBang((prev) => ({ ...prev, ngayCapBang: date || moment() }))}
-						format='DD/MM/YYYY'
+						onChange={(dateStr) => {
+							setFormCapBang((prev) => ({
+								...prev,
+								ngayCapBang: moment(dateStr),
+							}));
+						}}
 						placeholder='Chọn ngày cấp bằng'
 					/>
 				</Form.Item>
