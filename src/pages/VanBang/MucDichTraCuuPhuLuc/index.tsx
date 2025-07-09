@@ -1,6 +1,6 @@
 import { Popconfirm } from 'antd';
 import TableBase from '@/components/Table';
-import { IColumn } from '@/components/Table/typing';
+import type { IColumn } from '@/components/Table/typing';
 import { useModel } from 'umi';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
