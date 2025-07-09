@@ -15,7 +15,7 @@ import FormXacMinh from './components/FormXacMinh';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { useState } from 'react';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
-import { getXacMinhSetting, exportXacMinhVanBang } from '@/services/VanBang/XacMinhVanBang';
+import { exportXacMinhVanBang } from '@/services/VanBang/XacMinhVanBang';
 import { getNameFile } from '@/utils/utils';
 import fileDownload from 'js-file-download';
 import moment from 'moment';

@@ -1,7 +1,7 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Divider, Form, Input, Row, Switch } from 'antd';
+import { Button, Card, Col, Divider, Form, Input, Row } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
