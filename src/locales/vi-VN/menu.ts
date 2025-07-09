@@ -10,7 +10,11 @@ export default {
 	'menu.DotCapBangTotNghiep': 'Đợt cấp bằng tốt nghiệp',
 	'menu.PhuLucVanBang': 'Phụ lục văn bằng',
 <<<<<<< HEAD
+<<<<<<< HEAD
 	'menu.XacMinhVanBang': 'Xác minh văn bằng',
+=======
+	'menu.MucDichTraCuuPhuLuc': 'Mục đích tra cứu phụ lục',
+>>>>>>> main
 =======
 	'menu.SoVanBang': 'Sổ văn bằng',
 >>>>>>> main

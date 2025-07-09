@@ -48,10 +48,17 @@ export default [
 	},
 	{
 <<<<<<< HEAD
+<<<<<<< HEAD
 		name: 'XacMinhVanBang',
 		path: './xac-minh-van-bang',
 		component: 'VanBang/XacMinhVanBang',
 		icon: 'InfoCircleOutlined',
+=======
+		name: 'MucDichTraCuuPhuLuc',
+		path: './muc-dich-tra-cuu-phu-luc',
+		component: 'VanBang/MucDichTraCuuPhuLuc',
+		icon: 'SearchOutlined',
+>>>>>>> main
 =======
 		name: 'DotCapBangTotNghiep',
 		path: './dot-cap-bang',
