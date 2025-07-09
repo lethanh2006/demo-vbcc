@@ -32,6 +32,13 @@
 	},
 
 	{
+		name: 'SoVanBang',
+		path: '/so-van-bang',
+		component: './VanBang/SoVanBang',
+		icon: 'FileTextOutlined',
+	},
+
+	{
 		name: 'QuyetDinhTotNghiep',
 		path: './quyet-dinh',
 		component: 'VanBang/QuyetDinhTotNghiep',

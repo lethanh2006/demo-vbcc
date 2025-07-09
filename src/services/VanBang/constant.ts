@@ -1,3 +1,4 @@
+import { ETagColor } from '../base/constant';
 import type { BieuMauPhuLuc } from './BieuMauPhuLuc/typing';
 
 // BIỂU MẪU PHỤ LỤC
@@ -71,4 +72,16 @@ export const colorTrangThaiBlc: Record<ETrangThaiBlockchain, string> = {
 	[ETrangThaiBlockchain.CHUA_LUU]: 'blue',
 	[ETrangThaiBlockchain.CHUA_CAP_NHAT]: 'orange',
 	[ETrangThaiBlockchain.DA_LUU]: 'green',
+};
+
+export enum ETrangThaiSoVanBang {
+	CHO_DUYET = 'Chờ duyệt',
+	DA_DUYET = 'Đã duyệt',
+	TU_CHOI = 'Từ chối',
+}
+
+export const colorTrangThaiSoVanBang: Record<ETrangThaiSoVanBang, ETagColor> = {
+	[ETrangThaiSoVanBang.CHO_DUYET]: ETagColor.DEFAULT,
+	[ETrangThaiSoVanBang.DA_DUYET]: ETagColor.GREEN,
+	[ETrangThaiSoVanBang.TU_CHOI]: ETagColor.RED,
 };
