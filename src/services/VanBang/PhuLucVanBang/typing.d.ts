@@ -73,4 +73,12 @@ declare module PhuLucVanBang {
 		soLuongPhuLuc: number;
 		soLuotTraCuuThanhCong: number;
 	};
+
+	export interface IChiTietTraCuu {
+		soQuyetDinh: string;
+		tongTraCuu: number;
+		mucDich: {
+			[mucDich: string]: number;
+		};
+	}
 }
