@@ -36,7 +36,7 @@ const TongHopVanBang = () => {
 					<FilterHocKy style={{ width: '100%' }} allowClear />
 				</Col>
 				<Col xs={24} sm={18} md={18}>
-					<SelectSoVanBang style={{ width: 300 }} allowClear value={recSoVanBang?._id} />
+					<SelectSoVanBang style={{ width: 280 }} allowClear value={recSoVanBang?._id} />
 				</Col>
 				<Col span={24} md={6} className='dashboard-card-with-icon'>
 					<Card>

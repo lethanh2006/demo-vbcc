@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { genExcelFile } from '@/utils/utils';
 import { getChiTietLuotTraCuu } from '@/services/VanBang/PhuLucVanBang';
 import { useModel } from 'umi';
-import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 
 interface ModalTraCuuProps {
 	maHocKy: string | undefined;
@@ -58,7 +58,7 @@ const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ maHocKy, idSoVanBang,
 
 	return (
 		<Modal
-			title={`Chi tiết lượt tra cứu`}
+			title={'Chi tiết lượt tra cứu'}
 			visible={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			width={900}

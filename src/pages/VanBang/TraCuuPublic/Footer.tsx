@@ -99,7 +99,7 @@ const Footer = () => {
 				</Row>
 
 				<footer className='footer'>
-					<a className='link' href='https://aisoft.com.vn/' target='_blank' rel='noreferrer'>
+					<a className='link' href='https://aisoft.com.vn/' target='_blank' rel='noopener noreferrer'>
 						<b>© 2024 Designed and Developed by A.I-SOFT</b>
 					</a>
 				</footer>
