@@ -34,16 +34,30 @@ export default [
 	},
 
 	{
+		name: 'SoVanBang',
+		path: '/so-van-bang',
+		component: './VanBang/SoVanBang',
+		icon: 'FileTextOutlined',
+	},
+
+	{
 		name: 'QuyetDinhTotNghiep',
 		path: './quyet-dinh',
 		component: 'VanBang/QuyetDinhTotNghiep',
 		icon: 'FileDoneOutlined',
 	},
 	{
+<<<<<<< HEAD
 		name: 'XacMinhVanBang',
 		path: './xac-minh-van-bang',
 		component: 'VanBang/XacMinhVanBang',
 		icon: 'InfoCircleOutlined',
+=======
+		name: 'DotCapBangTotNghiep',
+		path: './dot-cap-bang',
+		component: 'VanBang/DotCapBangTotNghiep',
+		icon: 'CalendarOutlined',
+>>>>>>> main
 	},
 	{
 		name: 'PhuLucVanBang',
