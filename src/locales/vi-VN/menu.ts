@@ -9,7 +9,11 @@ export default {
 	'menu.QuyetDinhTotNghiep': 'QĐ tốt nghiệp',
 	'menu.DotCapBangTotNghiep': 'Đợt cấp bằng tốt nghiệp',
 	'menu.PhuLucVanBang': 'Phụ lục văn bằng',
+<<<<<<< HEAD
+	'menu.MucDichTraCuuPhuLuc': 'Mục đích tra cứu phụ lục',
+=======
 	'menu.SoVanBang': 'Sổ văn bằng',
+>>>>>>> main
 	'menu.NguoiKy': 'Người ký văn bằng',
 	'menu.BieuMauPhuLuc': 'Biểu mẫu phụ lục',
 	'menu.TraCuuVanBangPublic': 'Tra cứu văn bằng',

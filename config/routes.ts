@@ -45,10 +45,17 @@
 		icon: 'FileDoneOutlined',
 	},
 	{
+<<<<<<< HEAD
+		name: 'MucDichTraCuuPhuLuc',
+		path: './muc-dich-tra-cuu-phu-luc',
+		component: 'VanBang/MucDichTraCuuPhuLuc',
+		icon: 'SearchOutlined',
+=======
 		name: 'DotCapBangTotNghiep',
 		path: './dot-cap-bang',
 		component: 'VanBang/DotCapBangTotNghiep',
 		icon: 'CalendarOutlined',
+>>>>>>> main
 	},
 	{
 		name: 'PhuLucVanBang',
