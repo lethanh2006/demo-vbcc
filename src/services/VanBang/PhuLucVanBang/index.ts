@@ -20,11 +20,18 @@ export async function putUpdateIpfs(idQuyetDinh: string, update: any[]) {
 	});
 }
 
-export const getThongKeTong = (maHocKy: string, isDonVi: boolean) => {
+export const getThongKeTong = (maHocKy: string, idSoVanBang: string, isDonVi: boolean) => {
 	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke-tong${isDonVi ? '/don-vi' : ''}`, {
 		params: maHocKy && {
 			maHocKy: maHocKy,
+			idSoVanBang: idSoVanBang,
 		},
+	});
+};
+
+export const getChiTietLuotTraCuu = (maHocKy: string, idSoVanBang: string) => {
+	return axios.get(`${ip3}/phu-luc-van-bang/chi-tiet-luot-tra-cuu`, {
+		params: { maHocKy, idSoVanBang },
 	});
 };
 

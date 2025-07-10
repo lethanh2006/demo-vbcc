@@ -1,4 +1,6 @@
-﻿export default [
+﻿import path from 'path';
+
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -32,10 +34,37 @@
 	},
 
 	{
+		name: 'SoVanBang',
+		path: '/so-van-bang',
+		component: './VanBang/SoVanBang',
+		icon: 'FileTextOutlined',
+	},
+
+	{
 		name: 'QuyetDinhTotNghiep',
 		path: './quyet-dinh',
 		component: 'VanBang/QuyetDinhTotNghiep',
 		icon: 'FileDoneOutlined',
+	},
+	{
+<<<<<<< HEAD
+<<<<<<< HEAD
+		name: 'XacMinhVanBang',
+		path: './xac-minh-van-bang',
+		component: 'VanBang/XacMinhVanBang',
+		icon: 'InfoCircleOutlined',
+=======
+		name: 'MucDichTraCuuPhuLuc',
+		path: './muc-dich-tra-cuu-phu-luc',
+		component: 'VanBang/MucDichTraCuuPhuLuc',
+		icon: 'SearchOutlined',
+>>>>>>> main
+=======
+		name: 'DotCapBangTotNghiep',
+		path: './dot-cap-bang',
+		component: 'VanBang/DotCapBangTotNghiep',
+		icon: 'CalendarOutlined',
+>>>>>>> main
 	},
 	{
 		name: 'PhuLucVanBang',

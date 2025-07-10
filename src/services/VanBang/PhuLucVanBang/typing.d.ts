@@ -24,12 +24,17 @@ declare module PhuLucVanBang {
 		createdBlockchain?: ETrangThaiBlockchain;
 		kichHoat?: boolean;
 
+		// Cấp bằng
+		ngayCapPhuLuc?: Date | string;
+		ghiChu: string;
+
 		createdAt?: string;
 		updatedAt?: string;
 
 		// Temp
 		index?: number;
 		key?: string;
+		dotCapBangId?: string | null;
 	}
 
 	export type TUploadFolder = Pick<IRecord, 'urlIpfs' | 'idVanBangIPFS'> & {
@@ -68,4 +73,12 @@ declare module PhuLucVanBang {
 		soLuongPhuLuc: number;
 		soLuotTraCuuThanhCong: number;
 	};
+
+	export interface IChiTietTraCuu {
+		soQuyetDinh: string;
+		tongTraCuu: number;
+		mucDich: {
+			[mucDich: string]: number;
+		};
+	}
 }

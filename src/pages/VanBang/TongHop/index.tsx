@@ -9,29 +9,36 @@ import CountUp from 'react-countup';
 import { useModel } from 'umi';
 import '../../TrangChu/components/style.less';
 import CardQuyetDinhTotNghiep from './CardQuyetDinhTotNghiep';
+import SelectSoVanBang from '../SoVanBang/components/Select';
+import ModalTongLuotTraCuu from './ModalTongTraCuu';
 
 const TongHopVanBang = () => {
 	const [data, setData] = useState<PhuLucVanBang.TTongHop>();
 	const { record: recHocKy } = useModel('daotao.hocky');
+	const { record: recSoVanBang } = useModel('vbcc.sovanbang');
+	const { visibleForm, setVisibleForm } = useModel('vbcc.phulucvanbang');
 	const [loading, setLoading] = useState<boolean>(false);
 	const showAllVanBang = ShowAllVanBang();
 
 	const fetchData = async () => {
 		setLoading(true);
-		await getThongKeTong(recHocKy?.ma ?? '', !showAllVanBang)
+		await getThongKeTong(recHocKy?.ma ?? '', recSoVanBang?._id ?? '', !showAllVanBang)
 			.then((response) => setData(response.data?.data))
 			.finally(() => setLoading(false));
 	};
 
 	useEffect(() => {
 		fetchData();
-	}, [recHocKy?.ma]);
+	}, [recHocKy?.ma, recSoVanBang?._id]);
 
 	return (
 		<Spin spinning={loading}>
 			<Row gutter={[16, 16]}>
-				<Col span={24}>
-					<FilterHocKy style={{ width: 300 }} allowClear />
+				<Col xs={24} sm={6} md={6}>
+					<FilterHocKy style={{ width: '100%' }} allowClear />
+				</Col>
+				<Col xs={24} sm={18} md={18}>
+					<SelectSoVanBang style={{ width: 280 }} allowClear value={recSoVanBang?._id} />
 				</Col>
 				<Col span={24} md={6} className='dashboard-card-with-icon'>
 					<Card>
@@ -64,7 +71,7 @@ const TongHopVanBang = () => {
 				</Col>
 
 				<Col span={24} md={6} className='dashboard-card-with-icon'>
-					<Card>
+					<Card onClick={() => setVisibleForm(true)} style={{ cursor: 'pointer' }}>
 						<SearchOutlined style={{ color: '#15c58a' }} />
 						<div>
 							<CountUp className='number' end={data?.soLuotTraCuu ?? 0} duration={1.5} separator='.' />
@@ -77,6 +84,7 @@ const TongHopVanBang = () => {
 					<CardQuyetDinhTotNghiep chartData={data?.soPhuLucTheoDotTN ?? []} />
 				</Col>
 			</Row>
+			<ModalTongLuotTraCuu maHocKy={recHocKy?.ma} idSoVanBang={recSoVanBang?._id} ten={recSoVanBang} />
 		</Spin>
 	);
 };

@@ -130,6 +130,7 @@ export const tenTruongVietTatTiengAnh = APP_CONFIG_TEN_TRUONG_VIET_TAT_TIENG_ANH
 export enum ESettingKey {
 	KEY = 'KEY',
 	INFO_TENANT_VBCC = 'INFO_TENANT',
+	XAC_MINH_VAN_BANG = 'XAC_MINH_VAN_BANG',
 }
 
 /** Định dạng file */
