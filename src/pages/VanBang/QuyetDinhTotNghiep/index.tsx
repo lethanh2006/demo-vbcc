@@ -11,9 +11,8 @@ import { Button, message, Popconfirm, Tooltip } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalQuyetDinhTotNghiep from './components/Modal';
-import { get } from 'lodash';
 import ModalChonQuyetDinh from '../DotCapBangTotNghiep/components/ModalChonQuyetDinh';
+import ModalQuyetDinhTotNghiep from './components/Modal';
 
 type TProp = {
 	dotCapBangId: string;

@@ -1,17 +1,15 @@
+import MyDatePicker from '@/components/MyDatePicker';
+import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
+import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, DatePicker, Form, Input, Row } from 'antd';
+import { Button, Card, Col, Form, Input, Row } from 'antd';
+import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
-import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
-import { ETrangThaiSoVanBang } from '@/services/VanBang/constant';
-import moment from 'moment';
-import MyDatePicker from '@/components/MyDatePicker';
 
 const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
-	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, setFormSubmiting } =
-		useModel('vbcc.sovanbang');
+	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } = useModel('vbcc.sovanbang');
 
 	// Dùng để lấy danh sách trình độ và hình thức đào tạo từ model khác
 	const { danhSach: dsTrinhDo } = useModel('daotao.trinhdo');

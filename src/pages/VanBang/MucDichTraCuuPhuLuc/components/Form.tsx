@@ -30,8 +30,8 @@ const FormMucDichTraCuuPhuLuc = (props: { title?: string; [key: string]: any }) 
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} mục đích tra cứu phụ lục`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
-					<Col span={24} md={12}>
+				<Row gutter={[12, 0]}>
+					<Col span={24}>
 						<Form.Item
 							name='ten'
 							label='Mục đích tra cứu'
@@ -40,9 +40,9 @@ const FormMucDichTraCuuPhuLuc = (props: { title?: string; [key: string]: any }) 
 							<Input placeholder='Nhập tên mục đích tra cứu phụ lục' />
 						</Form.Item>
 					</Col>
-					<Col span={24} md={12}>
+					<Col span={24}>
 						<Form.Item name='soThuTu' label='Thứ tự hiển thị' rules={[...rules.required, ...rules.number()]}>
-							<InputNumber placeholder='Nhập thứ tự hiển thị' />
+							<InputNumber placeholder='Nhập thứ tự hiển thị' style={{ width: '100%' }} />
 						</Form.Item>
 					</Col>
 				</Row>

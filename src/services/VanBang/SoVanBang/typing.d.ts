@@ -3,7 +3,9 @@ declare module SoVanBang {
 		_id: string;
 		ten: string;
 		maTrinhDo?: string;
+		trinhDoDaoTao?: TrinhDoDaoTao.IRecordBo;
 		maHinhThuc?: string;
+		hinhThucDaoTao?: HinhThucDaoTao.IRecordBo;
 		namHanhChinh: number;
 		trangThai: ETrangThaiSoVanBang;
 		moTa: string;

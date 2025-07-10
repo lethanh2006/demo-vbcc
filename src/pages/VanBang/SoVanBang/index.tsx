@@ -1,25 +1,17 @@
-import { Popconfirm, Tag } from 'antd';
-import TableBase from '@/components/Table';
-import { IColumn } from '@/components/Table/typing';
-import SoVanBangForm from './components/Form'; // Adjust the path based on your file structure
-import { useModel } from 'umi';
-import ButtonExtend from '@/components/Table/ButtonExtend';
-import { CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ExpandText from '@/components/ExpandText';
-import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
+import TableBase from '@/components/Table';
+import ButtonExtend from '@/components/Table/ButtonExtend';
+import type { IColumn } from '@/components/Table/typing';
 import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
+import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
 import { colorTrangThaiSoVanBang, ETrangThaiSoVanBang } from '@/services/VanBang/constant';
-import { useEffect } from 'react';
+import { CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Popconfirm, Tag } from 'antd';
+import { useModel } from 'umi';
+import SoVanBangForm from './components/Form';
 
 const SoVanBangPage = () => {
 	const { page, limit, handleEdit, deleteModel, duyetModel, getModel } = useModel('vbcc.sovanbang');
-	const { getAllModel: hinhThucDaoTaoModel, danhSach: dsHinhThuc } = useModel('daotao.hinhthucdaotao');
-	const { getAllModel: trinhDoDaoTaoModel, danhSach: dsTrinhDo } = useModel('daotao.trinhdo');
-
-	useEffect(() => {
-		hinhThucDaoTaoModel();
-		trinhDoDaoTaoModel();
-	}, []);
 
 	const handleDuyet = (soVanBangId: string) => {
 		if (soVanBangId) duyetModel(soVanBangId, getModel).catch(console.log);
@@ -53,23 +45,17 @@ const SoVanBangPage = () => {
 			title: 'Trình độ',
 			dataIndex: 'maTrinhDo',
 			width: 120,
+			render: (val, rec) => rec?.trinhDoDaoTao?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectTrinhDo selectMa multiple />,
-			render: (val) => {
-				const trinhDo = dsTrinhDo.find((x) => x.ma === val);
-				return trinhDo?.ten ?? val;
-			},
 		},
 		{
 			title: 'Hình thức',
 			dataIndex: 'maHinhThuc',
 			width: 120,
+			render: (val, rec) => rec?.hinhThucDaoTao?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectHinhThuc selectMa multiple />,
-			render: (val) => {
-				const hinhThuc = dsHinhThuc.find((x) => x.ma === val);
-				return hinhThuc?.ten ?? val;
-			},
 		},
 		{
 			title: 'Mô tả',
