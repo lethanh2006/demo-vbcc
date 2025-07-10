@@ -42,7 +42,12 @@ export default defineConfig({
 	},
 	// esbuild is father build tools
 	// https://umijs.org/plugins/plugin-esbuild
-	esbuild: {},
+	esbuild: {
+		///////////////// IMPORTANT /////////////////////////
+		// Transform generator function to es2018 arrow function
+		// Required for ipfs-http-client build
+		target: 'es2018',
+	},
 	title: false,
 	ignoreMomentLocale: true,
 	// proxy: proxy[REACT_APP_ENV || 'dev'],

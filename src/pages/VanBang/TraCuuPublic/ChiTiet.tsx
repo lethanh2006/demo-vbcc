@@ -27,7 +27,7 @@ const ChiTietTraCuuVanBang = ({
 
 	return (
 		<>
-			<Header subTitle='Cổng xác thực thông tin văn bằng' />
+			<Header subTitle={APP_CONFIG_TITLE_VBCC} />
 			<div style={{ maxWidth: 1200, margin: 'auto', paddingTop: 30, paddingBottom: 30 }}>
 				<div style={{ textAlign: 'center', fontSize: 22, marginBottom: 36 }}>
 					<b>Chi tiết thông tin văn bằng</b>

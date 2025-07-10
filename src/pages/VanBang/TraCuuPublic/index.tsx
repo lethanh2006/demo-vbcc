@@ -22,7 +22,7 @@ const TraCuuVanBangPublic = () => {
 
 	return (
 		<>
-			<Header subTitle='Cổng xác thực thông tin văn bằng' />
+			<Header subTitle={APP_CONFIG_TITLE_VBCC} />
 			<div
 				style={{
 					// eslint-disable-next-line quotes

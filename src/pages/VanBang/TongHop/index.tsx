@@ -1,3 +1,4 @@
+import { ShowAllVanBang } from '@/hooks/useCheckAccess';
 import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
 import { getThongKeTong } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
@@ -17,10 +18,11 @@ const TongHopVanBang = () => {
 	const { record: recSoVanBang } = useModel('vbcc.sovanbang');
 	const { visibleForm, setVisibleForm } = useModel('vbcc.phulucvanbang');
 	const [loading, setLoading] = useState<boolean>(false);
+	const showAllVanBang = ShowAllVanBang();
 
 	const fetchData = async () => {
 		setLoading(true);
-		await getThongKeTong(recHocKy?.ma ?? '', recSoVanBang?._id ?? '')
+		await getThongKeTong(recHocKy?.ma ?? '', recSoVanBang?._id ?? '', !showAllVanBang)
 			.then((response) => setData(response.data?.data))
 			.finally(() => setLoading(false));
 	};
