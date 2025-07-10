@@ -46,7 +46,7 @@ ENV APP_CONFIG_TITLE_CORE='Danh mục chung'
 ENV APP_CONFIG_TITLE_CSVC='Cơ sở vật chất'
 ENV APP_CONFIG_TITLE_THU_VIEN='Thư viện'
 ENV APP_CONFIG_TITLE_QLVB='Quản lý văn bản'
-ENV APP_CONFIG_TITLE_VBCC='Văn bằng chứng chỉ'
+ENV APP_CONFIG_TITLE_VBCC='Văn bằng, chứng chỉ, chứng nhận'
 
 
 # Set working directory

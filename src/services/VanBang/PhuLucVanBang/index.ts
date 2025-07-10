@@ -20,8 +20,8 @@ export async function putUpdateIpfs(idQuyetDinh: string, update: any[]) {
 	});
 }
 
-export const getThongKeTong = (maHocKy: string) => {
-	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke-tong`, {
+export const getThongKeTong = (maHocKy: string, isDonVi: boolean) => {
+	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke-tong${isDonVi ? '/don-vi' : ''}`, {
 		params: maHocKy && {
 			maHocKy: maHocKy,
 		},

@@ -1,3 +1,4 @@
+import { ShowAllVanBang } from '@/hooks/useCheckAccess';
 import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
 import { getThongKeTong } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
@@ -13,10 +14,11 @@ const TongHopVanBang = () => {
 	const [data, setData] = useState<PhuLucVanBang.TTongHop>();
 	const { record: recHocKy } = useModel('daotao.hocky');
 	const [loading, setLoading] = useState<boolean>(false);
+	const showAllVanBang = ShowAllVanBang();
 
 	const fetchData = async () => {
 		setLoading(true);
-		await getThongKeTong(recHocKy?.ma ?? '')
+		await getThongKeTong(recHocKy?.ma ?? '', !showAllVanBang)
 			.then((response) => setData(response.data?.data))
 			.finally(() => setLoading(false));
 	};

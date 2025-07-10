@@ -14,7 +14,7 @@ const Settings: LayoutSettings & {
 	fixedHeader: true,
 	fixSiderbar: true,
 	colorWeak: false,
-	title: process.env.APP_CONFIG_TITLE_NHAN_SU ?? '',
+	title: process.env.APP_CONFIG_TITLE_VBCC ?? '',
 	pwa: false,
 	logo: '/logo-text.png',
 	iconfontUrl: '',
