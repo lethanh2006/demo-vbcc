@@ -14,6 +14,7 @@ declare module PhuLucVanBang {
 		hoTen: string;
 		ngaySinh: string;
 		maSinhVien: string;
+		maBieuMau?: string;
 		templateData?: BieuMauPhuLuc.TElement[];
 
 		// historyId?: string;
