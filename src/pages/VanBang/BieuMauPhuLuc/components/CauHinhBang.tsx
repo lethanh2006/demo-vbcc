@@ -2,7 +2,7 @@ import { Button, Col, Input, Row, Select, Space } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { ELoaiDuLieuBieuMau, loaiDuLieuBieuMau } from '@/services/VanBang/constant';
 
-type CotBang = { ma: string; ten: string; kieu: ELoaiDuLieuBieuMau };
+type CotBang = { ma: string; headerName: string; type: ELoaiDuLieuBieuMau };
 
 const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onChange?: (val: CotBang[]) => void }) => {
 	const handleChange = (index: number, field: keyof CotBang, val: any) => {
@@ -12,7 +12,7 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 	};
 
 	const addCot = () => {
-		onChange?.([...value, { ma: '', ten: '', kieu: ELoaiDuLieuBieuMau.Text }]);
+		onChange?.([...value, { ma: '', headerName: '', type: ELoaiDuLieuBieuMau.Text }]);
 	};
 
 	const removeCot = (index: number) => {
@@ -31,18 +31,18 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 					<Col span={8}>
 						<Input
 							placeholder='Tên hiển thị'
-							value={cot.ten}
-							onChange={(e) => handleChange(index, 'ten', e.target.value)}
+							value={cot.headerName}
+							onChange={(e) => handleChange(index, 'headerName', e.target.value)}
 						/>
 					</Col>
 					<Col span={8}>
 						<Select
-							value={cot.kieu}
+							value={cot.type}
 							style={{ width: '100%' }}
 							options={Object.values(ELoaiDuLieuBieuMau)
-								.filter((kieu) => kieu !== ELoaiDuLieuBieuMau.Table && kieu !== ELoaiDuLieuBieuMau.Transcript)
-								.map((kieu) => ({ label: loaiDuLieuBieuMau[kieu], value: kieu }))}
-							onChange={(val) => handleChange(index, 'kieu', val)}
+								.filter((type) => type !== ELoaiDuLieuBieuMau.Table && type !== ELoaiDuLieuBieuMau.Transcript)
+								.map((type) => ({ label: loaiDuLieuBieuMau[type], value: type }))}
+							onChange={(val) => handleChange(index, 'type', val)}
 						/>
 					</Col>
 					<Col span={2}>

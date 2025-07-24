@@ -1,7 +1,7 @@
 import { Button, Card, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import PhuLucVanBangPage from '../../PhuLuc';
+import PhuLucVanBangPage from '@/pages/VanBang/PhuLuc';
 import Form from './Form';
 
 const ModalQuyetDinhTotNghiep = (props: any) => {

@@ -1,7 +1,7 @@
 import { Button, Col, Input, Row, Space } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
-type CotTranscript = { ma: string; ten: string };
+type CotTranscript = { ma: string; headerName: string };
 
 const CauHinhBangDiemSinhVien = ({
 	value = [],
@@ -20,7 +20,7 @@ const CauHinhBangDiemSinhVien = ({
 	};
 
 	const addCot = () => {
-		onChange?.([...value, { ma: '', ten: '' }]);
+		onChange?.([...value, { ma: '', headerName: '' }]);
 	};
 
 	const removeCot = (index: number) => {
@@ -39,8 +39,8 @@ const CauHinhBangDiemSinhVien = ({
 					<Col span={10}>
 						<Input
 							placeholder='Tên hiển thị'
-							value={cot.ten}
-							onChange={(e) => handleChange(index, 'ten', e.target.value)}
+							value={cot.headerName}
+							onChange={(e) => handleChange(index, 'headerName', e.target.value)}
 						/>
 					</Col>
 					<Col span={4}>
