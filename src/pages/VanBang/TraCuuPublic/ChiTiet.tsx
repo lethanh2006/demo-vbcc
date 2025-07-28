@@ -1,5 +1,5 @@
 import PreviewFile from '@/components/PreviewFile';
-import { Col, Descriptions, Divider, Empty, Row } from 'antd';
+import { Col, Descriptions, Divider, Empty, Row, Table } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -24,6 +24,9 @@ const ChiTietTraCuuVanBang = ({
 	useEffect(() => {
 		getData();
 	}, [id]);
+
+	const normalElements = record?.templateData?.filter((item) => item.type !== ELoaiDuLieuBieuMau.Table) ?? [];
+	const tableElements = record?.templateData?.filter((item) => item.type === ELoaiDuLieuBieuMau.Table) ?? [];
 
 	return (
 		<>
@@ -88,8 +91,8 @@ const ChiTietTraCuuVanBang = ({
 						<Col span={24}>
 							<Divider>Chi tiết phụ lục</Divider>
 							<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered>
-								{record?.templateData?.map((item) => (
-									<Descriptions.Item key={item?.value} label={item?.headerName}>
+								{normalElements.map((item) => (
+									<Descriptions.Item key={item?.headerName} label={item?.headerName}>
 										{item?.value
 											? item.type === ELoaiDuLieuBieuMau.Date
 												? moment(item.value).format('DD/MM/YYYY')
@@ -98,6 +101,30 @@ const ChiTietTraCuuVanBang = ({
 									</Descriptions.Item>
 								))}
 							</Descriptions>
+
+							{tableElements.map((tableElement) => {
+								const columns =
+									tableElement.cot?.map((cot) => ({
+										title: cot.headerName,
+										dataIndex: cot.ma,
+										key: cot.ma,
+									})) ?? [];
+
+								const dataSource = Array.isArray(tableElement.value) ? tableElement.value : [];
+
+								return (
+									<div key={tableElement.headerName} style={{ marginTop: 24 }}>
+										<Divider>{tableElement.headerName}</Divider>
+										<Table
+											columns={columns}
+											dataSource={dataSource}
+											bordered
+											pagination={false}
+											rowKey={(r, i) => `${r.ma}-${i}`}
+										/>
+									</div>
+								);
+							})}
 						</Col>
 
 						{record?.signature && (

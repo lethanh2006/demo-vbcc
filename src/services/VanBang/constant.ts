@@ -7,7 +7,6 @@ export enum ELoaiDuLieuBieuMau {
 	Date = 'Date',
 	Number = 'Number',
 	Table = 'Table',
-	Transcript = 'BangDiemSinhVien',
 }
 
 export const loaiDuLieuBieuMau: Record<ELoaiDuLieuBieuMau, string> = {
@@ -15,27 +14,21 @@ export const loaiDuLieuBieuMau: Record<ELoaiDuLieuBieuMau, string> = {
 	[ELoaiDuLieuBieuMau.Number]: 'Kiểu số',
 	[ELoaiDuLieuBieuMau.Date]: 'Ngày tháng',
 	[ELoaiDuLieuBieuMau.Table]: 'Bảng',
-	[ELoaiDuLieuBieuMau.Transcript]: 'Bảng điểm sinh viên',
 };
 
 // bảng điểm mặc định
-export const defaultColumnsByType: Record<
-	ELoaiDuLieuBieuMau.Transcript,
-	{ ma: string; headerName: string; type: ELoaiDuLieuBieuMau }[]
-> = {
-	[ELoaiDuLieuBieuMau.Transcript]: [
-		{ ma: 'ma_mon', headerName: 'Mã môn học', type: ELoaiDuLieuBieuMau.Text },
-		{ ma: 'ten_mon', headerName: 'Tên môn học', type: ELoaiDuLieuBieuMau.Text },
-		{ ma: 'nhom', headerName: 'Nhóm môn học', type: ELoaiDuLieuBieuMau.Text },
-		{ ma: 'so_tin_chi', headerName: 'Số tín chỉ', type: ELoaiDuLieuBieuMau.Number },
-		{ ma: 'hoc_ky', headerName: 'Học kỳ', type: ELoaiDuLieuBieuMau.Text },
-		{ ma: 'diem_thi', headerName: 'Điểm thi', type: ELoaiDuLieuBieuMau.Number },
-		{ ma: 'diem_he_10', headerName: 'Điểm hệ 10', type: ELoaiDuLieuBieuMau.Number },
-		{ ma: 'diem_he_4', headerName: 'Điểm hệ 4', type: ELoaiDuLieuBieuMau.Number },
-		{ ma: 'diem_chu', headerName: 'Điểm chữ', type: ELoaiDuLieuBieuMau.Text },
-		{ ma: 'ghi_chu', headerName: 'Ghi chú', type: ELoaiDuLieuBieuMau.Text },
-	],
-};
+export const defaultTranscriptColumns: { ma: string; headerName: string; type: ELoaiDuLieuBieuMau }[] = [
+	{ ma: 'ma_mon', headerName: 'Mã môn học', type: ELoaiDuLieuBieuMau.Text },
+	{ ma: 'ten_mon', headerName: 'Tên môn học', type: ELoaiDuLieuBieuMau.Text },
+	{ ma: 'nhom', headerName: 'Nhóm môn học', type: ELoaiDuLieuBieuMau.Text },
+	{ ma: 'so_tin_chi', headerName: 'Số tín chỉ', type: ELoaiDuLieuBieuMau.Number },
+	{ ma: 'hoc_ky', headerName: 'Học kỳ', type: ELoaiDuLieuBieuMau.Text },
+	{ ma: 'diem_thi', headerName: 'Điểm thi', type: ELoaiDuLieuBieuMau.Number },
+	{ ma: 'diem_he_10', headerName: 'Điểm hệ 10', type: ELoaiDuLieuBieuMau.Number },
+	{ ma: 'diem_he_4', headerName: 'Điểm hệ 4', type: ELoaiDuLieuBieuMau.Number },
+	{ ma: 'diem_chu', headerName: 'Điểm chữ', type: ELoaiDuLieuBieuMau.Text },
+	{ ma: 'ghi_chu', headerName: 'Ghi chú', type: ELoaiDuLieuBieuMau.Text },
+];
 
 export const defaultElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Họ tên', isRequired: true },
@@ -71,7 +64,7 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Điểm rèn luyện', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Xếp hạng rèn luyện', type: ELoaiDuLieuBieuMau.Text },
 
-	{ headerName: 'Bảng điểm sinh viên', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Bảng điểm sinh viên', type: ELoaiDuLieuBieuMau.Table },
 ];
 
 // PHỤ LỤC VĂN BẰNG

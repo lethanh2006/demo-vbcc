@@ -3,17 +3,17 @@ import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import {
 	ELoaiDuLieuBieuMau,
 	allowElementBieuMau,
-	defaultColumnsByType,
+	defaultTranscriptColumns,
 	defaultElementBieuMau,
 	loaiDuLieuBieuMau,
 } from '@/services/VanBang/constant';
 import rules from '@/utils/rules';
 import { DeleteOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
-import { AutoComplete, Col, Form, Row, Select } from 'antd';
+import { AutoComplete, Col, Form, Row, Select, Input } from 'antd';
 import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable, type DropResult } from 'react-beautiful-dnd';
 import CauHinhDinhDangBang from './CauHinhBang';
-import CauHinhBangDiemSinhVien from './TranscriptTable';
+import './ElementBieuMauFormItem.less';
 
 const ElementBieuMauFormItem = (props: {
 	value?: BieuMauPhuLuc.TElement[];
@@ -26,6 +26,8 @@ const ElementBieuMauFormItem = (props: {
 			value: item.headerName,
 		})),
 	);
+
+	const form = Form.useFormInstance();
 
 	const addElement = () => {
 		const temp = elements.slice();
@@ -47,8 +49,8 @@ const ElementBieuMauFormItem = (props: {
 		const temp = elements.slice();
 		const sourceElement = elements[source.index];
 
-		temp.splice(source.index, 1); // remove form source index
-		temp.splice(destination.index, 0, sourceElement); // Insert that element into destination index
+		temp.splice(source.index, 1);
+		temp.splice(destination.index, 0, sourceElement);
 		if (onChange) onChange(temp);
 	};
 
@@ -62,9 +64,48 @@ const ElementBieuMauFormItem = (props: {
 		);
 	};
 
-	const onSelectHeader = (data: string) => {
+	const onSelectHeader = (data: string, index: number) => {
 		// TODO: onSelectHeader
 		// const ele = Object.values(allowElementBieuMau).find((item) => item.headerName === data);
+		const selectedElement = allowElementBieuMau.find((item) => item.headerName === data);
+		if (!selectedElement) return;
+
+		const currentElements = form.getFieldValue('elements') || [];
+		const newElements = [...currentElements];
+		const currentItem = newElements[index];
+		currentItem.type = selectedElement.type;
+
+		if (data === 'Bảng điểm sinh viên') {
+			currentItem.cot = defaultTranscriptColumns;
+		} else if (selectedElement.type === ELoaiDuLieuBieuMau.Table) {
+			currentItem.cot = [];
+		} else {
+			delete currentItem.cot;
+		}
+
+		form.setFieldsValue({ elements: newElements });
+		if (onChange) {
+			onChange(newElements);
+		}
+	};
+
+	const handleTypeChange = (index: number, val: ELoaiDuLieuBieuMau) => {
+		const newElements = [...elements];
+		const currentElement = newElements[index];
+		currentElement.type = val;
+
+		if (val === ELoaiDuLieuBieuMau.Table) {
+			if (!currentElement.cot) {
+				currentElement.cot = [];
+			}
+		} else {
+			delete currentElement.cot;
+		}
+
+		form.setFieldsValue({ elements: newElements });
+		if (onChange) {
+			onChange(newElements);
+		}
 	};
 
 	const renderElement = (index: number, isDefault: boolean, providedItem?: any) => (
@@ -87,10 +128,10 @@ const ElementBieuMauFormItem = (props: {
 					<AutoComplete
 						disabled={isDefault}
 						placeholder='Nhập tên phần tử'
-						value={isDefault ? defaultElementBieuMau[index].headerName : undefined}
+						defaultValue={isDefault ? defaultElementBieuMau[index].headerName : undefined}
 						options={searchoptions}
 						onSearch={onSearchHeader}
-						onSelect={onSelectHeader}
+						onSelect={(value) => onSelectHeader(value, index)}
 					/>
 				</Form.Item>
 			</Col>
@@ -101,26 +142,13 @@ const ElementBieuMauFormItem = (props: {
 					rules={[...rules.required]}
 				>
 					<Select
-						disabled={isDefault}
+						disabled={isDefault || elements[index]?.headerName === 'Bảng điểm sinh viên'}
 						options={Object.values(ELoaiDuLieuBieuMau).map((item) => ({
 							key: item,
 							value: item,
 							label: loaiDuLieuBieuMau[item],
 						}))}
-						value={isDefault ? defaultElementBieuMau[index].type ?? ELoaiDuLieuBieuMau.Text : undefined}
-						//  mặc định render ra bảng điểm
-						onChange={(val) => {
-							if (onChange) {
-								const temp = elements.slice();
-								temp[index].type = val;
-								if (val === ELoaiDuLieuBieuMau.Transcript) {
-									temp[index].cot = defaultColumnsByType[ELoaiDuLieuBieuMau.Transcript];
-								} else {
-									delete temp[index].cot;
-								}
-								onChange(temp);
-							}
-						}}
+						onChange={(val) => handleTypeChange(index, val)}
 					/>
 				</Form.Item>
 			</Col>
@@ -135,66 +163,19 @@ const ElementBieuMauFormItem = (props: {
 					/>
 				) : null}
 			</Col>
-			{/* Kiểu dữ liệu bảng */}
-			<Col span={24}>
-				{!isDefault && (
+
+			{!isDefault && elements[index]?.type === ELoaiDuLieuBieuMau.Table && (
+				<Col span={24}>
 					<Form.Item
-						noStyle
-						shouldUpdate={(prev, curr) => prev.elements?.[index]?.type !== curr.elements?.[index]?.type}
+						label='Cấu hình bảng'
+						className='table-config-container'
+						name={['elements', index, 'cot']}
+						rules={[{ required: true, message: 'Vui lòng cấu hình các cột của bảng' }]}
 					>
-						{({ getFieldValue }) => {
-							const selectedType = getFieldValue(['elements', index, 'type']);
-
-							if (selectedType === ELoaiDuLieuBieuMau.Table) {
-								return (
-									<Col span={24}>
-										<Form.Item
-											label='Cấu hình bảng'
-											style={{ width: '86%', marginLeft: 70 }}
-											name={['elements', index, 'cot']}
-											rules={[{ required: true, message: 'Vui lòng cấu hình các cột của bảng' }]}
-										>
-											<CauHinhDinhDangBang />
-										</Form.Item>
-									</Col>
-								);
-							}
-
-							return null;
-						}}
+						<CauHinhDinhDangBang />
 					</Form.Item>
-				)}
-			</Col>
-			{/* Bảng điểm sinh viên */}
-			<Col span={24}>
-				{!isDefault && (
-					<Form.Item
-						noStyle
-						shouldUpdate={(prev, curr) => prev.elements?.[index]?.type !== curr.elements?.[index]?.type}
-					>
-						{({ getFieldValue }) => {
-							const selectedType = getFieldValue(['elements', index, 'type']);
-
-							if (selectedType === ELoaiDuLieuBieuMau.Transcript) {
-								return (
-									<Col span={24}>
-										<Form.Item
-											label='Cấu hình bảng điểm sinh viên'
-											style={{ width: '95%', marginLeft: 70 }}
-											name={['elements', index, 'cot']}
-											rules={[{ required: true, message: 'Vui lòng cấu hình các cột của bảng' }]}
-										>
-											<CauHinhBangDiemSinhVien />
-										</Form.Item>
-									</Col>
-								);
-							}
-
-							return null;
-						}}
-					</Form.Item>
-				)}
-			</Col>
+				</Col>
+			)}
 		</Row>
 	);
 

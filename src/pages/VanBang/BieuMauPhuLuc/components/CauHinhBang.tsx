@@ -40,7 +40,7 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 							value={cot.type}
 							style={{ width: '100%' }}
 							options={Object.values(ELoaiDuLieuBieuMau)
-								.filter((type) => type !== ELoaiDuLieuBieuMau.Table && type !== ELoaiDuLieuBieuMau.Transcript)
+								.filter((type) => type !== ELoaiDuLieuBieuMau.Table)
 								.map((type) => ({ label: loaiDuLieuBieuMau[type], value: type }))}
 							onChange={(val) => handleChange(index, 'type', val)}
 						/>
@@ -50,7 +50,7 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 					</Col>
 				</Row>
 			))}
-			<Button icon={<PlusOutlined />} style={{ width: '95%', marginRight: 30 }} onClick={addCot} type='dashed' block>
+			<Button icon={<PlusOutlined />} className='add-column-button' onClick={addCot} type='dashed' block>
 				Thêm cột
 			</Button>
 		</Space>

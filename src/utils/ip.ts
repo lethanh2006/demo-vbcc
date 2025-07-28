@@ -6,6 +6,7 @@ const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 const ip3 = ipRoot + 'vbcc'; // ip dev
 
 // Ip khác
+const iplocal = 'https://acf55d3c8451.ngrok-free.app';
 const ipNotif = ipRoot + 'notification'; // ip dev
 const ipSlink = ipRoot + 'slink'; // ip dev
 const ipCore = ipRoot + 'core'; // ip dev
@@ -14,7 +15,7 @@ const ipDaoTao = ipRoot + 'qldt'; // ip dev
 const ipIPFS = 'https://ipfs.aisenote.com/api/v0/add';
 const preIPFS = 'https://ipfs.aisenote.com/ipfs/';
 
-const currentRole = EModuleKey.VBCC;
+const currentRole = EModuleKey.QLDT;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
 
@@ -29,6 +30,7 @@ const sentryDSN = APP_CONFIG_SENTRY_DSN;
 const oneSignalClient = APP_CONFIG_ONE_SIGNAL_ID;
 
 export {
+	iplocal,
 	currentRole,
 	replaceRole,
 	ip3,
