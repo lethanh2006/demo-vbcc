@@ -6,14 +6,14 @@ export default {
 	'menu.About': `Giới thiệu ${APP_CONFIG_TIEN_TO_TRUONG.toLowerCase()}`,
 	'menu.News': 'Tin tức',
 
-	'menu.SoVanBang': 'Sổ văn bằng',
 	'menu.QuyetDinhTotNghiep': 'QĐ tốt nghiệp',
-	'menu.XacMinhVanBang': 'Xác minh văn bằng',
-	'menu.MucDichTraCuuPhuLuc': 'Mục đích tra cứu phụ lục',
 	'menu.DotCapBangTotNghiep': 'Đợt cấp bằng tốt nghiệp',
 	'menu.PhuLucVanBang': 'Phụ lục văn bằng',
-	'menu.BieuMauPhuLuc': 'Biểu mẫu phụ lục',
+	'menu.XacMinhVanBang': 'Xác minh văn bằng',
+	'menu.MucDichTraCuuPhuLuc': 'Mục đích tra cứu phụ lục',
+	'menu.SoVanBang': 'Sổ văn bằng',
 	'menu.NguoiKy': 'Người ký văn bằng',
+	'menu.BieuMauPhuLuc': 'Biểu mẫu phụ lục',
 	'menu.TraCuuVanBangPublic': 'Tra cứu văn bằng',
 	'menu.ChiTietVanBangPublic': 'Chi tiết văn bằng',
 
