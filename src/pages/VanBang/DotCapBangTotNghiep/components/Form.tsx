@@ -1,10 +1,11 @@
+import MyDatePicker from '@/components/MyDatePicker';
+import type { DotCapBangTotNghiep } from '@/services/VanBang/DotCapBangTotNghiep/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
+import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import moment from 'moment';
-import MyDatePicker from '@/components/MyDatePicker';
 
 const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) => {
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
@@ -16,20 +17,14 @@ const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) 
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			// Convert string dates to moment objects
-			const formData = {
-				...record,
-				nam: record.nam ? moment(record.nam) : undefined,
-			};
-			form.setFieldsValue(formData);
+			form.setFieldsValue(record);
 		}
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: DotCapBangTotNghiep.IRecord) => {
 		const submitData = {
 			...values,
-			// Convert moment objects to proper format
-			nam: values.nam?.format('YYYY'),
+			nam: moment(values.nam).format('YYYY'),
 		};
 
 		if (edit) {
@@ -57,7 +52,7 @@ const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) 
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item name='nam' label='Năm hành chính' rules={[...rules.required]}>
-						<MyDatePicker placeholder='Chọn năm' />
+						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' />
 					</Form.Item>
 				</Col>
 

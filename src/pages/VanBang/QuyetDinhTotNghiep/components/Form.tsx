@@ -9,7 +9,7 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectBieuMauPhuLuc from '../../BieuMauPhuLuc/components/Select';
+import SelectBieuMauPhuLuc from '../../../DanhMuc/BieuMauPhuLuc/components/Select';
 
 const FormQuyetDinhTotNghiep = (props: {
 	afterAddNew?: (rec: QuyetDinhTotNghiep.IRecord) => void;

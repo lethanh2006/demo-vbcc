@@ -1,17 +1,17 @@
+import MyDatePicker from '@/components/MyDatePicker';
+import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
+import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
+import SelectDonVi from '@/pages/ToChucNhanSu/DonVi/Select';
+import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, DatePicker, Form, Input, Row } from 'antd';
+import { Button, Card, Col, Form, Input, Row } from 'antd';
+import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
-import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
-import { ETrangThaiSoVanBang } from '@/services/VanBang/constant';
-import moment from 'moment';
-import MyDatePicker from '@/components/MyDatePicker';
 
 const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
-	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, setFormSubmiting } =
-		useModel('vbcc.sovanbang');
+	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } = useModel('vbcc.sovanbang');
 
 	// Dùng để lấy danh sách trình độ và hình thức đào tạo từ model khác
 	const { danhSach: dsTrinhDo } = useModel('daotao.trinhdo');
@@ -23,20 +23,14 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			// Convert string year to moment object for DatePicker
-			const formData = {
-				...record,
-				namHanhChinh: record.namHanhChinh ? moment(record.namHanhChinh) : undefined,
-			};
-			form.setFieldsValue(formData);
+			form.setFieldsValue(record);
 		}
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: SoVanBang.IRecord) => {
 		const submitData = {
 			...values,
-			// Convert dayjs object to string year
-			namHanhChinh: values.namHanhChinh ? values.namHanhChinh.format('YYYY') : undefined,
+			namHanhChinh: moment(values.namHanhChinh).format('YYYY'),
 		};
 
 		if (edit) {
@@ -88,7 +82,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24} md={12}>
 						<Form.Item
-							name='formatSoVaoSo'
+							name='soVaoSoFormat'
 							label='Định dạng số vào sổ'
 							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						>
@@ -97,17 +91,17 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 					</Col>
 					<Col span={24} md={12}>
 						<Form.Item name='namHanhChinh' label='Năm hành chính' rules={[...rules.required]}>
-							<MyDatePicker pickerStyle='year' style={{ width: '100%' }} placeholder='Chọn năm' format='YYYY' />
+							<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='maTrinhDo' label='Trình độ đào tạo' rules={[...rules.required]}>
+						<Form.Item name='maTrinhDoDaoTao' label='Trình độ đào tạo' rules={[...rules.required]}>
 							<SelectTrinhDo selectMa />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='maHinhThuc' label='Hình thức đào tạo' rules={[...rules.required]}>
-							<SelectHinhThuc selectMa />
+						<Form.Item name='maHinhThucDaoTao' label='Hình thức đào tạo' rules={[...rules.required]}>
+							<SelectHinhThuc selectMa hideAll />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
@@ -119,7 +113,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 							<Input placeholder='Nhập tên sổ' />
 						</Form.Item>
 					</Col>
-					<Col span={24} md={12}>
+					<Col span={24}>
 						<Form.Item name='moTa' label='Mô tả' rules={[...rules.text, ...rules.length(200)]}>
 							<Input.TextArea placeholder='Nhập mô tả' style={{ width: '100%' }} />
 						</Form.Item>

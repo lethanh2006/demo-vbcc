@@ -1,6 +1,6 @@
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { inputFormat } from '@/utils/utils';
-import { Card } from 'antd';
+import { Card, Empty } from 'antd';
 import Chart from 'react-apexcharts';
 
 const CardQuyetDinhTotNghiep = (payload: { chartData: PhuLucVanBang.TThongKeTraCuu[] }) => {
@@ -31,9 +31,8 @@ const CardQuyetDinhTotNghiep = (payload: { chartData: PhuLucVanBang.TThongKeTraC
 		yaxis: [
 			{
 				labels: {
-					formatter: (val: any) => inputFormat(Math.round(val)),
+					formatter: (val: any) => inputFormat(val),
 				},
-				min: 0,
 			},
 			{
 				opposite: true,
@@ -41,7 +40,7 @@ const CardQuyetDinhTotNghiep = (payload: { chartData: PhuLucVanBang.TThongKeTraC
 		],
 		tooltip: {
 			y: {
-				formatter: (val: any) => inputFormat(Math.round(val)),
+				formatter: (val: any) => inputFormat(val),
 			},
 		},
 	};
@@ -63,7 +62,11 @@ const CardQuyetDinhTotNghiep = (payload: { chartData: PhuLucVanBang.TThongKeTraC
 
 	return (
 		<Card title='Thống kê Quyết định'>
-			<Chart options={options} series={series} height={450} />
+			{chartData.length ? (
+				<Chart options={options} series={series} height={450} />
+			) : (
+				<Empty description='Không có dữ liệu' />
+			)}
 		</Card>
 	);
 };

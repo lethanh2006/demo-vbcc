@@ -2,15 +2,21 @@ import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
 
 export async function getImportPhuLucVbTemplate(quyetDinhId: string) {
-	return axios.get(`${ip3}/phu-luc-van-bang/import-template/quyet-dinh/${quyetDinhId}`, {
+	return axios.get(`${ip3}/phu-luc-van-bang-import/import-template/quyet-dinh/${quyetDinhId}`, {
 		responseType: 'arraybuffer',
 	});
 }
 
+// export async function getImportPhuLucVbTemplate(quyetDinhId: string) {
+// 	return axios.get(`${ip3}/phu-luc-van-bang/import-template/quyet-dinh/${quyetDinhId}`, {
+// 		responseType: 'arraybuffer',
+// 	});
+// }
+
 export async function importPhuLucVanBang(payload: { quyetDinhId: string; file: Blob }) {
 	const form = new FormData();
 	form.append('file', payload.file);
-	return axios.post(`${ip3}/phu-luc-van-bang/import/insert/quyet-dinh/${payload.quyetDinhId}`, form);
+	return axios.post(`${ip3}/phu-luc-van-bang-import/import/insert/quyet-dinh/${payload.quyetDinhId}`, form);
 }
 
 export async function putUpdateIpfs(idQuyetDinh: string, update: any[]) {
@@ -22,10 +28,7 @@ export async function putUpdateIpfs(idQuyetDinh: string, update: any[]) {
 
 export const getThongKeTong = (maHocKy: string, idSoVanBang: string, isDonVi: boolean) => {
 	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke-tong${isDonVi ? '/don-vi' : ''}`, {
-		params: maHocKy && {
-			maHocKy: maHocKy,
-			idSoVanBang: idSoVanBang,
-		},
+		params: { maHocKy, idSoVanBang },
 	});
 };
 

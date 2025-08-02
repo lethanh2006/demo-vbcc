@@ -30,37 +30,17 @@
 		component: './TienIch/GioiThieu',
 		hideInMenu: true,
 	},
-
 	{
 		name: 'SoVanBang',
 		path: '/so-van-bang',
 		component: './VanBang/SoVanBang',
 		icon: 'FileTextOutlined',
 	},
-
 	{
 		name: 'QuyetDinhTotNghiep',
 		path: './quyet-dinh',
 		component: 'VanBang/QuyetDinhTotNghiep',
 		icon: 'FileDoneOutlined',
-	},
-	{
-		name: 'XacMinhVanBang',
-		path: './xac-minh-van-bang',
-		component: 'VanBang/XacMinhVanBang',
-		icon: 'InfoCircleOutlined',
-	},
-	{
-		name: 'MucDichTraCuuPhuLuc',
-		path: './muc-dich-tra-cuu-phu-luc',
-		component: 'VanBang/MucDichTraCuuPhuLuc',
-		icon: 'SearchOutlined',
-	},
-	{
-		name: 'DotCapBangTotNghiep',
-		path: './dot-cap-bang',
-		component: 'VanBang/DotCapBangTotNghiep',
-		icon: 'CalendarOutlined',
 	},
 	{
 		name: 'PhuLucVanBang',
@@ -69,19 +49,18 @@
 		icon: 'ProfileOutlined',
 	},
 	{
-		name: 'BieuMauPhuLuc',
-		path: './bieu-mau',
-		component: 'VanBang/BieuMauPhuLuc',
-		icon: 'FormOutlined',
+		name: 'DotCapBangTotNghiep',
+		path: './dot-cap-bang',
+		component: 'VanBang/DotCapBangTotNghiep',
+		icon: 'CalendarOutlined',
 	},
 	{
-		name: 'NguoiKy',
-		path: './nguoi-ky',
-		component: 'VanBang/NguoiKy',
-		icon: 'UserOutlined',
-		access: 'accessFilter',
-		maChucNang: 'van-bang-chung-chi|quan-tri-vien',
+		name: 'XacMinhVanBang',
+		path: './xac-minh-van-bang',
+		component: 'VanBang/XacMinhVanBang',
+		icon: 'InfoCircleOutlined',
 	},
+
 	{
 		name: 'TraCuuVanBangPublic',
 		path: '/tra-cuu-van-bang',
@@ -99,18 +78,33 @@
 	},
 
 	// DANH MUC HE THONG
-	// {
-	// 	name: 'DanhMuc',
-	// 	path: '/danh-muc',
-	// 	icon: 'copy',
-	// 	routes: [
-	// 		{
-	// 			name: 'ChucVu',
-	// 			path: 'chuc-vu',
-	// 			component: './DanhMuc/ChucVu',
-	// 		},
-	// 	],
-	// },
+	{
+		name: 'DanhMuc',
+		path: '/danh-muc',
+		icon: 'copy',
+		routes: [
+			{
+				name: 'NguoiKy',
+				path: './nguoi-ky',
+				component: 'DanhMuc/NguoiKy',
+				icon: 'UserOutlined',
+				access: 'accessFilter',
+				maChucNang: 'van-bang-chung-chi|quan-tri-vien',
+			},
+			{
+				name: 'BieuMauPhuLuc',
+				path: './bieu-mau',
+				component: 'DanhMuc/BieuMauPhuLuc',
+				icon: 'FormOutlined',
+			},
+			{
+				name: 'MucDichTraCuuPhuLuc',
+				path: './muc-dich-tra-cuu-phu-luc',
+				component: 'DanhMuc/MucDichTraCuuPhuLuc',
+				icon: 'SearchOutlined',
+			},
+		],
+	},
 
 	{
 		path: '/notification',

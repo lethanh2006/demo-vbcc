@@ -1,3 +1,5 @@
+import type { ETrangThaiDotCapBangTotNghiep } from '../constant';
+
 declare module DotCapBangTotNghiep {
 	export interface IRecord {
 		_id: string;
@@ -5,6 +7,11 @@ declare module DotCapBangTotNghiep {
 		nam: string;
 		ngayBatDau: Date;
 		ngayKetThuc: Date;
-		quyetDinhId?: string;
+		trangThai: ETrangThaiDotCapBangTotNghiep;
+		nguoiTaoInfo: {};
+		nguoiDuyetInfo: {};
+		maDonVi: string;
+		createdAt: Date;
+		updatedAt: Date;
 	}
 }

@@ -1,17 +1,23 @@
+import type { ETrangThaiSoVanBang } from '../constant';
+
 declare module SoVanBang {
 	export interface IRecord {
 		_id: string;
 		ten: string;
-		maTrinhDo?: string;
-		maHinhThuc?: string;
-		namHanhChinh: number;
+		maTrinhDoDaoTao: string;
+		trinhDoDaoTao?: TrinhDoDaoTao.IRecordBo;
+		maHinhThucDaoTao: string;
+		hinhThucDaoTao?: HinhThucDaoTao.IRecordBo;
+		namHanhChinh: string;
 		trangThai: ETrangThaiSoVanBang;
+		nguoiTaoInfo: TNnguoiInfo;
+		nguoiDuyetInfo: TNnguoiInfo;
+		soVaoSoHienTai: 0;
+		createdAt: Date;
+		updatedAt: Date;
 		moTa: string;
-
-		nguoiTaoInfo?: TNnguoiInfo;
-		nguoiDuyetInfo?: TNnguoiInfo;
-
-		soVaoSoHienTai: number;
+		maDonVi: string;
+		soVaoSoFormat: string;
 	}
 
 	export type TNnguoiInfo = {

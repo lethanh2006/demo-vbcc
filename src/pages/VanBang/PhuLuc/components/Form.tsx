@@ -25,7 +25,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 			getBieuMauDetailModel(recQuyetDinh?.maBieuMau ?? '').then((bm) => {
 				if (record?._id) {
 					const templateData = record.templateData;
-					if (bm._id)
+					if (bm)
 						record.templateData = bm?.elements?.map((elm) => ({
 							...elm,
 							value: templateData?.find((i) => i.headerName === elm.headerName)?.value,

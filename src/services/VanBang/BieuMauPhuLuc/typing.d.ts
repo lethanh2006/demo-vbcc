@@ -15,6 +15,7 @@ declare module BieuMauPhuLuc {
 	export type TElement = {
 		headerName: string;
 		type?: ELoaiDuLieuBieuMau = ELoaiDuLieuBieuMau.Text;
+		cot?: CotBang[];
 
 		// Temp
 		isRequired?: boolean = false;
