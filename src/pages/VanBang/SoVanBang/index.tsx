@@ -5,6 +5,7 @@ import type { IColumn } from '@/components/Table/typing';
 import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
 import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
 import { colorTrangThaiSoVanBang, ETrangThaiSoVanBang } from '@/services/VanBang/constant';
+import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import { CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm, Tag } from 'antd';
 import { useModel } from 'umi';
@@ -43,7 +44,7 @@ const SoVanBangPage = () => {
 		},
 		{
 			title: 'Trình độ',
-			dataIndex: 'maTrinhDo',
+			dataIndex: 'maTrinhDoDaoTao',
 			width: 120,
 			render: (val, rec) => rec?.trinhDoDaoTao?.ten,
 			filterType: 'customselect',
@@ -51,7 +52,7 @@ const SoVanBangPage = () => {
 		},
 		{
 			title: 'Hình thức',
-			dataIndex: 'maHinhThuc',
+			dataIndex: 'maHinhThucDaoTao',
 			width: 120,
 			render: (val, rec) => rec?.hinhThucDaoTao?.ten,
 			filterType: 'customselect',
@@ -126,16 +127,14 @@ const SoVanBangPage = () => {
 	];
 
 	return (
-		<div>
-			<TableBase
-				columns={columns}
-				modelName={'vbcc.sovanbang'}
-				title='Sổ văn bằng'
-				Form={SoVanBangForm}
-				dependencies={[page, limit]}
-				widthDrawer={800}
-			/>
-		</div>
+		<TableBase
+			columns={columns}
+			modelName={'vbcc.sovanbang'}
+			title='Sổ văn bằng'
+			Form={SoVanBangForm}
+			dependencies={[page, limit]}
+			widthDrawer={800}
+		/>
 	);
 };
 

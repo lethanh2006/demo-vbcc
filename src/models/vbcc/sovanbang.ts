@@ -1,5 +1,6 @@
 import useInitModel from '@/hooks/useInitModel';
 import { duyetSoVanBang } from '@/services/VanBang/SoVanBang';
+import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import { message } from 'antd';
 
 export default () => {

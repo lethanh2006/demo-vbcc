@@ -86,7 +86,7 @@
 			{
 				name: 'NguoiKy',
 				path: './nguoi-ky',
-				component: 'VanBang/NguoiKy',
+				component: 'DanhMuc/NguoiKy',
 				icon: 'UserOutlined',
 				access: 'accessFilter',
 				maChucNang: 'van-bang-chung-chi|quan-tri-vien',
@@ -94,13 +94,13 @@
 			{
 				name: 'BieuMauPhuLuc',
 				path: './bieu-mau',
-				component: 'VanBang/BieuMauPhuLuc',
+				component: 'DanhMuc/BieuMauPhuLuc',
 				icon: 'FormOutlined',
 			},
 			{
 				name: 'MucDichTraCuuPhuLuc',
 				path: './muc-dich-tra-cuu-phu-luc',
-				component: 'VanBang/MucDichTraCuuPhuLuc',
+				component: 'DanhMuc/MucDichTraCuuPhuLuc',
 				icon: 'SearchOutlined',
 			},
 		],

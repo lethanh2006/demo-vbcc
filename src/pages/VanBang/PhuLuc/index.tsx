@@ -340,7 +340,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 							value={recQuyetDinh?._id}
 							onChange={(val) => setQuyetDinh(danhsachQuyetDinh.find((item) => item._id === val))}
 							isSetRecord
-							allowClear
 						/>
 					</FilterHocKy>
 				) : null}

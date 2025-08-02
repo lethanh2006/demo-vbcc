@@ -83,13 +83,10 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 							<UploadFile hasPreviewFile previewFileProps={{ isFileId: true }} />
 						</Form.Item>
 					</Col>
-
-					<Col span={24}>
-						<Form.Item label='Cấu hình biểu mẫu' name='elements'>
-							<ElementBieuMauFormItem />
-						</Form.Item>
-					</Col>
 				</Row>
+				<Form.Item label='Cấu hình biểu mẫu' name='elements'>
+					<ElementBieuMauFormItem />
+				</Form.Item>
 
 				<div className='form-footer' style={{ marginTop: 24 }}>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>

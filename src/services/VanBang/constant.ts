@@ -103,3 +103,16 @@ export const colorTrangThaiSoVanBang: Record<ETrangThaiSoVanBang, ETagColor> = {
 	[ETrangThaiSoVanBang.DA_DUYET]: ETagColor.GREEN,
 	[ETrangThaiSoVanBang.TU_CHOI]: ETagColor.RED,
 };
+
+export enum ETrangThaiMucDichTraCuuPhuLuc {
+	CHO_XU_LY = 'Chờ xử lý',
+	KHONG_DUYET = 'Không duyệt',
+	DUYET = 'Duyệt',
+	YCCS = 'Yêu cầu chỉnh sửa lại',
+}
+
+export enum ETrangThaiDotCapBangTotNghiep {
+	CHO_DUYET = 'Chờ duyệt',
+	DA_DUYET = 'Đã duyệt',
+	TU_CHOI = 'Từ chối',
+}

@@ -1,3 +1,4 @@
+import type { MucDichTraCuuPhuLuc } from '@/services/VanBang/MucDichTraCuuPhuLuc/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, InputNumber, Row } from 'antd';
@@ -15,7 +16,7 @@ const FormMucDichTraCuuPhuLuc = (props: { title?: string; [key: string]: any }) 
 		else if (record?._id) form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: MucDichTraCuuPhuLuc.IRecord) => {
 		if (edit) {
 			putModel(record?._id ?? '', values)
 				.then()
@@ -31,6 +32,11 @@ const FormMucDichTraCuuPhuLuc = (props: { title?: string; [key: string]: any }) 
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} mục đích tra cứu phụ lục`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
+					<Col span={24}>
+						<Form.Item name='ma' label='Mã mục đích' rules={[...rules.required]}>
+							<Input placeholder='Nhập mã mục đích' />
+						</Form.Item>
+					</Col>
 					<Col span={24}>
 						<Form.Item
 							name='ten'
