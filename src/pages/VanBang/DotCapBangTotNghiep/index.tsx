@@ -1,11 +1,12 @@
-import { Popconfirm } from 'antd';
 import TableBase from '@/components/Table';
-import type { IColumn } from '@/components/Table/typing';
-import { useModel } from 'umi';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import type { IColumn } from '@/components/Table/typing';
+import type { DotCapBangTotNghiep } from '@/services/VanBang/DotCapBangTotNghiep/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import Modal from './components/Modal';
+import { Popconfirm } from 'antd';
 import moment from 'moment';
+import { useModel } from 'umi';
+import Modal from './components/Modal';
 
 const DotCapBangTotNghiepPage = () => {
 	const { page, limit, handleEdit, deleteModel } = useModel('vbcc.dotcapbangtotnghiep');

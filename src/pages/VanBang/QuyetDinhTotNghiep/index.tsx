@@ -9,11 +9,10 @@ import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, message, Popconfirm, Tooltip } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalQuyetDinhTotNghiep from './components/Modal';
-import { get } from 'lodash';
 import ModalChonQuyetDinh from '../DotCapBangTotNghiep/components/ModalChonQuyetDinh';
+import ModalQuyetDinhTotNghiep from './components/Modal';
 
 type TProp = {
 	dotCapBangId: string;
@@ -34,10 +33,6 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 			getModel({ maHocKy: recHocKy?.ma });
 		}
 	};
-
-	useEffect(() => {
-		getData();
-	}, [dotCapBangId, recHocKy?.ma, page, limit]); // Gọi getData khi các dependencies thay đổi
 
 	const handleApply = () => {
 		setVisibleModalChonQuyetDinh(true);
@@ -148,7 +143,7 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 				params={{ maHocKy: recHocKy?.ma }}
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, recHocKy?.ma]}
+				dependencies={[page, limit, recHocKy?.ma, dotCapBangId]}
 				modelName='vbcc.quyetdinhtotnghiep'
 				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
 				widthDrawer={1200}

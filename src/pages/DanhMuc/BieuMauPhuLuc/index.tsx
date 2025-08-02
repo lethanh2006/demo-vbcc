@@ -13,7 +13,7 @@ const BieuMauPhuLucPage = () => {
 
 	const columns: IColumn<BieuMauPhuLuc.IRecord>[] = [
 		{
-			title: 'Mã',
+			title: 'Mã biểu mẫu',
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',

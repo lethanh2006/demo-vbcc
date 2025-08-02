@@ -1,29 +1,44 @@
-import { Popconfirm } from 'antd';
 import TableBase from '@/components/Table';
-import type { IColumn } from '@/components/Table/typing';
-import { useModel } from 'umi';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import type { IColumn } from '@/components/Table/typing';
+import type { MucDichTraCuuPhuLuc } from '@/services/VanBang/MucDichTraCuuPhuLuc/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Popconfirm, Switch } from 'antd';
+import { useModel } from 'umi';
 import FormMucDichTraCuuPhuLuc from './components/Form';
 
 const MucDichTraCuuPhuLucPage = () => {
-	const { page, limit, handleEdit, deleteModel } = useModel('vbcc.mucdichtracuuphuluc');
+	const { page, limit, handleEdit, deleteModel, putModel } = useModel('vbcc.mucdichtracuuphuluc');
 
 	const columns: IColumn<MucDichTraCuuPhuLuc.IRecord>[] = [
 		{
-			title: 'Mục đích Tra cứu',
-			dataIndex: 'ten',
-			width: 150,
-			sorter: true,
-			filterType: 'string',
-		},
-		{
-			title: 'Thứ tự hiển thị',
+			title: 'Hiển thị',
 			dataIndex: 'soThuTu',
 			width: 60,
 			sorter: true,
 			defaultSortOrder: 'ascend',
 			filterType: 'number',
+		},
+		{
+			title: 'Mã mục đích',
+			dataIndex: 'ma',
+			width: 120,
+			filterType: 'string',
+		},
+		{
+			title: 'Mục đích Tra cứu',
+			dataIndex: 'ten',
+			width: 150,
+			filterType: 'string',
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'active',
+			align: 'center',
+			width: 80,
+			render: (val, rec) => (
+				<Switch size='small' checked={val} onChange={(checked) => putModel(rec._id, { ...rec, active: checked })} />
+			),
 		},
 		{
 			title: 'Thao tác',
@@ -46,15 +61,13 @@ const MucDichTraCuuPhuLucPage = () => {
 	];
 
 	return (
-		<div>
-			<TableBase
-				columns={columns}
-				modelName={'vbcc.mucdichtracuuphuluc'}
-				title='Mục đích tra cứu phụ lục'
-				Form={FormMucDichTraCuuPhuLuc}
-				dependencies={[page, limit]}
-			/>
-		</div>
+		<TableBase
+			columns={columns}
+			modelName={'vbcc.mucdichtracuuphuluc'}
+			title='Mục đích tra cứu phụ lục'
+			Form={FormMucDichTraCuuPhuLuc}
+			dependencies={[page, limit]}
+		/>
 	);
 };
 

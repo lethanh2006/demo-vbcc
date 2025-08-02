@@ -11,6 +11,7 @@ const ipNotif = ipRoot + 'notification'; // ip dev
 const ipSlink = ipRoot + 'slink'; // ip dev
 const ipCore = ipRoot + 'core'; // ip dev
 const ipDaoTao = ipRoot + 'qldt'; // ip dev
+const ipNhanSu = ipRoot + 'tcns'; // ip dev
 
 const ipIPFS = 'https://ipfs.aisenote.com/api/v0/add';
 const preIPFS = 'https://ipfs.aisenote.com/ipfs/';
@@ -38,6 +39,7 @@ export {
 	ipNotif,
 	ipSlink,
 	ipDaoTao,
+	ipNhanSu,
 	ipIPFS,
 	preIPFS,
 	keycloakAuthEndpoint,

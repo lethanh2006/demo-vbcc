@@ -3,13 +3,13 @@ import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import {
 	ELoaiDuLieuBieuMau,
 	allowElementBieuMau,
-	defaultTranscriptColumns,
 	defaultElementBieuMau,
+	defaultTranscriptColumns,
 	loaiDuLieuBieuMau,
 } from '@/services/VanBang/constant';
 import rules from '@/utils/rules';
 import { DeleteOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
-import { AutoComplete, Col, Form, Row, Select, Input } from 'antd';
+import { AutoComplete, Col, Form, Row, Select } from 'antd';
 import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable, type DropResult } from 'react-beautiful-dnd';
 import CauHinhDinhDangBang from './CauHinhBang';
