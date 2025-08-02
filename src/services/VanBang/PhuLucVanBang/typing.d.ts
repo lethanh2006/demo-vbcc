@@ -78,8 +78,6 @@ declare module PhuLucVanBang {
 	export interface IChiTietTraCuu {
 		soQuyetDinh: string;
 		tongTraCuu: number;
-		mucDich: {
-			[mucDich: string]: number;
-		};
+		mucDich: Record<string, number>;
 	}
 }

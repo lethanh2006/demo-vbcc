@@ -2448,6 +2448,146 @@
     classnames "^2.3.2"
     rc-util "^5.24.4"
 
+"@react-pdf-viewer/attachment@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/attachment/-/attachment-2.4.2.tgz#2b87a24d8900682439fa141ce0c3462ffd4e3b88"
+  integrity sha512-8btYBT0SscSrP4eVs0Poks8VBPHTfyHMG+NQQSmuAtqQoBJBpiBIHixaLyJyT+lu3CYkHc/8Pv0js2h0TLWbug==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/bookmark@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/bookmark/-/bookmark-2.4.2.tgz#769474e715fd0808043b716906745b30ee402ba9"
+  integrity sha512-0aJ1RuAN/sG9Q5GglhIShTBCWpDFn4neMyL0Zf6TGdDnA3eTETzq8CiwcIQS4vRrLaem3A+gMp6RzGn+ZGlt/g==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/core@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/core/-/core-2.4.2.tgz#cd69d1bc23fa25b4029c65c671834e525e55d1f0"
+  integrity sha512-UZWyyvGAtmHBWYPeuTO7pEgnPKJAuOwXRIhEN912y1fuzf5aIdT3uLgmokLFEkbLnsB1ytdzpnP26ywuN5DnTA==
+
+"@react-pdf-viewer/default-layout@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/default-layout/-/default-layout-2.4.2.tgz#bf023d38f05a3e5b0c311b7514be857eb9bbdd59"
+  integrity sha512-Bh06E6cDGQatbs8OjP3zNfKWuIEF3MuUQjbcuMRguGEsQuc/XCTRYTYWQCWGTrb/COuo706n7d+VygL/Xw1+iQ==
+  dependencies:
+    "@react-pdf-viewer/attachment" "2.4.2"
+    "@react-pdf-viewer/bookmark" "2.4.2"
+    "@react-pdf-viewer/core" "2.4.2"
+    "@react-pdf-viewer/thumbnail" "2.4.2"
+    "@react-pdf-viewer/toolbar" "2.4.2"
+
+"@react-pdf-viewer/drop@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/drop/-/drop-2.4.2.tgz#46b16a92abc9effdb95e75157bd5dfa589b9c732"
+  integrity sha512-Xhbaeo3c0fVSM/H6oKVTsRIZPtm4XBDTiQhQbROahekL3O5XID8bX5AtgEQpp56Vx3WI+y/4YyNKa6lbspvyqA==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/full-screen@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/full-screen/-/full-screen-2.4.2.tgz#d5a73640e1a1ca15b183b5d67d74ca836ab315cd"
+  integrity sha512-CKsiFn/QoFawyj0aAUOBk92DNsbE17VZo57u5PI1jgacVH8QrJuGMPrbX6J5JC/TdJfaOotSduGpJCFcOowoYA==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/get-file@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/get-file/-/get-file-2.4.2.tgz#1095b7feadc983f7a2f0875e562b85e35214fecb"
+  integrity sha512-cUD2MCZdVmIEDWGQ6uFjIgZka91PR/dEvOmzOVmW7QQaNNGSNKaPYZtoVJTl5jfKKHvi4Z+D4FNJgvGOsgXwJw==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/open@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/open/-/open-2.4.2.tgz#d9ccaa8b24ff477dd6d435f0f4cc6fdd894a3023"
+  integrity sha512-3qf1poQhy7oQHQZyEyxMsd+JvFkmS+ff53+1EU518fRAEdjpn+SYWnEXrxQIrhkotMJ7FQG8ovUQ7ZgfYtE5PQ==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/page-navigation@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/page-navigation/-/page-navigation-2.4.2.tgz#47e95c53686abe09eb0c5ed6d4b4c7cce69374ae"
+  integrity sha512-jFvHHdks/RJvlq3bAAQiHuXckn5yhA2Q/OCeXby3xfBR5U67a25yfoiGfq99y8GIo+MAeHjV+KZ4+NzKnoCmYw==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/print@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/print/-/print-2.4.2.tgz#944d9e6fc05beacf02c26b9800d65d11e12f1a40"
+  integrity sha512-lHLdU4wQ8qtfh4MwVB5ozODS7c873jbQETfmgrXNauaS0LXmK5N6qjpe8fZwq2+Nqijd4PB4Of1hZpldPB5yQQ==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/properties@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/properties/-/properties-2.4.2.tgz#d4e70bcd8885e174819af9653d67901d250df144"
+  integrity sha512-6kF6ucsLu+HZxQRfzEC46jaS9tAs4iGF/ftPoZ45GgY4jFG0ezKx334wcKmYxhIxemIwd798JdGlLYpxp5/ivg==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/rotate@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/rotate/-/rotate-2.4.2.tgz#6919492b125d62396f9880fa5800c1a5587048a4"
+  integrity sha512-tl3jFX1sycs3P7vEJdGriXSJ0DQO/aEjH5UkjqdXhyi5Xf3blRe0JZs/YgAS7Vx4iMfGQgXRgclZdfzyd3Mh8w==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/scroll-mode@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/scroll-mode/-/scroll-mode-2.4.2.tgz#2c842eb261b726beb78658400c2320ed626f2ed9"
+  integrity sha512-BXQlGjB3RSMdJtV0q3zNkma6n0XW8+PH4dYdkSZKtyaiNsni9TmkEyX4uopH83IFds14yaglBRetNtShZDltGw==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/search@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/search/-/search-2.4.2.tgz#bdcb2d6d4dac95375e5b337eee41a6b91b264ab2"
+  integrity sha512-vVZxUikZq/b7Nto4TJr1ZlIEkt7zXc4w88GR1WPK9TMFT4TbSHhkTEElmFK5Ny/KINCFbGoHPFD6cmwjXavKNA==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/selection-mode@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/selection-mode/-/selection-mode-2.4.2.tgz#7e4e001004a08b3ff2d1c8339ed4433ea1046c26"
+  integrity sha512-gTK4dmELCCieddoMCgI1fKcwHG3zFp8UwqB2WqO5ynz7zPd3wyjbfWIR6m3HLG3Y2BVxA6WJCGa00nt3DrChvQ==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/thumbnail@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/thumbnail/-/thumbnail-2.4.2.tgz#f3cb602cfec2f5dc19ce7da166b44925e2cd81ee"
+  integrity sha512-kDN+Maw1Vt04OWL4FGkJEXXKaDLza+xoewV1e9yMkg94NaxPJP1vO8LnvlhBc0T1NJXZUCOgvrXb4akwguOWIA==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
+"@react-pdf-viewer/toolbar@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/toolbar/-/toolbar-2.4.2.tgz#fb40226920262b44562c13cc6216963e9b1f2791"
+  integrity sha512-T33iu6CTvkvOyoCBx76Gy1el2/flliTk21u1trZ5YTKtRnZARK6F7/ZwBF0ETVQ+Suv7RBD6pGl5XX0ajlXHOg==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+    "@react-pdf-viewer/drop" "2.4.2"
+    "@react-pdf-viewer/full-screen" "2.4.2"
+    "@react-pdf-viewer/get-file" "2.4.2"
+    "@react-pdf-viewer/open" "2.4.2"
+    "@react-pdf-viewer/page-navigation" "2.4.2"
+    "@react-pdf-viewer/print" "2.4.2"
+    "@react-pdf-viewer/properties" "2.4.2"
+    "@react-pdf-viewer/rotate" "2.4.2"
+    "@react-pdf-viewer/scroll-mode" "2.4.2"
+    "@react-pdf-viewer/search" "2.4.2"
+    "@react-pdf-viewer/selection-mode" "2.4.2"
+    "@react-pdf-viewer/zoom" "2.4.2"
+
+"@react-pdf-viewer/zoom@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-pdf-viewer/zoom/-/zoom-2.4.2.tgz#1a1d6e8d24762ef826abe36c52d046aeaea5c57a"
+  integrity sha512-Ru4lQ86jUnYvKAPtfc+ggqtnezztcx2zZ9YfkVVnKLOWKL4W4Fd4YfxU7eU5jpyM9JLPaHR6Rr9jZJdFawMuAw==
+  dependencies:
+    "@react-pdf-viewer/core" "2.4.2"
+
 "@restart/hooks@^0.3.25":
   version "0.3.27"
   resolved "https://registry.yarnpkg.com/@restart/hooks/-/hooks-0.3.27.tgz#91f356d66d4699a8cd8b3d008402708b6a9dc505"
@@ -13152,6 +13292,11 @@ pdfjs-dist@2.12.313:
   version "2.12.313"
   resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-2.12.313.tgz#62f2273737bb956267ae2e02cdfaddcb1099819c"
   integrity sha512-1x6iXO4Qnv6Eb+YFdN5JdUzt4pAkxSp3aLAYPX93eQCyg/m7QFzXVWJHJVtoW48CI8HCXju4dSkhQZwoheL5mA==
+
+pdfjs-dist@2.6.347:
+  version "2.6.347"
+  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-2.6.347.tgz#f257ed66e83be900cd0fd28524a2187fb9e25cd5"
+  integrity sha512-QC+h7hG2su9v/nU1wEI3SnpPIrqJODL7GTDFvR74ANKGq1AFJW16PH8VWnhpiTi9YcLSFV9xLeWSgq+ckHLdVQ==
 
 pdfjs-dist@^2.10.377:
   version "2.16.105"

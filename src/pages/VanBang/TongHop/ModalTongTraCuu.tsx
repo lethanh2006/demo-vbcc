@@ -1,48 +1,45 @@
-import { Modal, Table, Button } from 'antd';
-import { useEffect, useState } from 'react';
-import { genExcelFile } from '@/utils/utils';
+import TableStaticData from '@/components/Table/TableStaticData';
+import type { IColumn } from '@/components/Table/typing';
 import { getChiTietLuotTraCuu } from '@/services/VanBang/PhuLucVanBang';
-import { useModel } from 'umi';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import { genExcelFile } from '@/utils/utils';
+import { Button, Descriptions, Modal } from 'antd';
+import { useEffect, useState } from 'react';
+import { useModel } from 'umi';
 
-interface ModalTraCuuProps {
-	maHocKy: string | undefined;
-	idSoVanBang: string | undefined;
-	ten: SoVanBang.IRecord | undefined;
-}
-
-const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ maHocKy, idSoVanBang, ten }) => {
+const ModalTongLuotTraCuu = () => {
+	const { record: recHocKy } = useModel('daotao.hocky');
+	const { record: recSoVanBang } = useModel('vbcc.sovanbang');
 	const { visibleForm, setVisibleForm } = useModel('vbcc.phulucvanbang');
 	const [data, setData] = useState<PhuLucVanBang.IChiTietTraCuu[]>([]);
 	const [loading, setLoading] = useState(false);
+	const allMucDichs = Array.from(new Set(data.flatMap((item) => Object.keys(item.mucDich))));
 
 	useEffect(() => {
-		if (visibleForm && maHocKy && idSoVanBang) {
+		if (visibleForm && recHocKy?.ma && recSoVanBang?._id) {
 			setLoading(true);
-			getChiTietLuotTraCuu(maHocKy, idSoVanBang)
+			getChiTietLuotTraCuu(recHocKy?.ma, recSoVanBang?._id)
 				.then((res) => setData(res?.data || []))
 				.finally(() => setLoading(false));
 		}
-	}, [visibleForm, maHocKy, idSoVanBang]);
+	}, [visibleForm]);
 
-	const allMucDichs = Array.from(new Set(data.flatMap((item) => Object.keys(item.mucDich))));
-
-	const columns = [
+	const columns: IColumn<PhuLucVanBang.IChiTietTraCuu>[] = [
 		{
 			title: 'Số quyết định',
 			dataIndex: 'soQuyetDinh',
-			key: 'soQuyetDinh',
+			width: 150,
 		},
 		{
 			title: 'Tổng tra cứu',
 			dataIndex: 'tongTraCuu',
-			key: 'tongTraCuu',
+			align: 'center',
+			width: 120,
 		},
 		...allMucDichs.map((mucDich) => ({
 			title: mucDich,
-			dataIndex: ['mucDich', mucDich],
-			key: mucDich,
-			render: (_: any, record: PhuLucVanBang.IChiTietTraCuu) => record.mucDich[mucDich] || 0,
+			dataIndex: ['mucDich', mucDich] as any,
+			width: 120,
 		})),
 	];
 
@@ -53,7 +50,7 @@ const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ maHocKy, idSoVanBang,
 			item.tongTraCuu,
 			...allMucDichs.map((muc) => item.mucDich[muc] || 0),
 		]);
-		genExcelFile([header, ...rows], `TraCuu_${maHocKy}_${idSoVanBang}.xlsx`, 'ChiTietTraCuu');
+		genExcelFile([header, ...rows], `TraCuu_${recHocKy?.ma}_${recSoVanBang?.ten}.xlsx`, 'ChiTietTraCuu');
 	};
 
 	return (
@@ -71,16 +68,18 @@ const ModalTongLuotTraCuu: React.FC<ModalTraCuuProps> = ({ maHocKy, idSoVanBang,
 				</Button>,
 			]}
 		>
-			<div style={{ marginBottom: 16, fontWeight: 600, fontSize: 16 }}>
-				Sổ văn bằng: {ten?.ten || <span style={{ fontWeight: 400, color: '#888' }}>(Chưa có tên)</span>}
-			</div>
-			<Table<PhuLucVanBang.IChiTietTraCuu>
-				rowKey='soQuyetDinh'
-				dataSource={data}
-				columns={columns}
-				loading={loading}
-				pagination={false}
-			/>
+			<Descriptions
+				colon={false}
+				layout='vertical'
+				className='highlight'
+				style={{ marginBottom: 12 }}
+				column={{ xs: 1, sm: 1, md: 2 }}
+			>
+				<Descriptions.Item label='Học kỳ'>{recHocKy?.ten ?? '--'}</Descriptions.Item>
+				<Descriptions.Item label='Sổ văn bằng'>{recSoVanBang?.ten ?? '--'}</Descriptions.Item>
+			</Descriptions>
+
+			<TableStaticData columns={columns} data={data} loading={loading} addStt hasTotal />
 		</Modal>
 	);
 };

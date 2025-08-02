@@ -30,7 +30,7 @@ const ChiTietTraCuuVanBang = ({
 
 	return (
 		<>
-			<Header subTitle={APP_CONFIG_TITLE_VBCC} />
+			<Header subTitle='Tra cứu văn bằng chứng chỉ, chứng nhận' />
 			<div style={{ maxWidth: 1200, margin: 'auto', paddingTop: 30, paddingBottom: 30 }}>
 				<div style={{ textAlign: 'center', fontSize: 22, marginBottom: 36 }}>
 					<b>Chi tiết thông tin văn bằng</b>
