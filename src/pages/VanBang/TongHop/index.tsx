@@ -8,22 +8,25 @@ import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
 import { useModel } from 'umi';
 import '../../TrangChu/components/style.less';
-import CardQuyetDinhTotNghiep from './CardQuyetDinhTotNghiep';
 import SelectSoVanBang from '../SoVanBang/components/Select';
+import CardQuyetDinhTotNghiep from './CardQuyetDinhTotNghiep';
 import ModalTongLuotTraCuu from './ModalTongTraCuu';
 
 const TongHopVanBang = () => {
 	const [data, setData] = useState<PhuLucVanBang.TTongHop>();
 	const { record: recHocKy } = useModel('daotao.hocky');
-	const { record: recSoVanBang } = useModel('vbcc.sovanbang');
-	const { visibleForm, setVisibleForm } = useModel('vbcc.phulucvanbang');
+	const { record: recSoVanBang, danhSach: danhSachSo, setRecord: setSoVanBang } = useModel('vbcc.sovanbang');
+	const { setVisibleForm } = useModel('vbcc.phulucvanbang');
 	const [loading, setLoading] = useState<boolean>(false);
 	const showAllVanBang = ShowAllVanBang();
 
 	const fetchData = async () => {
 		setLoading(true);
 		await getThongKeTong(recHocKy?.ma ?? '', recSoVanBang?._id ?? '', !showAllVanBang)
-			.then((response) => setData(response.data?.data))
+			.then((response) => {
+				setData(response.data?.data);
+			})
+			.catch(console.log)
 			.finally(() => setLoading(false));
 	};
 
@@ -34,12 +37,17 @@ const TongHopVanBang = () => {
 	return (
 		<Spin spinning={loading}>
 			<Row gutter={[16, 16]}>
-				<Col xs={24} sm={6} md={6}>
-					<FilterHocKy style={{ width: '100%' }} allowClear />
+				<Col span={24}>
+					<FilterHocKy style={{ width: '100%' }} allowClear>
+						<SelectSoVanBang
+							style={{ width: 250 }}
+							allowClear
+							value={recSoVanBang?._id}
+							onChange={(val) => setSoVanBang(danhSachSo.find((i) => i._id === val))}
+						/>
+					</FilterHocKy>
 				</Col>
-				<Col xs={24} sm={18} md={18}>
-					<SelectSoVanBang style={{ width: 280 }} allowClear value={recSoVanBang?._id} />
-				</Col>
+
 				<Col span={24} md={6} className='dashboard-card-with-icon'>
 					<Card>
 						<AuditOutlined style={{ color: '#bf20df' }} />
@@ -84,7 +92,8 @@ const TongHopVanBang = () => {
 					<CardQuyetDinhTotNghiep chartData={data?.soPhuLucTheoDotTN ?? []} />
 				</Col>
 			</Row>
-			<ModalTongLuotTraCuu maHocKy={recHocKy?.ma} idSoVanBang={recSoVanBang?._id} ten={recSoVanBang} />
+
+			<ModalTongLuotTraCuu />
 		</Spin>
 	);
 };

@@ -43,16 +43,10 @@
 		icon: 'FileDoneOutlined',
 	},
 	{
-		name: 'XacMinhVanBang',
-		path: './xac-minh-van-bang',
-		component: 'VanBang/XacMinhVanBang',
-		icon: 'InfoCircleOutlined',
-	},
-	{
-		name: 'MucDichTraCuuPhuLuc',
-		path: './muc-dich-tra-cuu-phu-luc',
-		component: 'VanBang/MucDichTraCuuPhuLuc',
-		icon: 'SearchOutlined',
+		name: 'PhuLucVanBang',
+		path: './phu-luc',
+		component: 'VanBang/PhuLuc',
+		icon: 'ProfileOutlined',
 	},
 	{
 		name: 'DotCapBangTotNghiep',
@@ -61,25 +55,12 @@
 		icon: 'CalendarOutlined',
 	},
 	{
-		name: 'PhuLucVanBang',
-		path: './phu-luc',
-		component: 'VanBang/PhuLuc',
-		icon: 'ProfileOutlined',
+		name: 'XacMinhVanBang',
+		path: './xac-minh-van-bang',
+		component: 'VanBang/XacMinhVanBang',
+		icon: 'InfoCircleOutlined',
 	},
-	{
-		name: 'BieuMauPhuLuc',
-		path: './bieu-mau',
-		component: 'VanBang/BieuMauPhuLuc',
-		icon: 'FormOutlined',
-	},
-	{
-		name: 'NguoiKy',
-		path: './nguoi-ky',
-		component: 'VanBang/NguoiKy',
-		icon: 'UserOutlined',
-		access: 'accessFilter',
-		maChucNang: 'van-bang-chung-chi|quan-tri-vien',
-	},
+
 	{
 		name: 'TraCuuVanBangPublic',
 		path: '/tra-cuu-van-bang',
@@ -97,18 +78,33 @@
 	},
 
 	// DANH MUC HE THONG
-	// {
-	// 	name: 'DanhMuc',
-	// 	path: '/danh-muc',
-	// 	icon: 'copy',
-	// 	routes: [
-	// 		{
-	// 			name: 'ChucVu',
-	// 			path: 'chuc-vu',
-	// 			component: './DanhMuc/ChucVu',
-	// 		},
-	// 	],
-	// },
+	{
+		name: 'DanhMuc',
+		path: '/danh-muc',
+		icon: 'copy',
+		routes: [
+			{
+				name: 'NguoiKy',
+				path: './nguoi-ky',
+				component: 'VanBang/NguoiKy',
+				icon: 'UserOutlined',
+				access: 'accessFilter',
+				maChucNang: 'van-bang-chung-chi|quan-tri-vien',
+			},
+			{
+				name: 'BieuMauPhuLuc',
+				path: './bieu-mau',
+				component: 'VanBang/BieuMauPhuLuc',
+				icon: 'FormOutlined',
+			},
+			{
+				name: 'MucDichTraCuuPhuLuc',
+				path: './muc-dich-tra-cuu-phu-luc',
+				component: 'VanBang/MucDichTraCuuPhuLuc',
+				icon: 'SearchOutlined',
+			},
+		],
+	},
 
 	{
 		path: '/notification',

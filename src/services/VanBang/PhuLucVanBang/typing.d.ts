@@ -14,6 +14,7 @@ declare module PhuLucVanBang {
 		hoTen: string;
 		ngaySinh: string;
 		maSinhVien: string;
+		maBieuMau?: string;
 		templateData?: BieuMauPhuLuc.TElement[];
 
 		// historyId?: string;
@@ -77,8 +78,6 @@ declare module PhuLucVanBang {
 	export interface IChiTietTraCuu {
 		soQuyetDinh: string;
 		tongTraCuu: number;
-		mucDich: {
-			[mucDich: string]: number;
-		};
+		mucDich: Record<string, number>;
 	}
 }
