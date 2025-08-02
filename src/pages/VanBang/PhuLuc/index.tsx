@@ -9,6 +9,7 @@ import {
 	CheckCircleOutlined,
 	CloudUploadOutlined,
 	DeleteOutlined,
+	DownloadOutlined,
 	EditOutlined,
 	FilePdfOutlined,
 	FormOutlined,
@@ -17,7 +18,7 @@ import {
 	SettingOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Popconfirm, Space, Tag } from 'antd';
+import { message, Popconfirm, Space, Tag } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -31,6 +32,8 @@ import ModalSign from './components/ModalSign';
 import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
+import { getImportPhuLucVbTemplate } from '@/services/VanBang/PhuLucVanBang';
+import fileDownload from 'js-file-download';
 
 const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	const intl = useIntl();
@@ -62,6 +65,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+	const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
 	const settingVbcc = settings[ESettingKey.INFO_TENANT_VBCC];
 
 	const getData = () => getModel({ idQuyetDinh: recQuyetDinh?._id }).then(() => setSelectedIds([]));
@@ -90,6 +94,22 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	const handlePrintOne = (rec: PhuLucVanBang.IRecord) => {
 		setDataToSignOrPush([rec]);
 		setVisiblePrint(true);
+	};
+
+	const onDownloadTemplate = async () => {
+		if (!recQuyetDinh?._id) {
+			return;
+		}
+		setLoadingDownload(true);
+		try {
+			const res = await getImportPhuLucVbTemplate(recQuyetDinh._id);
+			fileDownload(res.data, `Mẫu nhập Phụ lục văn bằng QĐ ${recQuyetDinh.soQuyetDinh}.xlsx`);
+		} catch (error) {
+			console.error('Lỗi khi tải file mẫu:', error);
+			message.error('Không thể tải file mẫu, vui lòng thử lại!');
+		} finally {
+			setLoadingDownload(false);
+		}
 	};
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
@@ -218,6 +238,15 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	];
 
 	const otherButtons = [
+		<ButtonExtend
+			icon={<DownloadOutlined />}
+			onClick={onDownloadTemplate}
+			key='download-template'
+			disabled={!recQuyetDinh?._id}
+			loading={loadingDownload}
+		>
+			Tải file mẫu
+		</ButtonExtend>,
 		<ButtonExtend
 			icon={<ImportOutlined />}
 			onClick={() => setVisibleImport(true)}
