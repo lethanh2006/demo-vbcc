@@ -106,8 +106,8 @@ const ChiTietTraCuuVanBang = ({
 								const columns =
 									tableElement.cot?.map((cot) => ({
 										title: cot.headerName,
-										dataIndex: cot.ma,
-										key: cot.ma,
+										dataIndex: cot.headerName,
+										key: cot.headerName,
 									})) ?? [];
 
 								const dataSource = Array.isArray(tableElement.value) ? tableElement.value : [];
@@ -120,7 +120,7 @@ const ChiTietTraCuuVanBang = ({
 											dataSource={dataSource}
 											bordered
 											pagination={false}
-											rowKey={(r, i) => `${r.ma}-${i}`}
+											rowKey={(r, i) => `${r.headerName}-${i}`}
 										/>
 									</div>
 								);

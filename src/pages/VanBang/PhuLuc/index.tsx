@@ -1,8 +1,10 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
+import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
 import { ESettingKey, ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
+import { getImportPhuLucVbTemplate } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import {
 	BoldOutlined,
@@ -19,6 +21,7 @@ import {
 	WarningOutlined,
 } from '@ant-design/icons';
 import { message, Popconfirm, Space, Tag } from 'antd';
+import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -31,9 +34,7 @@ import ModalPushBlockchain from './components/ModalPushBlockchain';
 import ModalSign from './components/ModalSign';
 import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
-import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
-import { getImportPhuLucVbTemplate } from '@/services/VanBang/PhuLucVanBang';
-import fileDownload from 'js-file-download';
+import ViewPhuLucVanBang from './components/ViewRender';
 
 const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	const intl = useIntl();
@@ -53,6 +54,8 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 		setVisiblePrint,
 		setRecord,
 		total,
+		isView,
+		handleView,
 	} = useModel('vbcc.phulucvanbang');
 	const {
 		record: recQuyetDinh,
@@ -112,24 +115,32 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 		}
 	};
 
+	const onCell = (rec: PhuLucVanBang.IRecord) => ({
+		onClick: () => handleView(rec),
+		style: { cursor: 'pointer' },
+	});
+
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
 			title: 'Số vào sổ',
 			dataIndex: 'soVaoSoBang',
 			filterType: 'string',
 			width: 120,
+			onCell,
 		},
 		{
 			title: 'Số hiệu VB',
 			dataIndex: 'soHieuVanBang',
 			filterType: 'string',
 			width: 120,
+			onCell,
 		},
 		{
 			title: 'Họ tên',
 			dataIndex: 'hoTen',
 			width: 160,
 			filterType: 'string',
+			onCell,
 		},
 		{
 			title: 'Ngày sinh',
@@ -139,6 +150,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 			render: (val) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
+			onCell,
 		},
 		{
 			title: 'Mã SV',
@@ -147,6 +159,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 			width: 120,
 			filterType: 'string',
 			sortable: true,
+			onCell,
 		},
 		{
 			title: 'Quyết định',
@@ -159,6 +172,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 				</>
 			),
 			hide: isQuyetDinh || !!recQuyetDinh?._id,
+			onCell,
 		},
 		{
 			title: 'Tập tin',
@@ -188,6 +202,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 			width: 80,
 			render: (val) => <Tag color={!!val ? ETagColor.GREEN : ETagColor.RED}>{!!val ? 'Đã ký' : 'Chưa ký'}</Tag>,
 			hide: !settingVbcc?.require_signature,
+			onCell,
 		},
 		{
 			title: 'Blockchain',
@@ -209,6 +224,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 				</div>
 			),
 			hide: !settingVbcc?.blockChain,
+			onCell,
 		},
 		{
 			title: 'Thao tác',
@@ -307,8 +323,8 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 				dependencies={[page, limit, recQuyetDinh?._id]}
 				modelName='vbcc.phulucvanbang'
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
-				widthDrawer={800}
-				Form={Form}
+				widthDrawer={isView ? 1000 : 800}
+				Form={isView ? ViewPhuLucVanBang : Form}
 				formProps={{ getData, isQuyetDinh }}
 				buttons={{ create: !!recQuyetDinh?._id }}
 				rowSelection
@@ -340,6 +356,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 							value={recQuyetDinh?._id}
 							onChange={(val) => setQuyetDinh(danhsachQuyetDinh.find((item) => item._id === val))}
 							isSetRecord
+							allowClear
 						/>
 					</FilterHocKy>
 				) : null}

@@ -18,17 +18,25 @@ export const loaiDuLieuBieuMau: Record<ELoaiDuLieuBieuMau, string> = {
 };
 
 // bảng điểm mặc định
-export const defaultTranscriptColumns: { ma: string; headerName: string; type: ELoaiDuLieuBieuMau }[] = [
-	{ ma: 'ma_mon', headerName: 'Mã môn học', type: ELoaiDuLieuBieuMau.Text },
-	{ ma: 'ten_mon', headerName: 'Tên môn học', type: ELoaiDuLieuBieuMau.Text },
-	{ ma: 'nhom', headerName: 'Nhóm môn học', type: ELoaiDuLieuBieuMau.Text },
-	{ ma: 'so_tin_chi', headerName: 'Số tín chỉ', type: ELoaiDuLieuBieuMau.Number },
-	{ ma: 'hoc_ky', headerName: 'Học kỳ', type: ELoaiDuLieuBieuMau.Text },
-	{ ma: 'diem_thi', headerName: 'Điểm thi', type: ELoaiDuLieuBieuMau.Number },
-	{ ma: 'diem_he_10', headerName: 'Điểm hệ 10', type: ELoaiDuLieuBieuMau.Number },
-	{ ma: 'diem_he_4', headerName: 'Điểm hệ 4', type: ELoaiDuLieuBieuMau.Number },
-	{ ma: 'diem_chu', headerName: 'Điểm chữ', type: ELoaiDuLieuBieuMau.Text },
-	{ ma: 'ghi_chu', headerName: 'Ghi chú', type: ELoaiDuLieuBieuMau.Text },
+export const defaultTranscriptColumns: { headerName: string; type: ELoaiDuLieuBieuMau }[] = [
+	{ headerName: 'Mã môn học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Tên môn học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Nhóm môn học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Số tín chỉ', type: ELoaiDuLieuBieuMau.Number },
+	{ headerName: 'Học kỳ', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Điểm thi', type: ELoaiDuLieuBieuMau.Number },
+	{ headerName: 'Điểm hệ 10', type: ELoaiDuLieuBieuMau.Number },
+	{ headerName: 'Điểm hệ 4', type: ELoaiDuLieuBieuMau.Number },
+	{ headerName: 'Điểm chữ', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Ghi chú', type: ELoaiDuLieuBieuMau.Text },
+];
+
+//Chuẩn đầu ra
+export const defaultChuanDauRaColumns: { headerName: string; type: ELoaiDuLieuBieuMau }[] = [
+	{ headerName: 'Mã PLO', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Nội dung PLO', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Mức điểm tối thiểu', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Mức điểm đạt được', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 export const defaultElementBieuMau: BieuMauPhuLuc.TElement[] = [
@@ -66,6 +74,7 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Xếp hạng rèn luyện', type: ELoaiDuLieuBieuMau.Text },
 
 	{ headerName: 'Bảng điểm sinh viên', type: ELoaiDuLieuBieuMau.Table },
+	{ headerName: 'Chuẩn đầu ra', type: ELoaiDuLieuBieuMau.Table },
 ];
 
 // PHỤ LỤC VĂN BẰNG
