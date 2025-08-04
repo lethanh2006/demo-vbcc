@@ -1,0 +1,84 @@
+import TableStaticData from '@/components/Table/TableStaticData';
+import type { IColumn } from '@/components/Table/typing';
+import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
+import { Button, Card, Descriptions, Divider } from 'antd';
+import moment from 'moment';
+import { useIntl, useModel } from 'umi';
+
+const ViewPhuLucVanBang = () => {
+	const intl = useIntl();
+	const { record, setVisibleForm } = useModel('vbcc.phulucvanbang');
+
+	const renderField = (item: any) => {
+		if (item.type === 'Date') {
+			return item.value ? moment(item.value).format('DD/MM/YYYY') : '---';
+		}
+		if (item.type === 'Number') {
+			return item.value ?? '---';
+		}
+		return item.value || '---';
+	};
+
+	return (
+		<Card title='Chi tiết phụ lục văn bằng' bordered={false}>
+			<Divider orientation='left'>Thông tin văn bằng</Divider>
+
+			<Descriptions bordered column={2} size='small'>
+				<Descriptions.Item label='Họ tên'>{record?.hoTen ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Mã sinh viên'>{record?.maSinhVien ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Số vào sổ bằng'>{record?.soVaoSoBang ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Ngày sinh'>
+					{record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : ''}
+				</Descriptions.Item>
+			</Descriptions>
+
+			<Divider orientation='left'>Thông tin phụ lục</Divider>
+
+			<Descriptions bordered column={2} size='small'>
+				{record?.templateData?.map((item: any, index: number) => {
+					if (item.type === ELoaiDuLieuBieuMau.Table) return null;
+					return (
+						// eslint-disable-next-line react/no-array-index-key
+						<Descriptions.Item label={item.headerName} key={index}>
+							{renderField(item)}
+						</Descriptions.Item>
+					);
+				})}
+			</Descriptions>
+
+			{record?.templateData
+				?.filter((item: any) => item.type === ELoaiDuLieuBieuMau.Table)
+				?.map((item: any, index: number) => {
+					const columns: IColumn<any>[] =
+						item?.cot?.map((i: any) => ({
+							title: i.headerName,
+							dataIndex: i.headerName,
+							width: 120,
+						})) ?? [];
+
+					return (
+						// eslint-disable-next-line react/no-array-index-key
+						<div key={index}>
+							<Divider orientation='left'>{item.headerName}</Divider>
+							<TableStaticData
+								otherProps={{ pagination: false }}
+								addStt
+								size='small'
+								columns={columns}
+								data={item?.value ?? []}
+							/>
+						</div>
+					);
+				})}
+
+			<div className='form-footer' style={{ marginTop: 24 }}>
+				<Button onClick={() => setVisibleForm(false)}>
+					{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
+				</Button>
+			</div>
+		</Card>
+	);
+};
+
+export default ViewPhuLucVanBang;

@@ -21,6 +21,7 @@ export default () => {
 	const [visiblePush, setVisiblePush] = useState<boolean>(false);
 	const [visiblePrint, setVisiblePrint] = useState<boolean>(false);
 	const [thongTinTraCuu, setThongTinTraCuu] = useState<PhuLucVanBang.IThongTinTraCuu[] | any>();
+	const [tableData, setTableData] = useState<any>();
 
 	const uploadFolderModel = async (
 		idQuyetDinh: string,
@@ -135,5 +136,7 @@ export default () => {
 		importPhuLucVanBangModel,
 		traCuuPhuLucVanBanModel,
 		thongTinTraCuu,
+		tableData,
+		setTableData,
 	};
 };
