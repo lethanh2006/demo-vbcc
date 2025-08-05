@@ -61,3 +61,6 @@ declare const APP_CONFIG_TITLE_CSVC: string;
 declare const APP_CONFIG_TITLE_THU_VIEN: string;
 declare const APP_CONFIG_TITLE_QLVB: string;
 declare const APP_CONFIG_TITLE_VBCC: string;
+
+declare const APP_CONFIG_INIT_TRINH_DO: string;
+declare const APP_CONFIG_INIT_HINH_THUC: string;

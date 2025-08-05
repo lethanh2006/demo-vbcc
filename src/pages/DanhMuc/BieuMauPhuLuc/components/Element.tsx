@@ -184,7 +184,21 @@ const ElementBieuMauFormItem = (props: {
 									name={['elements', index, 'cot']}
 									rules={[{ required: true, message: 'Vui lòng cấu hình các cột của bảng' }]}
 								>
-									<CauHinhDinhDangBang />
+									<CauHinhDinhDangBang
+										value={elements[index]?.cot}
+										onChange={(val) => {
+											const newElements = [...elements];
+											newElements[index].cot = val;
+											onChange?.(newElements);
+										}}
+										defaultColumns={
+											elements[index]?.headerName === 'Bảng điểm sinh viên'
+												? defaultTranscriptColumns
+												: elements[index]?.headerName === 'Chuẩn đầu ra'
+												? defaultChuanDauRaColumns
+												: []
+										}
+									/>
 								</Form.Item>
 							</Col>
 						</Row>

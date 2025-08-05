@@ -4,6 +4,7 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
+import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
 import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
@@ -12,6 +13,7 @@ import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalChonQuyetDinh from '../DotCapBangTotNghiep/components/ModalChonQuyetDinh';
+import SelectSoVanBang from '../SoVanBang/components/Select';
 import ModalQuyetDinhTotNghiep from './components/Modal';
 
 type TProp = {
@@ -63,10 +65,21 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 			onCell,
 		},
 		{
+			title: 'Sổ văn bằng',
+			dataIndex: 'soVanBangId',
+			width: 120,
+			render: (val, rec) => rec?.soVanBang?.ten ?? val,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectSoVanBang multiple />,
+			onCell,
+		},
+		{
 			title: 'Biểu mẫu phụ lục',
 			dataIndex: 'maBieuMau',
 			width: 150,
-			filterType: 'string',
+			render: (val, rec) => rec?.bieuMau?.ten ?? val,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectBieuMauPhuLuc multiple selectMa />,
 			onCell,
 		},
 		{

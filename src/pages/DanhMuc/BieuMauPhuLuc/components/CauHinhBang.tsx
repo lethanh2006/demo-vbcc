@@ -4,7 +4,15 @@ import { Button, Col, Input, Row, Select, Space } from 'antd';
 
 type CotBang = { headerName: string; type: ELoaiDuLieuBieuMau };
 
-const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onChange?: (val: CotBang[]) => void }) => {
+const CauHinhDinhDangBang = ({
+	value = [],
+	onChange,
+	defaultColumns = [],
+}: {
+	value?: CotBang[];
+	onChange?: (val: CotBang[]) => void;
+	defaultColumns?: CotBang[];
+}) => {
 	const handleChange = (index: number, field: keyof CotBang, val: any) => {
 		const updated = [...value];
 		updated[index][field] = val;
@@ -16,6 +24,8 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 	};
 
 	const removeCot = (index: number) => {
+		// Nếu là cột mặc định thì không cho xóa
+		if (index < defaultColumns.length) return;
 		const updated = [...value];
 		updated.splice(index, 1);
 		onChange?.(updated);
@@ -23,31 +33,38 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 
 	return (
 		<Space direction='vertical' style={{ width: '100%' }}>
-			{value.map((cot, index) => (
-				// eslint-disable-next-line react/no-array-index-key
-				<Row gutter={12} key={`custom-${index}`}>
-					<Col span={12}>
-						<Input
-							placeholder='Tên hiển thị'
-							value={cot.headerName}
-							onChange={(e) => handleChange(index, 'headerName', e.target.value)}
-						/>
-					</Col>
-					<Col span={11}>
-						<Select
-							value={cot.type}
-							style={{ width: '100%' }}
-							options={Object.values(ELoaiDuLieuBieuMau)
-								.filter((type) => type !== ELoaiDuLieuBieuMau.Table)
-								.map((type) => ({ label: loaiDuLieuBieuMau[type], value: type }))}
-							onChange={(val) => handleChange(index, 'type', val)}
-						/>
-					</Col>
-					<Col span={1}>
-						<Button type='link' icon={<DeleteOutlined />} onClick={() => removeCot(index)} danger />
-					</Col>
-				</Row>
-			))}
+			{value.map((cot, index) => {
+				const isDefault = index < defaultColumns.length;
+				return (
+					// eslint-disable-next-line react/no-array-index-key
+					<Row gutter={12} key={`custom-${index}`}>
+						<Col span={12}>
+							<Input
+								placeholder='Tên hiển thị'
+								value={cot.headerName}
+								disabled={isDefault}
+								onChange={(e) => handleChange(index, 'headerName', e.target.value)}
+							/>
+						</Col>
+						<Col span={isDefault ? 12 : 11}>
+							<Select
+								value={cot.type}
+								style={{ width: '100%' }}
+								disabled={isDefault}
+								options={Object.values(ELoaiDuLieuBieuMau)
+									.filter((type) => type !== ELoaiDuLieuBieuMau.Table)
+									.map((type) => ({ label: loaiDuLieuBieuMau[type], value: type }))}
+								onChange={(val) => handleChange(index, 'type', val)}
+							/>
+						</Col>
+						{!isDefault ? (
+							<Col span={1}>
+								<Button type='link' icon={<DeleteOutlined />} onClick={() => removeCot(index)} danger />
+							</Col>
+						) : null}
+					</Row>
+				);
+			})}
 
 			<Button icon={<PlusOutlined />} className='add-column-button' onClick={addCot} type='dashed' block>
 				Thêm cột
