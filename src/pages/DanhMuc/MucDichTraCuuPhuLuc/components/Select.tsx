@@ -29,11 +29,13 @@ const SelectMucDichTraCuuPhuLuc = (props: {
 			mode={multiple ? 'multiple' : undefined}
 			value={value}
 			onChange={onChange}
-			options={danhSach.map((item) => ({
-				key: item._id,
-				value: item._id,
-				label: `${item.ten}`,
-			}))}
+			options={danhSach
+				?.filter((item) => item?.active === true)
+				.map((item) => ({
+					key: item._id,
+					value: item._id,
+					label: `${item.ten}`,
+				}))}
 			showSearch
 			optionFilterProp='label'
 			placeholder='Chọn mục đích tra cứu phụ lục'

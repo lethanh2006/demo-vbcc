@@ -16,7 +16,7 @@ const ipNhanSu = ipRoot + 'tcns'; // ip dev
 const ipIPFS = 'https://ipfs.aisenote.com/api/v0/add';
 const preIPFS = 'https://ipfs.aisenote.com/ipfs/';
 
-const currentRole = EModuleKey.QLDT;
+const currentRole = EModuleKey.VBCC;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
 

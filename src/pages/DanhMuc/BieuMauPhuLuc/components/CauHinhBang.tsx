@@ -1,8 +1,8 @@
-import { Button, Col, Input, Row, Select, Space } from 'antd';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { ELoaiDuLieuBieuMau, loaiDuLieuBieuMau } from '@/services/VanBang/constant';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row, Select, Space } from 'antd';
 
-type CotBang = { ma: string; headerName: string; type: ELoaiDuLieuBieuMau };
+type CotBang = { headerName: string; type: ELoaiDuLieuBieuMau };
 
 const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onChange?: (val: CotBang[]) => void }) => {
 	const handleChange = (index: number, field: keyof CotBang, val: any) => {
@@ -12,7 +12,7 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 	};
 
 	const addCot = () => {
-		onChange?.([...value, { ma: '', headerName: '', type: ELoaiDuLieuBieuMau.Text }]);
+		onChange?.([...value, { headerName: '', type: ELoaiDuLieuBieuMau.Text }]);
 	};
 
 	const removeCot = (index: number) => {
@@ -24,18 +24,16 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 	return (
 		<Space direction='vertical' style={{ width: '100%' }}>
 			{value.map((cot, index) => (
-				<Row gutter={12} key={index}>
-					<Col span={6}>
-						<Input placeholder='Mã cột' value={cot.ma} onChange={(e) => handleChange(index, 'ma', e.target.value)} />
-					</Col>
-					<Col span={8}>
+				// eslint-disable-next-line react/no-array-index-key
+				<Row gutter={12} key={`custom-${index}`}>
+					<Col span={12}>
 						<Input
 							placeholder='Tên hiển thị'
 							value={cot.headerName}
 							onChange={(e) => handleChange(index, 'headerName', e.target.value)}
 						/>
 					</Col>
-					<Col span={8}>
+					<Col span={11}>
 						<Select
 							value={cot.type}
 							style={{ width: '100%' }}
@@ -45,11 +43,12 @@ const CauHinhDinhDangBang = ({ value = [], onChange }: { value?: CotBang[]; onCh
 							onChange={(val) => handleChange(index, 'type', val)}
 						/>
 					</Col>
-					<Col span={2}>
+					<Col span={1}>
 						<Button type='link' icon={<DeleteOutlined />} onClick={() => removeCot(index)} danger />
 					</Col>
 				</Row>
 			))}
+
 			<Button icon={<PlusOutlined />} className='add-column-button' onClick={addCot} type='dashed' block>
 				Thêm cột
 			</Button>

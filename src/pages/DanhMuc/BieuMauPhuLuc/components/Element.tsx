@@ -3,6 +3,7 @@ import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import {
 	ELoaiDuLieuBieuMau,
 	allowElementBieuMau,
+	defaultChuanDauRaColumns,
 	defaultElementBieuMau,
 	defaultTranscriptColumns,
 	loaiDuLieuBieuMau,
@@ -77,6 +78,8 @@ const ElementBieuMauFormItem = (props: {
 
 		if (data === 'Bảng điểm sinh viên') {
 			currentItem.cot = defaultTranscriptColumns;
+		} else if (data === 'Chuẩn đầu ra') {
+			currentItem.cot = defaultChuanDauRaColumns;
 		} else if (selectedElement.type === ELoaiDuLieuBieuMau.Table) {
 			currentItem.cot = [];
 		} else {
@@ -108,76 +111,88 @@ const ElementBieuMauFormItem = (props: {
 		}
 	};
 
-	const renderElement = (index: number, isDefault: boolean, providedItem?: any) => (
-		<Row gutter={12} key={index}>
-			<Col span={1} style={{ display: 'flex', alignItems: 'center' }}>
-				{providedItem && (
-					<div {...providedItem.dragHandleProps} style={{ width: '100%', textAlign: 'center' }}>
-						<MenuOutlined />
-					</div>
-				)}
-			</Col>
-			<Col span={14}>
-				<Form.Item
-					label={
-						`Phần tử ${index + (!isDefault ? defaultElementBieuMau.length : 0) + 1}` + (isDefault ? ' (mặc định)' : '')
-					}
-					name={isDefault ? undefined : ['elements', index, 'headerName']}
-					rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-				>
-					<AutoComplete
-						disabled={isDefault}
-						placeholder='Nhập tên phần tử'
-						defaultValue={isDefault ? defaultElementBieuMau[index].headerName : undefined}
-						options={searchoptions}
-						onSearch={onSearchHeader}
-						onSelect={(value) => onSelectHeader(value, index)}
-					/>
-				</Form.Item>
-			</Col>
-			<Col span={8}>
-				<Form.Item
-					label='Kiểu dữ liệu'
-					name={isDefault ? undefined : ['elements', index, 'type']}
-					rules={[...rules.required]}
-				>
-					<Select
-						disabled={isDefault || elements[index]?.headerName === 'Bảng điểm sinh viên'}
-						options={Object.values(ELoaiDuLieuBieuMau).map((item) => ({
-							key: item,
-							value: item,
-							label: loaiDuLieuBieuMau[item],
-						}))}
-						onChange={(val) => handleTypeChange(index, val)}
-					/>
-				</Form.Item>
-			</Col>
-			<Col span={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-				{!isDefault ? (
-					<ButtonExtend
-						disabled={isDefault}
-						onClick={() => removeElement(index)}
-						icon={<DeleteOutlined />}
-						type='link'
-						danger
-					/>
-				) : null}
-			</Col>
-
-			{!isDefault && elements[index]?.type === ELoaiDuLieuBieuMau.Table && (
-				<Col span={24}>
+	const renderElement = (index: number, isDefault: boolean, providedItem?: any) => {
+		return (
+			<Row gutter={12} key={index}>
+				<Col span={1} style={{ display: 'flex', alignItems: 'center' }}>
+					{providedItem && (
+						<div {...providedItem.dragHandleProps} style={{ width: '100%', textAlign: 'center' }}>
+							<MenuOutlined />
+						</div>
+					)}
+				</Col>
+				<Col span={14}>
 					<Form.Item
-						label='Cấu hình bảng'
-						className='table-config-container'
-						name={['elements', index, 'cot']}
-						rules={[{ required: true, message: 'Vui lòng cấu hình các cột của bảng' }]}
+						label={
+							`Phần tử ${index + (!isDefault ? defaultElementBieuMau.length : 0) + 1}` +
+							(isDefault ? ' (mặc định)' : '')
+						}
+						name={isDefault ? undefined : ['elements', index, 'headerName']}
+						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
 					>
-						<CauHinhDinhDangBang />
+						<AutoComplete
+							disabled={isDefault}
+							placeholder='Nhập tên phần tử'
+							defaultValue={isDefault ? defaultElementBieuMau[index].headerName : undefined}
+							options={searchoptions}
+							onSearch={onSearchHeader}
+							onSelect={(value) => onSelectHeader(value, index)}
+						/>
 					</Form.Item>
 				</Col>
-			)}
-		</Row>
-	);
+				<Col span={8}>
+					<Form.Item
+						label='Kiểu dữ liệu'
+						name={isDefault ? undefined : ['elements', index, 'type']}
+						rules={[...rules.required]}
+					>
+						<Select
+							disabled={
+								isDefault ||
+								elements[index]?.headerName === 'Bảng điểm sinh viên' ||
+								elements[index]?.headerName === 'Chuẩn đầu ra'
+							}
+							options={Object.values(ELoaiDuLieuBieuMau).map((item) => ({
+								key: item,
+								value: item,
+								label: loaiDuLieuBieuMau[item],
+							}))}
+							onChange={(val) => handleTypeChange(index, val)}
+							value={isDefault ? defaultElementBieuMau[index].type ?? ELoaiDuLieuBieuMau.Text : undefined}
+						/>
+					</Form.Item>
+				</Col>
+				<Col span={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+					{!isDefault ? (
+						<ButtonExtend
+							disabled={isDefault}
+							onClick={() => removeElement(index)}
+							icon={<DeleteOutlined />}
+							type='link'
+							danger
+						/>
+					) : null}
+				</Col>
+
+				{!isDefault && elements[index]?.type === ELoaiDuLieuBieuMau.Table && (
+					<Col span={24}>
+						<Row>
+							<Col span={22} push={1}>
+								<Form.Item
+									label='Cấu hình bảng'
+									className='table-config-container'
+									name={['elements', index, 'cot']}
+									rules={[{ required: true, message: 'Vui lòng cấu hình các cột của bảng' }]}
+								>
+									<CauHinhDinhDangBang />
+								</Form.Item>
+							</Col>
+						</Row>
+					</Col>
+				)}
+			</Row>
+		);
+	};
 
 	return (
 		<>

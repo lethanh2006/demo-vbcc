@@ -1,38 +1,79 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import ButtonExtend from '@/components/Table/ButtonExtend';
+import TableStaticData from '@/components/Table/TableStaticData';
+import type { IColumn } from '@/components/Table/typing';
 import UploadFile from '@/components/Upload/UploadFile';
+import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, InputNumber, Row } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
 import moment from 'moment';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import FormTable from './FormTable';
 
 const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: string]: any }) => {
-	const { record, edit, setVisibleForm, formSubmiting, visibleForm, putModel, postModel, setFormSubmiting } =
-		useModel('vbcc.phulucvanbang');
-	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
-	const { record: recBieuMau, getBieuMauDetailModel } = useModel('vbcc.bieumauphuluc');
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { getData, title } = props;
+	const {
+		record,
+		edit,
+		setVisibleForm,
+		formSubmiting,
+		visibleForm,
+		putModel,
+		postModel,
+		setFormSubmiting,
+		tableData,
+		setTableData,
+	} = useModel('vbcc.phulucvanbang');
+	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
+	const { record: recBieuMau, getBieuMauDetailModel } = useModel('vbcc.bieumauphuluc');
+	const [openedTableKey, setOpenedTableKey] = useState<string | null>(null);
+	const [editFormTable, setEditFormTable] = useState<boolean>(false);
+	const [recordTable, setRecordTable] = useState<any>({});
+
+	const onCancelFormTable = () => {
+		setOpenedTableKey(null);
+	};
 
 	useEffect(() => {
-		if (!visibleForm) resetFieldsForm(form);
-		else
+		if (!visibleForm) {
+			resetFieldsForm(form);
+		} else {
 			getBieuMauDetailModel(recQuyetDinh?.maBieuMau ?? '').then((bm) => {
 				if (record?._id) {
 					const templateData = record.templateData;
-					if (bm)
-						record.templateData = bm?.elements?.map((elm) => ({
-							...elm,
-							value: templateData?.find((i) => i.headerName === elm.headerName)?.value,
-						}));
+
+					if (bm) {
+						const updatedTemplateData = bm.elements?.map((elm) => {
+							const matched = templateData?.find((i) => i.headerName === elm.headerName);
+
+							if (elm.type === ELoaiDuLieuBieuMau.Table) {
+								setTableData((prev: any) => ({
+									...prev,
+									[elm.headerName]: matched?.value ?? [],
+								}));
+							}
+
+							return {
+								...elm,
+								value: matched?.value ?? null,
+							};
+						});
+
+						record.templateData = updatedTemplateData as any;
+					}
+
 					form.setFieldsValue(record);
 				}
 			});
+		}
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: PhuLucVanBang.IRecord) => {
@@ -41,24 +82,132 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 		values.urlIpfs = urlIpfs;
 		setFormSubmiting(false);
 
-		// Gán value vào templateData đã chọn
-		const temp = recBieuMau?.elements?.map((elment, index) => ({
-			...elment,
-			value:
-				elment.type === ELoaiDuLieuBieuMau.Date && values.templateData?.[index].value
-					? moment(values.templateData[index].value).startOf('day').toISOString()
-					: values.templateData?.[index].value,
-		}));
-		values.templateData = temp;
-		if (values.ngaySinh) values.ngaySinh = moment(values.ngaySinh).startOf('day').toISOString();
-		if (edit)
-			putModel(record?._id ?? '', values, getData)
-				.then()
-				.catch((er) => console.log(er));
-		else {
-			await postModel({ ...values, idQuyetDinh: recQuyetDinh?._id }, getData)
-				.then()
-				.catch((er) => console.log(er));
+		const templateData: any[] =
+			recBieuMau?.elements?.map((element, index) => {
+				let value = values?.templateData?.[index]?.value;
+
+				if (element.type === ELoaiDuLieuBieuMau.Date && value) {
+					value = moment(value).startOf('day').toISOString();
+				}
+
+				if (element.type === ELoaiDuLieuBieuMau.Table) {
+					value = tableData?.[element.headerName] ?? [];
+				}
+
+				return {
+					...element,
+					value,
+				};
+			}) ?? [];
+
+		if (values.ngaySinh) {
+			values.ngaySinh = moment(values.ngaySinh).startOf('day').toISOString();
+		}
+
+		values.templateData = templateData;
+
+		if (edit) {
+			putModel(record?._id ?? '', values, getData).catch(console.log);
+		} else {
+			postModel({ ...values, idQuyetDinh: recQuyetDinh?._id }, getData).catch(console.log);
+		}
+	};
+
+	const renderFormItemByType = (element: BieuMauPhuLuc.TElement) => {
+		switch (element.type) {
+			case ELoaiDuLieuBieuMau.Number:
+				return (
+					<InputNumber style={{ width: '100%' }} placeholder={`Nhập ${element.headerName?.toLocaleLowerCase()}`} />
+				);
+			case ELoaiDuLieuBieuMau.Date:
+				return <MyDatePicker />;
+			case ELoaiDuLieuBieuMau.Table:
+				const columns: IColumn<any>[] = [];
+
+				element?.cot?.forEach((item) => {
+					columns.push({
+						title: item.headerName,
+						dataIndex: item.headerName,
+						width: 120,
+					});
+				});
+
+				columns.push({
+					title: 'Thao tác',
+					align: 'center',
+					width: 80,
+					fixed: 'right',
+					render: (rec: any, agg, index) => (
+						<>
+							<ButtonExtend
+								tooltip='Chỉnh sửa'
+								size='small'
+								onClick={() => {
+									setEditFormTable(true);
+									setRecordTable({ ...rec, index });
+									setOpenedTableKey(element.headerName);
+								}}
+								type='link'
+								icon={<EditOutlined />}
+							/>
+
+							<Popconfirm
+								onConfirm={() => {
+									const newData = tableData?.[element.headerName]?.filter((_: any, i: number) => i !== index);
+									setTableData({
+										...tableData,
+										[element.headerName]: newData,
+									});
+								}}
+								title='Bạn có chắc chắn muốn xoá dòng này?'
+								placement='topRight'
+							>
+								<ButtonExtend tooltip='Xoá' size='small' danger type='link' icon={<DeleteOutlined />} />
+							</Popconfirm>
+						</>
+					),
+				});
+
+				return (
+					<>
+						<TableStaticData
+							otherProps={{ pagination: false }}
+							addStt
+							size='small'
+							columns={columns}
+							data={tableData?.[element.headerName] ?? []}
+							hasTotal
+							otherButtons={[
+								<Button
+									key={'1'}
+									size='small'
+									type='primary'
+									icon={<PlusCircleOutlined />}
+									onClick={() => {
+										setRecordTable(undefined);
+										setEditFormTable(false);
+										setOpenedTableKey(element.headerName);
+									}}
+								>
+									Thêm mới
+								</Button>,
+							]}
+						/>
+
+						<Modal
+							destroyOnClose
+							width={700}
+							footer={false}
+							title={`${editFormTable ? 'Chỉnh sửa' : 'Thêm mới'} ${element.headerName}`}
+							visible={openedTableKey === element.headerName}
+							onCancel={onCancelFormTable}
+						>
+							<FormTable record={recordTable} onCancel={onCancelFormTable} edit={editFormTable} elements={element} />
+						</Modal>
+					</>
+				);
+			default:
+				return <Input placeholder={`Nhập ${element.headerName?.toLocaleLowerCase()}`} />;
 		}
 	};
 
@@ -71,8 +220,9 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 							<Input
 								value={
 									recQuyetDinh?.soQuyetDinh ??
-									`${record?.quyetDinh?.soQuyetDinh ?? ''}, 
-					${record?.quyetDinh?.ngayBanHanh ? moment(record.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''}`
+									`${record?.quyetDinh?.soQuyetDinh ?? ''}, ${
+										record?.quyetDinh?.ngayBanHanh ? moment(record.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''
+									}`
 								}
 								disabled
 							/>
@@ -126,40 +276,31 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 						</Form.Item>
 					</Col>
 
-					{recBieuMau?._id ? (
+					{recBieuMau?._id && (
 						<>
 							<Col span={24}>
 								Theo biểu mẫu phụ lục: <b>{recBieuMau.ten}</b>
 							</Col>
 							{recBieuMau.elements.map((element, index) => (
-								<Col span={24} md={12} key={element.headerName}>
+								<Col span={24} md={element.type === ELoaiDuLieuBieuMau.Table ? 24 : 12} key={element.headerName}>
 									<Form.Item
 										label={element.headerName}
 										name={['templateData', index, 'value']}
 										rules={element.type === ELoaiDuLieuBieuMau.Text ? [...rules.text, ...rules.length(300)] : []}
 									>
-										{element.type === ELoaiDuLieuBieuMau.Number ? (
-											<InputNumber
-												style={{ width: '100%' }}
-												placeholder={`Nhập ${element.headerName?.toLocaleLowerCase()}`}
-											/>
-										) : element.type === ELoaiDuLieuBieuMau.Date ? (
-											<MyDatePicker />
-										) : (
-											<Input placeholder={`Nhập ${element.headerName?.toLocaleLowerCase()}`} />
-										)}
+										{renderFormItemByType(element)}
 									</Form.Item>
 								</Col>
 							))}
 						</>
-					) : null}
+					)}
 				</Row>
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
 						{!edit
-							? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
-							: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+							? intl.formatMessage({ id: 'global.button.themmoi' })
+							: intl.formatMessage({ id: 'global.button.luulai' })}
 					</Button>
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>

@@ -21,4 +21,10 @@ declare module BieuMauPhuLuc {
 		isRequired?: boolean = false;
 		value?: string | number;
 	};
+
+	export type CotBang = {
+		ma: string;
+		headerName: string;
+		type: ELoaiDuLieuBieuMau;
+	};
 }
