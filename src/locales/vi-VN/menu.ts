@@ -6,7 +6,7 @@ export default {
 	'menu.About': `Giới thiệu ${APP_CONFIG_TIEN_TO_TRUONG.toLowerCase()}`,
 	'menu.News': 'Tin tức',
 
-	'menu.QuyetDinhTotNghiep': 'QĐ tốt nghiệp',
+	'menu.QuyetDinhTotNghiep': 'Thông tin quyết định',
 	'menu.DotCapBangTotNghiep': 'Đợt cấp bằng tốt nghiệp',
 	'menu.PhuLucVanBang': 'Phụ lục văn bằng',
 	'menu.XacMinhVanBang': 'Xác minh văn bằng',

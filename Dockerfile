@@ -48,6 +48,9 @@ ENV APP_CONFIG_TITLE_THU_VIEN='Thư viện'
 ENV APP_CONFIG_TITLE_QLVB='Quản lý văn bản'
 ENV APP_CONFIG_TITLE_VBCC='Văn bằng, chứng chỉ, chứng nhận'
 
+ENV APP_CONFIG_INIT_TRINH_DO=7
+ENV APP_CONFIG_INIT_HINH_THUC=1
+
 
 # Set working directory
 WORKDIR /app

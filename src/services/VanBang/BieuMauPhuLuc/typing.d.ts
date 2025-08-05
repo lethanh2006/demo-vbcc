@@ -23,7 +23,6 @@ declare module BieuMauPhuLuc {
 	};
 
 	export type CotBang = {
-		ma: string;
 		headerName: string;
 		type: ELoaiDuLieuBieuMau;
 	};

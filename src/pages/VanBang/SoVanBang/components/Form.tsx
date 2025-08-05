@@ -1,7 +1,6 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
 import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
-import SelectDonVi from '@/pages/ToChucNhanSu/DonVi/Select';
 import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
@@ -43,25 +42,20 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 	const handleValuesChange = (changedValues: any, allValues: any) => {
 		const { namHanhChinh, maTrinhDoDaoTao, maHinhThucDaoTao } = allValues;
 
-		// Chỉ xử lý khi đang thêm mới
 		if (!edit) {
 			const isRelevantChange = Object.keys(changedValues).some((key) =>
-				['namHanhChinh', 'maTrinhDo', 'maHinhThuc'].includes(key),
+				['namHanhChinh', 'maTrinhDoDaoTao', 'maHinhThucDaoTao'].includes(key),
 			);
 
 			if (isRelevantChange) {
-				// Xử lý giá trị năm using moment
-				const year = namHanhChinh?.format?.('YYYY') ?? '';
-
-				// Ensure maTrinhDoDaoTao and maHinhThucDaoTao are strings
+				const year = moment(namHanhChinh).format('YYYY');
 				const maTrinhDo = String(maTrinhDoDaoTao || '');
 				const maHinhThuc = String(maHinhThucDaoTao || '');
 
-				// Lấy tên từ danh sách theo mã
 				const trinhDo = dsTrinhDo.find((x) => x.ma === maTrinhDo);
 				const hinhThuc = dsHinhThuc.find((x) => x.ma === maHinhThuc);
 
-				// Chỉ tạo tên khi có đủ thông tin
+				debugger;
 				if (year && trinhDo?.ten && hinhThuc?.ten) {
 					const tenSo = `Sổ văn bằng ${trinhDo.ten} - ${hinhThuc.ten} năm ${year}`;
 
@@ -80,6 +74,16 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${props.title?.toLowerCase()}`}>
 			<Form onFinish={onFinish} form={form} layout='vertical' onValuesChange={handleValuesChange}>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
+					<Col span={24}>
+						<Form.Item
+							name='ten'
+							label='Tên sổ văn bằng'
+							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
+							extra='Tên sẽ được gợi ý tự động theo trình độ, hình thức đào tạo và năm hành chính'
+						>
+							<Input placeholder='Nhập tên sổ' />
+						</Form.Item>
+					</Col>
 					<Col span={24} md={12}>
 						<Form.Item
 							name='soVaoSoFormat'
@@ -104,15 +108,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 							<SelectHinhThuc selectMa hideAll />
 						</Form.Item>
 					</Col>
-					<Col span={24} md={12}>
-						<Form.Item
-							name='ten'
-							label='Tên sổ văn bằng'
-							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
-						>
-							<Input placeholder='Nhập tên sổ' />
-						</Form.Item>
-					</Col>
+
 					<Col span={24}>
 						<Form.Item name='moTa' label='Mô tả' rules={[...rules.text, ...rules.length(200)]}>
 							<Input.TextArea placeholder='Nhập mô tả' style={{ width: '100%' }} />
