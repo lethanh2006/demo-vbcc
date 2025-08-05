@@ -10,6 +10,7 @@ import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectBieuMauPhuLuc from '../../../DanhMuc/BieuMauPhuLuc/components/Select';
+import SelectSoVanBang from '../../SoVanBang/components/Select';
 
 const FormQuyetDinhTotNghiep = (props: {
 	afterAddNew?: (rec: QuyetDinhTotNghiep.IRecord) => void;
@@ -41,7 +42,7 @@ const FormQuyetDinhTotNghiep = (props: {
 			});
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: QuyetDinhTotNghiep.IRecord) => {
 		setFormSubmiting(true);
 		const url = await buildUpLoadFile(values, 'url');
 		values.url = url;
@@ -77,6 +78,11 @@ const FormQuyetDinhTotNghiep = (props: {
 				<Col xs={24} md={12}>
 					<Form.Item name='ngayBanHanh' label='Ngày ký quyết định' rules={[...rules.required]}>
 						<MyDatePicker />
+					</Form.Item>
+				</Col>
+				<Col xs={24} md={12}>
+					<Form.Item name='soVanBangId' label='Sổ văn bằng' rules={[...rules.required]}>
+						<SelectSoVanBang />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>

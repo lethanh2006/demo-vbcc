@@ -1,6 +1,6 @@
 export default {
 	//Tốt nhiệp/ Quyết định tốt nghiệp
-	'vanbang.quyetdinhtotnghiep.title': 'Quyết định tốt nghiệp',
+	'vanbang.quyetdinhtotnghiep.title': 'Thông tin quyết định',
 	'vanbang.quyetdinhtotnghiep.step1': 'Thông tin quyết định',
 	'vanbang.quyetdinhtotnghiep.step2': 'Danh sách phụ lục',
 

@@ -4,19 +4,25 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
 import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
-import { colorTrangThaiSoVanBang, ETrangThaiSoVanBang } from '@/services/VanBang/constant';
+import { ETrangThaiSoVanBang } from '@/services/VanBang/constant';
 import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
-import { CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Popconfirm, Tag } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Popconfirm } from 'antd';
 import { useModel } from 'umi';
 import SoVanBangForm from './components/Form';
 
 const SoVanBangPage = () => {
-	const { page, limit, handleEdit, deleteModel, duyetModel, getModel } = useModel('vbcc.sovanbang');
+	const {
+		page,
+		limit,
+		handleEdit,
+		deleteModel,
+		//  duyetModel, getModel
+	} = useModel('vbcc.sovanbang');
 
-	const handleDuyet = (soVanBangId: string) => {
-		if (soVanBangId) duyetModel(soVanBangId, getModel).catch(console.log);
-	};
+	// const handleDuyet = (soVanBangId: string) => {
+	// 	if (soVanBangId) duyetModel(soVanBangId, getModel).catch(console.log);
+	// };
 
 	const columns: IColumn<SoVanBang.IRecord>[] = [
 		{
@@ -46,7 +52,7 @@ const SoVanBangPage = () => {
 			title: 'Trình độ',
 			dataIndex: 'maTrinhDoDaoTao',
 			width: 120,
-			render: (val, rec) => rec?.trinhDoDaoTao?.ten,
+			render: (val, rec) => rec?.trinhDoDaoTao?.ten ?? val,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectTrinhDo selectMa multiple />,
 		},
@@ -54,7 +60,7 @@ const SoVanBangPage = () => {
 			title: 'Hình thức',
 			dataIndex: 'maHinhThucDaoTao',
 			width: 120,
-			render: (val, rec) => rec?.hinhThucDaoTao?.ten,
+			render: (val, rec) => rec?.hinhThucDaoTao?.ten ?? val,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectHinhThuc selectMa multiple />,
 		},
@@ -64,29 +70,29 @@ const SoVanBangPage = () => {
 			width: 180,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
-		{
-			title: 'Trạng thái',
-			dataIndex: 'trangThai',
-			width: 100,
-			filterType: 'select',
-			align: 'center',
-			filterData: Object.values(ETrangThaiSoVanBang),
-			render: (val: ETrangThaiSoVanBang) => <Tag color={colorTrangThaiSoVanBang[val]}>{val}</Tag>,
-		},
-		{
-			title: 'Người tạo',
-			dataIndex: 'nguoiTaoInfo',
-			width: 150,
-			filterType: 'string',
-			render: (val) => val?.hoTen ?? val?.username,
-		},
-		{
-			title: 'Người duyệt',
-			dataIndex: 'nguoiDuyetInfo',
-			width: 150,
-			filterType: 'string',
-			render: (val) => val?.hoTen ?? val?.username,
-		},
+		// {
+		// 	title: 'Trạng thái',
+		// 	dataIndex: 'trangThai',
+		// 	width: 100,
+		// 	filterType: 'select',
+		// 	align: 'center',
+		// 	filterData: Object.values(ETrangThaiSoVanBang),
+		// 	render: (val: ETrangThaiSoVanBang) => <Tag color={colorTrangThaiSoVanBang[val]}>{val}</Tag>,
+		// },
+		// {
+		// 	title: 'Người tạo',
+		// 	dataIndex: 'nguoiTaoInfo',
+		// 	width: 150,
+		// 	filterType: 'string',
+		// 	render: (val) => val?.hoTen ?? val?.username,
+		// },
+		// {
+		// 	title: 'Người duyệt',
+		// 	dataIndex: 'nguoiDuyetInfo',
+		// 	width: 150,
+		// 	filterType: 'string',
+		// 	render: (val) => val?.hoTen ?? val?.username,
+		// },
 		{
 			title: 'Thao tác',
 			align: 'center',
@@ -94,7 +100,7 @@ const SoVanBangPage = () => {
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<Popconfirm
+					{/* <Popconfirm
 						title='Bạn có chắc chắn muốn duyệt sổ văn bằng này?'
 						placement='topLeft'
 						onConfirm={() => handleDuyet(rec._id)}
@@ -106,8 +112,10 @@ const SoVanBangPage = () => {
 							icon={<CheckOutlined />}
 							disabled={rec.trangThai === ETrangThaiSoVanBang.DA_DUYET}
 						/>
-					</Popconfirm>
+					</Popconfirm> */}
+
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
 						title='Bạn có chắc chắn muốn xóa sổ văn bằng này?'

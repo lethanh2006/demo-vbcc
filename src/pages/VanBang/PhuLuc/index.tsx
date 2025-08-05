@@ -323,7 +323,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 				dependencies={[page, limit, recQuyetDinh?._id]}
 				modelName='vbcc.phulucvanbang'
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
-				widthDrawer={isView ? 1000 : 800}
+				widthDrawer={1000}
 				Form={isView ? ViewPhuLucVanBang : Form}
 				formProps={{ getData, isQuyetDinh }}
 				buttons={{ create: !!recQuyetDinh?._id }}

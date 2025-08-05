@@ -19,15 +19,14 @@ export const loaiDuLieuBieuMau: Record<ELoaiDuLieuBieuMau, string> = {
 
 // bảng điểm mặc định
 export const defaultTranscriptColumns: { headerName: string; type: ELoaiDuLieuBieuMau }[] = [
-	{ headerName: 'Mã môn học', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Tên môn học', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Nhóm môn học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Mã học phần', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Tên học phần', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Số tín chỉ', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Học kỳ', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Điểm thi', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Điểm hệ 10', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Điểm hệ 4', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Điểm chữ', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Điểm thi', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Ghi chú', type: ELoaiDuLieuBieuMau.Text },
 ];
 
