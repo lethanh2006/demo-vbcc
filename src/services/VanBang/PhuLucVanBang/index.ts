@@ -26,9 +26,9 @@ export async function putUpdateIpfs(idQuyetDinh: string, update: any[]) {
 	});
 }
 
-export const getThongKeTong = (maHocKy: string, idSoVanBang: string, isDonVi: boolean) => {
+export const getThongKeTong = (nam: string, idSoVanBang: string, isDonVi: boolean) => {
 	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke-tong${isDonVi ? '/don-vi' : ''}`, {
-		params: { maHocKy, idSoVanBang },
+		params: { nam, idSoVanBang },
 	});
 };
 

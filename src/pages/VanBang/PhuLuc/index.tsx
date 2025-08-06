@@ -1,7 +1,7 @@
+import MyDatePicker from '@/components/MyDatePicker';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
-import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
 import { ESettingKey, ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
 import { getImportPhuLucVbTemplate } from '@/services/VanBang/PhuLucVanBang';
@@ -62,8 +62,8 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 		danhSach: danhsachQuyetDinh,
 		setRecord: setQuyetDinh,
 	} = useModel('vbcc.quyetdinhtotnghiep');
-	const { record: recHocKy } = useModel('daotao.hocky');
 	const { settings } = useModel('tienich.caidat');
+	const [yearSelect, setYearSelect] = useState<any>(moment().year());
 	const [showUpload, setShowUpload] = useState(false);
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
@@ -349,16 +349,32 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 				}
 			>
 				{!isQuyetDinh ? (
-					<FilterHocKy isSetHocKy allowClear style={{ marginBottom: 12 }}>
+					<Space wrap style={{ marginBottom: 12 }}>
+						<MyDatePicker
+							style={{ width: 200 }}
+							value={yearSelect ? moment(yearSelect, 'YYYY') : null}
+							pickerStyle='year'
+							placeholder='Chọn năm hành chính'
+							format='YYYY'
+							onChange={(val) => {
+								if (val) {
+									setYearSelect(moment(val).year());
+								} else {
+									setYearSelect(undefined);
+								}
+							}}
+							allowClear
+						/>
+
 						<SelectQuyetDinh
-							condition={{ maHocKy: recHocKy?.ma }}
+							condition={yearSelect ? { nam: String(yearSelect) } : undefined}
 							style={{ width: 250 }}
 							value={recQuyetDinh?._id}
 							onChange={(val) => setQuyetDinh(danhsachQuyetDinh.find((item) => item._id === val))}
 							isSetRecord
 							allowClear
 						/>
-					</FilterHocKy>
+					</Space>
 				) : null}
 			</TableBase>
 
