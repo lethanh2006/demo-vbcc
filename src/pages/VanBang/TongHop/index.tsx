@@ -1,9 +1,10 @@
+import MyDatePicker from '@/components/MyDatePicker';
 import { ShowAllVanBang } from '@/hooks/useCheckAccess';
-import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
 import { getThongKeTong } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { AuditOutlined, BoldOutlined, CopyOutlined, SearchOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Spin } from 'antd';
+import { Card, Col, Row, Space, Spin } from 'antd';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
 import { useModel } from 'umi';
@@ -14,15 +15,15 @@ import ModalTongLuotTraCuu from './ModalTongTraCuu';
 
 const TongHopVanBang = () => {
 	const [data, setData] = useState<PhuLucVanBang.TTongHop>();
-	const { record: recHocKy } = useModel('daotao.hocky');
-	const { record: recSoVanBang, danhSach: danhSachSo, setRecord: setSoVanBang } = useModel('vbcc.sovanbang');
 	const { setVisibleForm } = useModel('vbcc.phulucvanbang');
+	const { record: recSoVanBang, danhSach: danhSachSo, setRecord: setSoVanBang } = useModel('vbcc.sovanbang');
+	const [yearSelect, setYearSelect] = useState<any>(moment().year());
 	const [loading, setLoading] = useState<boolean>(false);
 	const showAllVanBang = ShowAllVanBang();
 
 	const fetchData = async () => {
 		setLoading(true);
-		await getThongKeTong(recHocKy?.ma ?? '', recSoVanBang?._id ?? '', !showAllVanBang)
+		await getThongKeTong(yearSelect ? String(yearSelect) : '', recSoVanBang?._id ?? '', !showAllVanBang)
 			.then((response) => {
 				setData(response.data?.data);
 			})
@@ -32,20 +33,36 @@ const TongHopVanBang = () => {
 
 	useEffect(() => {
 		fetchData();
-	}, [recHocKy?.ma, recSoVanBang?._id]);
+	}, [yearSelect, recSoVanBang?._id]);
 
 	return (
 		<Spin spinning={loading}>
 			<Row gutter={[16, 16]}>
 				<Col span={24}>
-					<FilterHocKy style={{ width: '100%' }} allowClear>
+					<Space>
+						<MyDatePicker
+							style={{ width: 200 }}
+							value={yearSelect ? moment(yearSelect, 'YYYY') : null}
+							pickerStyle='year'
+							placeholder='Chọn năm hành chính'
+							format='YYYY'
+							onChange={(val) => {
+								if (val) {
+									setYearSelect(moment(val).year());
+								} else {
+									setYearSelect(undefined);
+								}
+							}}
+							allowClear
+						/>
+
 						<SelectSoVanBang
 							style={{ width: 250 }}
 							allowClear
 							value={recSoVanBang?._id}
 							onChange={(val) => setSoVanBang(danhSachSo.find((i) => i._id === val))}
 						/>
-					</FilterHocKy>
+					</Space>
 				</Col>
 
 				<Col span={24} md={6} className='dashboard-card-with-icon'>

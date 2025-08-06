@@ -1,12 +1,12 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
-import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
 import { ELoaiQuyetDinh } from '@/services/DaoTao/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
+import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectBieuMauPhuLuc from '../../../DanhMuc/BieuMauPhuLuc/components/Select';
@@ -30,22 +30,33 @@ const FormQuyetDinhTotNghiep = (props: {
 		visibleForm,
 		setFormSubmiting,
 	} = useModel('vbcc.quyetdinhtotnghiep');
-	const { record: recHocKy } = useModel('daotao.hocky');
 	const { afterAddNew, getData } = props;
 
 	useEffect(() => {
-		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) form.setFieldsValue(record);
-		else
+		if (!visibleForm) {
+			resetFieldsForm(form);
+		} else if (record?._id) {
 			form.setFieldsValue({
-				maHocKy: recHocKy?.ma,
+				...record,
+				nam: record.nam ? moment(record.nam, 'YYYY') : undefined,
+				ngayBanHanh: record.ngayBanHanh ? moment(record.ngayBanHanh) : undefined,
 			});
+		}
+
+		if (!record?._id) {
+			form.setFieldsValue({
+				nam: moment(),
+				ngayBanHanh: moment(),
+			});
+		}
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: QuyetDinhTotNghiep.IRecord) => {
 		setFormSubmiting(true);
 		const url = await buildUpLoadFile(values, 'url');
 		values.url = url;
+		values.nam = moment(values.nam).format('YYYY');
+		values.ngayBanHanh = moment(values.ngayBanHanh).startOf('d').toISOString();
 
 		setFormSubmiting(false);
 		if (edit) {
@@ -65,9 +76,9 @@ const FormQuyetDinhTotNghiep = (props: {
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
-				<Col xs={24}>
-					<Form.Item name='maHocKy' label='Học kỳ' rules={[...rules.required]}>
-						<SelectHocKy selectMa disabled={!!recHocKy?.ma} />
+				<Col xs={24} md={12}>
+					<Form.Item name='nam' label='Năm hành chính' rules={[...rules.required]}>
+						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
@@ -81,7 +92,7 @@ const FormQuyetDinhTotNghiep = (props: {
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='soVanBangId' label='Sổ văn bằng' rules={[...rules.required]}>
+					<Form.Item name='idSoVanBang' label='Sổ văn bằng' rules={[...rules.required]}>
 						<SelectSoVanBang />
 					</Form.Item>
 				</Col>
