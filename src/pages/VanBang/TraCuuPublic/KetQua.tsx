@@ -3,7 +3,6 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { EyeOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 
@@ -68,7 +67,7 @@ const KetQuaVanBang = () => {
 	];
 
 	return (
-		<Card title='Thông tin phụ lục văn bằng'>
+		<div style={{ padding: 12 }}>
 			{!!thongTinTraCuu?.Error ? (
 				<div style={{ margin: 'auto' }}>
 					<i style={{ color: 'red' }}>Không tồn tại thông tin văn bằng!</i>
@@ -86,7 +85,7 @@ const KetQuaVanBang = () => {
 					}}
 				/>
 			)}
-		</Card>
+		</div>
 	);
 };
 

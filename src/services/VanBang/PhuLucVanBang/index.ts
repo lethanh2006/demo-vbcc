@@ -38,8 +38,12 @@ export const getChiTietLuotTraCuu = (maHocKy: string, idSoVanBang: string) => {
 	});
 };
 
-export async function traCuuPhuLucVanBan(payLoad: any) {
+export async function traCuuPhuLucVanBanPublic(payLoad: any) {
 	return axios.post(`${ip3}/phu-luc-van-bang/public/tra-cuu-phu-luc-van-bang`, payLoad);
+}
+
+export async function chiTietPhuLucVanBanPublic(idVanBang: string) {
+	return axios.get(`${ip3}/phu-luc-van-bang/public/chi-tiet-phu-luc/${idVanBang}`);
 }
 
 export const exportData = (
