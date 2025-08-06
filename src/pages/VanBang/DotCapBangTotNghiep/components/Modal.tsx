@@ -1,9 +1,9 @@
 import { Button, Card, message, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import Form from './Form';
+import PhuLucVanBangPage from '../../PhuLuc';
 import QuyetDinhTotNghiepPage from '../../QuyetDinhTotNghiep';
-import ModalPhuLucVanBang from './ModalPhuLucVanBang';
+import Form from './Form';
 
 const ModalDotCapBangTotNghiep = (props: any) => {
 	const { title, getData } = props;
@@ -59,16 +59,9 @@ const ModalDotCapBangTotNghiep = (props: any) => {
 			{currentStep === 0 ? (
 				<Form afterAddNew={handleAfterAddNew} getData={getData} />
 			) : currentStep === 1 ? (
-				<div style={{ border: 'none' }}>
-					<QuyetDinhTotNghiepPage dotCapBangId={dotCapBangId} />
-				</div>
+				<QuyetDinhTotNghiepPage dotCapBangId={dotCapBangId} />
 			) : currentStep === 2 ? (
-				<ModalPhuLucVanBang
-					isQuyetDinh
-					dotCapBangId={dotCapBangId}
-
-					// quyetDinhId={selectedQuyetDinh}
-				/>
+				<PhuLucVanBangPage dotCapBangId={dotCapBangId} />
 			) : null}
 
 			{currentStep !== 0 ? (

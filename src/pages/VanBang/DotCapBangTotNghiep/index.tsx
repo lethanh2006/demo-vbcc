@@ -66,16 +66,14 @@ const DotCapBangTotNghiepPage = () => {
 	];
 
 	return (
-		<div>
-			<TableBase
-				columns={columns}
-				modelName={'vbcc.dotcapbangtotnghiep'}
-				title='Đợt cấp bằng tốt nghiệp'
-				Form={Modal}
-				dependencies={[page, limit]}
-				widthDrawer={1000}
-			/>
-		</div>
+		<TableBase
+			columns={columns}
+			modelName={'vbcc.dotcapbangtotnghiep'}
+			title='Đợt cấp bằng tốt nghiệp'
+			Form={Modal}
+			dependencies={[page, limit]}
+			widthDrawer={1200}
+		/>
 	);
 };
 

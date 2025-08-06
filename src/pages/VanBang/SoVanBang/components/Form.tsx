@@ -38,9 +38,14 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
 
 	const onFinish = async (values: SoVanBang.IRecord) => {
+		const trinhDo = dsTrinhDo.find((x) => x.ma === values?.maTrinhDoDaoTao);
+		const hinhThuc = dsHinhThuc.find((x) => x.ma === values?.maHinhThucDaoTao);
+
 		const submitData = {
 			...values,
 			namHanhChinh: moment(values.namHanhChinh).format('YYYY'),
+			tenTrinhDoDaoTao: trinhDo?.ten,
+			tenHinhThucDaoTao: hinhThuc?.ten,
 		};
 
 		if (edit) {

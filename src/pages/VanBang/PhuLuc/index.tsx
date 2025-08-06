@@ -4,14 +4,12 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import { ESettingKey, ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
-import { getImportPhuLucVbTemplate } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import {
 	BoldOutlined,
 	CheckCircleOutlined,
 	CloudUploadOutlined,
 	DeleteOutlined,
-	DownloadOutlined,
 	EditOutlined,
 	FilePdfOutlined,
 	FormOutlined,
@@ -20,8 +18,7 @@ import {
 	SettingOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { message, Popconfirm, Space, Tag } from 'antd';
-import fileDownload from 'js-file-download';
+import { Popconfirm, Space, Tag } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -36,9 +33,9 @@ import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import ViewPhuLucVanBang from './components/ViewRender';
 
-const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
+const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string }) => {
 	const intl = useIntl();
-	const { isQuyetDinh } = props;
+	const { isQuyetDinh, dotCapBangId } = props;
 	const {
 		page,
 		limit,
@@ -68,7 +65,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
-	const [loadingDownload, setLoadingDownload] = useState<boolean>(false);
 	const settingVbcc = settings[ESettingKey.INFO_TENANT_VBCC];
 
 	const getData = () => getModel({ idQuyetDinh: recQuyetDinh?._id }).then(() => setSelectedIds([]));
@@ -97,22 +93,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	const handlePrintOne = (rec: PhuLucVanBang.IRecord) => {
 		setDataToSignOrPush([rec]);
 		setVisiblePrint(true);
-	};
-
-	const onDownloadTemplate = async () => {
-		if (!recQuyetDinh?._id) {
-			return;
-		}
-		setLoadingDownload(true);
-		try {
-			const res = await getImportPhuLucVbTemplate(recQuyetDinh._id);
-			fileDownload(res.data, `Mẫu nhập Phụ lục văn bằng QĐ ${recQuyetDinh.soQuyetDinh}.xlsx`);
-		} catch (error) {
-			console.error('Lỗi khi tải file mẫu:', error);
-			message.error('Không thể tải file mẫu, vui lòng thử lại!');
-		} finally {
-			setLoadingDownload(false);
-		}
 	};
 
 	const onCell = (rec: PhuLucVanBang.IRecord) => ({
@@ -255,15 +235,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 
 	const otherButtons = [
 		<ButtonExtend
-			icon={<DownloadOutlined />}
-			onClick={onDownloadTemplate}
-			key='download-template'
-			disabled={!recQuyetDinh?._id}
-			loading={loadingDownload}
-		>
-			Tải file mẫu
-		</ButtonExtend>,
-		<ButtonExtend
 			icon={<ImportOutlined />}
 			onClick={() => setVisibleImport(true)}
 			key='import'
@@ -329,7 +300,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 				buttons={{ create: !!recQuyetDinh?._id }}
 				rowSelection
 				deleteMany
-				hideCard={isQuyetDinh}
+				hideCard={isQuyetDinh || !!dotCapBangId}
 				otherButtons={otherButtons}
 				extra={
 					<Space wrap>
