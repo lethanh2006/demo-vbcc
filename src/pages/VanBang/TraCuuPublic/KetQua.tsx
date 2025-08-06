@@ -56,11 +56,11 @@ const KetQuaVanBang = () => {
 			fixed: 'right',
 			render: (val, rec) => (
 				<ButtonExtend
-					disabled={!rec?.DuLieu?.idVanBang}
-					tooltip={!rec?.DuLieu?.idVanBang ? 'Chưa có thông tin văn bằng' : 'Chi tiết'}
+					disabled={!rec?.DuLieu?._id}
+					tooltip={!rec?.DuLieu?._id ? 'Chưa có thông tin văn bằng' : 'Chi tiết'}
 					type='link'
 					icon={<EyeOutlined />}
-					onClick={() => window.open(`/tra-cuu-van-bang/chi-tiet/${rec?.DuLieu?.idVanBang}`, '_blank')}
+					onClick={() => window.open(`/tra-cuu-van-bang/chi-tiet/${rec?.DuLieu?._id}`, '_blank')}
 				/>
 			),
 		},

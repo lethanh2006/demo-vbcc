@@ -120,11 +120,11 @@ export default () => {
 		}
 	};
 
-	const chiTietPhuLucVanBanPublicModel = async (idVanBang: string) => {
+	const chiTietPhuLucVanBanPublicModel = async (id: string) => {
 		setLoading(true);
 
 		try {
-			const res = await chiTietPhuLucVanBanPublic(idVanBang);
+			const res = await chiTietPhuLucVanBanPublic(id);
 			setRecord(res.data?.data);
 
 			return res.data?.data;
