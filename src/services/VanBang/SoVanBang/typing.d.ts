@@ -5,9 +5,9 @@ declare module SoVanBang {
 		_id: string;
 		ten: string;
 		maTrinhDoDaoTao: string;
-		trinhDoDaoTao?: TrinhDoDaoTao.IRecordBo;
+		tenTrinhDoDaoTao: string;
 		maHinhThucDaoTao: string;
-		hinhThucDaoTao?: HinhThucDaoTao.IRecordBo;
+		tenHinhThucDaoTao: string;
 		namHanhChinh: string;
 		trangThai: ETrangThaiSoVanBang;
 		nguoiTaoInfo: TNnguoiInfo;

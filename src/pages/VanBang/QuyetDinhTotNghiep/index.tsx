@@ -187,6 +187,7 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 						  ]
 						: []
 				}
+				hideCard={!!dotCapBangId}
 			>
 				<MyDatePicker
 					style={{ width: 200, marginBottom: 12 }}

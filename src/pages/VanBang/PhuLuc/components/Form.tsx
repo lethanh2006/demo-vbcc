@@ -45,6 +45,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
+			setRecordTable(undefined);
 		} else {
 			getBieuMauDetailModel(recQuyetDinh?.maBieuMau ?? '').then((bm) => {
 				if (record?._id) {

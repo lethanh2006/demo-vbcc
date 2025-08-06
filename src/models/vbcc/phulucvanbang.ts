@@ -1,9 +1,10 @@
 import { ShowAllVanBang } from '@/hooks/useCheckAccess';
 import useInitModel from '@/hooks/useInitModel';
 import {
+	chiTietPhuLucVanBanPublic,
 	importPhuLucVanBang,
 	putUpdateIpfs,
-	traCuuPhuLucVanBan,
+	traCuuPhuLucVanBanPublic,
 	updBlockchain,
 } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
@@ -15,7 +16,7 @@ export default () => {
 	const showAllVanBang = ShowAllVanBang();
 
 	const objInit = useInitModel<PhuLucVanBang.IRecord>(showAllVanBang ? 'phu-luc-van-bang' : 'phu-luc-van-bang/don-vi');
-	const { formSubmiting, setFormSubmiting } = objInit;
+	const { formSubmiting, setFormSubmiting, setLoading, setRecord } = objInit;
 	const [dataToSignOrPush, setDataToSignOrPush] = useState<PhuLucVanBang.IRecord[]>([]);
 	const [visibleSign, setVisibleSign] = useState<boolean>(false);
 	const [visiblePush, setVisiblePush] = useState<boolean>(false);
@@ -88,7 +89,6 @@ export default () => {
 
 		try {
 			const res = await importPhuLucVanBang(payload);
-			message.success('Import thành công');
 
 			return res.data?.data;
 		} catch (err) {
@@ -98,7 +98,7 @@ export default () => {
 		}
 	};
 
-	const traCuuPhuLucVanBanModel = async (payload: {
+	const traCuuPhuLucVanBanPublicModel = async (payload: {
 		hoTen?: string;
 		ngaySinh?: Date;
 		maSinhVien?: string;
@@ -109,7 +109,7 @@ export default () => {
 		setFormSubmiting(true);
 
 		try {
-			const res = await traCuuPhuLucVanBan(payload);
+			const res = await traCuuPhuLucVanBanPublic(payload);
 			setThongTinTraCuu(res.data?.data?.result);
 
 			return res.data?.result;
@@ -117,6 +117,21 @@ export default () => {
 			return Promise.reject(err);
 		} finally {
 			setFormSubmiting(false);
+		}
+	};
+
+	const chiTietPhuLucVanBanPublicModel = async (id: string) => {
+		setLoading(true);
+
+		try {
+			const res = await chiTietPhuLucVanBanPublic(id);
+			setRecord(res.data?.data);
+
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -134,8 +149,9 @@ export default () => {
 		updateSignatureModel,
 		pushBlockchainModel,
 		importPhuLucVanBangModel,
-		traCuuPhuLucVanBanModel,
+		traCuuPhuLucVanBanPublicModel,
 		thongTinTraCuu,
+		chiTietPhuLucVanBanPublicModel,
 		tableData,
 		setTableData,
 	};

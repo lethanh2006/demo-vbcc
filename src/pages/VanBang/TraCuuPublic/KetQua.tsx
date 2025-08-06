@@ -3,7 +3,6 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { EyeOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 
@@ -57,18 +56,18 @@ const KetQuaVanBang = () => {
 			fixed: 'right',
 			render: (val, rec) => (
 				<ButtonExtend
-					disabled={!rec?.DuLieu?.idVanBang}
-					tooltip={!rec?.DuLieu?.idVanBang ? 'Chưa có thông tin văn bằng' : 'Chi tiết'}
+					disabled={!rec?.DuLieu?._id}
+					tooltip={!rec?.DuLieu?._id ? 'Chưa có thông tin văn bằng' : 'Chi tiết'}
 					type='link'
 					icon={<EyeOutlined />}
-					onClick={() => window.open(`/tra-cuu-van-bang/chi-tiet/${rec?.DuLieu?.idVanBang}`, '_blank')}
+					onClick={() => window.open(`/tra-cuu-van-bang/chi-tiet/${rec?.DuLieu?._id}`, '_blank')}
 				/>
 			),
 		},
 	];
 
 	return (
-		<Card title='Thông tin phụ lục văn bằng'>
+		<div style={{ padding: 12 }}>
 			{!!thongTinTraCuu?.Error ? (
 				<div style={{ margin: 'auto' }}>
 					<i style={{ color: 'red' }}>Không tồn tại thông tin văn bằng!</i>
@@ -86,7 +85,7 @@ const KetQuaVanBang = () => {
 					}}
 				/>
 			)}
-		</Card>
+		</div>
 	);
 };
 
