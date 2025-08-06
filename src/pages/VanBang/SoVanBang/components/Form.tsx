@@ -4,7 +4,7 @@ import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
 import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, Row } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, Row } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -24,12 +24,28 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		} else if (record?._id) {
 			form.setFieldsValue(record);
 		}
-	}, [record?._id, visibleForm]);
+
+		if (!record?._id) {
+			const trinhDo = dsTrinhDo?.find((x) => x.ma === String(APP_CONFIG_INIT_TRINH_DO));
+			const hinhThuc = dsHinhThuc?.find((x) => x.ma === String(APP_CONFIG_INIT_HINH_THUC));
+			form.setFieldsValue({
+				namHanhChinh: moment(),
+				maTrinhDoDaoTao: APP_CONFIG_INIT_TRINH_DO,
+				maHinhThucDaoTao: APP_CONFIG_INIT_HINH_THUC,
+				ten: `Sổ văn bằng ${trinhDo?.ten} - ${hinhThuc?.ten} năm ${moment().format('YYYY')}`,
+			});
+		}
+	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
 
 	const onFinish = async (values: SoVanBang.IRecord) => {
+		const trinhDo = dsTrinhDo.find((x) => x.ma === values?.maTrinhDoDaoTao);
+		const hinhThuc = dsHinhThuc.find((x) => x.ma === values?.maHinhThucDaoTao);
+
 		const submitData = {
 			...values,
 			namHanhChinh: moment(values.namHanhChinh).format('YYYY'),
+			tenTrinhDoDaoTao: trinhDo?.ten,
+			tenHinhThucDaoTao: hinhThuc?.ten,
 		};
 
 		if (edit) {
@@ -55,7 +71,6 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 				const trinhDo = dsTrinhDo.find((x) => x.ma === maTrinhDo);
 				const hinhThuc = dsHinhThuc.find((x) => x.ma === maHinhThuc);
 
-				debugger;
 				if (year && trinhDo?.ten && hinhThuc?.ten) {
 					const tenSo = `Sổ văn bằng ${trinhDo.ten} - ${hinhThuc.ten} năm ${year}`;
 
@@ -74,12 +89,26 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${props.title?.toLowerCase()}`}>
 			<Form onFinish={onFinish} form={form} layout='vertical' onValuesChange={handleValuesChange}>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
-					<Col span={24}>
+					<Col span={24} md={12}>
+						<Form.Item name='namHanhChinh' label='Năm hành chính' rules={[...rules.required]}>
+							<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item name='maTrinhDoDaoTao' label='Trình độ đào tạo' rules={[...rules.required]}>
+							<SelectTrinhDo selectMa />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item name='maHinhThucDaoTao' label='Hình thức đào tạo' rules={[...rules.required]}>
+							<SelectHinhThuc selectMa hideAll />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
 						<Form.Item
 							name='ten'
 							label='Tên sổ văn bằng'
 							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
-							extra='Tên sẽ được gợi ý tự động theo trình độ, hình thức đào tạo và năm hành chính'
 						>
 							<Input placeholder='Nhập tên sổ' />
 						</Form.Item>
@@ -94,18 +123,8 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='namHanhChinh' label='Năm hành chính' rules={[...rules.required]}>
-							<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' />
-						</Form.Item>
-					</Col>
-					<Col span={24} md={12}>
-						<Form.Item name='maTrinhDoDaoTao' label='Trình độ đào tạo' rules={[...rules.required]}>
-							<SelectTrinhDo selectMa />
-						</Form.Item>
-					</Col>
-					<Col span={24} md={12}>
-						<Form.Item name='maHinhThucDaoTao' label='Hình thức đào tạo' rules={[...rules.required]}>
-							<SelectHinhThuc selectMa hideAll />
+						<Form.Item name='soVaoSoHienTai' label='Số vào sổ hiện tại' rules={[...rules.required]}>
+							<InputNumber style={{ width: '100%' }} placeholder='Nhập số vào sổ hiện tại' disabled={edit} />
 						</Form.Item>
 					</Col>
 

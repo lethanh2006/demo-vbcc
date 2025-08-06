@@ -1,11 +1,11 @@
 import ExpandText from '@/components/ExpandText';
+import MyDatePicker from '@/components/MyDatePicker';
 import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
-import FilterHocKy from '@/pages/DaoTao/HocKy/FilterHocKy';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, message, Popconfirm, Tooltip } from 'antd';
@@ -24,15 +24,17 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 	const intl = useIntl();
 	const { getModel, handleEdit, page, limit, deleteModel, setRecord, record, putModel } =
 		useModel('vbcc.quyetdinhtotnghiep');
-	const { record: recHocKy } = useModel('daotao.hocky');
+	const [yearSelect, setYearSelect] = useState<any>(moment().year());
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const [visibleModalChonQuyetDinh, setVisibleModalChonQuyetDinh] = useState<boolean>(false);
+
+	const condition = yearSelect ? { nam: String(yearSelect) } : undefined;
 
 	const getData = () => {
 		if (dotCapBangId) {
 			getModel({ dotCapBangId });
 		} else {
-			getModel({ maHocKy: recHocKy?.ma });
+			getModel(condition);
 		}
 	};
 
@@ -46,6 +48,15 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 	});
 
 	const columns: IColumn<QuyetDinhTotNghiep.IRecord>[] = [
+		{
+			title: 'Năm hành chính',
+			dataIndex: 'nam',
+			align: 'center',
+			width: 120,
+			filterType: 'string',
+			onCell,
+			hide: !!yearSelect,
+		},
 		{
 			title: 'Số quyết định',
 			dataIndex: 'soQuyetDinh',
@@ -66,7 +77,7 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 		},
 		{
 			title: 'Sổ văn bằng',
-			dataIndex: 'soVanBangId',
+			dataIndex: 'idSoVanBang',
 			width: 120,
 			render: (val, rec) => rec?.soVanBang?.ten ?? val,
 			filterType: 'customselect',
@@ -153,10 +164,10 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 	return (
 		<>
 			<TableBase
-				params={{ maHocKy: recHocKy?.ma }}
+				params={condition}
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, recHocKy?.ma, dotCapBangId]}
+				dependencies={[page, limit, yearSelect, dotCapBangId]}
 				modelName='vbcc.quyetdinhtotnghiep'
 				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
 				widthDrawer={1200}
@@ -176,8 +187,23 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 						  ]
 						: []
 				}
+				hideCard={!!dotCapBangId}
 			>
-				<FilterHocKy isSetHocKy style={{ width: 300, marginBottom: 12 }} allowClear />
+				<MyDatePicker
+					style={{ width: 200, marginBottom: 12 }}
+					value={yearSelect ? moment(yearSelect, 'YYYY') : null}
+					pickerStyle='year'
+					placeholder='Chọn năm hành chính'
+					format='YYYY'
+					onChange={(val) => {
+						if (val) {
+							setYearSelect(moment(val).year());
+						} else {
+							setYearSelect(undefined);
+						}
+					}}
+					allowClear
+				/>
 			</TableBase>
 
 			<ModalExpandable

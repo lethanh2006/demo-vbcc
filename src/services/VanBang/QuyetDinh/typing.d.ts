@@ -5,14 +5,15 @@ import type { SoVanBang } from '../SoVanBang/typing';
 declare module QuyetDinhTotNghiep {
 	export interface IRecord {
 		_id: string;
+		nam: string; //Năm hành chính
 		soQuyetDinh: string;
 		maHocKy: string;
 		noiDung: string;
-		soVanBangId: string;
+		idSoVanBang: string;
 		soVanBang: SoVanBang.IRecord;
 		maBieuMau: string;
 		bieuMau: BieuMauPhuLuc.IRecord;
-		ngayBanHanh: string;
+		ngayBanHanh: string | null;
 		loai: ELoaiQuyetDinh;
 		url: string | null;
 		kichHoat: string;
@@ -20,7 +21,7 @@ declare module QuyetDinhTotNghiep {
 		soLuotTraCuu: string;
 		idFileMau: string;
 		maDonVi: string;
-		idSoVanBang: string;
+
 		dotCapBangId: string | null;
 	}
 }

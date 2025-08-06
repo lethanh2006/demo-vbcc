@@ -80,4 +80,17 @@ declare module PhuLucVanBang {
 		tongTraCuu: number;
 		mucDich: Record<string, number>;
 	}
+
+	export interface IImportPhuLuc {
+		row: number;
+		identityKey: string;
+		field: string;
+		tableError: {
+			row: number;
+			column: string;
+			columnType: string;
+			value: string;
+			error: string;
+		};
+	}
 }

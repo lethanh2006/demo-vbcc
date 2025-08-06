@@ -88,7 +88,6 @@ export default () => {
 
 		try {
 			const res = await importPhuLucVanBang(payload);
-			message.success('Import thành công');
 
 			return res.data?.data;
 		} catch (err) {
