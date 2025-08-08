@@ -1,4 +1,5 @@
 import { Select } from 'antd';
+import _ from 'lodash';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
@@ -29,7 +30,7 @@ const SelectMucDichTraCuuPhuLuc = (props: {
 			mode={multiple ? 'multiple' : undefined}
 			value={value}
 			onChange={onChange}
-			options={danhSach
+			options={_.orderBy(danhSach, 'thuTu')
 				?.filter((item) => item?.active === true)
 				.map((item) => ({
 					key: item._id,

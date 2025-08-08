@@ -31,6 +31,7 @@ const FormQuyetDinhTotNghiep = (props: {
 		setFormSubmiting,
 	} = useModel('vbcc.quyetdinhtotnghiep');
 	const { afterAddNew, getData } = props;
+	const nam = Form.useWatch('nam', form);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -93,7 +94,7 @@ const FormQuyetDinhTotNghiep = (props: {
 				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item name='idSoVanBang' label='Sổ văn bằng' rules={[...rules.required]}>
-						<SelectSoVanBang />
+						<SelectSoVanBang condition={{ namHanhChinh: String(moment(nam).format('YYYY')) }} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>

@@ -1,22 +1,46 @@
-import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { MucDichTraCuuPhuLuc } from '@/services/VanBang/MucDichTraCuuPhuLuc/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Popconfirm, Switch } from 'antd';
+import { Card, Popconfirm, Switch } from 'antd';
+import { useEffect } from 'react';
 import { useModel } from 'umi';
 import FormMucDichTraCuuPhuLuc from './components/Form';
 
 const MucDichTraCuuPhuLucPage = () => {
-	const { page, limit, handleEdit, deleteModel, putModel } = useModel('vbcc.mucdichtracuuphuluc');
+	const {
+		getAllModel,
+		loading,
+		danhSach,
+		handleEdit,
+		deleteModel,
+		putModel,
+		visibleForm,
+		setVisibleForm,
+		setEdit,
+		setIsView,
+		setRecord,
+		updatethuTuModel,
+	} = useModel('vbcc.mucdichtracuuphuluc');
+
+	const getData = () => {
+		getAllModel(undefined, { soThuTu: 1 });
+	};
+
+	useEffect(() => {
+		getData();
+	}, []);
+
+	const onSortEnd = (record: MucDichTraCuuPhuLuc.IRecord, newIndex: number): void => {
+		updatethuTuModel(record, newIndex, getData);
+	};
 
 	const columns: IColumn<MucDichTraCuuPhuLuc.IRecord>[] = [
 		{
 			title: 'Hiển thị',
 			dataIndex: 'soThuTu',
 			width: 60,
-			sorter: true,
-			defaultSortOrder: 'ascend',
 			filterType: 'number',
 		},
 		{
@@ -61,13 +85,28 @@ const MucDichTraCuuPhuLucPage = () => {
 	];
 
 	return (
-		<TableBase
-			columns={columns}
-			modelName={'vbcc.mucdichtracuuphuluc'}
-			title='Mục đích tra cứu phụ lục'
-			Form={FormMucDichTraCuuPhuLuc}
-			dependencies={[page, limit]}
-		/>
+		<Card title='Danh sách mục đích tra cứu phụ lục'>
+			<TableStaticData
+				loading={loading}
+				columns={columns}
+				data={danhSach}
+				hasTotal
+				onReload={getData}
+				Form={FormMucDichTraCuuPhuLuc}
+				formProps={{ getData, title: 'Mục đích tra cứu phụ lục' }}
+				hasCreate
+				widthDrawer={800}
+				showEdit={visibleForm}
+				setShowEdit={(vis: boolean) => {
+					setRecord(undefined);
+					setEdit(false);
+					setIsView(false);
+					setVisibleForm(vis);
+				}}
+				rowSortable
+				onSortEnd={onSortEnd}
+			/>
+		</Card>
 	);
 };
 
