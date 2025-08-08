@@ -157,7 +157,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
 				widthDrawer={1200}
 				Form={ModalQuyetDinhTotNghiep}
-				formProps={{ getData }}
+				formProps={{ getData, yearSelect }}
 				rowSelection
 				buttons={{ create: isdotCapBang ? false : true, export: true }}
 				otherButtons={

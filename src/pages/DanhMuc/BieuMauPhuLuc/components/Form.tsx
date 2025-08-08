@@ -81,7 +81,15 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 
 					<Col span={24}>
 						<Form.Item label='Biểu mẫu xuất phụ lục (mặc định)' name='idFileMau' rules={[...rules.required]}>
-							<UploadFile hasPreviewFile previewFileProps={{ isFileId: true }} />
+							<UploadFile
+								hasPreviewFile
+								previewFileProps={{ isFileId: true }}
+								onChange={(info) => {
+									if (info?.fileList?.length === 0) {
+										form.setFieldsValue({ idFileMau: null });
+									}
+								}}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

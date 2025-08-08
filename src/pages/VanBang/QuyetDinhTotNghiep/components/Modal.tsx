@@ -6,7 +6,7 @@ import Form from './Form';
 
 const ModalQuyetDinhTotNghiep = (props: any) => {
 	const intl = useIntl();
-	const { title, getData } = props;
+	const { title, getData, yearSelect } = props;
 	const { record, edit, setVisibleForm } = useModel('vbcc.quyetdinhtotnghiep');
 	const [currentStep, setCurrentStep] = useState(0);
 
@@ -31,7 +31,7 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 			</Steps>
 
 			{currentStep === 0 ? (
-				<Form afterAddNew={() => setCurrentStep(1)} getData={getData} />
+				<Form afterAddNew={() => setCurrentStep(1)} getData={getData} yearSelect={yearSelect} />
 			) : currentStep === 1 ? (
 				<PhuLucVanBangPage isQuyetDinh />
 			) : null}
