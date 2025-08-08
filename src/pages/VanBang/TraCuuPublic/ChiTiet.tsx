@@ -78,7 +78,7 @@ const ChiTietTraCuuVanBang = ({
 									</Descriptions.Item>
 									<Descriptions.Item label='Tập tin đính kèm' span={2}>
 										{record?.quyetDinh?.url ? (
-											<a href={record.quyetDinh?.url} target='_blank' rel='noreferrer'>
+											<a href={record?.quyetDinh?.url} target='_blank' rel='noreferrer'>
 												Xem chi tiết
 											</a>
 										) : (
@@ -103,7 +103,7 @@ const ChiTietTraCuuVanBang = ({
 								</Descriptions>
 							</Col>
 
-							{record?.signature && (
+							{record?.signature ? (
 								<Col span={24}>
 									<div className='vbcc-signature'>
 										<img src='/images/tick.svg' alt='' width={24} height={24} />
@@ -118,16 +118,16 @@ const ChiTietTraCuuVanBang = ({
 										</a>
 									</div>
 								</Col>
-							)}
+							) : null}
 
-							{record?.urlIpfs && (
+							{record?.urlIpfs ? (
 								<Col span={24}>
 									<div className='vbcc-urlIpfs'>
 										<h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>File văn bằng</h4>
 										<PreviewFile file={record?.urlIpfs} />
 									</div>
 								</Col>
-							)}
+							) : null}
 						</Row>
 					) : (
 						<Empty description='Không có thông tin sinh viên' style={{ margin: 'auto' }} />

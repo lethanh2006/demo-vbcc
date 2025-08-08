@@ -1,6 +1,7 @@
 import { Select } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
+import _ from 'lodash';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -31,7 +32,7 @@ const SelectMucDichTraCuuPublic = (props: {
 			mode={multiple ? 'multiple' : undefined}
 			value={value}
 			onChange={onChange}
-			options={danhSach
+			options={_.orderBy(danhSach, 'thuTu')
 				?.filter((item) => item?.active === true)
 				.map((item) => ({
 					key: item._id,

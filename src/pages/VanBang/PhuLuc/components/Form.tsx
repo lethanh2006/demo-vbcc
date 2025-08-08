@@ -236,7 +236,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 							name='soVaoSoBang'
 							rules={[...rules.required, ...rules.text, ...rules.length(100)]}
 						>
-							<Input placeholder='Nhập số vào sổ' disabled={edit} />
+							<Input placeholder='Nhập số vào sổ' />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>

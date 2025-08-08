@@ -52,6 +52,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 		} else {
 			values.elements = [];
 		}
+
 		if (edit) {
 			putModel(record?._id ?? '', values)
 				.then()
