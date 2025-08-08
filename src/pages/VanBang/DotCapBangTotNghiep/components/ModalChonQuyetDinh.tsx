@@ -1,61 +1,53 @@
-import { Modal, Button, message } from 'antd';
-import { useState, useEffect } from 'react';
-import { useModel } from 'umi';
-import moment from 'moment';
 import ExpandText from '@/components/ExpandText';
-import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
+import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
+import { Button, message, Modal } from 'antd';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { useModel } from 'umi';
 
 type TProps = {
 	visible: boolean;
 	onCancel: () => void;
-	dotCapBangId: string;
-	onSuccess: () => void;
+	getData: () => void;
 };
 
-const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, onSuccess }) => {
+const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getDataExternal }) => {
 	const { record: recDot } = useModel('vbcc.dotcapbangtotnghiep');
-	const { getAllModel: getAllQuyetDinh, putManyModel, formSubmiting, loading } = useModel('vbcc.quyetdinhtotnghiep');
-	const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-	const [availableDecisions, setAvailableDecisions] = useState<QuyetDinhTotNghiep.IRecord[]>([]);
+	const {
+		getAllModel: getAllQuyetDinh,
+		putManyModel,
+		formSubmiting,
+		loading,
+		selectedIds,
+		setSelectedIds,
+	} = useModel('vbcc.quyetdinhtotnghiep');
+	const [danhSach, setDanhSach] = useState<QuyetDinhTotNghiep.IRecord[]>([]);
 
-	// Lấy danh sách quyết định chưa được gán vào bất kỳ đợt cấp bằng nào
 	const getData = () =>
-		getAllQuyetDinh(undefined, undefined, { dotCapBangId: null } as any, undefined, undefined, false).then((res) =>
-			setAvailableDecisions(res),
+		getAllQuyetDinh(undefined, undefined, { dotCapBangId: null }, undefined, undefined, false).then((res) =>
+			setDanhSach(res),
 		);
 
 	useEffect(() => {
 		if (visible && recDot?._id) {
 			getData();
+		} else {
+			setDanhSach([]);
+			setSelectedIds([]);
 		}
 	}, [visible, recDot?._id]);
 
-	// Reset giá trị khi mở modal
-	useEffect(() => {
-		if (visible) {
-			setSelectedRowKeys([]);
-		}
-	}, [visible]);
-
 	const handleSubmit = async () => {
-		if (selectedRowKeys.length === 0) {
+		if (selectedIds?.length === 0) {
 			message.warning('Vui lòng chọn ít nhất một quyết định');
 			return;
 		}
 
 		try {
-			await putManyModel(selectedRowKeys, { dotCapBangId: recDot?._id });
-
-			message.success('Thêm quyết định vào đợt cấp bằng thành công');
-
-			if (onSuccess) {
-				onSuccess();
-			}
+			await putManyModel(selectedIds ?? [], { dotCapBangId: recDot?._id }, getDataExternal);
 			onCancel();
-			// Cập nhật lại danh sách quyết định chưa được gán
-			getData();
 		} catch (error) {
 			message.error('Có lỗi xảy ra khi thêm quyết định');
 		}
@@ -83,28 +75,31 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, onSuccess }) 
 		},
 	];
 
-	const rowSelection = {
-		selectedRowKeys,
-		onChange: (selectedKeys: React.Key[]) => {
-			setSelectedRowKeys(selectedKeys as string[]);
-		},
-	};
-
 	return (
 		<Modal title='Chọn quyết định tốt nghiệp' visible={visible} width={800} onCancel={onCancel} footer={null}>
 			<TableStaticData
 				columns={columns}
-				data={availableDecisions}
+				data={danhSach}
 				loading={loading}
-				otherProps={{ rowSelection, rowKey: '_id' }}
 				addStt
 				hasTotal
 				onReload={getData}
+				otherProps={{
+					pagination: false,
+					rowKey: (rec: QuyetDinhTotNghiep.IRecord) => rec._id,
+					rowSelection: {
+						type: 'checkbox',
+						selectedRowKeys: selectedIds,
+						preserveSelectedRowKeys: true,
+						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+						columnWidth: 40,
+					},
+				}}
 			/>
 
 			<div className='form-footer'>
-				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={selectedRowKeys.length === 0}>
-					Thêm vào đợt cấp bằng {selectedRowKeys.length > 0 ? `(${selectedRowKeys.length})` : ''}
+				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={selectedIds?.length === 0}>
+					Thêm vào đợt cấp bằng {selectedIds?.length ?? 0 > 0 ? `(${selectedIds?.length})` : ''}
 				</Button>
 				<Button onClick={onCancel}>Hủy</Button>
 			</div>

@@ -1,43 +1,54 @@
-import { Modal, Button, message, Tag } from 'antd';
-import { useModel } from 'umi';
-import moment from 'moment';
+import ExpandText from '@/components/ExpandText';
+import { EOperatorType } from '@/components/Table/constant';
+import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
-import ExpandText from '@/components/ExpandText';
-import TableBase from '@/components/Table';
+import { Button, message, Modal } from 'antd';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { useModel } from 'umi';
 
 type TProps = {
 	visible: boolean;
 	onCancel: () => void;
-	onSuccess: () => void;
-	dotCapBangId: string;
-	// idDotCapBang: string;
+	getData: () => void;
 };
 
-const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, dotCapBangId, onSuccess }) => {
-	const {
-		getModel: getPhuLuc,
-		putManyModel,
-		formSubmiting,
-		selectedIds = [],
-		page,
-		limit,
-	} = useModel('vbcc.phulucvanbang');
+const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getDataExternal }) => {
+	const { record: recDot } = useModel('vbcc.dotcapbangtotnghiep');
+	const { dsAllQuyeDinh } = useModel('vbcc.quyetdinhtotnghiep');
+	const { getAllModel, putManyModel, formSubmiting, selectedIds, setSelectedIds, loading } =
+		useModel('vbcc.phulucvanbang');
+	const [danhSach, setDanhSach] = useState<PhuLucVanBang.IRecord[]>([]);
 
-	// Lấy danh sách phụ lục chưa được gán vào bất kỳ đợt cấp bằng nào
 	const getData = async () => {
-		return await getPhuLuc(
+		getAllModel(
 			undefined,
 			undefined,
 			{
 				dotCapBangId: null,
-				// daCapBang: false,
-				// daCapPhuLuc: false,
-			} as any,
+			},
+			[
+				{
+					active: true,
+					field: 'idQuyetDinh',
+					operator: EOperatorType.INCLUDE,
+					values: dsAllQuyeDinh?.map((item) => item?._id),
+				},
+			],
 			undefined,
-			undefined,
-		);
+			false,
+		).then((res) => setDanhSach(res));
 	};
+
+	useEffect(() => {
+		if (visible && recDot?._id) {
+			getData();
+		} else {
+			setDanhSach([]);
+			setSelectedIds([]);
+		}
+	}, [visible, recDot?._id]);
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
@@ -87,40 +98,50 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, dotCapBangId, on
 	];
 
 	const handleSubmit = async () => {
-		if (selectedIds.length === 0) {
+		if (selectedIds?.length === 0) {
 			message.warning('Vui lòng chọn ít nhất một phụ lục');
 			return;
 		}
 
 		try {
-			await putManyModel(selectedIds, {
-				dotCapBangId: String(dotCapBangId),
-			});
+			await putManyModel(
+				selectedIds ?? [],
+				{
+					dotCapBangId: recDot?._id,
+				},
+				getDataExternal,
+			);
 
-			message.success('Thêm phụ lục vào đợt cấp bằng thành công');
-			onSuccess?.();
 			onCancel();
 		} catch (error) {
 			console.error(error);
-			message.error('Có lỗi xảy ra khi thêm phụ lục');
 		}
 	};
 
 	return (
 		<Modal title='Chọn phụ lục văn bằng' visible={visible} width={800} onCancel={onCancel} footer={null}>
-			<TableBase
-				title='Thêm phụ lục văn bằng vào đợt cấp bằng'
+			<TableStaticData
 				columns={columns}
-				modelName='vbcc.phulucvanbangrieng'
-				getData={getData}
+				data={danhSach?.filter((item) => item?.kichHoat !== true)}
+				loading={loading}
 				addStt
-				rowSelection
-				dependencies={[page, limit]}
-				otherProps={{ rowKey: '_id' }}
+				hasTotal
+				onReload={getData}
+				otherProps={{
+					pagination: false,
+					rowKey: (rec: PhuLucVanBang.IRecord) => rec._id,
+					rowSelection: {
+						type: 'checkbox',
+						selectedRowKeys: selectedIds,
+						preserveSelectedRowKeys: true,
+						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+						columnWidth: 40,
+					},
+				}}
 			/>
 			<div className='form-footer'>
-				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={selectedIds.length === 0}>
-					Thêm vào đợt cấp bằng {selectedIds.length > 0 ? `(${selectedIds.length})` : ''}
+				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={selectedIds?.length === 0}>
+					Thêm vào đợt cấp bằng {selectedIds?.length ?? 0 > 0 ? `(${selectedIds?.length})` : ''}
 				</Button>
 				<Button onClick={onCancel}>Hủy</Button>
 			</div>

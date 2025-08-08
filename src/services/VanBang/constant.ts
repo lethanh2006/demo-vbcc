@@ -124,3 +124,9 @@ export enum ETrangThaiDotCapBangTotNghiep {
 	DA_DUYET = 'Đã duyệt',
 	TU_CHOI = 'Từ chối',
 }
+
+export const colorTrangThaiCapBangToiNghiep: Record<ETrangThaiDotCapBangTotNghiep, ETagColor> = {
+	[ETrangThaiDotCapBangTotNghiep.CHO_DUYET]: ETagColor.DEFAULT,
+	[ETrangThaiDotCapBangTotNghiep.DA_DUYET]: ETagColor.GREEN,
+	[ETrangThaiDotCapBangTotNghiep.TU_CHOI]: ETagColor.RED,
+};

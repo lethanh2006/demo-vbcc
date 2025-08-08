@@ -1,9 +1,11 @@
+import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
+import { colorTrangThaiCapBangToiNghiep, ETrangThaiDotCapBangTotNghiep } from '@/services/VanBang/constant';
 import type { DotCapBangTotNghiep } from '@/services/VanBang/DotCapBangTotNghiep/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Popconfirm } from 'antd';
+import { Popconfirm, Tag } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 import Modal from './components/Modal';
@@ -18,14 +20,6 @@ const DotCapBangTotNghiepPage = () => {
 			width: 180,
 			sorter: true,
 			filterType: 'string',
-		},
-		{
-			title: 'Năm',
-			dataIndex: 'nam',
-			width: 150,
-			sorter: true,
-			filterType: 'string',
-			align: 'center',
 		},
 		{
 			title: 'Thời gian bắt đầu',
@@ -44,6 +38,24 @@ const DotCapBangTotNghiepPage = () => {
 			filterType: 'date',
 			align: 'center',
 			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+		},
+		{
+			title: 'Ghi chú',
+			dataIndex: 'ghiChu',
+			width: 180,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			filterType: 'string',
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'trangThai',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => (
+				<Tag color={colorTrangThaiCapBangToiNghiep[val as ETrangThaiDotCapBangTotNghiep]}>{val}</Tag>
+			),
+			filterType: 'select',
+			filterData: Object.values(ETrangThaiDotCapBangTotNghiep),
 		},
 		{
 			title: 'Thao tác',
@@ -69,7 +81,7 @@ const DotCapBangTotNghiepPage = () => {
 		<TableBase
 			columns={columns}
 			modelName={'vbcc.dotcapbangtotnghiep'}
-			title='Đợt cấp bằng tốt nghiệp'
+			title='Đợt cấp bằng, chứng chỉ, chứng nhận'
 			Form={Modal}
 			dependencies={[page, limit]}
 			widthDrawer={1200}

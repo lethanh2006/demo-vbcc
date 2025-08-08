@@ -7,11 +7,13 @@ import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) => {
-	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
+const DotCapBangTotNghiepForm = (props: { afterAddNew?: (rec: DotCapBangTotNghiep.IRecord) => void }) => {
+	const { afterAddNew } = props;
+	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, setRecord, setEdit } =
 		useModel('vbcc.dotcapbangtotnghiep');
 	const intl = useIntl();
 	const [form] = Form.useForm();
+	const ngayBatDau = Form.useWatch('ngayBatDau', form);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -22,18 +24,22 @@ const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) 
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: DotCapBangTotNghiep.IRecord) => {
-		const submitData = {
+		const data = {
 			...values,
 			nam: moment(values.nam).format('YYYY'),
 		};
 
 		if (edit) {
-			putModel(record?._id ?? '', submitData)
+			putModel(record?._id ?? '', data)
 				.then()
 				.catch((er) => console.log(er));
 		} else {
-			postModel(submitData)
-				.then()
+			postModel(data)
+				.then((rec) => {
+					setRecord(rec);
+					setEdit(true);
+					if (afterAddNew) afterAddNew(rec);
+				})
 				.catch((er) => console.log(er));
 		}
 	};
@@ -41,18 +47,13 @@ const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) 
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
-				<Col span={24} md={12}>
+				<Col span={24}>
 					<Form.Item
 						name='ten'
 						label='Tên đợt cấp bằng'
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
 						<Input placeholder='Nhập tên đợt cấp bằng' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item name='nam' label='Năm hành chính' rules={[...rules.required]}>
-						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' />
 					</Form.Item>
 				</Col>
 
@@ -64,7 +65,15 @@ const DotCapBangTotNghiepForm = (props: { title?: string; [key: string]: any }) 
 
 				<Col span={24} md={12}>
 					<Form.Item name='ngayKetThuc' label='Thời gian kết thúc' rules={[...rules.required]}>
-						<MyDatePicker placeholder='Chọn thời gian kết thúc' />
+						<MyDatePicker
+							placeholder='Chọn thời gian kết thúc'
+							disabledDate={(cur) => (ngayBatDau ? moment(cur).isBefore(ngayBatDau) : false)}
+						/>
+					</Form.Item>
+				</Col>
+				<Col span={24}>
+					<Form.Item name='ghiChu' label='Ghi chú'>
+						<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
 					</Form.Item>
 				</Col>
 			</Row>
