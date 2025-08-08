@@ -7,7 +7,7 @@ export default {
 	'menu.News': 'Tin tức',
 
 	'menu.QuyetDinhTotNghiep': 'Thông tin quyết định',
-	'menu.DotCapBangTotNghiep': 'Đợt cấp bằng tốt nghiệp',
+	'menu.DotCapBangTotNghiep': 'Đợt cấp bằng, chứng chỉ, chứng nhận',
 	'menu.PhuLucVanBang': 'Phụ lục văn bằng',
 	'menu.XacMinhVanBang': 'Xác minh văn bằng',
 	'menu.SoVanBang': 'Sổ văn bằng',

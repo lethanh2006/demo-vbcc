@@ -11,6 +11,7 @@ declare module DotCapBangTotNghiep {
 		nguoiTaoInfo: {};
 		nguoiDuyetInfo: {};
 		maDonVi: string;
+		ghiChu: string;
 		createdAt: Date;
 		updatedAt: Date;
 	}

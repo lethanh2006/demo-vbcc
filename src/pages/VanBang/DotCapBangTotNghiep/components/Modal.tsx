@@ -1,76 +1,45 @@
-import { Button, Card, message, Steps } from 'antd';
+import { Card, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import PhuLucVanBangPage from '../../PhuLuc';
 import QuyetDinhTotNghiepPage from '../../QuyetDinhTotNghiep';
 import Form from './Form';
 
-const ModalDotCapBangTotNghiep = (props: any) => {
-	const { title, getData } = props;
-	const { record, edit, setVisibleForm } = useModel('vbcc.dotcapbangtotnghiep');
-	const [currentStep, setCurrentStep] = useState(0);
-	// const [selectedQuyetDinh, setSelectedQuyetDinh] = useState<string>();
-	const [dotCapBangId = 'fromDotCapBangTotNghiepModal', setDotCapBangId] = useState(record?._id);
+const ModalKhaoSat = (props: any) => {
+	const { title } = props;
+	const { record, edit } = useModel('vbcc.dotcapbangtotnghiep');
+	const [currentStep, setCurrentStep] = useState<number>(0);
 
 	useEffect(() => {
 		setCurrentStep(0);
-		if (record?._id) {
-			setDotCapBangId(record._id);
-		}
 	}, [record?._id]);
 
 	const onChangeStep = (step: number) => {
-		// Chỉ cho phép chuyển sang bước tiếp theo nếu đã có dotCapBangId
-		if (step > 0 && !dotCapBangId) {
-			message.warning('Vui lòng tạo đợt cấp bằng trước khi tiếp tục');
-			return;
-		}
 		setCurrentStep(step);
-	};
-
-	const handleAfterAddNew = (newId: string) => {
-		setDotCapBangId(newId);
-		setCurrentStep(1);
 	};
 
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
 			<Steps
 				current={currentStep}
+				type='navigation'
 				style={{ marginBottom: 18, paddingTop: 0 }}
 				onChange={record?._id ? onChangeStep : undefined}
-				type='navigation'
 			>
-				<Steps.Step title='Thông tin chung' style={{ cursor: 'pointer' }} />
-				<Steps.Step
-					title='Quyết định tốt nghiệp'
-					style={{ cursor: dotCapBangId ? 'pointer' : 'not-allowed' }}
-					// onClick={() => setCurrentStep(1)}
-					disabled={!record?._id}
-				/>
-				<Steps.Step
-					title='Phụ lục văn bằng'
-					style={{ cursor: dotCapBangId ? 'pointer' : 'not-allowed' }}
-					// onClick={() => setCurrentStep(2)}
-					disabled={!dotCapBangId}
-				/>
+				<Steps.Step title='Thông tin chung' />
+				<Steps.Step title='Quyết định tốt nghiệp' disabled={!record?._id} />
+				<Steps.Step title='Phụ lục văn bằng' disabled={!record?._id} />
 			</Steps>
 
 			{currentStep === 0 ? (
-				<Form afterAddNew={handleAfterAddNew} getData={getData} />
+				<Form afterAddNew={() => setCurrentStep(1)} />
 			) : currentStep === 1 ? (
-				<QuyetDinhTotNghiepPage dotCapBangId={dotCapBangId} />
+				<QuyetDinhTotNghiepPage isDotCapBang />
 			) : currentStep === 2 ? (
-				<PhuLucVanBangPage dotCapBangId={dotCapBangId} />
-			) : null}
-
-			{currentStep !== 0 ? (
-				<div className='form-footer'>
-					<Button onClick={() => setVisibleForm(false)}>Đóng</Button>
-				</div>
+				<PhuLucVanBangPage isDotCapBang />
 			) : null}
 		</Card>
 	);
 };
 
-export default ModalDotCapBangTotNghiep;
+export default ModalKhaoSat;
