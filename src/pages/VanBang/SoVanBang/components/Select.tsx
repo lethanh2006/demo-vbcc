@@ -37,7 +37,7 @@ const SelectDangTaiLieu = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn dạng tài liệu'
+			placeholder='Chọn sổ văn bằng'
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>
