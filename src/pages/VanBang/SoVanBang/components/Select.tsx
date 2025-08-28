@@ -6,7 +6,7 @@ import { useModel } from 'umi';
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
  */
-const SelectDangTaiLieu = (props: {
+const SelectSoVanBang = (props: {
 	value?: string;
 	onChange?: (val?: string) => void;
 	multiple?: boolean;
@@ -44,4 +44,4 @@ const SelectDangTaiLieu = (props: {
 	);
 };
 
-export default SelectDangTaiLieu;
+export default SelectSoVanBang;

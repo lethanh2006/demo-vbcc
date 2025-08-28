@@ -1,9 +1,11 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import PreviewFile from '@/components/PreviewFile';
+import ModalExpandable from '@/components/Table/ModalExpandable';
 import { EFileScope, uploadFile } from '@/services/uploadFile';
 import { exportData } from '@/services/VanBang/PhuLucVanBang';
 import socket, { ESocketType } from '@/utils/socket';
 import { FilePdfOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Col, Descriptions, message, Modal, Progress, Row, Upload } from 'antd';
+import { Button, Checkbox, Col, Descriptions, message, Modal, Progress, Row, Space, Upload } from 'antd';
 import type { RcFile } from 'antd/lib/upload';
 import moment, { type Moment } from 'moment';
 import { useEffect, useState } from 'react';
@@ -20,9 +22,21 @@ const ModalExportData = () => {
 	const exportStatus = exportDetail.current === exportDetail.total && exportDetail.total > 0 ? 'Done' : 'None';
 	const [fileList, setFileList] = useState<any[]>([]);
 	const [ngayThang, setngayThang] = useState<Moment>(moment());
+	const [previewOpen, setPreviewOpen] = useState(false);
+	const [previewImage, setPreviewImage] = useState('');
+
+	const [selectedMaus, setSelectedMaus] = useState<string[]>([]);
 
 	useEffect(() => {
 		setExportDetail({ current: 0, total: dataToSignOrPush?.length });
+
+		if (recQuyetDinh?.bieuMau?.listIdFileBieuMau?.length) {
+			setSelectedMaus([recQuyetDinh?.bieuMau?.listIdFileBieuMau[0]?._id]);
+		} else if (dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau?.length) {
+			setSelectedMaus([dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau[0]?._id]);
+		} else {
+			setSelectedMaus([]);
+		}
 	}, [visiblePrint]);
 
 	const increExportCurrent = () => setExportDetail(({ current, total }) => ({ total, current: current + 1 }));
@@ -33,30 +47,31 @@ const ModalExportData = () => {
 
 	const onExport = async () => {
 		if (exporting) return;
-		if (!recQuyetDinh?.bieuMau?.idFileMau && !fileList.length)
-			return message.error('Không có mẫu in phụ lục. Vui lòng chọn lại');
+		if (!selectedMaus.length && !fileList.length) return message.error('Không có mẫu in phụ lục. Vui lòng chọn lại');
 		setExporting(true);
 
-		let idMau = undefined;
-		if (fileList.length && fileList[0].originFileObj)
-			idMau = (
-				await uploadFile({
-					file: fileList[0].originFileObj,
-					scope: EFileScope.PUBLIC,
-				})
-			).data?.data?.file?._id;
+		let idsMau: string[] = selectedMaus;
 
-		await exportData(
-			{
-				quyetDinhId: recQuyetDinh?._id,
-				listIdVanBang: dataToSignOrPush.map((item) => item._id),
-				ngay: ngayThang.format('DD'),
-				thang: ngayThang.format('MM'),
-				nam: ngayThang.format('YYYY'),
-			},
-			{ idMau },
-		)
-			.then((res) => {
+		if (fileList.length && fileList[0].originFileObj) {
+			const res = await uploadFile({
+				file: fileList[0].originFileObj,
+				scope: EFileScope.PUBLIC,
+			});
+			const uploadedId = res.data?.data?.file?._id;
+			if (uploadedId) {
+				idsMau = [uploadedId];
+			}
+		}
+
+		await exportData({
+			idMau: idsMau,
+			quyetDinhId: recQuyetDinh?._id,
+			listIdVanBang: dataToSignOrPush.map((item) => item._id),
+			ngay: ngayThang.format('DD'),
+			thang: ngayThang.format('MM'),
+			nam: ngayThang.format('YYYY'),
+		})
+			.then(() => {
 				message.info('Đang xử lý dữ liệu. Vui lòng đợi trong ít phút...');
 				// fileDownload(res.data, getFilenameHeader(res));
 
@@ -72,6 +87,9 @@ const ModalExportData = () => {
 		}
 		return isLt5M;
 	};
+
+	const mauOptions =
+		recQuyetDinh?.bieuMau?.listIdFileBieuMau || dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau || [];
 
 	return (
 		<Modal
@@ -93,8 +111,25 @@ const ModalExportData = () => {
 					<Descriptions.Item label='Số mục thống kê'>{dataToSignOrPush?.length || 'Tất cả'} phụ lục</Descriptions.Item>
 					<Descriptions.Item label='Mẫu in phụ lục'>
 						<div>
-							{recQuyetDinh?.bieuMau?.idFileMau || dataToSignOrPush[0]?.quyetDinh?.bieuMau?.idFileMau ? (
-								<b>Mẫu {recQuyetDinh?.soQuyetDinh ?? dataToSignOrPush[0]?.quyetDinh?.soQuyetDinh ?? ''}</b>
+							{mauOptions.length ? (
+								<Checkbox.Group value={selectedMaus} onChange={(vals) => setSelectedMaus(vals as string[])}>
+									<Space wrap>
+										{mauOptions.map((item: any, idx: number) => (
+											<Space wrap key={item}>
+												<Checkbox value={item} />
+												<a
+													onClick={(e) => {
+														e.preventDefault();
+														setPreviewImage(item);
+														setPreviewOpen(true);
+													}}
+												>
+													{`Tệp tin ${idx + 1}`}
+												</a>
+											</Space>
+										))}
+									</Space>
+								</Checkbox.Group>
 							) : (
 								<i style={{ color: 'red' }}>(chưa có mẫu)</i>
 							)}
@@ -152,6 +187,20 @@ const ModalExportData = () => {
 				</Button>
 				<Button onClick={() => setVisiblePrint(false)}>Hủy</Button>
 			</div>
+
+			<ModalExpandable
+				title='Xem trước tập tin'
+				width={1000}
+				visible={previewOpen}
+				footer={null}
+				onCancel={() => setPreviewOpen(false)}
+			>
+				<PreviewFile file={previewImage} isFileId />
+
+				<div className='form-footer'>
+					<Button onClick={() => setPreviewOpen(false)}>Đóng</Button>
+				</div>
+			</ModalExpandable>
 		</Modal>
 	);
 };

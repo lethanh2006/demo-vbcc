@@ -6,7 +6,7 @@ declare module BieuMauPhuLuc {
 		ma: string;
 		ten: string;
 		elements: TElement[];
-		idFileMau: any;
+		listIdFileBieuMau: any;
 
 		createdAt: string;
 		updatedAt: string;
