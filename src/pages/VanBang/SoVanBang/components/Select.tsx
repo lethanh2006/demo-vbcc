@@ -1,41 +1,43 @@
+import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import { Select } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
+/**
+ * Secect Căn cứ pháp lý để cho vào FormItem
+ */
 const SelectSoVanBang = (props: {
 	value?: string;
-	onChange?: (val: string) => void;
+	onChange?: (val?: string) => void;
 	multiple?: boolean;
 	allowClear?: boolean;
-	hasDefault?: boolean;
 	style?: React.CSSProperties;
-	placeholder?: string;
+	isSetRecord?: boolean;
+	condition?: Partial<SoVanBang.IRecord>;
+	disabled?: boolean;
 }) => {
-	const { value, onChange, multiple, allowClear, hasDefault, style } = props;
+	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled } = props;
 	const { danhSach, getAllModel } = useModel('vbcc.sovanbang');
 
 	useEffect(() => {
-		getAllModel().then((data) => {
-			// Nếu chưa chọn giá trị và (sau khi thêm mới hoặc data chỉ có 1 phần tử)
-			// Thì chọn phần tử đầu tiên
-			if (hasDefault && !!onChange) onChange(data?.[0]?._id);
-		});
-	}, []);
+		getAllModel(!!isSetRecord, undefined, condition);
+	}, [JSON.stringify(condition)]);
 
 	return (
 		<Select
+			disabled={disabled}
 			mode={multiple ? 'multiple' : undefined}
+			allowClear={allowClear}
 			value={value}
 			onChange={onChange}
 			options={danhSach.map((item) => ({
 				key: item._id,
 				value: item._id,
-				label: `${item.ten}`,
+				label: item.ten,
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder={props.placeholder ?? 'Chọn sổ văn bằng'}
-			allowClear={allowClear ?? false}
+			placeholder='Chọn sổ văn bằng'
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

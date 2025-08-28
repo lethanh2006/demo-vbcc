@@ -46,16 +46,23 @@ export async function chiTietPhuLucVanBanPublic(id: string) {
 	return axios.get(`${ip3}/phu-luc-van-bang/public/chi-tiet-phu-luc/${id}`);
 }
 
-export const exportData = (
-	payload: { listIdVanBang: string[]; quyetDinhId?: string; ngay: string; thang: string; nam: string },
-	params: { idMau?: string },
-) => {
+export const exportData = (payload: {
+	idMau: string[];
+	listIdVanBang: string[];
+	quyetDinhId?: string;
+	ngay: string;
+	thang: string;
+	nam: string;
+}) => {
 	return axios.post(`${ip3}/phu-luc-van-bang/exports-by-list-id`, payload, {
-		params,
 		responseType: 'arraybuffer',
 	});
 };
 
 export async function updBlockchain(payLoad: any) {
 	return axios.post(`${ip3}/phu-luc-van-bang/create-blockchain/list-id-van-bang`, payLoad);
+}
+
+export async function sinhSoVaoSo(idQuyetDinh: string, payLoad: any) {
+	return axios.post(`${ip3}/phu-luc-van-bang/sinh-so-vao-so/${idQuyetDinh}`, payLoad);
 }

@@ -8,7 +8,7 @@ import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, message, Popconfirm, Tooltip } from 'antd';
+import { Button, Popconfirm, Tooltip } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -16,26 +16,28 @@ import ModalChonQuyetDinh from '../DotCapBangTotNghiep/components/ModalChonQuyet
 import SelectSoVanBang from '../SoVanBang/components/Select';
 import ModalQuyetDinhTotNghiep from './components/Modal';
 
-type TProp = {
-	dotCapBangId: string;
-};
-
-const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
+const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
+	const { isDotCapBang: isdotCapBang = false } = props;
 	const intl = useIntl();
+	const { record: recDotCapBang } = useModel('vbcc.dotcapbangtotnghiep');
 	const { getModel, handleEdit, page, limit, deleteModel, setRecord, record, putModel } =
 		useModel('vbcc.quyetdinhtotnghiep');
 	const [yearSelect, setYearSelect] = useState<any>(moment().year());
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const [visibleModalChonQuyetDinh, setVisibleModalChonQuyetDinh] = useState<boolean>(false);
 
-	const condition = yearSelect ? { nam: String(yearSelect) } : undefined;
+	const condition: any = {};
+
+	if (yearSelect && !isdotCapBang) {
+		condition.nam = String(yearSelect);
+	}
+
+	if (isdotCapBang) {
+		condition.dotCapBangId = recDotCapBang?._id;
+	}
 
 	const getData = () => {
-		if (dotCapBangId) {
-			getModel({ dotCapBangId });
-		} else {
-			getModel(condition);
-		}
+		getModel(condition);
 	};
 
 	const handleApply = () => {
@@ -46,6 +48,10 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 		onClick: () => handleEdit(rec),
 		style: { cursor: 'pointer' },
 	});
+
+	const deleQuyetDinhDot = (rec: QuyetDinhTotNghiep.IRecord) => {
+		putModel(rec?._id ?? '', { dotCapBangId: null }, getData);
+	};
 
 	const columns: IColumn<QuyetDinhTotNghiep.IRecord>[] = [
 		{
@@ -124,38 +130,17 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 			fixed: 'right',
 			render: (rec: QuyetDinhTotNghiep.IRecord) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
-					{dotCapBangId ? (
-						// Nếu có dotCapBangId, gọi hàm xóa khác
-						<Popconfirm
-							onConfirm={async () => {
-								try {
-									await putModel(rec?._id, {
-										...rec,
-										dotCapBangId: null,
-									});
-									console.log(rec);
-									message.success('Đã gỡ quyết định khỏi đợt cấp bằng');
-									// Gọi lại getModel trực tiếp với dotCapBangId hiện tại
-									getModel({ dotCapBangId });
-								} catch {
-									message.error('Lỗi khi gỡ quyết định');
-								}
-							}}
-							title='Bạn có chắc chắn muốn xóa quyết định này khỏi đợt cấp bằng?'
-							placement='topRight'
-						>
-							<ButtonExtend tooltip='Gỡ khỏi đợt' danger type='link' icon={<DeleteOutlined />} />
-						</Popconfirm>
-					) : (
-						<Popconfirm
-							onConfirm={() => deleteModel(rec._id, getData)}
-							title='Bạn có chắc chắn muốn xóa quyết định tốt nghiệp này?'
-							placement='topRight'
-						>
-							<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-						</Popconfirm>
-					)}
+					{!isdotCapBang ? (
+						<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					) : null}
+
+					<Popconfirm
+						onConfirm={() => (isdotCapBang ? deleQuyetDinhDot(rec) : deleteModel(rec._id, getData))}
+						title='Bạn có chắc chắn muốn xóa quyết định tốt nghiệp này?'
+						placement='topRight'
+					>
+						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+					</Popconfirm>
 				</>
 			),
 		},
@@ -167,17 +152,16 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 				params={condition}
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, yearSelect, dotCapBangId]}
+				dependencies={[page, limit, yearSelect, recDotCapBang?._id]}
 				modelName='vbcc.quyetdinhtotnghiep'
 				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
 				widthDrawer={1200}
 				Form={ModalQuyetDinhTotNghiep}
-				formProps={{ getData }}
+				formProps={{ getData, yearSelect }}
 				rowSelection
-				deleteMany
-				buttons={{ export: true }}
+				buttons={{ create: isdotCapBang ? false : true, export: true }}
 				otherButtons={
-					dotCapBangId
+					isdotCapBang
 						? [
 								<Tooltip title='Thêm quyết định hiện có vào Đợt cấp bằng này' key='apply-tooltip'>
 									<Button type='primary' icon={<PlusCircleOutlined />} onClick={handleApply}>
@@ -187,23 +171,25 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 						  ]
 						: []
 				}
-				hideCard={!!dotCapBangId}
+				hideCard={isdotCapBang}
 			>
-				<MyDatePicker
-					style={{ width: 200, marginBottom: 12 }}
-					value={yearSelect ? moment(yearSelect, 'YYYY') : null}
-					pickerStyle='year'
-					placeholder='Chọn năm hành chính'
-					format='YYYY'
-					onChange={(val) => {
-						if (val) {
-							setYearSelect(moment(val).year());
-						} else {
-							setYearSelect(undefined);
-						}
-					}}
-					allowClear
-				/>
+				{!isdotCapBang ? (
+					<MyDatePicker
+						style={{ width: 200, marginBottom: 12 }}
+						value={yearSelect ? moment(yearSelect, 'YYYY') : null}
+						pickerStyle='year'
+						placeholder='Chọn năm hành chính'
+						format='YYYY'
+						onChange={(val) => {
+							if (val) {
+								setYearSelect(moment(val).year());
+							} else {
+								setYearSelect(undefined);
+							}
+						}}
+						allowClear
+					/>
+				) : null}
 			</TableBase>
 
 			<ModalExpandable
@@ -220,20 +206,11 @@ const QuyetDinhTotNghiepPage: React.FC<TProp> = ({ dotCapBangId }) => {
 				<PreviewFile file={record?.url ?? ''} />
 			</ModalExpandable>
 
-			{/* Modal chọn quyết định để thêm vào đợt cấp bằng */}
-			{dotCapBangId && (
-				<ModalChonQuyetDinh
-					visible={visibleModalChonQuyetDinh}
-					onCancel={() => setVisibleModalChonQuyetDinh(false)}
-					dotCapBangId={dotCapBangId}
-					onSuccess={() => {
-						// Thêm timeout ngắn để đảm bảo server đã cập nhật dữ liệu
-						setTimeout(() => {
-							getModel({ dotCapBangId });
-						}, 200);
-					}}
-				/>
-			)}
+			<ModalChonQuyetDinh
+				visible={visibleModalChonQuyetDinh}
+				onCancel={() => setVisibleModalChonQuyetDinh(false)}
+				getData={getData}
+			/>
 		</>
 	);
 };

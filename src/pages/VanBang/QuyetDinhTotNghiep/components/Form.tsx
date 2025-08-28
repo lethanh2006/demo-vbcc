@@ -15,6 +15,7 @@ import SelectSoVanBang from '../../SoVanBang/components/Select';
 const FormQuyetDinhTotNghiep = (props: {
 	afterAddNew?: (rec: QuyetDinhTotNghiep.IRecord) => void;
 	getData?: () => void;
+	yearSelect?: any;
 }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
@@ -30,7 +31,8 @@ const FormQuyetDinhTotNghiep = (props: {
 		visibleForm,
 		setFormSubmiting,
 	} = useModel('vbcc.quyetdinhtotnghiep');
-	const { afterAddNew, getData } = props;
+	const { afterAddNew, getData, yearSelect } = props;
+	const nam = Form.useWatch('nam', form);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -45,7 +47,7 @@ const FormQuyetDinhTotNghiep = (props: {
 
 		if (!record?._id) {
 			form.setFieldsValue({
-				nam: moment(),
+				nam: yearSelect ? moment(yearSelect, 'YYYY') : moment(),
 				ngayBanHanh: moment(),
 			});
 		}
@@ -93,7 +95,7 @@ const FormQuyetDinhTotNghiep = (props: {
 				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item name='idSoVanBang' label='Sổ văn bằng' rules={[...rules.required]}>
-						<SelectSoVanBang />
+						<SelectSoVanBang condition={{ namHanhChinh: String(moment(nam).format('YYYY')) }} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>

@@ -9,33 +9,40 @@ import {
 	BoldOutlined,
 	CheckCircleOutlined,
 	CloudUploadOutlined,
+	DatabaseOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	FilePdfOutlined,
 	FormOutlined,
 	ImportOutlined,
+	PlusCircleOutlined,
 	SearchOutlined,
 	SettingOutlined,
+	UserAddOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
 import { Popconfirm, Space, Tag } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
+import ModalChonPhuLuc from '../DotCapBangTotNghiep/components/ModalChonPhuLuc';
 import SelectQuyetDinh from '../QuyetDinhTotNghiep/components/Select';
+import SelectQuyetDinhTotNghiepDot from '../QuyetDinhTotNghiep/components/SelectQuyetDinhDot';
 import CauHinhPhuLucVanBang from './components/CauHinh';
 import Form from './components/Form';
 import ModalExportData from './components/ModalExportData';
 import ModalImportPhuLucVanBang from './components/ModalImportPhuLuc';
 import ModalPushBlockchain from './components/ModalPushBlockchain';
 import ModalSign from './components/ModalSign';
+import ModalSinhSoVaoSo from './components/ModalSinhSo';
 import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import ViewPhuLucVanBang from './components/ViewRender';
 
-const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string }) => {
+const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolean }) => {
 	const intl = useIntl();
-	const { isQuyetDinh, dotCapBangId } = props;
+	const { isQuyetDinh = false, isDotCapBang = false } = props;
 	const {
 		page,
 		limit,
@@ -53,21 +60,37 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 		total,
 		isView,
 		handleView,
+		putModel,
 	} = useModel('vbcc.phulucvanbang');
 	const {
 		record: recQuyetDinh,
 		danhSach: danhsachQuyetDinh,
 		setRecord: setQuyetDinh,
+		dsAllQuyeDinh,
 	} = useModel('vbcc.quyetdinhtotnghiep');
+	const { record: recDotCapCang } = useModel('vbcc.dotcapbangtotnghiep');
 	const { settings } = useModel('tienich.caidat');
 	const [yearSelect, setYearSelect] = useState<any>(moment().year());
 	const [showUpload, setShowUpload] = useState(false);
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+	const [showModalCapBang, setShowModalCapBang] = useState<boolean>(false);
+	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
+	const [visibleSinhSo, setVisibleSinhSo] = useState<boolean>(false);
 	const settingVbcc = settings[ESettingKey.INFO_TENANT_VBCC];
 
-	const getData = () => getModel({ idQuyetDinh: recQuyetDinh?._id }).then(() => setSelectedIds([]));
+	const condition: any = {};
+
+	if (recQuyetDinh?._id) {
+		condition.idQuyetDinh = recQuyetDinh?._id;
+	}
+
+	if (isDotCapBang) {
+		condition.dotCapBangId = recDotCapCang?._id;
+	}
+
+	const getData = () => getModel(condition).then(() => setSelectedIds([]));
 
 	const handleSign = () => {
 		if (selectedIds?.length) {
@@ -93,6 +116,10 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 	const handlePrintOne = (rec: PhuLucVanBang.IRecord) => {
 		setDataToSignOrPush([rec]);
 		setVisiblePrint(true);
+	};
+
+	const delePhuLucDot = (rec: PhuLucVanBang.IRecord) => {
+		putModel(rec?._id ?? '', { dotCapBangId: null }, getData);
 	};
 
 	const onCell = (rec: PhuLucVanBang.IRecord) => ({
@@ -207,6 +234,29 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 			onCell,
 		},
 		{
+			title: 'Ngày cấp',
+			dataIndex: 'ngayCapPhuLuc',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'kichHoat',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => (val ? <Tag color='green'>Đã cấp bằng</Tag> : <Tag color='red'>Chưa cấp bằng</Tag>),
+			filterType: 'select',
+			filterData: [
+				{ value: true as any, label: 'Đã cấp bằng' },
+				{ value: false, label: 'Chưa cấp bằng' },
+			],
+			onCell,
+		},
+		{
 			title: 'Thao tác',
 			align: 'center',
 			width: 120,
@@ -222,7 +272,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 					<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
 					<Popconfirm
 						// disabled={isQuyetDinh && rec.trangThaiPhuLuc === ETrangThaiPhuLuc.DA_VAO_SO}
-						onConfirm={() => deleteModel(rec._id, getData)}
+						onConfirm={() => (isDotCapBang ? delePhuLucDot(rec) : deleteModel(rec._id, getData))}
 						title='Bạn có chắc chắn muốn xóa phụ lục này?'
 						placement='topRight'
 					>
@@ -243,6 +293,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 			Nhập dữ liệu
 		</ButtonExtend>,
 	];
+
 	if (settingVbcc?.require_IPFS)
 		otherButtons.push(
 			<ButtonExtend
@@ -284,23 +335,43 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 			<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total}>
 				In phụ lục ({selectedIds?.length || 'Tất cả'})
 			</ButtonExtend>,
+			<ButtonExtend icon={<DatabaseOutlined />} onClick={() => setVisibleSinhSo(true)} key='sinhSo'>
+				Sinh số vào sổ
+			</ButtonExtend>,
 		);
+
+	if (isDotCapBang) {
+		otherButtons.push(
+			<>
+				<ButtonExtend type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisibleModalChonPhuLuc(true)}>
+					Thêm phụ lục
+				</ButtonExtend>
+				<ButtonExtend
+					tooltip='Xác nhận đã cấp bằng cho những phục lục này'
+					disabled={!selectedIds?.length}
+					icon={<UserAddOutlined />}
+					onClick={() => setShowModalCapBang(true)}
+				>
+					Cấp bằng ({selectedIds?.length})
+				</ButtonExtend>
+			</>,
+		);
+	}
 
 	return (
 		<>
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, recQuyetDinh?._id]}
+				params={condition}
+				dependencies={[page, limit, recQuyetDinh?._id, recDotCapCang?._id]}
 				modelName='vbcc.phulucvanbang'
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
 				widthDrawer={1000}
 				Form={isView ? ViewPhuLucVanBang : Form}
 				formProps={{ getData, isQuyetDinh }}
-				buttons={{ create: !!recQuyetDinh?._id }}
-				rowSelection
-				deleteMany
-				hideCard={isQuyetDinh || !!dotCapBangId}
+				buttons={{ create: !!recQuyetDinh?._id && !isDotCapBang }}
+				hideCard={isQuyetDinh || isDotCapBang}
 				otherButtons={otherButtons}
 				extra={
 					<Space wrap>
@@ -318,8 +389,24 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 						/>
 					</Space>
 				}
+				otherProps={{
+					rowKey: (rec: PhuLucVanBang.IRecord) => rec._id,
+					rowSelection: {
+						type: 'checkbox',
+						selectedRowKeys: selectedIds,
+						preserveSelectedRowKeys: true,
+						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+						getCheckboxProps: (rec: PhuLucVanBang.IRecord) => {
+							return {
+								disabled: rec?.kichHoat === true,
+							};
+						},
+						columnWidth: 40,
+						hideSelectAll: true,
+					},
+				}}
 			>
-				{!isQuyetDinh ? (
+				{!isQuyetDinh && !isDotCapBang ? (
 					<Space wrap style={{ marginBottom: 12 }}>
 						<MyDatePicker
 							style={{ width: 200 }}
@@ -341,11 +428,21 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 							condition={yearSelect ? { nam: String(yearSelect) } : undefined}
 							style={{ width: 250 }}
 							value={recQuyetDinh?._id}
-							onChange={(val) => setQuyetDinh(danhsachQuyetDinh.find((item) => item._id === val))}
+							onChange={(val) => setQuyetDinh(danhsachQuyetDinh?.find((item) => item._id === val))}
 							isSetRecord
 							allowClear
 						/>
 					</Space>
+				) : null}
+
+				{isDotCapBang ? (
+					<SelectQuyetDinhTotNghiepDot
+						style={{ width: 250, marginBottom: 12 }}
+						value={recQuyetDinh?._id}
+						onChange={(val) => setQuyetDinh(dsAllQuyeDinh?.find((item) => item._id === val))}
+						isSetRecord
+						allowClear
+					/>
 				) : null}
 			</TableBase>
 
@@ -379,6 +476,16 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; dotCapBangId?: string
 			<CauHinhPhuLucVanBang visible={visibleCauHinh} setVisible={setVisibleCauHinh} />
 
 			<PreviewIPFS visible={visibleModal} setVisible={setVisibleModal} />
+
+			<ModalCapBang visible={showModalCapBang} setVisible={setShowModalCapBang} getData={getData} />
+
+			<ModalChonPhuLuc
+				visible={visibleModalChonPhuLuc}
+				onCancel={() => setVisibleModalChonPhuLuc(false)}
+				getData={getData}
+			/>
+
+			<ModalSinhSoVaoSo visible={visibleSinhSo} setVisibe={setVisibleSinhSo} getData={getData} />
 		</>
 	);
 };

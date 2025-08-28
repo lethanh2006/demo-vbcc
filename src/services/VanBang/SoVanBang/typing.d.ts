@@ -18,6 +18,7 @@ declare module SoVanBang {
 		moTa: string;
 		maDonVi: string;
 		soVaoSoFormat: string;
+		soChuSoVaoSo: number;
 	}
 
 	export type TNnguoiInfo = {
