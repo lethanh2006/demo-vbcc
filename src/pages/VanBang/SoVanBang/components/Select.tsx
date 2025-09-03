@@ -6,7 +6,7 @@ import { useModel } from 'umi';
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
  */
-const SelectDangTaiLieu = (props: {
+const SelectSoVanBang = (props: {
 	value?: string;
 	onChange?: (val?: string) => void;
 	multiple?: boolean;
@@ -37,11 +37,11 @@ const SelectDangTaiLieu = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn dạng tài liệu'
+			placeholder='Chọn sổ văn bằng'
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>
 	);
 };
 
-export default SelectDangTaiLieu;
+export default SelectSoVanBang;

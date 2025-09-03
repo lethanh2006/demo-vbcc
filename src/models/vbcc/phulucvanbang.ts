@@ -4,6 +4,7 @@ import {
 	chiTietPhuLucVanBanPublic,
 	importPhuLucVanBang,
 	putUpdateIpfs,
+	sinhSoVaoSo,
 	traCuuPhuLucVanBanPublic,
 	updBlockchain,
 } from '@/services/VanBang/PhuLucVanBang';
@@ -135,6 +136,33 @@ export default () => {
 		}
 	};
 
+	const sinhSoVaoSoModel = async (
+		idQuyetDinh: string,
+		payload: {
+			soVaoSoHienTai: number;
+			idSoVanBang: string;
+			sinhLaiToanBo: boolean;
+			sortTheoHoTen: boolean;
+			sortTheoMaSinhVien: boolean;
+		},
+		getData?: () => void,
+	): Promise<any> => {
+		if (formSubmiting) return Promise.reject('Form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await sinhSoVaoSo(idQuyetDinh, payload);
+			message.success('Lưu thành công');
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (er) {
+			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
 	return {
 		...objInit,
 		dataToSignOrPush,
@@ -154,5 +182,6 @@ export default () => {
 		chiTietPhuLucVanBanPublicModel,
 		tableData,
 		setTableData,
+		sinhSoVaoSoModel,
 	};
 };

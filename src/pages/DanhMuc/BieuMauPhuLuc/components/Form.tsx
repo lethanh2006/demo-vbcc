@@ -23,22 +23,32 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: BieuMauPhuLuc.IRecord) => {
-		const idFileMau = values.idFileMau?.fileList?.[0];
-		if (idFileMau?.originFileObj) {
+		const listFileMau = values.listIdFileBieuMau?.fileList;
+		if (listFileMau && listFileMau.length > 0) {
 			try {
 				setFormSubmiting(true);
-				const res = await uploadFile({
-					file: idFileMau.originFileObj,
-					scope: EFileScope.PUBLIC,
+
+				const uploadPromises = listFileMau.map(async (file: any) => {
+					if (file.originFileObj) {
+						const res = await uploadFile({
+							file: file.originFileObj,
+							scope: EFileScope.PUBLIC,
+						});
+						return res?.data?.data?.file?._id;
+					} else {
+						return file.url;
+					}
 				});
-				values.idFileMau = res?.data?.data?.file?._id;
+
+				const uploadedFileIds = await Promise.all(uploadPromises);
+				values.listIdFileBieuMau = uploadedFileIds.filter((id) => id);
 			} catch (error) {
 				return Promise.reject(error);
 			} finally {
 				setFormSubmiting(false);
 			}
 		} else {
-			values.idFileMau = idFileMau?.url ?? null;
+			values.listIdFileBieuMau = [];
 		}
 
 		if (values.elements?.length) {
@@ -80,13 +90,18 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 					</Col>
 
 					<Col span={24}>
-						<Form.Item label='Biểu mẫu xuất phụ lục (mặc định)' name='idFileMau' rules={[...rules.required]}>
+						<Form.Item
+							label='Danh sách file biểu mẫu xuất phụ lục (mặc định)'
+							name='listIdFileBieuMau'
+							rules={[...rules.required]}
+						>
 							<UploadFile
+								maxCount={5}
 								hasPreviewFile
 								previewFileProps={{ isFileId: true }}
 								onChange={(info) => {
 									if (info?.fileList?.length === 0) {
-										form.setFieldsValue({ idFileMau: null });
+										form.setFieldsValue({ listIdFileBieuMau: [] });
 									}
 								}}
 							/>

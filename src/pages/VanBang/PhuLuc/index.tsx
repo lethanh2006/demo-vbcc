@@ -9,6 +9,7 @@ import {
 	BoldOutlined,
 	CheckCircleOutlined,
 	CloudUploadOutlined,
+	DatabaseOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	FilePdfOutlined,
@@ -34,6 +35,7 @@ import ModalExportData from './components/ModalExportData';
 import ModalImportPhuLucVanBang from './components/ModalImportPhuLuc';
 import ModalPushBlockchain from './components/ModalPushBlockchain';
 import ModalSign from './components/ModalSign';
+import ModalSinhSoVaoSo from './components/ModalSinhSo';
 import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import ViewPhuLucVanBang from './components/ViewRender';
@@ -75,6 +77,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [showModalCapBang, setShowModalCapBang] = useState<boolean>(false);
 	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
+	const [visibleSinhSo, setVisibleSinhSo] = useState<boolean>(false);
 	const settingVbcc = settings[ESettingKey.INFO_TENANT_VBCC];
 
 	const condition: any = {};
@@ -332,6 +335,9 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total}>
 				In phụ lục ({selectedIds?.length || 'Tất cả'})
 			</ButtonExtend>,
+			<ButtonExtend icon={<DatabaseOutlined />} onClick={() => setVisibleSinhSo(true)} key='sinhSo'>
+				Sinh số vào sổ
+			</ButtonExtend>,
 		);
 
 	if (isDotCapBang) {
@@ -478,6 +484,8 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				onCancel={() => setVisibleModalChonPhuLuc(false)}
 				getData={getData}
 			/>
+
+			<ModalSinhSoVaoSo visible={visibleSinhSo} setVisibe={setVisibleSinhSo} getData={getData} />
 		</>
 	);
 };
