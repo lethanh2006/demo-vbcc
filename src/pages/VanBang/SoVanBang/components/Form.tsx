@@ -33,6 +33,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 				maTrinhDoDaoTao: APP_CONFIG_INIT_TRINH_DO,
 				maHinhThucDaoTao: APP_CONFIG_INIT_HINH_THUC,
 				ten: `Sổ văn bằng ${trinhDo?.ten} - ${hinhThuc?.ten} năm ${moment().format('YYYY')}`,
+				soVaoSoFormat: 'HH2024/{soVaoSo}',
 			});
 		}
 	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
@@ -119,7 +120,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 							label='Định dạng số vào sổ'
 							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						>
-							<Input placeholder='VD: HH2024/{0}' />
+							<Input placeholder='VD: HH2024/{soVaoSo}' />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>

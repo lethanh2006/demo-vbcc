@@ -104,6 +104,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 										form.setFieldsValue({ listIdFileBieuMau: [] });
 									}
 								}}
+								accept='.docx'
 							/>
 						</Form.Item>
 					</Col>
