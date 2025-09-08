@@ -33,7 +33,6 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 				maTrinhDoDaoTao: APP_CONFIG_INIT_TRINH_DO,
 				maHinhThucDaoTao: APP_CONFIG_INIT_HINH_THUC,
 				ten: `Sổ văn bằng ${trinhDo?.ten} - ${hinhThuc?.ten} năm ${moment().format('YYYY')}`,
-				soVaoSoFormat: 'HH2024/{soVaoSo}',
 			});
 		}
 	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
@@ -114,15 +113,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 							<Input placeholder='Nhập tên sổ' />
 						</Form.Item>
 					</Col>
-					<Col span={24} md={12}>
-						<Form.Item
-							name='soVaoSoFormat'
-							label='Định dạng số vào sổ'
-							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
-						>
-							<Input placeholder='VD: HH2024/{soVaoSo}' />
-						</Form.Item>
-					</Col>
+
 					<Col span={24} md={12}>
 						<Form.Item name='soVaoSoHienTai' label='Số vào sổ hiện tại' rules={[...rules.required]}>
 							<InputNumber style={{ width: '100%' }} placeholder='Nhập số vào sổ hiện tại' />
@@ -131,6 +122,24 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 					<Col span={24} md={12}>
 						<Form.Item name='soChuSoVaoSo' label='Số chữ số vào sổ' rules={[...rules.required]}>
 							<InputNumber style={{ width: '100%' }} placeholder='Nhập số chữ số vào sổ' />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item
+							name='soVaoSoFormat'
+							label='Định dạng số vào sổ'
+							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
+						>
+							<Input placeholder='VD: TS25/{soVaoSo}' />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item
+							name='bookEntryNumberFormat'
+							label='Định dạng số vào sổ (Tiếng Anh)'
+							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
+						>
+							<Input placeholder='VD: TS25/{soVaoSo}' />
 						</Form.Item>
 					</Col>
 

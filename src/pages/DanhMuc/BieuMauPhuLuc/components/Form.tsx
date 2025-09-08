@@ -1,5 +1,3 @@
-import UploadFile from '@/components/Upload/UploadFile';
-import { EFileScope, uploadFile } from '@/services/uploadFile';
 import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import { defaultElementBieuMau } from '@/services/VanBang/constant';
 import rules from '@/utils/rules';
@@ -8,10 +6,11 @@ import { Button, Card, Col, Form, Input, Row } from 'antd';
 import _ from 'lodash';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import FormItemFileBieuMau from '../FileBieuMau/FormItem';
 import ElementBieuMauFormItem from './Element';
 
 const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
-	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, setFormSubmiting } =
+	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
 		useModel('vbcc.bieumauphuluc');
 	const intl = useIntl();
 	const [form] = Form.useForm();
@@ -23,34 +22,6 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: BieuMauPhuLuc.IRecord) => {
-		const listFileMau = values.listIdFileBieuMau?.fileList;
-		if (listFileMau && listFileMau.length > 0) {
-			try {
-				setFormSubmiting(true);
-
-				const uploadPromises = listFileMau.map(async (file: any) => {
-					if (file.originFileObj) {
-						const res = await uploadFile({
-							file: file.originFileObj,
-							scope: EFileScope.PUBLIC,
-						});
-						return res?.data?.data?.file?._id;
-					} else {
-						return file.url;
-					}
-				});
-
-				const uploadedFileIds = await Promise.all(uploadPromises);
-				values.listIdFileBieuMau = uploadedFileIds.filter((id) => id);
-			} catch (error) {
-				return Promise.reject(error);
-			} finally {
-				setFormSubmiting(false);
-			}
-		} else {
-			values.listIdFileBieuMau = [];
-		}
-
 		if (values.elements?.length) {
 			const elementNames = values.elements.map((item) => item.headerName);
 			const uniqElements = _.uniq(elementNames);
@@ -95,17 +66,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 							name='listIdFileBieuMau'
 							rules={[...rules.required]}
 						>
-							<UploadFile
-								maxCount={5}
-								hasPreviewFile
-								previewFileProps={{ isFileId: true }}
-								onChange={(info) => {
-									if (info?.fileList?.length === 0) {
-										form.setFieldsValue({ listIdFileBieuMau: [] });
-									}
-								}}
-								accept='.docx'
-							/>
+							<FormItemFileBieuMau />
 						</Form.Item>
 					</Col>
 				</Row>
