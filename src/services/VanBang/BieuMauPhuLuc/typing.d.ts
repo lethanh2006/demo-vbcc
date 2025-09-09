@@ -6,7 +6,7 @@ declare module BieuMauPhuLuc {
 		ma: string;
 		ten: string;
 		elements: TElement[];
-		listIdFileBieuMau: any;
+		listIdFileBieuMau: TFileBieuMau[];
 
 		createdAt: string;
 		updatedAt: string;
@@ -25,5 +25,12 @@ declare module BieuMauPhuLuc {
 	export type CotBang = {
 		headerName: string;
 		type: ELoaiDuLieuBieuMau;
+	};
+
+	export type TFileBieuMau = {
+		ten: string;
+		idFile: any;
+
+		index: number;
 	};
 }

@@ -31,9 +31,9 @@ const ModalExportData = () => {
 		setExportDetail({ current: 0, total: dataToSignOrPush?.length });
 
 		if (recQuyetDinh?.bieuMau?.listIdFileBieuMau?.length) {
-			setSelectedMaus([recQuyetDinh?.bieuMau?.listIdFileBieuMau[0]?._id]);
+			setSelectedMaus([recQuyetDinh?.bieuMau?.listIdFileBieuMau[0]?.idFile]);
 		} else if (dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau?.length) {
-			setSelectedMaus([dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau[0]?._id]);
+			setSelectedMaus([dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau[0]?.idFile]);
 		} else {
 			setSelectedMaus([]);
 		}
@@ -72,7 +72,8 @@ const ModalExportData = () => {
 			nam: ngayThang.format('YYYY'),
 		})
 			.then(() => {
-				message.info('Đang xử lý dữ liệu. Vui lòng đợi trong ít phút...');
+				message.success('Lưu thành công');
+				// message.info('Đang xử lý dữ liệu. Vui lòng đợi trong ít phút...');
 				// fileDownload(res.data, getFilenameHeader(res));
 
 				setVisiblePrint(false);
@@ -124,7 +125,7 @@ const ModalExportData = () => {
 														setPreviewOpen(true);
 													}}
 												>
-													{`Tệp tin ${idx + 1}`}
+													{item?.ten ?? `Tệp tin ${idx + 1}`}
 												</a>
 											</Space>
 										))}

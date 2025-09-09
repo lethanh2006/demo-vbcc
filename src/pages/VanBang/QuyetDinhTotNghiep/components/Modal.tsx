@@ -1,7 +1,7 @@
+import PhuLucVanBangPage from '@/pages/VanBang/PhuLuc';
 import { Button, Card, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import PhuLucVanBangPage from '@/pages/VanBang/PhuLuc';
 import Form from './Form';
 
 const ModalQuyetDinhTotNghiep = (props: any) => {
@@ -33,7 +33,7 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 			{currentStep === 0 ? (
 				<Form afterAddNew={() => setCurrentStep(1)} getData={getData} yearSelect={yearSelect} />
 			) : currentStep === 1 ? (
-				<PhuLucVanBangPage isQuyetDinh />
+				<PhuLucVanBangPage isQuyetDinh getData={getData} />
 			) : null}
 
 			{currentStep !== 0 ? (
