@@ -116,12 +116,12 @@ const ModalExportData = () => {
 								<Checkbox.Group value={selectedMaus} onChange={(vals) => setSelectedMaus(vals as string[])}>
 									<Space wrap>
 										{mauOptions.map((item: any, idx: number) => (
-											<Space wrap key={item}>
-												<Checkbox value={item} />
+											<Space wrap key={item.idFile}>
+												<Checkbox value={item.idFile} />
 												<a
 													onClick={(e) => {
 														e.preventDefault();
-														setPreviewImage(item);
+														setPreviewImage(item.idFile);
 														setPreviewOpen(true);
 													}}
 												>
