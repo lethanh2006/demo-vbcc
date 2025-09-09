@@ -18,6 +18,7 @@ declare module SoVanBang {
 		moTa: string;
 		maDonVi: string;
 		soVaoSoFormat: string;
+		bookEntryNumberFormat: string;
 		soChuSoVaoSo: number;
 	}
 

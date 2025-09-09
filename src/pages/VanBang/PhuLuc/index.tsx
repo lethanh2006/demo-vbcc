@@ -23,7 +23,7 @@ import {
 } from '@ant-design/icons';
 import { Popconfirm, Space, Tag } from 'antd';
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
 import ModalChonPhuLuc from '../DotCapBangTotNghiep/components/ModalChonPhuLuc';
@@ -40,9 +40,9 @@ import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import ViewPhuLucVanBang from './components/ViewRender';
 
-const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolean }) => {
+const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolean; getData?: any }) => {
 	const intl = useIntl();
-	const { isQuyetDinh = false, isDotCapBang = false } = props;
+	const { isQuyetDinh = false, isDotCapBang = false, getData: getDataV2 } = props;
 	const {
 		page,
 		limit,
@@ -79,6 +79,11 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
 	const [visibleSinhSo, setVisibleSinhSo] = useState<boolean>(false);
 	const settingVbcc = settings[ESettingKey.INFO_TENANT_VBCC];
+
+	// set lại quyết định sau khi sinh số vào sổ
+	useEffect(() => {
+		setQuyetDinh(danhsachQuyetDinh?.find((item) => item?._id === recQuyetDinh?._id));
+	}, [JSON.stringify(danhsachQuyetDinh)]);
 
 	const condition: any = {};
 
@@ -485,7 +490,14 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				getData={getData}
 			/>
 
-			<ModalSinhSoVaoSo visible={visibleSinhSo} setVisibe={setVisibleSinhSo} getData={getData} />
+			<ModalSinhSoVaoSo
+				visible={visibleSinhSo}
+				setVisibe={setVisibleSinhSo}
+				getData={() => {
+					getData();
+					if (getDataV2) getDataV2();
+				}}
+			/>
 		</>
 	);
 };
