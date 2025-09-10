@@ -1,7 +1,5 @@
-import { Card } from 'antd';
-import './components/style.less';
-import { unitName } from '@/services/base/constant';
 import TongHopVanBang from '../VanBang/TongHop';
+import './components/style.less';
 
 const TrangChu = () => {
 	return (
