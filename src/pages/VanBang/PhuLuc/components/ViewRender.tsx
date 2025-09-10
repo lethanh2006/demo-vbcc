@@ -1,13 +1,15 @@
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
-import { Button, Card, Descriptions, Divider } from 'antd';
+import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import { FilePdfOutlined } from '@ant-design/icons';
+import { Button, Card, Descriptions, Divider, Tag } from 'antd';
 import moment from 'moment';
 import { useIntl, useModel } from 'umi';
 
 const ViewPhuLucVanBang = () => {
 	const intl = useIntl();
-	const { record, setVisibleForm } = useModel('vbcc.phulucvanbang');
+	const { record, setVisibleForm, setDataToSignOrPush, setVisiblePrint } = useModel('vbcc.phulucvanbang');
 
 	const renderField = (item: any) => {
 		if (item.type === 'Date') {
@@ -19,6 +21,12 @@ const ViewPhuLucVanBang = () => {
 		return item.value || '---';
 	};
 
+	const handlePrintOne = (rec?: PhuLucVanBang.IRecord) => {
+		if (!rec) return;
+		setDataToSignOrPush([rec]);
+		setVisiblePrint(true);
+	};
+
 	return (
 		<Card title='Chi tiết phụ lục văn bằng' bordered={false}>
 			<Divider orientation='left'>Thông tin văn bằng</Divider>
@@ -26,10 +34,16 @@ const ViewPhuLucVanBang = () => {
 			<Descriptions bordered column={2} size='small'>
 				<Descriptions.Item label='Họ tên'>{record?.hoTen ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Mã sinh viên'>{record?.maSinhVien ?? ''}</Descriptions.Item>
-				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
-				<Descriptions.Item label='Số vào sổ bằng'>{record?.soVaoSoBang ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Ngày sinh'>
 					{record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : ''}
+				</Descriptions.Item>
+				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Số vào sổ bằng'>{record?.soVaoSoBang ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Trạng thái cấp bằng'>
+					{record?.kichHoat ? <Tag color='green'>Đã cấp bằng</Tag> : <Tag color='red'>Chưa cấp bằng</Tag>}
+				</Descriptions.Item>
+				<Descriptions.Item label='Ngày cấp bằng'>
+					{record?.ngayCapPhuLuc ? moment(record?.ngayCapPhuLuc).format('DD/MM/YYYY') : ''}
 				</Descriptions.Item>
 			</Descriptions>
 
@@ -73,6 +87,10 @@ const ViewPhuLucVanBang = () => {
 				})}
 
 			<div className='form-footer' style={{ marginTop: 24 }}>
+				<Button type='primary' icon={<FilePdfOutlined />} onClick={() => handlePrintOne(record)}>
+					In phụ lục
+				</Button>
+
 				<Button onClick={() => setVisibleForm(false)}>
 					{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
 				</Button>

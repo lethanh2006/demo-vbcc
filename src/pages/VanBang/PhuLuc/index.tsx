@@ -12,6 +12,7 @@ import {
 	DatabaseOutlined,
 	DeleteOutlined,
 	EditOutlined,
+	EyeOutlined,
 	FilePdfOutlined,
 	FormOutlined,
 	ImportOutlined,
@@ -239,21 +240,26 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			onCell,
 		},
 		{
-			title: 'Ngày cấp',
-			dataIndex: 'ngayCapPhuLuc',
-			align: 'center',
-			width: 120,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-		},
-		{
 			title: 'Trạng thái',
 			dataIndex: 'kichHoat',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => (val ? <Tag color='green'>Đã cấp bằng</Tag> : <Tag color='red'>Chưa cấp bằng</Tag>),
+			render: (_: any, record: PhuLucVanBang.IRecord) => {
+				const trangThai = record?.kichHoat ? (
+					<Tag color='green'>Đã cấp bằng</Tag>
+				) : (
+					<Tag color='red'>Chưa cấp bằng</Tag>
+				);
+
+				const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${moment(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
+
+				return (
+					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+						<div>{trangThai}</div>
+						{ngayCap && <div>{ngayCap}</div>}
+					</div>
+				);
+			},
 			filterType: 'select',
 			filterData: [
 				{ value: true as any, label: 'Đã cấp bằng' },
@@ -268,15 +274,11 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend
-						tooltip='In phụ lục'
-						type='link'
-						icon={<FilePdfOutlined />}
-						onClick={() => handlePrintOne(rec)}
-					/>
+					<ButtonExtend tooltip='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
 					<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
 					<Popconfirm
 						// disabled={isQuyetDinh && rec.trangThaiPhuLuc === ETrangThaiPhuLuc.DA_VAO_SO}
+						disabled={rec.kichHoat === true}
 						onConfirm={() => (isDotCapBang ? delePhuLucDot(rec) : deleteModel(rec._id, getData))}
 						title='Bạn có chắc chắn muốn xóa phụ lục này?'
 						placement='topRight'
@@ -401,11 +403,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 						selectedRowKeys: selectedIds,
 						preserveSelectedRowKeys: true,
 						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
-						getCheckboxProps: (rec: PhuLucVanBang.IRecord) => {
-							return {
-								disabled: rec?.kichHoat === true,
-							};
-						},
 						columnWidth: 40,
 						hideSelectAll: true,
 					},
