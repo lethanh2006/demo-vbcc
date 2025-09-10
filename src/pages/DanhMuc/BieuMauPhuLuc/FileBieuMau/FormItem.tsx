@@ -116,7 +116,7 @@ const FormItemFileBieuMau = (props: {
 
 			<Modal
 				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} file biểu mẫu`}
-				visible={visibleForm}
+				open={visibleForm}
 				width={600}
 				footer={null}
 				onCancel={() => setVisibleForm(false)}
@@ -127,7 +127,7 @@ const FormItemFileBieuMau = (props: {
 			<ModalExpandable
 				title='Xem trước tập tin'
 				width={1000}
-				visible={previewOpen}
+				open={previewOpen}
 				footer={null}
 				onCancel={() => setPreviewOpen(false)}
 			>

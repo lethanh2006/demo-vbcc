@@ -2,9 +2,9 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
+import dayjs from '@/utils/dayjs';
 import { FormOutlined, QuestionCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Progress, Typography, message } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import { sign_service, type TSignData } from './SignService';
@@ -84,15 +84,15 @@ const ModalSign = (props: { getData?: () => void }) => {
 				urlIpfs,
 				...dataToSign
 			} = dataToSignOrPush[index];
-			dataToSign.ngaySinh = dataToSign.ngaySinh ? moment(dataToSign.ngaySinh).format('DD/MM/YYYY') : '';
-			dataToSign.createdAt = moment(dataToSign.createdAt).format('HH:mm:ss DD/MM/YYYY');
-			dataToSign.updatedAt = moment(dataToSign.updatedAt).format('HH:mm:ss DD/MM/YYYY');
+			dataToSign.ngaySinh = dataToSign.ngaySinh ? dayjs(dataToSign.ngaySinh).format('DD/MM/YYYY') : '';
+			dataToSign.createdAt = dayjs(dataToSign.createdAt).format('HH:mm:ss DD/MM/YYYY');
+			dataToSign.updatedAt = dayjs(dataToSign.updatedAt).format('HH:mm:ss DD/MM/YYYY');
 			Object.assign(dataToSign, { quyetDinhTotNghiep: dataToSignOrPush[index].quyetDinh?.soQuyetDinh });
 			templateData?.map((element) => {
 				Object.assign(dataToSign, {
 					[element.headerName]:
 						element.type === ELoaiDuLieuBieuMau.Date && element.value
-							? moment(element.value).format('DD/MM/YYYY')
+							? dayjs(element.value).format('DD/MM/YYYY')
 							: element.value || '',
 				});
 			});
@@ -159,7 +159,7 @@ const ModalSign = (props: { getData?: () => void }) => {
 
 	return (
 		<Modal
-			visible={visibleSign}
+			open={visibleSign}
 			title={
 				<>
 					Ký số văn bằng{' '}

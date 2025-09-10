@@ -4,9 +4,9 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import { colorTrangThaiCapBangToiNghiep, ETrangThaiDotCapBangTotNghiep } from '@/services/VanBang/constant';
 import type { DotCapBangTotNghiep } from '@/services/VanBang/DotCapBangTotNghiep/typing';
+import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm, Tag } from 'antd';
-import moment from 'moment';
 import { useModel } from 'umi';
 import Modal from './components/Modal';
 
@@ -28,7 +28,7 @@ const DotCapBangTotNghiepPage = () => {
 			sorter: true,
 			filterType: 'date',
 			align: 'center',
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Thời gian kết thúc',
@@ -37,7 +37,7 @@ const DotCapBangTotNghiepPage = () => {
 			sorter: true,
 			filterType: 'date',
 			align: 'center',
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Ghi chú',

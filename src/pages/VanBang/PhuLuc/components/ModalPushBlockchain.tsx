@@ -128,7 +128,7 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 
 	return (
 		<ModalExpandable
-			visible={visiblePush}
+			open={visiblePush}
 			title={
 				<>
 					Dữ liệu blockchain{' '}
@@ -145,7 +145,7 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 				</>
 			}
 			width={1000}
-			bodyStyle={{ paddingTop: 0 }}
+			style={{ paddingTop: 0 }}
 			onCancel={onCancel}
 			okButtonProps={{ hidden: true }}
 			cancelText='Đóng'

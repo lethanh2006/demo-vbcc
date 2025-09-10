@@ -1,10 +1,10 @@
-import { Button, Col, Form, Modal, Row, Spin } from 'antd';
-import { useEffect } from 'react';
 import UploadFile from '@/components/Upload/UploadFile';
+import { ESettingKey } from '@/services/base/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import rules from '@/utils/rules';
+import { Button, Col, Form, Modal, Row, Spin } from 'antd';
+import { useEffect } from 'react';
 import { useModel } from 'umi';
-import { ESettingKey } from '@/services/base/constant';
 
 interface Props {
 	visible: boolean;
@@ -38,7 +38,7 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 	};
 
 	return (
-		<Modal title={title || 'Thêm biểu mẫu'} visible={visible} onCancel={onClose} footer={null} destroyOnClose>
+		<Modal title={title || 'Thêm biểu mẫu'} open={visible} onCancel={onClose} footer={null} destroyOnClose>
 			<Spin spinning={loading}>
 				<Form form={form} layout='vertical' onFinish={onFinish}>
 					<Row gutter={[12, 0]}>

@@ -66,7 +66,7 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 
 	return (
 		<Modal
-			visible={visible}
+			open={visible}
 			title={
 				<>
 					Tải lên phụ lục văn bằng{' '}

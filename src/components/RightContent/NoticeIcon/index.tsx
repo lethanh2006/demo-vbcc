@@ -1,24 +1,15 @@
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import ViewThongBao from '@/pages/ThongBao/components/ViewThongBao';
+import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import NoticeIcon from './NoticeIcon';
+import NoticeList from './NoticeList';
 
 const NoticeIconView = () => {
 	const intl = useIntl();
-	const {
-		danhSach,
-		getThongBaoModel,
-		total,
-		page,
-		limit,
-		setLimit,
-		loading,
-		record,
-		setRecord,
-		unread,
-		readNotificationModel,
-	} = useModel('thongbao.noticeicon');
+	const { record, setRecord, unread, readNotificationModel, page, limit, getThongBaoModel, total } =
+		useModel('thongbao.noticeicon');
 	const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
 	const [visiblePopup, setVisiblePopup] = useState<boolean>(false);
 
@@ -34,45 +25,29 @@ const NoticeIconView = () => {
 	return (
 		<>
 			<NoticeIcon
+				total={total}
 				count={unread}
-				onItemClick={async (item) => {
-					setRecord(item);
-					setVisibleDetail(true);
-					setVisiblePopup(false);
-				}}
-				loading={loading}
-				onClear={() => clearReadState()}
-				clearText={intl.formatMessage({ id: 'global.rightcontent.thongbao.cleartext' })}
-				viewMoreText={intl.formatMessage({ id: 'global.rightcontent.thongbao.taithem' })}
-				onViewMore={() => {
-					if (loading) return;
-					setLimit(limit + 5);
-				}}
 				popupVisible={visiblePopup}
-				clearClose
-				onPopupVisibleChange={(visible) => {
-					setVisiblePopup(visible);
-				}}
+				onPopupVisibleChange={(visible) => setVisiblePopup(visible)}
+				allowClear={!!unread}
+				onClear={clearReadState}
 			>
-				<NoticeIcon.Tab
-					tabKey='notification'
-					count={total}
-					list={danhSach}
-					title={intl.formatMessage({ id: 'global.rightcontent.thongbao.title' })}
-					emptyText={intl.formatMessage({ id: 'global.rightcontent.thongbao.emptytext' })}
-					showClear={!!unread}
-					showViewMore={danhSach.length < total}
+				<NoticeList
+					onClick={(item) => {
+						setRecord(item);
+						setVisibleDetail(true);
+						setVisiblePopup(false);
+					}}
 				/>
 			</NoticeIcon>
 
 			<ModalExpandable
 				width={800}
-				bodyStyle={{ padding: 0 }}
+				styles={{ body: { padding: 0 } }}
 				destroyOnClose
 				onCancel={() => setVisibleDetail(false)}
-				visible={visibleDetail}
-				okButtonProps={{ hidden: true }}
-				cancelText={intl.formatMessage({ id: 'global.rightcontent.thongbao.dong' })}
+				open={visibleDetail}
+				footer={null}
 			>
 				<ViewThongBao
 					record={record}
@@ -81,6 +56,12 @@ const NoticeIconView = () => {
 						setVisiblePopup(false);
 					}}
 				/>
+
+				<div className='form-footer'>
+					<Button onClick={() => setVisibleDetail(false)}>
+						{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
+					</Button>
+				</div>
 			</ModalExpandable>
 		</>
 	);

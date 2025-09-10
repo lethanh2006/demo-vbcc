@@ -5,7 +5,7 @@ import { EFileScope, uploadFile } from '@/services/uploadFile';
 import { exportData } from '@/services/VanBang/PhuLucVanBang';
 import socket, { ESocketType } from '@/utils/socket';
 import { FilePdfOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, Descriptions, message, Modal, Progress, Row, Space, Upload } from 'antd';
+import { Button, Checkbox, Col, Descriptions, message, Modal, Progress, Row, Upload } from 'antd';
 import type { RcFile } from 'antd/lib/upload';
 import moment, { type Moment } from 'moment';
 import { useEffect, useState } from 'react';
@@ -94,7 +94,7 @@ const ModalExportData = () => {
 
 	return (
 		<Modal
-			visible={visiblePrint}
+			open={visiblePrint}
 			closable={false}
 			maskClosable={false}
 			onCancel={() => setVisiblePrint(false)}
@@ -192,7 +192,7 @@ const ModalExportData = () => {
 			<ModalExpandable
 				title='Xem trước tập tin'
 				width={1000}
-				visible={previewOpen}
+				open={previewOpen}
 				footer={null}
 				onCancel={() => setPreviewOpen(false)}
 			>

@@ -3,10 +3,10 @@ import UploadFile from '@/components/Upload/UploadFile';
 import { ELoaiQuyetDinh } from '@/services/DaoTao/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectBieuMauPhuLuc from '../../../DanhMuc/BieuMauPhuLuc/components/Select';
@@ -40,15 +40,15 @@ const FormQuyetDinhTotNghiep = (props: {
 		} else if (record?._id) {
 			form.setFieldsValue({
 				...record,
-				nam: record.nam ? moment(record.nam, 'YYYY') : undefined,
-				ngayBanHanh: record.ngayBanHanh ? moment(record.ngayBanHanh) : undefined,
+				nam: record.nam ? dayjs(record.nam, 'YYYY') : undefined,
+				ngayBanHanh: record.ngayBanHanh ? dayjs(record.ngayBanHanh) : undefined,
 			});
 		}
 
 		if (!record?._id) {
 			form.setFieldsValue({
-				nam: yearSelect ? moment(yearSelect, 'YYYY') : moment(),
-				ngayBanHanh: moment(),
+				nam: yearSelect ? dayjs(yearSelect, 'YYYY') : dayjs(),
+				ngayBanHanh: dayjs(),
 			});
 		}
 	}, [record?._id, visibleForm]);
@@ -57,8 +57,8 @@ const FormQuyetDinhTotNghiep = (props: {
 		setFormSubmiting(true);
 		const url = await buildUpLoadFile(values, 'url');
 		values.url = url;
-		values.nam = moment(values.nam).format('YYYY');
-		values.ngayBanHanh = moment(values.ngayBanHanh).startOf('d').toISOString();
+		values.nam = dayjs(values.nam).format('YYYY');
+		values.ngayBanHanh = dayjs(values.ngayBanHanh).startOf('d').toISOString();
 
 		setFormSubmiting(false);
 		if (edit) {
@@ -95,7 +95,7 @@ const FormQuyetDinhTotNghiep = (props: {
 				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item name='idSoVanBang' label='Sổ văn bằng' rules={[...rules.required]}>
-						<SelectSoVanBang condition={{ namHanhChinh: String(moment(nam).format('YYYY')) }} />
+						<SelectSoVanBang condition={{ namHanhChinh: String(dayjs(nam).format('YYYY')) }} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>

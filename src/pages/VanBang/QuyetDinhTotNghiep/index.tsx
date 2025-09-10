@@ -7,9 +7,9 @@ import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
+import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Tooltip } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalChonQuyetDinh from '../DotCapBangTotNghiep/components/ModalChonQuyetDinh';
@@ -22,14 +22,14 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 	const { record: recDotCapBang } = useModel('vbcc.dotcapbangtotnghiep');
 	const { getModel, handleEdit, page, limit, deleteModel, setRecord, record, putModel } =
 		useModel('vbcc.quyetdinhtotnghiep');
-	const [yearSelect, setYearSelect] = useState<any>(moment().year());
+	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const [visibleModalChonQuyetDinh, setVisibleModalChonQuyetDinh] = useState<boolean>(false);
 
 	const condition: any = {};
 
 	if (yearSelect && !isdotCapBang) {
-		condition.nam = String(yearSelect);
+		condition.nam = dayjs(yearSelect).format('YYYY');
 	}
 
 	if (isdotCapBang) {
@@ -78,7 +78,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 			filterType: 'date',
 			sortable: true,
 			align: 'center',
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			onCell,
 		},
 		{
@@ -157,7 +157,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
 				widthDrawer={1200}
 				Form={ModalQuyetDinhTotNghiep}
-				formProps={{ getData, yearSelect }}
+				formProps={{ getData, yearSelect: dayjs(yearSelect).format('YYYY') }}
 				rowSelection
 				buttons={{ create: isdotCapBang ? false : true, export: true }}
 				otherButtons={
@@ -168,7 +168,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 										Thêm quyết định
 									</Button>
 								</Tooltip>,
-						  ]
+							]
 						: []
 				}
 				hideCard={isdotCapBang}
@@ -176,15 +176,15 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 				{!isdotCapBang ? (
 					<MyDatePicker
 						style={{ width: 200, marginBottom: 12 }}
-						value={yearSelect ? moment(yearSelect, 'YYYY') : null}
+						value={yearSelect ? dayjs(yearSelect) : null}
 						pickerStyle='year'
 						placeholder='Chọn năm hành chính'
 						format='YYYY'
 						onChange={(val) => {
 							if (val) {
-								setYearSelect(moment(val).year());
+								setYearSelect(dayjs(val));
 							} else {
-								setYearSelect(undefined);
+								setYearSelect(null);
 							}
 						}}
 						allowClear
@@ -195,7 +195,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 			<ModalExpandable
 				title='Chi tiết minh chứng'
 				width={1000}
-				visible={visibleFormFile}
+				open={visibleFormFile}
 				footer={
 					<div className='form-footer'>
 						<Button onClick={() => setVisibleFormFile(false)}>Đóng</Button>

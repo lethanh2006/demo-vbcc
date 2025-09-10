@@ -1,9 +1,9 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import type { DotCapBangTotNghiep } from '@/services/VanBang/DotCapBangTotNghiep/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, message, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -24,14 +24,14 @@ const DotCapBangTotNghiepForm = (props: { afterAddNew?: (rec: DotCapBangTotNghie
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: DotCapBangTotNghiep.IRecord) => {
-		const diffMinutes = moment(values.ngayKetThuc).diff(moment(values.ngayBatDau), 'minutes');
+		const diffMinutes = dayjs(values.ngayKetThuc).diff(dayjs(values.ngayBatDau), 'minutes');
 		if (diffMinutes <= 0) {
 			return message.info('Thời gian kết thúc phải sau thời gian bắt đầu!');
 		}
 
 		const data = {
 			...values,
-			nam: moment(values.nam).format('YYYY'),
+			nam: dayjs(values.nam).format('YYYY'),
 		};
 
 		if (edit) {
@@ -72,7 +72,7 @@ const DotCapBangTotNghiepForm = (props: { afterAddNew?: (rec: DotCapBangTotNghie
 					<Form.Item name='ngayKetThuc' label='Thời gian kết thúc' rules={[...rules.required]}>
 						<MyDatePicker
 							placeholder='Chọn thời gian kết thúc'
-							disabledDate={(cur) => (ngayBatDau ? moment(cur).isBefore(ngayBatDau) : false)}
+							disabledDate={(cur) => (ngayBatDau ? dayjs(cur).isBefore(ngayBatDau) : false)}
 						/>
 					</Form.Item>
 				</Col>

@@ -94,7 +94,7 @@ const ModalImportPhuLucVanBang = (props: { visible: boolean; onCancel: () => voi
 	];
 
 	return (
-		<Modal title='Nhập phụ lục văn bằng' visible={visible} onCancel={onCancel} footer={null} maskClosable={false}>
+		<Modal title='Nhập phụ lục văn bằng' open={visible} onCancel={onCancel} footer={null} maskClosable={false}>
 			<Form form={form} layout='vertical' onFinish={onFinish}>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24}>
@@ -128,7 +128,7 @@ const ModalImportPhuLucVanBang = (props: { visible: boolean; onCancel: () => voi
 
 			<Modal
 				title='Chi tiết thông tin lỗi'
-				visible={visibleModal}
+				open={visibleModal}
 				onCancel={() => setVisibleModal(false)}
 				footer={null}
 				width={900}
