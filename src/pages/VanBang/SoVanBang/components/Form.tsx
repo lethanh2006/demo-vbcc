@@ -2,10 +2,10 @@ import MyDatePicker from '@/components/MyDatePicker';
 import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
 import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
 import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, InputNumber, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -29,10 +29,10 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 			const trinhDo = dsTrinhDo?.find((x) => x.ma === String(APP_CONFIG_INIT_TRINH_DO));
 			const hinhThuc = dsHinhThuc?.find((x) => x.ma === String(APP_CONFIG_INIT_HINH_THUC));
 			form.setFieldsValue({
-				namHanhChinh: moment(),
+				namHanhChinh: dayjs(),
 				maTrinhDoDaoTao: APP_CONFIG_INIT_TRINH_DO,
 				maHinhThucDaoTao: APP_CONFIG_INIT_HINH_THUC,
-				ten: `Sổ văn bằng ${trinhDo?.ten} - ${hinhThuc?.ten} năm ${moment().format('YYYY')}`,
+				ten: `Sổ văn bằng ${trinhDo?.ten} - ${hinhThuc?.ten} năm ${dayjs().format('YYYY')}`,
 			});
 		}
 	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
@@ -43,7 +43,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 
 		const submitData = {
 			...values,
-			namHanhChinh: moment(values.namHanhChinh).format('YYYY'),
+			namHanhChinh: dayjs(values.namHanhChinh).format('YYYY'),
 			tenTrinhDoDaoTao: trinhDo?.ten,
 			tenHinhThucDaoTao: hinhThuc?.ten,
 		};
@@ -64,7 +64,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 			);
 
 			if (isRelevantChange) {
-				const year = moment(namHanhChinh).format('YYYY');
+				const year = dayjs(namHanhChinh).format('YYYY');
 				const maTrinhDo = String(maTrinhDoDaoTao || '');
 				const maHinhThuc = String(maHinhThucDaoTao || '');
 

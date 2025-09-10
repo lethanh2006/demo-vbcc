@@ -50,7 +50,7 @@ const CardQuyetDinhTotNghiep = (payload: { chartData: PhuLucVanBang.TThongKeTraC
 			name: 'Số lượng phụ lục',
 			type: 'column',
 			data: chartData.map((item) => item.soLuongPhuLuc ?? 0),
-			color: 'var(--primary-color)',
+			color: 'var(--color-primary)',
 		},
 		{
 			name: 'Số lượng tra cứu',

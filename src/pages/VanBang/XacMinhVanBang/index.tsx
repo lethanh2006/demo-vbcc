@@ -1,5 +1,11 @@
 import TableBase from '@/components/Table';
+import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
+import { ESettingKey } from '@/services/base/constant';
+import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import { exportXacMinhVanBang } from '@/services/VanBang/XacMinhVanBang';
+import dayjs from '@/utils/dayjs';
+import { getNameFile } from '@/utils/utils';
 import {
 	DeleteOutlined,
 	EditOutlined,
@@ -10,18 +16,12 @@ import {
 	SettingOutlined,
 } from '@ant-design/icons';
 import { Checkbox, message, Popconfirm, Popover, Space } from 'antd';
-import { useModel } from 'umi';
-import FormXacMinh from './components/FormXacMinh';
-import ButtonExtend from '@/components/Table/ButtonExtend';
-import { useState } from 'react';
-import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
-import { exportXacMinhVanBang } from '@/services/VanBang/XacMinhVanBang';
-import { getNameFile } from '@/utils/utils';
 import fileDownload from 'js-file-download';
-import moment from 'moment';
-import FormBieuMau from './components/ModalCaiDat';
+import { useState } from 'react';
+import { useModel } from 'umi';
 import ViewDetailPhuLuc from '../PhuLuc/components/ViewDetailPhuLuc';
-import { ESettingKey } from '@/services/base/constant';
+import FormXacMinh from './components/FormXacMinh';
+import FormBieuMau from './components/ModalCaiDat';
 
 const XacMinhVanBangPage = () => {
 	const { page, limit, deleteModel, handleEdit } = useModel('vbcc.xacminhvanbang');
@@ -100,7 +100,7 @@ const XacMinhVanBangPage = () => {
 			title: 'Ngày gửi',
 			dataIndex: 'ngayGuiYeuCau',
 			filterType: 'date',
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			sortable: true,
 			width: 120,
 			align: 'center',

@@ -2,9 +2,9 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import dayjs from '@/utils/dayjs';
 import { FilePdfOutlined } from '@ant-design/icons';
 import { Button, Card, Descriptions, Divider, Tag } from 'antd';
-import moment from 'moment';
 import { useIntl, useModel } from 'umi';
 
 const ViewPhuLucVanBang = () => {
@@ -13,10 +13,13 @@ const ViewPhuLucVanBang = () => {
 
 	const renderField = (item: any) => {
 		if (item.type === 'Date') {
-			return item.value ? moment(item.value).format('DD/MM/YYYY') : '---';
+			return item.value ? dayjs(item.value).format('DD/MM/YYYY') : '---';
 		}
 		if (item.type === 'Number') {
 			return item.value ?? '---';
+		}
+		if (typeof item.value === 'object') {
+			return JSON.stringify(item.value);
 		}
 		return item.value || '---';
 	};
@@ -28,14 +31,14 @@ const ViewPhuLucVanBang = () => {
 	};
 
 	return (
-		<Card title='Chi tiết phụ lục văn bằng' bordered={false}>
+		<Card title='Chi tiết phụ lục văn bằng' style={{ padding: 0 }}>
 			<Divider orientation='left'>Thông tin văn bằng</Divider>
 
 			<Descriptions bordered column={2} size='small'>
 				<Descriptions.Item label='Họ tên'>{record?.hoTen ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Mã sinh viên'>{record?.maSinhVien ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Ngày sinh'>
-					{record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : ''}
+					{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : ''}
 				</Descriptions.Item>
 				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Số vào sổ bằng'>{record?.soVaoSoBang ?? ''}</Descriptions.Item>
@@ -43,7 +46,7 @@ const ViewPhuLucVanBang = () => {
 					{record?.kichHoat ? <Tag color='green'>Đã cấp bằng</Tag> : <Tag color='red'>Chưa cấp bằng</Tag>}
 				</Descriptions.Item>
 				<Descriptions.Item label='Ngày cấp bằng'>
-					{record?.ngayCapPhuLuc ? moment(record?.ngayCapPhuLuc).format('DD/MM/YYYY') : ''}
+					{record?.ngayCapPhuLuc ? dayjs(record?.ngayCapPhuLuc).format('DD/MM/YYYY') : ''}
 				</Descriptions.Item>
 			</Descriptions>
 

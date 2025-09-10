@@ -1,9 +1,9 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, message, Modal, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -18,7 +18,7 @@ const ModalCapBang = (props: { visible: boolean; setVisible: (val: boolean) => v
 			resetFieldsForm(form);
 		} else {
 			form.setFieldsValue({
-				ngayCapPhuLuc: moment(),
+				ngayCapPhuLuc: dayjs(),
 			});
 		}
 	}, [visible]);
@@ -48,7 +48,7 @@ const ModalCapBang = (props: { visible: boolean; setVisible: (val: boolean) => v
 	};
 
 	return (
-		<Modal title='Xác nhận cấp bằng' visible={visible} onCancel={() => setVisible(false)} footer={null}>
+		<Modal title='Xác nhận cấp bằng' open={visible} onCancel={() => setVisible(false)} footer={null}>
 			<div style={{ marginBottom: 16 }}>
 				<h3>Thông tin cấp bằng</h3>
 				<p>

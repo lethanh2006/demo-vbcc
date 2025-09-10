@@ -7,11 +7,11 @@ import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormTable from './FormTable';
@@ -83,12 +83,14 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 		values.urlIpfs = urlIpfs;
 		setFormSubmiting(false);
 
+		values.fullName = values.hoTen;
+
 		const templateData: any[] =
 			recBieuMau?.elements?.map((element, index) => {
 				let value = values?.templateData?.[index]?.value;
 
 				if (element.type === ELoaiDuLieuBieuMau.Date && value) {
-					value = moment(value).startOf('day').toISOString();
+					value = dayjs(value).startOf('day').toISOString();
 				}
 
 				if (element.type === ELoaiDuLieuBieuMau.Table) {
@@ -102,7 +104,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 			}) ?? [];
 
 		if (values.ngaySinh) {
-			values.ngaySinh = moment(values.ngaySinh).startOf('day').toISOString();
+			values.ngaySinh = dayjs(values.ngaySinh).startOf('day').toISOString();
 		}
 
 		values.templateData = templateData;
@@ -200,7 +202,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 							width={700}
 							footer={false}
 							title={`${editFormTable ? 'Chỉnh sửa' : 'Thêm mới'} ${element.headerName}`}
-							visible={openedTableKey === element.headerName}
+							open={openedTableKey === element.headerName}
 							onCancel={onCancelFormTable}
 						>
 							<FormTable record={recordTable} onCancel={onCancelFormTable} edit={editFormTable} elements={element} />
@@ -222,7 +224,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 								value={
 									recQuyetDinh?.soQuyetDinh ??
 									`${record?.quyetDinh?.soQuyetDinh ?? ''}, ${
-										record?.quyetDinh?.ngayBanHanh ? moment(record.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''
+										record?.quyetDinh?.ngayBanHanh ? dayjs(record.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''
 									}`
 								}
 								disabled

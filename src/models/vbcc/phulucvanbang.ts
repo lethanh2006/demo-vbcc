@@ -1,4 +1,3 @@
-import { ShowAllVanBang } from '@/hooks/useCheckAccess';
 import useInitModel from '@/hooks/useInitModel';
 import {
 	chiTietPhuLucVanBanPublic,
@@ -14,9 +13,7 @@ import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
-	const showAllVanBang = ShowAllVanBang();
-
-	const objInit = useInitModel<PhuLucVanBang.IRecord>(showAllVanBang ? 'phu-luc-van-bang' : 'phu-luc-van-bang/don-vi');
+	const objInit = useInitModel<PhuLucVanBang.IRecord>('phu-luc-van-bang');
 	const { formSubmiting, setFormSubmiting, setLoading, setRecord } = objInit;
 	const [dataToSignOrPush, setDataToSignOrPush] = useState<PhuLucVanBang.IRecord[]>([]);
 	const [visibleSign, setVisibleSign] = useState<boolean>(false);
