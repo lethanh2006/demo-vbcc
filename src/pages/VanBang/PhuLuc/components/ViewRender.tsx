@@ -21,7 +21,8 @@ const ViewPhuLucVanBang = () => {
 		return item.value || '---';
 	};
 
-	const handlePrintOne = (rec: PhuLucVanBang.IRecord) => {
+	const handlePrintOne = (rec?: PhuLucVanBang.IRecord) => {
+		if (!rec) return;
 		setDataToSignOrPush([rec]);
 		setVisiblePrint(true);
 	};
