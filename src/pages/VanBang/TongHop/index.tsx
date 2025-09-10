@@ -1,5 +1,4 @@
 import MyDatePicker from '@/components/MyDatePicker';
-import useCheckAccess from '@/hooks/useCheckAccess';
 import { getThongKeTong } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
@@ -20,11 +19,11 @@ const TongHopVanBang = () => {
 	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const quanTri = !useCheckAccess('van-bang-chung-chi|quan-tri-vien');
+	// const quanTri = !useCheckAccess('van-bang-chung-chi|quan-tri-vien');
 
 	const fetchData = async () => {
 		setLoading(true);
-		await getThongKeTong(yearSelect ? dayjs(yearSelect).format('YYYY') : '', recSoVanBang?._id ?? '', !quanTri)
+		await getThongKeTong(yearSelect ? dayjs(yearSelect).format('YYYY') : '', recSoVanBang?._id ?? '', false)
 			.then((response) => {
 				setData(response.data?.data);
 			})

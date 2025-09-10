@@ -1,4 +1,3 @@
-import useCheckAccess from '@/hooks/useCheckAccess';
 import useInitModel from '@/hooks/useInitModel';
 import {
 	chiTietPhuLucVanBanPublic,
@@ -13,10 +12,10 @@ import { preIPFS } from '@/utils/ip';
 import { message } from 'antd';
 import { useState } from 'react';
 
-export default (): any => {
-	const quanTri = useCheckAccess('van-bang-chung-chi|quan-tri-vien');
-
-	const objInit = useInitModel<PhuLucVanBang.IRecord>(quanTri ? 'phu-luc-van-bang' : 'phu-luc-van-bang/don-vi');
+export default () => {
+	// const quanTri = useCheckAccess('van-bang-chung-chi|quan-tri-vien');
+	// const objInit = useInitModel<PhuLucVanBang.IRecord>(quanTri ? 'phu-luc-van-bang' : 'phu-luc-van-bang/don-vi');
+	const objInit = useInitModel<PhuLucVanBang.IRecord>('phu-luc-van-bang');
 	const { formSubmiting, setFormSubmiting, setLoading, setRecord } = objInit;
 	const [dataToSignOrPush, setDataToSignOrPush] = useState<PhuLucVanBang.IRecord[]>([]);
 	const [visibleSign, setVisibleSign] = useState<boolean>(false);
