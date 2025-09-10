@@ -30,7 +30,7 @@ ENV APP_CONFIG_URL_CORE=https://core.vinhuni.edu.vn/
 ENV APP_CONFIG_URL_CSVC=https://csvc.vinhuni.edu.vn/
 ENV APP_CONFIG_URL_THU_VIEN=
 ENV APP_CONFIG_URL_QLVB=https://gwdu.vinhuni.edu.vn/sso/realms/vinhuni/protocol/openid-connect/auth?response_type=code&client_id=vinhuni-qlvb&redirect_uri=http%3A%2F%2Fqlvb.vinhuni.edu.vn%2Fauth_oauth%2Fsignin&scope=openid+profile+email&state=%7B%22d%22%3A+%22qlvb%22%2C+%22p%22%3A+4%2C+%22r%22%3A+%22http%253A%252F%252Fqlvb.vinhuni.edu.vn%252Fweb%22%7D
-ENV APP_CONFIG_URL_VBCC=
+ENV APP_CONFIG_URL_VBCC=https://vbcc.vinhuni.edu.vn/
 
 ENV APP_CONFIG_TITLE_LANDING='Cổng thông tin'
 ENV APP_CONFIG_TITLE_CONNECT='Cổng người học'
