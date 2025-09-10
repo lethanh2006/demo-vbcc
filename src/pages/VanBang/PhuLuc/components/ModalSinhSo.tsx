@@ -35,13 +35,7 @@ const ModalSinhSoVaoSo = (props: { visible: boolean; setVisibe: (val: boolean) =
 	};
 
 	return (
-		<Modal
-			title='Sinh số vào sổ quyết định'
-			visible={visible}
-			onCancel={() => setVisibe(false)}
-			footer={null}
-			width={800}
-		>
+		<Modal title='Sinh số vào sổ quyết định' open={visible} onCancel={() => setVisibe(false)} footer={null} width={800}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={12}>

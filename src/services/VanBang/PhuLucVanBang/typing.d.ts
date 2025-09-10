@@ -12,6 +12,7 @@ declare module PhuLucVanBang {
 		soVaoSoBang: string;
 		soHieuVanBang: string;
 		hoTen: string;
+		fullName: string;
 		ngaySinh: string;
 		maSinhVien: string;
 		maBieuMau?: string;

@@ -56,7 +56,7 @@ const ModalTongLuotTraCuu = () => {
 	return (
 		<Modal
 			title={'Chi tiết lượt tra cứu'}
-			visible={visibleForm}
+			open={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			width={900}
 			footer={[

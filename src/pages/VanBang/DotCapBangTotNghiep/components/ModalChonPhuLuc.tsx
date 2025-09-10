@@ -3,8 +3,8 @@ import { EOperatorType } from '@/components/Table/constant';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import dayjs from '@/utils/dayjs';
 import { Button, message, Modal } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
@@ -73,7 +73,7 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 100,
-			render: (val: moment.MomentInput) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Mã SV',
@@ -89,8 +89,8 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 				<ExpandText>
 					{rec?.quyetDinh?.soQuyetDinh
 						? `Số QĐ: ${rec.quyetDinh.soQuyetDinh}${
-								rec.quyetDinh.ngayBanHanh ? ` - ${moment(rec.quyetDinh.ngayBanHanh).format('DD/MM/YYYY')}` : ''
-						  }`
+								rec.quyetDinh.ngayBanHanh ? ` - ${dayjs(rec.quyetDinh.ngayBanHanh).format('DD/MM/YYYY')}` : ''
+							}`
 						: 'Chưa có QĐ'}
 				</ExpandText>
 			),
@@ -119,7 +119,7 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 	};
 
 	return (
-		<Modal title='Chọn phụ lục văn bằng' visible={visible} width={800} onCancel={onCancel} footer={null}>
+		<Modal title='Chọn phụ lục văn bằng' open={visible} width={800} onCancel={onCancel} footer={null}>
 			<TableStaticData
 				columns={columns}
 				data={danhSach?.filter((item) => item?.kichHoat !== true)}
@@ -141,7 +141,7 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 			/>
 			<div className='form-footer'>
 				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={selectedIds?.length === 0}>
-					Thêm vào đợt cấp bằng {selectedIds?.length ?? 0 > 0 ? `(${selectedIds?.length})` : ''}
+					Thêm vào đợt cấp bằng {(selectedIds?.length ?? 0 > 0) ? `(${selectedIds?.length})` : ''}
 				</Button>
 				<Button onClick={onCancel}>Hủy</Button>
 			</div>

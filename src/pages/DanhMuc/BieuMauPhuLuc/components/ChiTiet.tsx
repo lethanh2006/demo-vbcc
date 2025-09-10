@@ -115,7 +115,7 @@ const ChiTietBieuMauPhuLuc = () => {
 							width={700}
 							footer={false}
 							title={`${editFormTable ? 'Chỉnh sửa' : 'Thêm mới'} ${element.headerName}`}
-							visible={openedTableKey === element.headerName}
+							open={openedTableKey === element.headerName}
 							onCancel={onCancelFormTable}
 						>
 							<FormTable record={recordTable} onCancel={onCancelFormTable} edit={editFormTable} elements={element} />

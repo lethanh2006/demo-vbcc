@@ -11,7 +11,7 @@ const PreviewIPFS = (props: { visible: boolean; setVisible: (val: boolean) => vo
 	return (
 		<ModalExpandable
 			title='Chi tiết tập tin văn bằng'
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={1000}

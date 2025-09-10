@@ -1,7 +1,7 @@
 import PreviewFile from '@/components/PreviewFile';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
+import dayjs from '@/utils/dayjs';
 import { Col, Descriptions, Divider, Empty, Row, Spin } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import Footer from './Footer';
@@ -49,7 +49,7 @@ const ChiTietTraCuuVanBang = ({
 									<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? '--'}</Descriptions.Item>
 									<Descriptions.Item label='Họ tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
 									<Descriptions.Item label='Ngày sinh'>
-										{record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
+										{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
 									</Descriptions.Item>
 									<Descriptions.Item label='Mã sinh viên'>{record?.maSinhVien ?? '--'}</Descriptions.Item>
 									{/* <Descriptions.Item label='Tập tin'>
@@ -69,9 +69,7 @@ const ChiTietTraCuuVanBang = ({
 								<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered>
 									<Descriptions.Item label='Số quyết định'>{record?.quyetDinh?.soQuyetDinh ?? '--'}</Descriptions.Item>
 									<Descriptions.Item label='Ngày ban hành'>
-										{record?.quyetDinh?.ngayBanHanh
-											? moment(record?.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY')
-											: '--'}
+										{record?.quyetDinh?.ngayBanHanh ? dayjs(record?.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : '--'}
 									</Descriptions.Item>
 									<Descriptions.Item label='Nội dung trích yếu' span={2}>
 										{record?.quyetDinh?.noiDung ?? '--'}
@@ -95,7 +93,7 @@ const ChiTietTraCuuVanBang = ({
 										<Descriptions.Item key={item?.value} label={item?.headerName}>
 											{item?.value
 												? item.type === ELoaiDuLieuBieuMau.Date
-													? moment(item.value).format('DD/MM/YYYY')
+													? dayjs(item.value).format('DD/MM/YYYY')
 													: item.value
 												: null}
 										</Descriptions.Item>

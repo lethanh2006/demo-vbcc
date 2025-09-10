@@ -1,8 +1,8 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Divider, Form, Input, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -62,7 +62,7 @@ const FormXacMinhVanBang = () => {
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item label='Ngày gửi yêu cầu' name='ngayGuiYeuCau' initialValue={moment()}>
+						<Form.Item label='Ngày gửi yêu cầu' name='ngayGuiYeuCau' initialValue={dayjs()}>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>

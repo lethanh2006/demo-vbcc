@@ -2,8 +2,8 @@ import ExpandText from '@/components/ExpandText';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
+import dayjs from '@/utils/dayjs';
 import { Button, message, Modal } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
@@ -65,18 +65,18 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 			dataIndex: 'ngayBanHanh',
 			align: 'center',
 			width: 120,
-			render: (val: moment.MomentInput) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Nội dung',
 			dataIndex: 'noiDung',
 			width: 300,
-			render: (val: unknown) => <ExpandText>{val}</ExpandText>,
+			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 	];
 
 	return (
-		<Modal title='Chọn quyết định tốt nghiệp' visible={visible} width={800} onCancel={onCancel} footer={null}>
+		<Modal title='Chọn quyết định tốt nghiệp' open={visible} width={800} onCancel={onCancel} footer={null}>
 			<TableStaticData
 				columns={columns}
 				data={danhSach}
@@ -99,7 +99,7 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 
 			<div className='form-footer'>
 				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={selectedIds?.length === 0}>
-					Thêm vào đợt cấp bằng {selectedIds?.length ?? 0 > 0 ? `(${selectedIds?.length})` : ''}
+					Thêm vào đợt cấp bằng {(selectedIds?.length ?? 0 > 0) ? `(${selectedIds?.length})` : ''}
 				</Button>
 				<Button onClick={onCancel}>Hủy</Button>
 			</div>

@@ -5,6 +5,7 @@ import type { IColumn } from '@/components/Table/typing';
 import { ESettingKey, ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import dayjs from '@/utils/dayjs';
 import {
 	BoldOutlined,
 	CheckCircleOutlined,
@@ -23,7 +24,6 @@ import {
 	WarningOutlined,
 } from '@ant-design/icons';
 import { Popconfirm, Space, Tag } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
@@ -71,7 +71,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 	} = useModel('vbcc.quyetdinhtotnghiep');
 	const { record: recDotCapCang } = useModel('vbcc.dotcapbangtotnghiep');
 	const { settings } = useModel('tienich.caidat');
-	const [yearSelect, setYearSelect] = useState<any>(moment().year());
+	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 	const [showUpload, setShowUpload] = useState(false);
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
@@ -160,7 +160,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 100,
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -181,7 +181,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			render: (val, rec) => (
 				<>
 					{rec.quyetDinh?.soQuyetDinh ?? ''},{' '}
-					{rec.quyetDinh?.ngayBanHanh ? moment(rec.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''}
+					{rec.quyetDinh?.ngayBanHanh ? dayjs(rec.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''}
 				</>
 			),
 			hide: isQuyetDinh || !!recQuyetDinh?._id,
@@ -251,7 +251,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 					<Tag color='red'>Chưa cấp bằng</Tag>
 				);
 
-				const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${moment(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
+				const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
 
 				return (
 					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -277,13 +277,18 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 					<ButtonExtend tooltip='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
 					<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
 					<Popconfirm
-						// disabled={isQuyetDinh && rec.trangThaiPhuLuc === ETrangThaiPhuLuc.DA_VAO_SO}
-						disabled={rec.kichHoat === true}
 						onConfirm={() => (isDotCapBang ? delePhuLucDot(rec) : deleteModel(rec._id, getData))}
 						title='Bạn có chắc chắn muốn xóa phụ lục này?'
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							// disabled={isQuyetDinh && rec.trangThaiPhuLuc === ETrangThaiPhuLuc.DA_VAO_SO}
+							// disabled={rec.kichHoat === true}
+							tooltip='Xóa'
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -412,22 +417,22 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 					<Space wrap style={{ marginBottom: 12 }}>
 						<MyDatePicker
 							style={{ width: 200 }}
-							value={yearSelect ? moment(yearSelect, 'YYYY') : null}
+							value={yearSelect}
 							pickerStyle='year'
 							placeholder='Chọn năm hành chính'
 							format='YYYY'
 							onChange={(val) => {
 								if (val) {
-									setYearSelect(moment(val).year());
+									setYearSelect(dayjs(val));
 								} else {
-									setYearSelect(undefined);
+									setYearSelect(null);
 								}
 							}}
 							allowClear
 						/>
 
 						<SelectQuyetDinh
-							condition={yearSelect ? { nam: String(yearSelect) } : undefined}
+							condition={{ nam: dayjs(yearSelect).format('YYYY') }}
 							style={{ width: 250 }}
 							value={recQuyetDinh?._id}
 							onChange={(val) => setQuyetDinh(danhsachQuyetDinh?.find((item) => item._id === val))}

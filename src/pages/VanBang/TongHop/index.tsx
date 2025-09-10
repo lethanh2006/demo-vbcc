@@ -1,10 +1,9 @@
 import MyDatePicker from '@/components/MyDatePicker';
-import { ShowAllVanBang } from '@/hooks/useCheckAccess';
 import { getThongKeTong } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
+import dayjs from '@/utils/dayjs';
 import { AuditOutlined, BoldOutlined, CopyOutlined, SearchOutlined } from '@ant-design/icons';
 import { Card, Col, Row, Space, Spin } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
 import { useModel } from 'umi';
@@ -17,13 +16,12 @@ const TongHopVanBang = () => {
 	const [data, setData] = useState<PhuLucVanBang.TTongHop>();
 	const { setVisibleForm } = useModel('vbcc.phulucvanbang');
 	const { record: recSoVanBang, danhSach: danhSachSo, setRecord: setSoVanBang } = useModel('vbcc.sovanbang');
-	const [yearSelect, setYearSelect] = useState<any>(moment().year());
+	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 	const [loading, setLoading] = useState<boolean>(false);
-	const showAllVanBang = ShowAllVanBang();
 
 	const fetchData = async () => {
 		setLoading(true);
-		await getThongKeTong(yearSelect ? String(yearSelect) : '', recSoVanBang?._id ?? '', !showAllVanBang)
+		await getThongKeTong(yearSelect ? dayjs(yearSelect).format('YYYY') : '', recSoVanBang?._id ?? '', false)
 			.then((response) => {
 				setData(response.data?.data);
 			})
@@ -42,15 +40,15 @@ const TongHopVanBang = () => {
 					<Space>
 						<MyDatePicker
 							style={{ width: 200 }}
-							value={yearSelect ? moment(yearSelect, 'YYYY') : null}
+							value={yearSelect}
 							pickerStyle='year'
 							placeholder='Chọn năm hành chính'
 							format='YYYY'
 							onChange={(val) => {
 								if (val) {
-									setYearSelect(moment(val).year());
+									setYearSelect(dayjs(val));
 								} else {
-									setYearSelect(undefined);
+									setYearSelect(null);
 								}
 							}}
 							allowClear
@@ -77,7 +75,7 @@ const TongHopVanBang = () => {
 
 				<Col span={24} md={6} className='dashboard-card-with-icon'>
 					<Card>
-						<CopyOutlined style={{ color: 'var(--primary-color)' }} />
+						<CopyOutlined style={{ color: 'var(--color-primary)' }} />
 						<div>
 							<CountUp className='number' end={data?.tongSoPhuLuc ?? 0} duration={1.5} separator='.' />
 							<div className='text'>Phụ lục văn bằng</div>
