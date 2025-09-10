@@ -114,10 +114,10 @@ const ModalExportData = () => {
 						<div>
 							{mauOptions.length ? (
 								<Checkbox.Group value={selectedMaus} onChange={(vals) => setSelectedMaus(vals as string[])}>
-									<Space wrap>
-										{mauOptions.map((item: any, idx: number) => (
-											<Space wrap key={item.idFile}>
-												<Checkbox value={item.idFile} />
+									<Space direction='vertical'>
+										{mauOptions.map((item, idx: number) => (
+											<div key={item.idFile}>
+												<Checkbox value={item.idFile} />{' '}
 												<a
 													onClick={(e) => {
 														e.preventDefault();
@@ -127,7 +127,7 @@ const ModalExportData = () => {
 												>
 													{item?.ten ?? `Tệp tin ${idx + 1}`}
 												</a>
-											</Space>
+											</div>
 										))}
 									</Space>
 								</Checkbox.Group>
