@@ -3,11 +3,11 @@ import PreviewFile from '@/components/PreviewFile';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import { EFileScope, uploadFile } from '@/services/uploadFile';
 import { exportData } from '@/services/VanBang/PhuLucVanBang';
+import dayjs from '@/utils/dayjs';
 import socket, { ESocketType } from '@/utils/socket';
 import { FilePdfOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, Descriptions, message, Modal, Progress, Row, Upload } from 'antd';
+import { Button, Checkbox, Col, Descriptions, message, Modal, Progress, Row, Space, Upload } from 'antd';
 import type { RcFile } from 'antd/lib/upload';
-import moment, { type Moment } from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
@@ -21,7 +21,7 @@ const ModalExportData = () => {
 	});
 	const exportStatus = exportDetail.current === exportDetail.total && exportDetail.total > 0 ? 'Done' : 'None';
 	const [fileList, setFileList] = useState<any[]>([]);
-	const [ngayThang, setngayThang] = useState<Moment>(moment());
+	const [ngayThang, setngayThang] = useState<any>(dayjs());
 	const [previewOpen, setPreviewOpen] = useState(false);
 	const [previewImage, setPreviewImage] = useState('');
 
@@ -152,7 +152,7 @@ const ModalExportData = () => {
 						</div>
 					</Descriptions.Item>
 					<Descriptions.Item label='Ngày in phụ lục'>
-						<MyDatePicker value={ngayThang} onChange={(val) => setngayThang(moment(val))} />
+						<MyDatePicker value={ngayThang} onChange={(val) => setngayThang(dayjs(val))} />
 					</Descriptions.Item>
 				</Descriptions>
 			) : null}
