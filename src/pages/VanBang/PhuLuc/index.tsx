@@ -226,14 +226,16 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			filterData: Object.values(ETrangThaiBlockchain).map((item) => ({ label: item, value: item })),
 			render: (val: ETrangThaiBlockchain) => (
 				<div style={{ color: colorTrangThaiBlc[val] }}>
-					{val === ETrangThaiBlockchain.DA_LUU ? (
-						<CheckCircleOutlined />
-					) : val === ETrangThaiBlockchain.CHUA_CAP_NHAT ? (
-						<EditOutlined />
-					) : (
-						<WarningOutlined />
-					)}{' '}
-					<small>{val}</small>
+					<Space>
+						{val === ETrangThaiBlockchain.DA_LUU ? (
+							<CheckCircleOutlined />
+						) : val === ETrangThaiBlockchain.CHUA_CAP_NHAT ? (
+							<EditOutlined />
+						) : (
+							<WarningOutlined />
+						)}{' '}
+						{val}
+					</Space>
 				</div>
 			),
 			hide: !settingVbcc?.blockChain,
@@ -381,7 +383,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
 				widthDrawer={1000}
 				Form={isView ? ViewPhuLucVanBang : Form}
-				formProps={{ getData, isQuyetDinh }}
+				formProps={{ getData, isQuyetDinh, vbccSettings: settingVbcc }}
 				buttons={{ create: !!recQuyetDinh?._id && !isDotCapBang }}
 				hideCard={isQuyetDinh || isDotCapBang}
 				otherButtons={otherButtons}
