@@ -14,16 +14,14 @@ export default () => {
 		setFormSubmiting(true);
 
 		try {
-			const from = oldIndex < newIndex ? oldIndex : newIndex;
-			const to = oldIndex < newIndex ? newIndex : oldIndex;
-			const distance = oldIndex < newIndex ? -1 : 1;
-			const updatedList: any = [];
-			danhSach.forEach((item, index) => {
-				if (index >= from && index <= to) {
-					if (item._id === rec._id) updatedList.push({ _id: item._id, soThuTu: newIndex + 1 });
-					else updatedList.push({ _id: item._id, soThuTu: (item.soThuTu ?? index) + distance });
-				}
-			});
+			const tempDanhSach = [...danhSach];
+			const [movedItem] = tempDanhSach.splice(oldIndex, 1);
+			tempDanhSach.splice(newIndex, 0, movedItem);
+
+			const updatedList: { _id: string; soThuTu: number }[] = tempDanhSach.map((item, index) => ({
+				_id: item._id,
+				soThuTu: index + 1,
+			}));
 			await Promise.all(updatedList.map((item: any) => putService(item._id, { soThuTu: item.soThuTu })));
 
 			getData();
