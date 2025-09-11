@@ -17,6 +17,9 @@ declare module PhuLucVanBang {
 		maSinhVien: string;
 		maBieuMau?: string;
 		templateData?: BieuMauPhuLuc.TElement[];
+		tenDeTai: string;
+		nguoiHuongDan: string;
+		moTaDeTai: string;
 
 		// historyId?: string;
 		urlIpfs?: string | null;

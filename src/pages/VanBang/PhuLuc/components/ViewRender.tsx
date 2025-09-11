@@ -42,6 +42,9 @@ const ViewPhuLucVanBang = () => {
 				</Descriptions.Item>
 				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Số vào sổ bằng'>{record?.soVaoSoBang ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Tên đề tài'>{record?.tenDeTai ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Người hướng dẫn'>{record?.nguoiHuongDan ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Mô tả đề tài'>{record?.moTaDeTai ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Trạng thái cấp bằng'>
 					{record?.kichHoat ? <Tag color='green'>Đã cấp bằng</Tag> : <Tag color='red'>Chưa cấp bằng</Tag>}
 				</Descriptions.Item>
