@@ -19,7 +19,7 @@ import FormTable from './FormTable';
 const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: string]: any }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { getData, title } = props;
+	const { getData, title, vbccSettings } = props;
 	const {
 		record,
 		edit,
@@ -273,12 +273,13 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 							<Input placeholder='Nhập mã sinh viên' />
 						</Form.Item>
 					</Col>
-					<Col span={24} md={12}>
-						<Form.Item label='Tập tin văn bằng (file scan)' name='urlIpfs'>
-							<UploadFile maxCount={1} otherProps={{ accept: '.pdf' }} />
-						</Form.Item>
-					</Col>
-
+					{!vbccSettings?.require_IPFS && (
+						<Col span={24} md={12}>
+							<Form.Item label='Tập tin văn bằng (file scan)' name='urlIpfs'>
+								<UploadFile maxCount={1} otherProps={{ accept: '.pdf' }} />
+							</Form.Item>
+						</Col>
+					)}
 					{recBieuMau?._id && (
 						<>
 							<Col span={24}>
