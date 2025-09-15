@@ -36,6 +36,7 @@ export const defaultChuanDauRaColumns: { headerName: string; type: ELoaiDuLieuBi
 	{ headerName: 'Nội dung PLO', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Mức điểm tối thiểu', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Mức điểm đạt được', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Nhóm chuẩn dầu ra', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 export const defaultElementBieuMau: BieuMauPhuLuc.TElement[] = [
