@@ -150,7 +150,7 @@ const ElementBieuMauFormItem = (props: {
 							disabled={
 								isDefault ||
 								elements[index]?.headerName === 'Bảng điểm sinh viên' ||
-								elements[index]?.headerName === 'Chuẩn đầu ra'
+								elements[index]?.headerName === 'Chuẩn đầu ra CTĐT'
 							}
 							options={Object.values(ELoaiDuLieuBieuMau).map((item) => ({
 								key: item,
@@ -194,7 +194,7 @@ const ElementBieuMauFormItem = (props: {
 										defaultColumns={
 											elements[index]?.headerName === 'Bảng điểm sinh viên'
 												? defaultTranscriptColumns
-												: elements[index]?.headerName === 'Chuẩn đầu ra'
+												: elements[index]?.headerName === 'Chuẩn đầu ra CTĐT'
 													? defaultChuanDauRaColumns
 													: []
 										}
