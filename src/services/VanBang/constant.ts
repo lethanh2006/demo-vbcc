@@ -74,7 +74,7 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Xếp hạng rèn luyện', type: ELoaiDuLieuBieuMau.Text },
 
 	{ headerName: 'Bảng điểm sinh viên', type: ELoaiDuLieuBieuMau.Table },
-	{ headerName: 'Chuẩn đầu ra chương trình đào tạo', type: ELoaiDuLieuBieuMau.Table },
+	{ headerName: 'Chuẩn đầu ra CTĐT', type: ELoaiDuLieuBieuMau.Table },
 
 	{ headerName: 'Đề tài khoa học', type: ELoaiDuLieuBieuMau.Table },
 	{ headerName: 'Mô tả đề tài', type: ELoaiDuLieuBieuMau.Table },

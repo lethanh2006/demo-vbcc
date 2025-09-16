@@ -78,7 +78,7 @@ const ElementBieuMauFormItem = (props: {
 
 		if (data === 'Bảng điểm sinh viên') {
 			currentItem.cot = defaultTranscriptColumns;
-		} else if (data === 'Chuẩn đầu ra chương trình đào tạo') {
+		} else if (data === 'Chuẩn đầu ra CTĐT') {
 			currentItem.cot = defaultChuanDauRaColumns;
 		} else if (selectedElement.type === ELoaiDuLieuBieuMau.Table) {
 			currentItem.cot = [];
