@@ -39,9 +39,9 @@ export const defaultChuanDauRaColumns: { headerName: string; type: ELoaiDuLieuBi
 ];
 
 export const defaultElementBieuMau: BieuMauPhuLuc.TElement[] = [
-	{ headerName: 'Họ tên', isRequired: true },
+	{ headerName: 'Họ tên', type: ELoaiDuLieuBieuMau.Text, isRequired: true },
 	{ headerName: 'Ngày sinh', type: ELoaiDuLieuBieuMau.Date, isRequired: true },
-	{ headerName: 'Mã sinh viên' },
+	{ headerName: 'Mã sinh viên', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
@@ -63,10 +63,11 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Khóa', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Niên khóa', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Thời gian đào tạo', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Ngày nhập học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Ngày nhập học', type: ELoaiDuLieuBieuMau.Date },
 	{ headerName: 'Năm tốt nghiệp', type: ELoaiDuLieuBieuMau.Text },
 
 	{ headerName: 'Điểm tổng kết', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Điểm tổng kết (hệ 4)', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Số tín chỉ tích lũy', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Xếp loại', type: ELoaiDuLieuBieuMau.Text },
 
@@ -76,9 +77,11 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Bảng điểm sinh viên', type: ELoaiDuLieuBieuMau.Table },
 	{ headerName: 'Chuẩn đầu ra CTĐT', type: ELoaiDuLieuBieuMau.Table },
 
-	{ headerName: 'Đề tài khoa học', type: ELoaiDuLieuBieuMau.Table },
-	{ headerName: 'Mô tả đề tài', type: ELoaiDuLieuBieuMau.Table },
-	{ headerName: 'Người hướng dẫn', type: ELoaiDuLieuBieuMau.Table },
+	{ headerName: 'Đề tài khoa học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Mô tả đề tài', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Người hướng dẫn', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Chương trình đào tạo', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Ngày đánh giá tốt nghiệp', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 // PHỤ LỤC VĂN BẰNG
