@@ -62,16 +62,26 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 								}));
 							}
 
+							let value = matched?.value ?? null;
+							if (elm.type === ELoaiDuLieuBieuMau.Date && value) {
+								value = dayjs(value).toISOString();
+							}
+
 							return {
 								...elm,
-								value: matched?.value ?? null,
+								value,
 							};
 						});
 
 						record.templateData = updatedTemplateData as any;
 					}
 
-					form.setFieldsValue(record);
+					const formValues = {
+						...record,
+						ngaySinh: record.ngaySinh ? dayjs(record.ngaySinh) : null,
+					};
+
+					form.setFieldsValue(formValues);
 				}
 			});
 		}
