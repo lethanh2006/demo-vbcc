@@ -25,7 +25,7 @@ const MucDichTraCuuPhuLucPage = () => {
 	} = useModel('vbcc.mucdichtracuuphuluc');
 
 	const getData = () => {
-		getAllModel(undefined, { soThuTu: 1 });
+		getAllModel();
 	};
 
 	useEffect(() => {
@@ -95,7 +95,7 @@ const MucDichTraCuuPhuLucPage = () => {
 				Form={FormMucDichTraCuuPhuLuc}
 				formProps={{ getData, title: 'Mục đích tra cứu phụ lục' }}
 				hasCreate
-				widthDrawer={800}
+				widthDrawer={600}
 				showEdit={visibleForm}
 				setShowEdit={(vis: boolean) => {
 					setRecord(undefined);

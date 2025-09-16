@@ -26,7 +26,6 @@ export const defaultTranscriptColumns: { headerName: string; type: ELoaiDuLieuBi
 	{ headerName: 'Điểm hệ 10', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Điểm hệ 4', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Điểm chữ', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Điểm thi', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Ghi chú', type: ELoaiDuLieuBieuMau.Text },
 ];
 
@@ -75,7 +74,11 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Xếp hạng rèn luyện', type: ELoaiDuLieuBieuMau.Text },
 
 	{ headerName: 'Bảng điểm sinh viên', type: ELoaiDuLieuBieuMau.Table },
-	{ headerName: 'Chuẩn đầu ra', type: ELoaiDuLieuBieuMau.Table },
+	{ headerName: 'Chuẩn đầu ra chương trình đào tạo', type: ELoaiDuLieuBieuMau.Table },
+
+	{ headerName: 'Đề tài khoa học', type: ELoaiDuLieuBieuMau.Table },
+	{ headerName: 'Mô tả đề tài', type: ELoaiDuLieuBieuMau.Table },
+	{ headerName: 'Người hướng dẫn', type: ELoaiDuLieuBieuMau.Table },
 ];
 
 // PHỤ LỤC VĂN BẰNG

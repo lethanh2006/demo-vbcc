@@ -84,6 +84,11 @@ const FormQuyetDinhTotNghiep = (props: {
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
+					<Form.Item name='idSoVanBang' label='Sổ văn bằng' rules={[...rules.required]}>
+						<SelectSoVanBang condition={{ namHanhChinh: String(dayjs(nam).format('YYYY')) }} />
+					</Form.Item>
+				</Col>
+				<Col xs={24} md={12}>
 					<Form.Item name='soQuyetDinh' label='Số quyết định' rules={[...rules.required]}>
 						<Input placeholder='Nhập số quyết định' />
 					</Form.Item>
@@ -91,11 +96,6 @@ const FormQuyetDinhTotNghiep = (props: {
 				<Col xs={24} md={12}>
 					<Form.Item name='ngayBanHanh' label='Ngày ký quyết định' rules={[...rules.required]}>
 						<MyDatePicker />
-					</Form.Item>
-				</Col>
-				<Col xs={24} md={12}>
-					<Form.Item name='idSoVanBang' label='Sổ văn bằng' rules={[...rules.required]}>
-						<SelectSoVanBang condition={{ namHanhChinh: String(dayjs(nam).format('YYYY')) }} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>

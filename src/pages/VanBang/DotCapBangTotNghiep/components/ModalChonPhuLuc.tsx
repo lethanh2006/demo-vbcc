@@ -26,7 +26,7 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 			undefined,
 			undefined,
 			{
-				dotCapBangId: null,
+				idDotCapBang: null,
 			},
 			[
 				{
@@ -107,7 +107,7 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 			await putManyModel(
 				selectedIds ?? [],
 				{
-					dotCapBangId: recDot?._id,
+					idDotCapBang: recDot?._id,
 				},
 				getDataExternal,
 			);

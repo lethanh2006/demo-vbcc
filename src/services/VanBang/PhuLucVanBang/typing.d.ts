@@ -30,6 +30,7 @@ declare module PhuLucVanBang {
 		kichHoat?: boolean;
 
 		// Cấp bằng
+		idDotCapBang?: string | null;
 		ngayCapPhuLuc?: Date | string;
 		ghiChu: string;
 
@@ -39,7 +40,6 @@ declare module PhuLucVanBang {
 		// Temp
 		index?: number;
 		key?: string;
-		dotCapBangId?: string | null;
 	}
 
 	export type TUploadFolder = Pick<IRecord, 'urlIpfs' | 'idVanBangIPFS'> & {

@@ -3,7 +3,13 @@ import type { MucDichTraCuuPhuLuc } from '@/services/VanBang/MucDichTraCuuPhuLuc
 import { message } from 'antd';
 
 export default () => {
-	const objInit = useInitModel<MucDichTraCuuPhuLuc.IRecord>('muc-dich-tra-cuu-phu-luc');
+	const objInit = useInitModel<MucDichTraCuuPhuLuc.IRecord>(
+		'muc-dich-tra-cuu-phu-luc',
+		undefined,
+		undefined,
+		undefined,
+		{ soThuTu: 1 },
+	);
 
 	const { formSubmiting, setFormSubmiting, putService, danhSach } = objInit;
 
