@@ -33,9 +33,9 @@ export const defaultTranscriptColumns: { headerName: string; type: ELoaiDuLieuBi
 export const defaultChuanDauRaColumns: { headerName: string; type: ELoaiDuLieuBieuMau }[] = [
 	{ headerName: 'Mã PLO', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Nội dung PLO', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Nhóm chuẩn đầu ra', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Mức điểm tối thiểu', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Mức điểm đạt được', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Nhóm chuẩn dầu ra', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 export const defaultElementBieuMau: BieuMauPhuLuc.TElement[] = [

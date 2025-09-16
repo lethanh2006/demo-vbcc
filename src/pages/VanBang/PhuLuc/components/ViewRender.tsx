@@ -5,6 +5,7 @@ import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import { FilePdfOutlined } from '@ant-design/icons';
 import { Button, Card, Descriptions, Divider } from 'antd';
+import moment from 'moment';
 import { useIntl, useModel } from 'umi';
 
 const ViewPhuLucVanBang = () => {
@@ -41,10 +42,12 @@ const ViewPhuLucVanBang = () => {
 				<Descriptions.Item label='Ngày sinh'>
 					{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : ''}
 				</Descriptions.Item>
-				<Descriptions.Item label='Số quyết định'>{record?.quyetDinh?.soQuyetDinh ?? ''}</Descriptions.Item>
-				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Số vào sổ bằng'>{record?.soVaoSoBang ?? ''}</Descriptions.Item>
-				<Descriptions.Item label='Tên đề tài'>{record?.tenDeTai ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Số quyết định'>{record?.quyetDinh?.soQuyetDinh ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Ngày quyết định'>
+					{record?.quyetDinh?.ngayBanHanh ? moment(record?.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''}
+				</Descriptions.Item>
 			</Descriptions>
 
 			<Divider orientation='left'>Thông tin phụ lục</Divider>
@@ -65,6 +68,7 @@ const ViewPhuLucVanBang = () => {
 						<Descriptions bordered column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }} size='small'>
 							{elements
 								?.filter((item: any) => item.type !== ELoaiDuLieuBieuMau.Table)
+								?.filter((item: any) => !!item.value)
 								?.map((item: any, index: number) => (
 									<Descriptions.Item label={item.headerName} key={index}>
 										{renderField(item)}
