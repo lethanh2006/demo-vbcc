@@ -13,6 +13,7 @@ import minMax from 'dayjs/plugin/minMax';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 
 // mirgrate from moment to dayjs:
@@ -67,6 +68,7 @@ dayjs.extend(duration);
 dayjs.extend(calendar);
 dayjs.extend(isBetween);
 dayjs.extend(advancedFormat);
+dayjs.extend(weekday);
 
 // Set locale + timezone
 dayjs.locale('vi');

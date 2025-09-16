@@ -5,12 +5,12 @@ import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 
 const MyDatePicker = (
-	props: Omit<DatePickerProps<Dayjs>, 'onChange' | 'value'> & {
+	props: Omit<DatePickerProps, 'onChange'> & {
 		/**
 		 * Format hiển thị, mặc định: DD/MM/YYYY
 		 */
 		format?: string;
-		pickerStyle?: 'time' | 'date' | 'week' | 'month' | 'quarter' | 'year';
+		pickerStyle?: 'time' | 'date' | 'week' | 'month' | 'quarter' | 'year' | undefined;
 		showTime?:
 			| boolean
 			| {
@@ -31,34 +31,22 @@ const MyDatePicker = (
 		 * Format lưu lại, mặc định: ISOString
 		 */
 		saveFormat?: string;
-
-		disabledDate?: (cur: Dayjs | null) => boolean;
-		onChange?: (arg: string | null, date?: Dayjs | null) => any;
-		value?: string | Dayjs | null;
+		disabledDate?: (cur: string) => any;
+		onChange?: (arg: string | null) => any;
 	},
 ) => {
 	const format = props?.format ?? 'DD/MM/YYYY';
 	const { saveFormat, pickerStyle, disabledDate, showTime, allowClear, disabled } = props;
 
-	let dateValue: Dayjs | null = null;
-	if (props.value) {
-		if (typeof props.value === 'string') {
-			const d = dayjs(props.value, saveFormat || undefined);
-			dateValue = d.isValid() ? d : null;
-		} else {
-			dateValue = props.value as Dayjs;
-		}
-	}
-
 	const handleChange = (value: Dayjs | null) => {
-		if (props.onChange) {
-			if (value) {
-				props.onChange(saveFormat ? value.format(saveFormat) : value.toISOString(), value);
-			} else {
-				props.onChange(null, null);
-			}
-		}
+		if (props.onChange)
+			if (value) props.onChange(saveFormat ? value?.format(props?.saveFormat) : value.toISOString());
+			else props.onChange(null);
 	};
+
+	let objMoment: any = undefined;
+	if (props.value && typeof props.value == 'string') objMoment = dayjs(props.value, saveFormat);
+	else objMoment = props?.value;
 
 	return (
 		<DatePicker
@@ -67,7 +55,7 @@ const MyDatePicker = (
 			format={format}
 			picker={pickerStyle}
 			locale={locale}
-			value={dateValue}
+			value={objMoment}
 			onChange={handleChange}
 			disabledDate={disabledDate}
 			showTime={showTime}
