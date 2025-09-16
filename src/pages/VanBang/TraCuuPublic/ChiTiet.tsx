@@ -1,20 +1,18 @@
 import PreviewFile from '@/components/PreviewFile';
+import TableStaticData from '@/components/Table/TableStaticData';
+import { IColumn } from '@/components/Table/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import dayjs from '@/utils/dayjs';
 import { Col, Descriptions, Divider, Empty, Row, Spin } from 'antd';
+import moment from 'moment';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useModel, useParams } from 'umi';
 import Footer from './Footer';
 import Header from './Header';
 import './style.less';
 
-const ChiTietTraCuuVanBang = ({
-	match: {
-		params: { id },
-	},
-}: {
-	match: { params: { id: string } };
-}) => {
+const ChiTietTraCuuVanBang = () => {
+	const { id } = useParams<{ id: string }>();
 	const { chiTietPhuLucVanBanPublicModel, record, loading } = useModel('vbcc.phulucvanbang');
 
 	const getData = () => {
@@ -25,11 +23,24 @@ const ChiTietTraCuuVanBang = ({
 		getData();
 	}, [id]);
 
+	const renderField = (item: any) => {
+		if (item.type === 'Date') {
+			return item.value ? dayjs(item.value).format('DD/MM/YYYY') : '---';
+		}
+		if (item.type === 'Number') {
+			return item.value ?? '---';
+		}
+		if (typeof item.value === 'object') {
+			return JSON.stringify(item.value);
+		}
+		return item.value || '---';
+	};
+
 	return (
 		<>
 			<Header subTitle={APP_CONFIG_TITLE_VBCC} />
 			<Spin spinning={loading}>
-				<div style={{ maxWidth: 1200, minHeight: 700, margin: 'auto', paddingTop: 30, paddingBottom: 30 }}>
+				<div style={{ maxWidth: 1200, margin: 'auto', paddingTop: 30, paddingBottom: 30 }}>
 					<div style={{ textAlign: 'center', fontSize: 22, marginBottom: 36 }}>
 						<b>Chi tiết thông tin văn bằng</b>
 					</div>
@@ -49,7 +60,7 @@ const ChiTietTraCuuVanBang = ({
 									<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? '--'}</Descriptions.Item>
 									<Descriptions.Item label='Họ tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
 									<Descriptions.Item label='Ngày sinh'>
-										{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
+										{record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
 									</Descriptions.Item>
 									<Descriptions.Item label='Mã sinh viên'>{record?.maSinhVien ?? '--'}</Descriptions.Item>
 									{/* <Descriptions.Item label='Tập tin'>
@@ -69,14 +80,16 @@ const ChiTietTraCuuVanBang = ({
 								<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered>
 									<Descriptions.Item label='Số quyết định'>{record?.quyetDinh?.soQuyetDinh ?? '--'}</Descriptions.Item>
 									<Descriptions.Item label='Ngày ban hành'>
-										{record?.quyetDinh?.ngayBanHanh ? dayjs(record?.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : '--'}
+										{record?.quyetDinh?.ngayBanHanh
+											? moment(record?.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY')
+											: '--'}
 									</Descriptions.Item>
 									<Descriptions.Item label='Nội dung trích yếu' span={2}>
 										{record?.quyetDinh?.noiDung ?? '--'}
 									</Descriptions.Item>
 									<Descriptions.Item label='Tập tin đính kèm' span={2}>
 										{record?.quyetDinh?.url ? (
-											<a href={record?.quyetDinh?.url} target='_blank' rel='noreferrer'>
+											<a href={record.quyetDinh?.url} target='_blank' rel='noreferrer'>
 												Xem chi tiết
 											</a>
 										) : (
@@ -87,18 +100,52 @@ const ChiTietTraCuuVanBang = ({
 							</Col>
 
 							<Col span={24}>
-								<Divider>Chi tiết phụ lục</Divider>
-								<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered>
-									{record?.templateData?.map((item) => (
-										<Descriptions.Item key={item?.value} label={item?.headerName}>
-											{item?.value
-												? item.type === ELoaiDuLieuBieuMau.Date
-													? dayjs(item.value).format('DD/MM/YYYY')
-													: item.value
-												: null}
-										</Descriptions.Item>
-									))}
-								</Descriptions>
+								<Divider>Thông tin phụ lục</Divider>
+
+								{(() => {
+									const dataElements = record?.templateData ?? [];
+
+									const elements = dataElements;
+
+									return (
+										<>
+											<Descriptions bordered column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }} size='small'>
+												{elements
+													?.filter((item: any) => item.type !== ELoaiDuLieuBieuMau.Table)
+													?.filter((item: any) => !!item.value)
+													?.map((item: any, index: number) => (
+														<Descriptions.Item label={item.headerName} key={index}>
+															{renderField(item)}
+														</Descriptions.Item>
+													))}
+											</Descriptions>
+
+											{elements
+												?.filter((item: any) => item.type === ELoaiDuLieuBieuMau.Table)
+												?.map((item: any, index: number) => {
+													const columns: IColumn<any>[] =
+														item?.cot?.map((i: any) => ({
+															title: i.headerName,
+															dataIndex: i.headerName,
+															width: 120,
+														})) ?? [];
+
+													return (
+														<div key={index}>
+															<Divider>{item.headerName}</Divider>
+															<TableStaticData
+																addStt
+																hasTotal
+																size='small'
+																columns={columns}
+																data={item?.value ?? []}
+															/>
+														</div>
+													);
+												})}
+										</>
+									);
+								})()}
 							</Col>
 
 							{record?.signature ? (
@@ -128,7 +175,7 @@ const ChiTietTraCuuVanBang = ({
 							) : null}
 						</Row>
 					) : (
-						<Empty description='Không có thông tin sinh viên' style={{ margin: 'auto' }} />
+						<Empty description='Không có thông tin sinh viên' style={{ marginBottom: 32, marginTop: 32 }} />
 					)}
 				</div>
 			</Spin>

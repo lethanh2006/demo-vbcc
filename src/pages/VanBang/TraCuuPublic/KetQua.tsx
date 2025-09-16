@@ -2,8 +2,8 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
-import dayjs from '@/utils/dayjs';
 import { EyeOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import { useModel } from 'umi';
 
 const KetQuaVanBang = () => {
@@ -29,7 +29,7 @@ const KetQuaVanBang = () => {
 			title: 'Ngày sinh',
 			align: 'center',
 			width: 100,
-			render: (val, rec) => rec?.DuLieu?.ngaySinh && dayjs(rec?.DuLieu?.ngaySinh).format('DD/MM/YYYY'),
+			render: (val, rec) => rec?.DuLieu?.ngaySinh && moment(rec?.DuLieu?.ngaySinh).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Mã SV',
@@ -56,8 +56,8 @@ const KetQuaVanBang = () => {
 			fixed: 'right',
 			render: (val, rec) => (
 				<ButtonExtend
-					disabled={!rec?.DuLieu?._id}
-					tooltip={!rec?.DuLieu?._id ? 'Chưa có thông tin văn bằng' : 'Chi tiết'}
+					disabled={!rec?.DuLieu?.idVanBang}
+					tooltip={!rec?.DuLieu?.idVanBang ? 'Chưa có thông tin văn bằng' : 'Chi tiết'}
 					type='link'
 					icon={<EyeOutlined />}
 					onClick={() => window.open(`/tra-cuu-van-bang/chi-tiet/${rec?.DuLieu?._id}`, '_blank')}
