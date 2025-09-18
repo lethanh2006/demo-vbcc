@@ -51,7 +51,10 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={8}>
 						<Form.Item label='Mã biểu mẫu' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
-							<Input placeholder='Nhập mã biểu mẫu' disabled={edit} />
+							<Input
+								placeholder='Nhập mã biểu mẫu'
+								//  disabled={edit}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24} md={16}>

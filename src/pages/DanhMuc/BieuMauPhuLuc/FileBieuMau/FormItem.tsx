@@ -14,10 +14,11 @@ const FormItemFileBieuMau = (props: {
 	value?: BieuMauPhuLuc.TFileBieuMau[];
 	onChange?: (data: BieuMauPhuLuc.TFileBieuMau[]) => void;
 	disabled?: boolean;
+	hide?: boolean;
 }) => {
 	const { handleEdit, setVisibleForm, visibleForm, setEdit, edit, record, setRecord, isView, setIsView, handleView } =
 		useModel('vbcc.filebieumau');
-	const { value = [], onChange, disabled } = props;
+	const { value = [], onChange, disabled, hide } = props;
 	const [previewOpen, setPreviewOpen] = useState(false);
 
 	const onDelete = (index: number) => {
@@ -85,6 +86,7 @@ const FormItemFileBieuMau = (props: {
 					</Popconfirm>
 				</>
 			),
+			hide: hide,
 		},
 	];
 
@@ -98,20 +100,22 @@ const FormItemFileBieuMau = (props: {
 				addStt
 				otherProps={{ pagination: false, scroll: { y: 400 } }}
 			>
-				<Button
-					disabled={disabled}
-					icon={<PlusCircleOutlined />}
-					onClick={() => {
-						setRecord({} as BieuMauPhuLuc.TFileBieuMau);
-						setEdit(false);
-						setIsView(false);
-						setVisibleForm(true);
-					}}
-					size='small'
-					type='primary'
-				>
-					Thêm mới
-				</Button>
+				{!hide && (
+					<Button
+						disabled={disabled}
+						icon={<PlusCircleOutlined />}
+						onClick={() => {
+							setRecord({} as BieuMauPhuLuc.TFileBieuMau);
+							setEdit(false);
+							setIsView(false);
+							setVisibleForm(true);
+						}}
+						size='small'
+						type='primary'
+					>
+						Thêm mới
+					</Button>
+				)}
 			</TableStaticData>
 
 			<Modal

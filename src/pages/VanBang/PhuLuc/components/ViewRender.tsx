@@ -4,11 +4,13 @@ import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import { FilePdfOutlined } from '@ant-design/icons';
-import { Button, Card, Descriptions, Divider, Tag } from 'antd';
+import { Button, Card, Descriptions, Divider } from 'antd';
+import moment from 'moment';
 import { useIntl, useModel } from 'umi';
 
 const ViewPhuLucVanBang = () => {
 	const intl = useIntl();
+	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const { record, setVisibleForm, setDataToSignOrPush, setVisiblePrint } = useModel('vbcc.phulucvanbang');
 
 	const renderField = (item: any) => {
@@ -40,56 +42,62 @@ const ViewPhuLucVanBang = () => {
 				<Descriptions.Item label='Ngày sinh'>
 					{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : ''}
 				</Descriptions.Item>
-				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Số vào sổ bằng'>{record?.soVaoSoBang ?? ''}</Descriptions.Item>
-				<Descriptions.Item label='Trạng thái cấp bằng'>
-					{record?.kichHoat ? <Tag color='green'>Đã cấp bằng</Tag> : <Tag color='red'>Chưa cấp bằng</Tag>}
-				</Descriptions.Item>
-				<Descriptions.Item label='Ngày cấp bằng'>
-					{record?.ngayCapPhuLuc ? dayjs(record?.ngayCapPhuLuc).format('DD/MM/YYYY') : ''}
+				<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Số quyết định'>{record?.quyetDinh?.soQuyetDinh ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Ngày quyết định'>
+					{record?.quyetDinh?.ngayBanHanh ? moment(record?.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''}
 				</Descriptions.Item>
 			</Descriptions>
 
 			<Divider orientation='left'>Thông tin phụ lục</Divider>
 
-			<Descriptions bordered column={2} size='small'>
-				{record?.templateData?.map((item: any, index: number) => {
-					if (item.type === ELoaiDuLieuBieuMau.Table) return null;
-					return (
-						// eslint-disable-next-line react/no-array-index-key
-						<Descriptions.Item label={item.headerName} key={index}>
-							{renderField(item)}
-						</Descriptions.Item>
-					);
-				})}
-			</Descriptions>
+			{(() => {
+				const templateElements = recQuyetDinh?.bieuMau?.elements ?? [];
+				const dataElements = record?.templateData ?? [];
 
-			{record?.templateData
-				?.filter((item: any) => item.type === ELoaiDuLieuBieuMau.Table)
-				?.map((item: any, index: number) => {
-					const columns: IColumn<any>[] =
-						item?.cot?.map((i: any) => ({
-							title: i.headerName,
-							dataIndex: i.headerName,
-							width: 120,
-						})) ?? [];
+				const elements = templateElements
+					? templateElements.map((e: any) => ({
+							...e,
+							value: dataElements.find((d: any) => d.headerName === e.headerName)?.value,
+						}))
+					: dataElements;
 
-					return (
-						// eslint-disable-next-line react/no-array-index-key
-						<div key={index}>
-							<Divider orientation='left'>{item.headerName}</Divider>
-							<TableStaticData
-								otherProps={{ pagination: false }}
-								addStt
-								size='small'
-								columns={columns}
-								data={item?.value ?? []}
-							/>
-						</div>
-					);
-				})}
+				return (
+					<>
+						<Descriptions bordered column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }} size='small'>
+							{elements
+								?.filter((item: any) => item.type !== ELoaiDuLieuBieuMau.Table)
+								?.filter((item: any) => !!item.value)
+								?.map((item: any, index: number) => (
+									<Descriptions.Item label={item.headerName} key={index}>
+										{renderField(item)}
+									</Descriptions.Item>
+								))}
+						</Descriptions>
 
-			<div className='form-footer' style={{ marginTop: 24 }}>
+						{elements
+							?.filter((item: any) => item.type === ELoaiDuLieuBieuMau.Table)
+							?.map((item: any, index: number) => {
+								const columns: IColumn<any>[] =
+									item?.cot?.map((i: any) => ({
+										title: i.headerName,
+										dataIndex: i.headerName,
+										width: 120,
+									})) ?? [];
+
+								return (
+									<div key={index}>
+										<Divider orientation='left'>{item.headerName}</Divider>
+										<TableStaticData addStt hasTotal size='small' columns={columns} data={item?.value ?? []} />
+									</div>
+								);
+							})}
+					</>
+				);
+			})()}
+
+			<div className='form-footer'>
 				<Button type='primary' icon={<FilePdfOutlined />} onClick={() => handlePrintOne(record)}>
 					In phụ lục
 				</Button>

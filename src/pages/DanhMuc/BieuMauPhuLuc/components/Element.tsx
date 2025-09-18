@@ -78,7 +78,7 @@ const ElementBieuMauFormItem = (props: {
 
 		if (data === 'Bảng điểm sinh viên') {
 			currentItem.cot = defaultTranscriptColumns;
-		} else if (data === 'Chuẩn đầu ra') {
+		} else if (data === 'Chuẩn đầu ra CTĐT') {
 			currentItem.cot = defaultChuanDauRaColumns;
 		} else if (selectedElement.type === ELoaiDuLieuBieuMau.Table) {
 			currentItem.cot = [];
@@ -150,7 +150,7 @@ const ElementBieuMauFormItem = (props: {
 							disabled={
 								isDefault ||
 								elements[index]?.headerName === 'Bảng điểm sinh viên' ||
-								elements[index]?.headerName === 'Chuẩn đầu ra'
+								elements[index]?.headerName === 'Chuẩn đầu ra CTĐT'
 							}
 							options={Object.values(ELoaiDuLieuBieuMau).map((item) => ({
 								key: item,
@@ -158,7 +158,7 @@ const ElementBieuMauFormItem = (props: {
 								label: loaiDuLieuBieuMau[item],
 							}))}
 							onChange={(val) => handleTypeChange(index, val)}
-							value={isDefault ? defaultElementBieuMau[index].type ?? ELoaiDuLieuBieuMau.Text : undefined}
+							value={isDefault ? (defaultElementBieuMau[index].type ?? ELoaiDuLieuBieuMau.Text) : undefined}
 						/>
 					</Form.Item>
 				</Col>
@@ -194,9 +194,9 @@ const ElementBieuMauFormItem = (props: {
 										defaultColumns={
 											elements[index]?.headerName === 'Bảng điểm sinh viên'
 												? defaultTranscriptColumns
-												: elements[index]?.headerName === 'Chuẩn đầu ra'
-												? defaultChuanDauRaColumns
-												: []
+												: elements[index]?.headerName === 'Chuẩn đầu ra CTĐT'
+													? defaultChuanDauRaColumns
+													: []
 										}
 									/>
 								</Form.Item>

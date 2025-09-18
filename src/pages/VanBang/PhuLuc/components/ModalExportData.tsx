@@ -72,8 +72,8 @@ const ModalExportData = () => {
 			nam: ngayThang.format('YYYY'),
 		})
 			.then(() => {
-				message.success('Lưu thành công');
-				// message.info('Đang xử lý dữ liệu. Vui lòng đợi trong ít phút...');
+				// message.success('Lưu thành công');
+				message.info('Đang xử lý dữ liệu. Vui lòng đợi trong ít phút...');
 				// fileDownload(res.data, getFilenameHeader(res));
 
 				setVisiblePrint(false);

@@ -7,7 +7,7 @@ const Footer = () => {
 	return (
 		<footer
 			style={{
-				background: primaryColor,
+				background: `linear-gradient(135deg, ${primaryColor} 0%, #1a3e7a 100%)`,
 				color: 'white',
 				padding: '40px 0 20px',
 				borderTop: '1px solid rgba(255, 255, 255, 0.1)',
@@ -135,7 +135,7 @@ const Footer = () => {
 							}}
 						>
 							<iframe
-								src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3746.847868497462!2d105.67099731543054!3d18.67947988634998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3139ce6a5a8e5a3d%3A0x2c8a0e9a5a8e5a3d!2zVHLGsOG7nW5nIMSQ4bqhaSBI4buNYyBWaW5o!5e0!3m2!1svi!2s!4v1620000000000!5m2!1svi!2s'
+								src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.1048508214276!2d105.69253772543162!3d18.659290332461474!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3139cddf0bf20f23%3A0x86154b56a284fa6d!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBWaW5o!5e0!3m2!1svi!2s!4v1758022274592!5m2!1svi!2s'
 								width='100%'
 								height='100%'
 								style={{ border: 0 }}

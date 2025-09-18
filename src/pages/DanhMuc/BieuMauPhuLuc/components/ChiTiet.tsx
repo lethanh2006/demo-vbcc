@@ -7,9 +7,10 @@ import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import rules from '@/utils/rules';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
+import { Button, Card, Col, Descriptions, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import FormItemFileBieuMau from '../FileBieuMau/FormItem';
 
 const ChiTietBieuMauPhuLuc = () => {
 	const intl = useIntl();
@@ -129,6 +130,19 @@ const ChiTietBieuMauPhuLuc = () => {
 
 	return (
 		<Card title='Chi tiết biểu mẫu phụ lục'>
+			<Descriptions column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }}>
+				<Descriptions.Item label='Mã biểu mẫu'>{record?.ma ?? '--'}</Descriptions.Item>
+				<Descriptions.Item label='Tên biểu mẫu'>{record?.ten ?? '--'}</Descriptions.Item>
+			</Descriptions>
+
+			<div className='fw500' style={{ marginTop: 12 }}>
+				Danh sách file biểu mẫu xuất phụ lục
+			</div>
+			<FormItemFileBieuMau value={record?.listIdFileBieuMau ?? []} hide />
+
+			<div className='fw500' style={{ marginTop: 12 }}>
+				Cấu hình biểu mẫu
+			</div>
 			<Form layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={12}>

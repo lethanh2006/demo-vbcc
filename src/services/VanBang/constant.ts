@@ -26,7 +26,6 @@ export const defaultTranscriptColumns: { headerName: string; type: ELoaiDuLieuBi
 	{ headerName: 'Điểm hệ 10', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Điểm hệ 4', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Điểm chữ', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Điểm thi', type: ELoaiDuLieuBieuMau.Number },
 	{ headerName: 'Ghi chú', type: ELoaiDuLieuBieuMau.Text },
 ];
 
@@ -34,14 +33,15 @@ export const defaultTranscriptColumns: { headerName: string; type: ELoaiDuLieuBi
 export const defaultChuanDauRaColumns: { headerName: string; type: ELoaiDuLieuBieuMau }[] = [
 	{ headerName: 'Mã PLO', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Nội dung PLO', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Nhóm chuẩn đầu ra', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Mức điểm tối thiểu', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Mức điểm đạt được', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 export const defaultElementBieuMau: BieuMauPhuLuc.TElement[] = [
-	{ headerName: 'Họ tên', isRequired: true },
+	{ headerName: 'Họ tên', type: ELoaiDuLieuBieuMau.Text, isRequired: true },
 	{ headerName: 'Ngày sinh', type: ELoaiDuLieuBieuMau.Date, isRequired: true },
-	{ headerName: 'Mã sinh viên' },
+	{ headerName: 'Mã sinh viên', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
@@ -63,10 +63,11 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Khóa', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Niên khóa', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Thời gian đào tạo', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Ngày nhập học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Ngày nhập học', type: ELoaiDuLieuBieuMau.Date },
 	{ headerName: 'Năm tốt nghiệp', type: ELoaiDuLieuBieuMau.Text },
 
 	{ headerName: 'Điểm tổng kết', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Điểm tổng kết (hệ 4)', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Số tín chỉ tích lũy', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Xếp loại', type: ELoaiDuLieuBieuMau.Text },
 
@@ -74,7 +75,13 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Xếp hạng rèn luyện', type: ELoaiDuLieuBieuMau.Text },
 
 	{ headerName: 'Bảng điểm sinh viên', type: ELoaiDuLieuBieuMau.Table },
-	{ headerName: 'Chuẩn đầu ra', type: ELoaiDuLieuBieuMau.Table },
+	{ headerName: 'Chuẩn đầu ra CTĐT', type: ELoaiDuLieuBieuMau.Table },
+
+	{ headerName: 'Đề tài khoa học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Mô tả đề tài', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Người hướng dẫn', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Chương trình đào tạo', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Ngày đánh giá tốt nghiệp', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 // PHỤ LỤC VĂN BẰNG
