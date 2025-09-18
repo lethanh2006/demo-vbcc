@@ -58,7 +58,7 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Chuyên ngành', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Lớp', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Hình thức đào tạo', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Tính chất đào tạo', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Tính chất CTĐT', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Ngôn ngữ đào tạo', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Khóa', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Niên khóa', type: ELoaiDuLieuBieuMau.Text },
