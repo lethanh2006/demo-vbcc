@@ -17,6 +17,9 @@ declare module PhuLucVanBang {
 		maSinhVien: string;
 		maBieuMau?: string;
 		templateData?: BieuMauPhuLuc.TElement[];
+		tenDeTai: string;
+		nguoiHuongDan: string;
+		moTaDeTai: string;
 
 		// historyId?: string;
 		urlIpfs?: string | null;
@@ -27,6 +30,7 @@ declare module PhuLucVanBang {
 		kichHoat?: boolean;
 
 		// Cấp bằng
+		idDotCapBang?: string | null;
 		ngayCapPhuLuc?: Date | string;
 		ghiChu: string;
 
@@ -36,7 +40,6 @@ declare module PhuLucVanBang {
 		// Temp
 		index?: number;
 		key?: string;
-		dotCapBangId?: string | null;
 	}
 
 	export type TUploadFolder = Pick<IRecord, 'urlIpfs' | 'idVanBangIPFS'> & {

@@ -38,10 +38,10 @@ const ModalCapBang = (props: { visible: boolean; setVisible: (val: boolean) => v
 					ghiChu: values.ghiChu,
 				},
 				getData(),
-			);
-
-			setSelectedIds([]);
-			setVisible(false);
+			).then(() => {
+				setSelectedIds([]);
+				setVisible(false);
+			});
 		} catch (error) {
 			message.error('Có lỗi xảy ra khi cập nhật trạng thái cấp bằng');
 		}

@@ -93,7 +93,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 	}
 
 	if (isDotCapBang) {
-		condition.dotCapBangId = recDotCapCang?._id;
+		condition.idDotCapBang = recDotCapCang?._id;
 	}
 
 	const getData = () => getModel(condition).then(() => setSelectedIds([]));
@@ -125,7 +125,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 	};
 
 	const delePhuLucDot = (rec: PhuLucVanBang.IRecord) => {
-		putModel(rec?._id ?? '', { dotCapBangId: null }, getData);
+		putModel(rec?._id ?? '', { idDotCapBang: null }, getData);
 	};
 
 	const onCell = (rec: PhuLucVanBang.IRecord) => ({
@@ -272,12 +272,14 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 120,
+			width: isDotCapBang ? 90 : 120,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
 					<ButtonExtend tooltip='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
-					<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
+					{!isDotCapBang && (
+						<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
+					)}
 					<Popconfirm
 						onConfirm={() => (isDotCapBang ? delePhuLucDot(rec) : deleteModel(rec._id, getData))}
 						title='Bạn có chắc chắn muốn xóa phụ lục này?'
@@ -434,12 +436,12 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 						/>
 
 						<SelectQuyetDinh
-							condition={{ nam: dayjs(yearSelect).format('YYYY') }}
+							condition={yearSelect ? { nam: dayjs(yearSelect).format('YYYY') } : undefined}
 							style={{ width: 250 }}
 							value={recQuyetDinh?._id}
 							onChange={(val) => setQuyetDinh(danhsachQuyetDinh?.find((item) => item._id === val))}
 							isSetRecord
-							allowClear
+							// allowClear
 						/>
 					</Space>
 				) : null}
