@@ -61,7 +61,7 @@ const CardQuyetDinhTotNghiep = (payload: { chartData: PhuLucVanBang.TThongKeTraC
 	];
 
 	return (
-		<Card title='Thống kê Quyết định' variant='borderless'>
+		<Card title='Thống kê Quyết định'>
 			{chartData.length ? (
 				<Chart options={options} series={series} height={450} />
 			) : (

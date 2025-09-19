@@ -31,17 +31,15 @@ const sentryDSN = APP_CONFIG_SENTRY_DSN;
 const oneSignalClient = APP_CONFIG_ONE_SIGNAL_ID;
 
 export {
-	iplocal,
 	currentRole,
-	replaceRole,
 	ip3,
 	ipCore,
+	ipDaoTao,
+	ipIPFS,
+	iplocal,
+	ipNhanSu,
 	ipNotif,
 	ipSlink,
-	ipDaoTao,
-	ipNhanSu,
-	ipIPFS,
-	preIPFS,
 	keycloakAuthEndpoint,
 	keycloakAuthority,
 	keycloakClientID,
@@ -49,6 +47,8 @@ export {
 	keycloakUserInfoEndpoint,
 	oneSignalClient,
 	oneSignalRole,
+	preIPFS,
+	replaceRole,
 	resourceServerClientId,
 	sentryDSN,
 };
