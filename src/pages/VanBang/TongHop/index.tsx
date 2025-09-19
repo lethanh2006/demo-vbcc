@@ -95,8 +95,8 @@ const TongHopVanBang = () => {
 					</Card>
 				</Col>
 
-				<Col span={24} md={6} className='dashboard-card-with-icon'>
-					<Card onClick={() => setVisibleForm(true)} style={{ cursor: 'pointer' }} variant='borderless'>
+				<Col span={24} md={6} className='dashboard-card-with-icon' variant='borderless'>
+					<Card onClick={() => setVisibleForm(true)} style={{ cursor: 'pointer' }}>
 						<SearchOutlined style={{ color: '#15c58a' }} />
 						<div>
 							<CountUp className='number' end={data?.soLuotTraCuu ?? 0} duration={1.5} separator='.' />
