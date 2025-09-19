@@ -420,7 +420,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				{!isQuyetDinh && !isDotCapBang ? (
 					<Space wrap style={{ marginBottom: 12 }}>
 						<MyDatePicker
-							style={{ width: 200 }}
+							style={{ width: 150 }}
 							value={yearSelect}
 							pickerStyle='year'
 							placeholder='Chọn năm hành chính'
