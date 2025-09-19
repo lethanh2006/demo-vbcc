@@ -175,7 +175,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 			>
 				{!isdotCapBang ? (
 					<MyDatePicker
-						style={{ width: 200, marginBottom: 12 }}
+						style={{ width: 150, marginBottom: 12 }}
 						value={yearSelect ? dayjs(yearSelect) : null}
 						pickerStyle='year'
 						placeholder='Chọn năm hành chính'

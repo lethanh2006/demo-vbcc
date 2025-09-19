@@ -41,7 +41,7 @@ const TongHopVanBang = () => {
 				<Col span={24}>
 					<Space>
 						<MyDatePicker
-							style={{ width: 200 }}
+							style={{ width: 150 }}
 							value={yearSelect}
 							pickerStyle='year'
 							placeholder='Chọn năm hành chính'
@@ -66,7 +66,7 @@ const TongHopVanBang = () => {
 				</Col>
 
 				<Col span={24} md={6} className='dashboard-card-with-icon'>
-					<Card>
+					<Card variant='borderless'>
 						<AuditOutlined style={{ color: '#bf20df' }} />
 						<div>
 							<CountUp className='number' end={data?.tongSoQuyetDinh ?? 0} duration={1.5} separator='.' />
@@ -76,7 +76,7 @@ const TongHopVanBang = () => {
 				</Col>
 
 				<Col span={24} md={6} className='dashboard-card-with-icon'>
-					<Card>
+					<Card variant='borderless'>
 						<CopyOutlined style={{ color: 'var(--color-primary)' }} />
 						<div>
 							<CountUp className='number' end={data?.tongSoPhuLuc ?? 0} duration={1.5} separator='.' />
@@ -86,7 +86,7 @@ const TongHopVanBang = () => {
 				</Col>
 
 				<Col span={24} md={6} className='dashboard-card-with-icon'>
-					<Card>
+					<Card variant='borderless'>
 						<BoldOutlined style={{ color: '#0e6499' }} />
 						<div>
 							<CountUp className='number' end={data?.tongSoDaDuaLenBlockchain ?? 0} duration={1.5} separator='.' />
@@ -95,7 +95,7 @@ const TongHopVanBang = () => {
 					</Card>
 				</Col>
 
-				<Col span={24} md={6} className='dashboard-card-with-icon'>
+				<Col span={24} md={6} className='dashboard-card-with-icon' variant='borderless'>
 					<Card onClick={() => setVisibleForm(true)} style={{ cursor: 'pointer' }}>
 						<SearchOutlined style={{ color: '#15c58a' }} />
 						<div>
