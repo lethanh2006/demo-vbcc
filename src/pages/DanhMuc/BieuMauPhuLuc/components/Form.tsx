@@ -64,6 +64,12 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 					</Col>
 
 					<Col span={24}>
+						<Form.Item label='Cấu hình biểu mẫu' name='elements'>
+							<ElementBieuMauFormItem />
+						</Form.Item>
+					</Col>
+
+					<Col span={24}>
 						<Form.Item
 							label='Danh sách file biểu mẫu xuất phụ lục (mặc định)'
 							name='listIdFileBieuMau'
@@ -73,9 +79,6 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 						</Form.Item>
 					</Col>
 				</Row>
-				<Form.Item label='Cấu hình biểu mẫu' name='elements'>
-					<ElementBieuMauFormItem />
-				</Form.Item>
 
 				<div className='form-footer' style={{ marginTop: 24 }}>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
