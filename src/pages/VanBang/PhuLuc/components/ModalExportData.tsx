@@ -6,7 +6,7 @@ import { exportData } from '@/services/VanBang/PhuLucVanBang';
 import dayjs from '@/utils/dayjs';
 import socket, { ESocketType } from '@/utils/socket';
 import { FilePdfOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Col, Descriptions, message, Modal, Progress, Radio, Row, Space, Tabs, Upload } from 'antd';
+import { Button, Checkbox, Col, Descriptions, message, Modal, Progress, Radio, Row, Space, Tabs, Upload } from 'antd';
 import type { RcFile } from 'antd/lib/upload';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
@@ -49,7 +49,7 @@ const ModalExportData = () => {
 	const onExport = async () => {
 		if (exporting) return;
 
-		if (!selectedMaus[0] && !fileList.length) {
+		if (!selectedMaus.length && !fileList.length) {
 			return message.error('Không có mẫu in phụ lục. Vui lòng chọn hoặc upload mẫu mới');
 		}
 
@@ -66,8 +66,8 @@ const ModalExportData = () => {
 			if (uploadedId) {
 				idsMau = [uploadedId];
 			}
-		} else if (selectedMaus[0]) {
-			idsMau = [selectedMaus[0]];
+		} else if (selectedMaus.length) {
+			idsMau = selectedMaus;
 		}
 
 		await exportData({
@@ -130,11 +130,14 @@ const ModalExportData = () => {
 									key: 'select',
 									label: 'Chọn mẫu có sẵn',
 									children: mauOptions.length ? (
-										<Radio.Group value={selectedMaus[0]} onChange={(e) => setSelectedMaus([e.target.value])}>
+										<Checkbox.Group
+											value={selectedMaus}
+											onChange={(checkedValues) => setSelectedMaus(checkedValues as string[])}
+										>
 											<Space direction='vertical'>
 												{mauOptions.map((item, idx: number) => (
 													<div key={item.idFile}>
-														<Radio value={item.idFile}>
+														<Checkbox value={item.idFile}>
 															<a
 																onClick={(e) => {
 																	e.preventDefault();
@@ -144,11 +147,11 @@ const ModalExportData = () => {
 															>
 																{item?.ten ?? `Tệp tin ${idx + 1}`}
 															</a>
-														</Radio>
+														</Checkbox>
 													</div>
 												))}
 											</Space>
-										</Radio.Group>
+										</Checkbox.Group>
 									) : (
 										<i style={{ color: 'red' }}>(chưa có mẫu)</i>
 									),
