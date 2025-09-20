@@ -53,6 +53,7 @@ export const exportData = (payload: {
 	ngay: string;
 	thang: string;
 	nam: string;
+	mode: 'PDF' | 'DOCX';
 }) => {
 	return axios.post(`${ip3}/phu-luc-van-bang/exports-by-list-id`, payload, {
 		responseType: 'arraybuffer',

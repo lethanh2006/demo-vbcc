@@ -6,7 +6,7 @@ import { exportData } from '@/services/VanBang/PhuLucVanBang';
 import dayjs from '@/utils/dayjs';
 import socket, { ESocketType } from '@/utils/socket';
 import { FilePdfOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, Descriptions, message, Modal, Progress, Row, Space, Upload } from 'antd';
+import { Button, Col, Descriptions, message, Modal, Progress, Radio, Row, Space, Tabs, Upload } from 'antd';
 import type { RcFile } from 'antd/lib/upload';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
@@ -26,6 +26,7 @@ const ModalExportData = () => {
 	const [previewImage, setPreviewImage] = useState('');
 
 	const [selectedMaus, setSelectedMaus] = useState<string[]>([]);
+	const [mode, setMode] = useState<'PDF' | 'DOCX'>('PDF');
 
 	useEffect(() => {
 		setExportDetail({ current: 0, total: dataToSignOrPush?.length });
@@ -47,10 +48,14 @@ const ModalExportData = () => {
 
 	const onExport = async () => {
 		if (exporting) return;
-		if (!selectedMaus.length && !fileList.length) return message.error('Không có mẫu in phụ lục. Vui lòng chọn lại');
+
+		if (!selectedMaus[0] && !fileList.length) {
+			return message.error('Không có mẫu in phụ lục. Vui lòng chọn hoặc upload mẫu mới');
+		}
+
 		setExporting(true);
 
-		let idsMau: string[] = selectedMaus;
+		let idsMau: string[] = [];
 
 		if (fileList.length && fileList[0].originFileObj) {
 			const res = await uploadFile({
@@ -61,6 +66,8 @@ const ModalExportData = () => {
 			if (uploadedId) {
 				idsMau = [uploadedId];
 			}
+		} else if (selectedMaus[0]) {
+			idsMau = [selectedMaus[0]];
 		}
 
 		await exportData({
@@ -70,6 +77,7 @@ const ModalExportData = () => {
 			ngay: ngayThang.format('DD'),
 			thang: ngayThang.format('MM'),
 			nam: ngayThang.format('YYYY'),
+			mode,
 		})
 			.then(() => {
 				// message.success('Lưu thành công');
@@ -79,6 +87,8 @@ const ModalExportData = () => {
 				setVisiblePrint(false);
 			})
 			.finally(() => setExporting(false));
+
+		return;
 	};
 
 	const beforeUpload = (file: RcFile) => {
@@ -111,53 +121,70 @@ const ModalExportData = () => {
 					</Descriptions.Item>
 					<Descriptions.Item label='Số mục thống kê'>{dataToSignOrPush?.length || 'Tất cả'} phụ lục</Descriptions.Item>
 					<Descriptions.Item label='Mẫu in phụ lục'>
-						<div>
-							{mauOptions.length ? (
-								<Checkbox.Group value={selectedMaus} onChange={(vals) => setSelectedMaus(vals as string[])}>
-									<Space direction='vertical'>
-										{mauOptions.map((item, idx: number) => (
-											<div key={item.idFile}>
-												<Checkbox value={item.idFile} />{' '}
-												<a
-													onClick={(e) => {
-														e.preventDefault();
-														setPreviewImage(item.idFile);
-														setPreviewOpen(true);
-													}}
-												>
-													{item?.ten ?? `Tệp tin ${idx + 1}`}
-												</a>
-											</div>
-										))}
-									</Space>
-								</Checkbox.Group>
-							) : (
-								<i style={{ color: 'red' }}>(chưa có mẫu)</i>
-							)}
-
-							<div style={{ marginTop: 12 }}>
-								<Upload
-									customRequest={({ onSuccess }) => setTimeout(() => onSuccess && onSuccess('ok'), 0)}
-									fileList={fileList}
-									onChange={({ fileList: fl }) => setFileList(fl)}
-									accept='.doc,.docx'
-									maxCount={1}
-									beforeUpload={beforeUpload}
-								>
-									<a>
-										<UploadOutlined /> Chọn mẫu in phụ lục mới
-									</a>
-								</Upload>
-							</div>
-						</div>
+						<Tabs
+							style={{ marginTop: -10 }}
+							size='small'
+							defaultActiveKey={mauOptions.length ? 'select' : 'upload'}
+							items={[
+								{
+									key: 'select',
+									label: 'Chọn mẫu có sẵn',
+									children: mauOptions.length ? (
+										<Radio.Group value={selectedMaus[0]} onChange={(e) => setSelectedMaus([e.target.value])}>
+											<Space direction='vertical'>
+												{mauOptions.map((item, idx: number) => (
+													<div key={item.idFile}>
+														<Radio value={item.idFile}>
+															<a
+																onClick={(e) => {
+																	e.preventDefault();
+																	setPreviewImage(item.idFile);
+																	setPreviewOpen(true);
+																}}
+															>
+																{item?.ten ?? `Tệp tin ${idx + 1}`}
+															</a>
+														</Radio>
+													</div>
+												))}
+											</Space>
+										</Radio.Group>
+									) : (
+										<i style={{ color: 'red' }}>(chưa có mẫu)</i>
+									),
+								},
+								{
+									key: 'upload',
+									label: 'Upload mẫu mới',
+									children: (
+										<Upload
+											customRequest={({ onSuccess }) => setTimeout(() => onSuccess && onSuccess('ok'), 0)}
+											fileList={fileList}
+											onChange={({ fileList: fl }) => setFileList(fl)}
+											accept='.doc,.docx'
+											maxCount={1}
+											beforeUpload={beforeUpload}
+										>
+											<Button icon={<UploadOutlined />}>Chọn tệp mẫu mới</Button>
+										</Upload>
+									),
+								},
+							]}
+						/>
 					</Descriptions.Item>
 					<Descriptions.Item label='Ngày in phụ lục'>
 						<MyDatePicker value={ngayThang} onChange={(val) => setngayThang(dayjs(val))} />
 					</Descriptions.Item>
+					<Descriptions.Item label='Định dạng xuất file'>
+						<Radio.Group value={mode} onChange={(e) => setMode(e.target.value)} size='small'>
+							<Radio.Button value='PDF'>PDF</Radio.Button>
+							<Radio.Button value='DOCX'>DOCX</Radio.Button>
+						</Radio.Group>
+					</Descriptions.Item>
 				</Descriptions>
 			) : null}
 
-			<div style={{ marginBottom: 12 }} className='text-error'>
+			<div style={{ marginTop: 12, marginBottom: 12 }} className='text-error'>
 				Chú ý: Quá trình in phụ lục có thể mất một khoảng thời gian tùy thuộc vào số lượng phụ lục. Hệ thống sẽ gửi
 				thông báo đường dẫn tải về khi hoàn tất.
 				<br />
