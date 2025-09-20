@@ -29,15 +29,20 @@ const ModalExportData = () => {
 	const [mode, setMode] = useState<'PDF' | 'DOCX'>('PDF');
 
 	useEffect(() => {
+		if (!visiblePrint) {
+			setSelectedMaus([]);
+			setFileList([]);
+		}
+
 		setExportDetail({ current: 0, total: dataToSignOrPush?.length });
 
-		if (recQuyetDinh?.bieuMau?.listIdFileBieuMau?.length) {
-			setSelectedMaus([recQuyetDinh?.bieuMau?.listIdFileBieuMau[0]?.idFile]);
-		} else if (dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau?.length) {
-			setSelectedMaus([dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau[0]?.idFile]);
-		} else {
-			setSelectedMaus([]);
-		}
+		// if (recQuyetDinh?.bieuMau?.listIdFileBieuMau?.length) {
+		// 	setSelectedMaus([recQuyetDinh?.bieuMau?.listIdFileBieuMau[0]?.idFile]);
+		// } else if (dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau?.length) {
+		// 	setSelectedMaus([dataToSignOrPush[0]?.quyetDinh?.bieuMau?.listIdFileBieuMau[0]?.idFile]);
+		// } else {
+		// 	setSelectedMaus([]);
+		// }
 	}, [visiblePrint]);
 
 	const increExportCurrent = () => setExportDetail(({ current, total }) => ({ total, current: current + 1 }));
