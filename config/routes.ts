@@ -92,8 +92,8 @@
 				path: 'nguoi-ky',
 				component: 'DanhMuc/NguoiKy',
 				icon: 'UserOutlined',
-				access: 'accessFilter',
-				maChucNang: 'van-bang-chung-chi|quan-tri-vien',
+				// access: 'accessFilter',
+				// maChucNang: 'van-bang-chung-chi|quan-tri-vien',
 			},
 			{
 				name: 'BieuMauPhuLuc',

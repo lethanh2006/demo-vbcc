@@ -1,7 +1,8 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import type { NguoiKyVanBang } from '@/services/VanBang/NguoiKy/typing';
+import { ELoaiChuKy } from '@/services/VanBang/constant';
+import { NguoiKyVanBang } from '@/services/VanBang/NguoiKy/typing';
 import { formatPhoneNumber } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Popconfirm, Popover } from 'antd';
@@ -19,6 +20,13 @@ const NguoiKyVanBangPage = () => {
 			width: 160,
 			filterType: 'string',
 			sortable: true,
+		},
+		{
+			title: 'Loại chữ ký',
+			dataIndex: 'loaiChuKy',
+			width: 120,
+			filterType: 'select',
+			filterData: Object.values(ELoaiChuKy),
 		},
 		{
 			title: 'Chức vụ',

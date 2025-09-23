@@ -37,9 +37,32 @@ declare module PhuLucVanBang {
 		createdAt?: string;
 		updatedAt?: string;
 
+		//trình ký
+		fileVanBang: string;
+		idFileVanBang?: string;
+		trinhKy?: boolean;
+		thoiGianKy?: Date;
+		thoiGianDongGiau?: Date;
+		daKy?: boolean;
+		daDongDau?: boolean;
+		nguoiKy: {
+			hoTen: string;
+			ssoId: string;
+		};
+		nguoiDongGiau: {
+			hoTen: string;
+			ssoId: string;
+		};
+
 		// Temp
 		index?: number;
 		key?: string;
+
+		//fake
+		token?: string;
+		url?: string;
+		uploadUrl?: string;
+		uploaded?: boolean;
 	}
 
 	export type TUploadFolder = Pick<IRecord, 'urlIpfs' | 'idVanBangIPFS'> & {

@@ -2,6 +2,7 @@ import useInitModel from '@/hooks/useInitModel';
 import {
 	chiTietPhuLucVanBanPublic,
 	importPhuLucVanBang,
+	postTrinhKyVanBang,
 	putUpdateIpfs,
 	sinhSoVaoSo,
 	traCuuPhuLucVanBanPublic,
@@ -19,6 +20,7 @@ export default () => {
 	const { formSubmiting, setFormSubmiting, setLoading, setRecord } = objInit;
 	const [dataToSignOrPush, setDataToSignOrPush] = useState<PhuLucVanBang.IRecord[]>([]);
 	const [visibleSign, setVisibleSign] = useState<boolean>(false);
+	const [visibleSignVanBang, setVisibleSignVanBang] = useState<boolean>(false);
 	const [visiblePush, setVisiblePush] = useState<boolean>(false);
 	const [visiblePrint, setVisiblePrint] = useState<boolean>(false);
 	const [thongTinTraCuu, setThongTinTraCuu] = useState<PhuLucVanBang.IThongTinTraCuu[] | any>();
@@ -162,6 +164,35 @@ export default () => {
 		}
 	};
 
+	const postTrinhKyVanBangModel = async (
+		payload: {
+			listIdVanBang: string[];
+			quyetDinhId: string;
+			ngay: string;
+			thang: string;
+			nam: string;
+			mode: 'PDF';
+			trinhKyLai: boolean;
+			idMauTrinhKy: string;
+		},
+		getData?: () => void,
+	): Promise<any> => {
+		if (formSubmiting) return Promise.reject('Form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await postTrinhKyVanBang(payload);
+			message.success('Lưu thành công');
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (er) {
+			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
 	return {
 		...objInit,
 		dataToSignOrPush,
@@ -182,5 +213,8 @@ export default () => {
 		tableData,
 		setTableData,
 		sinhSoVaoSoModel,
+		postTrinhKyVanBangModel,
+		visibleSignVanBang,
+		setVisibleSignVanBang,
 	};
 };

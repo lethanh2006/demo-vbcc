@@ -17,13 +17,15 @@ import {
 	FilePdfOutlined,
 	FormOutlined,
 	ImportOutlined,
+	InfoCircleOutlined,
 	PlusCircleOutlined,
 	SearchOutlined,
 	SettingOutlined,
+	SignatureOutlined,
 	UserAddOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Popconfirm, Space, Tag } from 'antd';
+import { Descriptions, Dropdown, Menu, Popconfirm, Popover, Space, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
@@ -32,11 +34,13 @@ import SelectQuyetDinh from '../QuyetDinhTotNghiep/components/Select';
 import SelectQuyetDinhTotNghiepDot from '../QuyetDinhTotNghiep/components/SelectQuyetDinhDot';
 import CauHinhPhuLucVanBang from './components/CauHinh';
 import Form from './components/Form';
+import ModalSignVanBang from './components/KySoVanBang';
 import ModalExportData from './components/ModalExportData';
 import ModalImportPhuLucVanBang from './components/ModalImportPhuLuc';
 import ModalPushBlockchain from './components/ModalPushBlockchain';
 import ModalSign from './components/ModalSign';
 import ModalSinhSoVaoSo from './components/ModalSinhSo';
+import ModalTrinhKyVanBang from './components/ModalTrinhKy';
 import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import ViewPhuLucVanBang from './components/ViewRender';
@@ -62,6 +66,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		isView,
 		handleView,
 		putModel,
+		setVisibleSignVanBang,
 	} = useModel('vbcc.phulucvanbang');
 	const {
 		record: recQuyetDinh,
@@ -79,6 +84,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 	const [showModalCapBang, setShowModalCapBang] = useState<boolean>(false);
 	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
 	const [visibleSinhSo, setVisibleSinhSo] = useState<boolean>(false);
+	const [visibleTrinhKy, setVisibleTrinhKy] = useState<boolean>(false);
 	const settingVbcc = settings[ESettingKey.INFO_TENANT_VBCC];
 
 	// set lại quyết định sau khi sinh số vào sổ
@@ -119,9 +125,16 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		}
 	};
 
-	const handlePrintOne = (rec: PhuLucVanBang.IRecord) => {
-		setDataToSignOrPush([rec]);
-		setVisiblePrint(true);
+	// const handlePrintOne = (rec: PhuLucVanBang.IRecord) => {
+	// 	setDataToSignOrPush([rec]);
+	// 	setVisiblePrint(true);
+	// };
+
+	const handlePrintVanBang = () => {
+		if (recQuyetDinh?._id) {
+			setDataToSignOrPush(danhSach.filter((item) => selectedIds?.includes(item._id)));
+			setVisibleSignVanBang(true);
+		}
 	};
 
 	const delePhuLucDot = (rec: PhuLucVanBang.IRecord) => {
@@ -208,8 +221,99 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				),
 			hide: !settingVbcc?.require_IPFS,
 		},
+
 		{
-			title: 'Ký số',
+			title: 'Văn bằng',
+			width: 120,
+			children: [
+				{
+					title: 'File ký',
+					dataIndex: 'fileVanBang',
+					align: 'center',
+					width: 120,
+					render: (val, rec) => (
+						<Space>
+							{!val ? (
+								<Tag color='red'>Chưa trình ký</Tag>
+							) : (
+								<a href={val} target='_blank' rel='noreferrer'>
+									Tập tin
+								</a>
+							)}
+
+							{val && (
+								<Popover
+									content={
+										<div style={{ maxWidth: 300 }}>
+											<Descriptions column={1} size='small'>
+												<Descriptions.Item label='Người ký'>{rec?.nguoiKy?.hoTen ?? '--'}</Descriptions.Item>
+												<Descriptions.Item label='Thời gian ký'>
+													{rec?.thoiGianKy ? dayjs(rec?.thoiGianKy).format('HH:mm DD/MM/YYYY') : '--'}
+												</Descriptions.Item>
+												<Descriptions.Item label='Người đóng dấu'>
+													{rec?.nguoiDongGiau?.hoTen ?? '--'}
+												</Descriptions.Item>
+												<Descriptions.Item label='Thời gian đóng dấu'>
+													{rec?.thoiGianDongGiau ? dayjs(rec?.thoiGianDongGiau).format('HH:mm DD/MM/YYYY') : '--'}
+												</Descriptions.Item>
+											</Descriptions>
+										</div>
+									}
+									trigger='hover'
+								>
+									<InfoCircleOutlined />
+								</Popover>
+							)}
+						</Space>
+					),
+				},
+				{
+					title: 'Ký số',
+					dataIndex: 'daKy',
+					align: 'center',
+					width: 120,
+					render: (val, rec) => (val ? <Tag color='green'>Đã ký</Tag> : <Tag color='orange'>Chưa ký</Tag>),
+				},
+				{
+					title: 'Đóng dấu',
+					dataIndex: 'daDongDau',
+					align: 'center',
+					width: 120,
+					render: (val, rec) => (val ? <Tag color='green'>Đã đóng dấu</Tag> : <Tag color='orange'>Chưa đóng dấu</Tag>),
+				},
+			],
+		},
+
+		{
+			title: 'Cấp bằng',
+			dataIndex: 'kichHoat',
+			align: 'center',
+			width: 120,
+			render: (_: any, record: PhuLucVanBang.IRecord) => {
+				const trangThai = record?.kichHoat ? (
+					<Tag color='green'>Đã cấp bằng</Tag>
+				) : (
+					<Tag color='red'>Chưa cấp bằng</Tag>
+				);
+
+				const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
+
+				return (
+					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+						<div>{trangThai}</div>
+						{ngayCap && <div>{ngayCap}</div>}
+					</div>
+				);
+			},
+			filterType: 'select',
+			filterData: [
+				{ value: true as any, label: 'Đã cấp bằng' },
+				{ value: false, label: 'Chưa cấp bằng' },
+			],
+			onCell,
+		},
+		{
+			title: 'Ký số thông tin',
 			dataIndex: 'signature',
 			align: 'center',
 			width: 80,
@@ -239,34 +343,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				</div>
 			),
 			hide: !settingVbcc?.blockChain,
-			onCell,
-		},
-		{
-			title: 'Trạng thái',
-			dataIndex: 'kichHoat',
-			align: 'center',
-			width: 120,
-			render: (_: any, record: PhuLucVanBang.IRecord) => {
-				const trangThai = record?.kichHoat ? (
-					<Tag color='green'>Đã cấp bằng</Tag>
-				) : (
-					<Tag color='red'>Chưa cấp bằng</Tag>
-				);
-
-				const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
-
-				return (
-					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-						<div>{trangThai}</div>
-						{ngayCap && <div>{ngayCap}</div>}
-					</div>
-				);
-			},
-			filterType: 'select',
-			filterData: [
-				{ value: true as any, label: 'Đã cấp bằng' },
-				{ value: false, label: 'Chưa cấp bằng' },
-			],
 			onCell,
 		},
 		{
@@ -322,18 +398,44 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				Upload văn bằng
 			</ButtonExtend>,
 		);
-	if (settingVbcc?.require_signature)
+	if (!!recQuyetDinh?._id)
 		otherButtons.push(
+			<ButtonExtend icon={<DatabaseOutlined />} onClick={() => setVisibleSinhSo(true)} key='sinhSo'>
+				Sinh số vào sổ
+			</ButtonExtend>,
 			<ButtonExtend
-				disabled={!selectedIds?.length}
-				className='btn-success'
-				icon={<FormOutlined />}
-				onClick={handleSign}
-				key='sign'
+				icon={<SignatureOutlined />}
+				onClick={() => setVisibleTrinhKy(true)}
+				key='trinhky'
+				disabled={!total}
 			>
-				Ký số ({selectedIds?.length ?? 0})
+				Trình ký ({selectedIds?.length || 'Tất cả'})
+			</ButtonExtend>,
+			<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total}>
+				In phụ lục ({selectedIds?.length || 'Tất cả'})
 			</ButtonExtend>,
 		);
+
+	if (settingVbcc?.require_signature)
+		otherButtons.push(
+			<Dropdown
+				overlay={
+					<Menu>
+						{/* <Menu.Item key='thongtin' onClick={handleSign}>
+							Thông tin
+						</Menu.Item> */}
+						<Menu.Item key='vanbang' onClick={handlePrintVanBang}>
+							Văn bằng
+						</Menu.Item>
+					</Menu>
+				}
+			>
+				<ButtonExtend disabled={!selectedIds?.length} className='btn-success' icon={<FormOutlined />} key='sign'>
+					Ký số ({selectedIds?.length ?? 0})
+				</ButtonExtend>
+			</Dropdown>,
+		);
+
 	if (settingVbcc?.blockChain)
 		otherButtons.push(
 			<ButtonExtend
@@ -344,15 +446,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				key='push'
 			>
 				Đẩy lên Blockchain ({selectedIds?.length ?? 0})
-			</ButtonExtend>,
-		);
-	if (!!recQuyetDinh?._id)
-		otherButtons.push(
-			<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total}>
-				In phụ lục ({selectedIds?.length || 'Tất cả'})
-			</ButtonExtend>,
-			<ButtonExtend icon={<DatabaseOutlined />} onClick={() => setVisibleSinhSo(true)} key='sinhSo'>
-				Sinh số vào sổ
 			</ButtonExtend>,
 		);
 
@@ -413,7 +506,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 						preserveSelectedRowKeys: true,
 						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
 						columnWidth: 40,
-						hideSelectAll: true,
+						// hideSelectAll: true,
 					},
 				}}
 			>
@@ -504,6 +597,10 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 					if (getDataV2) getDataV2();
 				}}
 			/>
+
+			<ModalTrinhKyVanBang visible={visibleTrinhKy} setVisible={setVisibleTrinhKy} getData={getData} />
+
+			<ModalSignVanBang getData={() => getData()} />
 		</>
 	);
 };

@@ -1,73 +1,47 @@
+import PreviewFile from '@/components/PreviewFile';
+import ModalExpandable from '@/components/Table/ModalExpandable';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
-import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
-import dayjs from '@/utils/dayjs';
-import { FormOutlined, QuestionCircleOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Modal, Popconfirm, Popover, Progress, Typography, message } from 'antd';
-import { useState } from 'react';
+import { ip3 } from '@/utils/ip';
+import { FormOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Modal, Popover, Progress, message } from 'antd';
+import { useEffect, useState } from 'react';
+import { useAuth } from 'react-oidc-context';
 import { useModel } from 'umi';
 import { sign_service, type TSignData } from './SignService';
 
-const ModalSign = (props: { getData?: () => void }) => {
+const ModalSignVanBang = (props: { getData?: () => void }) => {
 	const { getData } = props;
-	const { updateSignatureModel, visibleSign, setVisibleSign, dataToSignOrPush, setDataToSignOrPush, formSubmiting } =
+	const auth = useAuth();
+	const { visibleSignVanBang, setVisibleSignVanBang, dataToSignOrPush, setDataToSignOrPush, setSelectedIds } =
 		useModel('vbcc.phulucvanbang');
 	const [signProgress, setSignProgress] = useState<number>(0);
 	const signStatus = dataToSignOrPush?.length && signProgress === dataToSignOrPush.length ? 'active' : 'normal';
 	const [signing, setSigning] = useState(false);
 	const [currentSocket, setCurrentSocket] = useState<WebSocket>();
+	const [url, setUrl] = useState<string>('');
+	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 
 	const increSignCurrent = () => setSignProgress((current) => current + 1);
 
+	useEffect(() => {
+		if (!visibleSignVanBang) {
+			setSelectedIds([]);
+		}
+	}, [visibleSignVanBang]);
+
 	const onCancel = () => {
 		if (currentSocket) sign_service.sign_batch_stop(currentSocket);
-		setVisibleSign(false);
-	};
-
-	const columnsSign: IColumn<PhuLucVanBang.TUpdateSignature>[] = [
-		{
-			title: 'ID Văn bằng',
-			dataIndex: 'key',
-			width: 250,
-		},
-		{
-			title: 'Trạng thái',
-			dataIndex: 'message',
-			width: 150,
-		},
-	];
-
-	const onOk = async () => {
-		const dataSignature: PhuLucVanBang.TUpdateSignature[] = dataToSignOrPush
-			.filter((item) => item.signature)
-			.map((item) => ({ key: item.idVanBang ?? '', signature: item.signature ?? '' }));
-
-		if (dataSignature.length === 0) {
-			message.error('Không có chữ ký để cập nhật');
-			return;
-		}
-
-		await updateSignatureModel(dataSignature)
-			.then((data) => {
-				Modal.info({
-					title: 'Kết quả',
-					width: 800,
-					icon: null,
-					content: <TableStaticData data={data} size='small' columns={columnsSign} />,
-				});
-				onCancel();
-				if (getData) getData();
-			})
-			.catch((er) => console.log(er));
+		setVisibleSignVanBang(false);
 	};
 
 	const callbackDone1Document = (response: any) => {
 		const { status, message: msg } = response;
 		if (status === 'success') {
-			const { id, signature } = response.data;
+			const { id, signature, uploaded } = response.data;
 			setDataToSignOrPush((data) =>
-				data.map((item) => (item._id === id ? { ...item, signature, message: msg } : item)),
+				data.map((item) => (item._id === id ? { ...item, signature, message: msg, uploaded } : item)),
 			);
 		} else message.error(msg);
 	};
@@ -82,31 +56,25 @@ const ModalSign = (props: { getData?: () => void }) => {
 				index: i,
 				key,
 				idQuyetDinh,
-				templateData,
 				urlIpfs,
 				...dataToSign
 			} = dataToSignOrPush[index];
-			dataToSign.ngaySinh = dataToSign.ngaySinh ? dayjs(dataToSign.ngaySinh).format('DD/MM/YYYY') : '';
-			dataToSign.createdAt = dayjs(dataToSign.createdAt).format('HH:mm:ss DD/MM/YYYY');
-			dataToSign.updatedAt = dayjs(dataToSign.updatedAt).format('HH:mm:ss DD/MM/YYYY');
-			Object.assign(dataToSign, { quyetDinhTotNghiep: dataToSignOrPush[index].quyetDinh?.soQuyetDinh });
-			templateData?.map((element) => {
-				Object.assign(dataToSign, {
-					[element.headerName]:
-						element.type === ELoaiDuLieuBieuMau.Date && element.value
-							? dayjs(element.value).format('DD/MM/YYYY')
-							: element.value || '',
-				});
-			});
 
-			sign_service.sign_batch_next(dataToSign?._id, dataToSign, socket, (res) => {
+			dataToSign.token = auth?.user?.access_token;
+			dataToSign.url = dataToSign.fileVanBang;
+			dataToSign.uploadUrl = `${ip3}/phu-luc-van-bang/ky-so/callback/${dataToSign.idFileVanBang}`;
+
+			sign_service.sign_batch_next(dataToSign?._id, dataToSign, socket, (res: any) => {
 				callbackDone1Document(res);
+
 				// Sign next document
 				startSignDocument(socket, index + 1);
 			});
 		} else {
 			sign_service.sign_batch_finish(socket);
 			setSigning(false);
+
+			if (getData) getData();
 		}
 	};
 
@@ -130,11 +98,6 @@ const ModalSign = (props: { getData?: () => void }) => {
 	};
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
-		// {
-		// 	dataIndex: 'idVanBang',
-		// 	title: 'ID Văn bằng',
-		// 	width: 150,
-		// },
 		{
 			dataIndex: 'soVaoSoBang',
 			title: 'Số vào sổ',
@@ -151,11 +114,21 @@ const ModalSign = (props: { getData?: () => void }) => {
 			width: 150,
 		},
 		{
-			dataIndex: 'signature',
-			title: 'Chữ ký',
-			width: 100,
+			dataIndex: 'fileVanBang',
+			title: 'Tập tin văn bằng',
 			align: 'center',
-			render: (text) => (text ? <Typography.Paragraph copyable={{ text }}>(đã ký)</Typography.Paragraph> : ''),
+			width: 120,
+			render: (val, rec) =>
+				val && (
+					<a
+						onClick={(e) => {
+							setUrl(val);
+							setVisibleFormFile(true);
+						}}
+					>
+						Xem chi tiết
+					</a>
+				),
 		},
 		{
 			dataIndex: 'message' as any,
@@ -166,10 +139,10 @@ const ModalSign = (props: { getData?: () => void }) => {
 
 	return (
 		<Modal
-			open={visibleSign}
+			open={visibleSignVanBang}
 			title={
 				<>
-					Ký số thông tin văn bằng{' '}
+					Ký số tệp tin văn bằng{' '}
 					<Popover
 						content={
 							<>
@@ -205,35 +178,39 @@ const ModalSign = (props: { getData?: () => void }) => {
 				</>
 			)}
 
+			<ModalExpandable
+				title='Chi tiết tệp tin'
+				width={1000}
+				open={visibleFormFile}
+				footer={
+					<div className='form-footer'>
+						<Button onClick={() => setVisibleFormFile(false)}>Đóng</Button>
+					</div>
+				}
+				onCancel={() => setVisibleFormFile(false)}
+			>
+				<PreviewFile file={url ?? ''} />
+			</ModalExpandable>
+
 			<div className='form-footer'>
 				<Button
 					icon={<FormOutlined />}
 					type='primary'
-					disabled={!dataToSignOrPush?.length}
+					disabled={
+						!dataToSignOrPush?.length ||
+						dataToSignOrPush?.filter((item) => item?.uploaded)?.length === dataToSignOrPush?.length
+					}
 					onClick={execSignBatch}
 					loading={signing}
 					className='btn-success'
 				>
 					Ký số bằng tool tự động
 				</Button>
-				<Popconfirm
-					title='Xác nhận lưu chữ ký số?'
-					onConfirm={onOk}
-					disabled={!dataToSignOrPush?.length || signing || formSubmiting}
-				>
-					<Button
-						type='primary'
-						icon={<SaveOutlined />}
-						loading={formSubmiting}
-						disabled={!dataToSignOrPush?.length || signing || formSubmiting}
-					>
-						Lưu lại
-					</Button>
-				</Popconfirm>
+
 				<Button onClick={onCancel}>Hủy</Button>
 			</div>
 		</Modal>
 	);
 };
 
-export default ModalSign;
+export default ModalSignVanBang;

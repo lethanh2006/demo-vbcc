@@ -138,3 +138,8 @@ export const colorTrangThaiCapBangToiNghiep: Record<ETrangThaiDotCapBangTotNghie
 	[ETrangThaiDotCapBangTotNghiep.DA_DUYET]: ETagColor.GREEN,
 	[ETrangThaiDotCapBangTotNghiep.TU_CHOI]: ETagColor.RED,
 };
+
+export enum ELoaiChuKy {
+	KY_SO = 'Ký số',
+	DONG_DAU_VAN_THU = 'Đóng dấu văn thư',
+}
