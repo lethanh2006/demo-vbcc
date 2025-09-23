@@ -67,3 +67,7 @@ export async function updBlockchain(payLoad: any) {
 export async function sinhSoVaoSo(idQuyetDinh: string, payLoad: any) {
 	return axios.post(`${ip3}/phu-luc-van-bang/sinh-so-vao-so/${idQuyetDinh}`, payLoad);
 }
+
+export async function postTrinhKyVanBang(payLoad: any) {
+	return axios.post(`${ip3}/phu-luc-van-bang/trinh-ky-van-bang`, payLoad);
+}

@@ -1,9 +1,10 @@
-import UploadFile from '@/components/Upload/UploadFile';
+import SelectNhanSuDebounce from '@/pages/ToChucNhanSu/NhanSu/Select';
+import { ELoaiChuKy } from '@/services/VanBang/constant';
+import { NguoiKyVanBang } from '@/services/VanBang/NguoiKy/typing';
 import { ipIPFS, preIPFS } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { AuditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, Popover, Row, message } from 'antd';
+import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd';
 import { create as createIPFS } from 'ipfs-http-client';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -22,7 +23,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 		else if (record?._id) form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: NguoiKyVanBang.IRecord) => {
 		if (edit) {
 			putModel(record?._id ?? '', values)
 				.then()
@@ -50,6 +51,26 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} người ký văn bằng`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
+					<Col span={24}>
+						<Form.Item
+							name='ssoId'
+							label='Người ký số'
+							extra='Nếu người hướng đẫn ngoài hệ thống người dùng có thể bỏ trống'
+						>
+							<SelectNhanSuDebounce
+								allowClear
+								onChange={(val, option) => {
+									const nhanSu = option?.rawData;
+									form.setFieldsValue({
+										hoTen: nhanSu?.hoTen,
+										email: nhanSu?.emailCanBo,
+										soDienThoai: nhanSu?.soDienThoai,
+										chucVu: nhanSu?.chucVuChinh?.ten,
+									});
+								}}
+							/>
+						</Form.Item>
+					</Col>
 					<Col span={24} md={12}>
 						<Form.Item name='hoTen' label='Họ tên' rules={[...rules.required, ...rules.text, ...rules.length(150)]}>
 							<Input placeholder='Nhập họ tên người ký' />
@@ -82,8 +103,19 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 							<Input placeholder='Nhập số điện thoại' />
 						</Form.Item>
 					</Col>
+					<Col span={24} md={12}>
+						<Form.Item name='loaiChuKy' label='Loại chữ ký' rules={[...rules.required]}>
+							<Select
+								placeholder='Chọn loại chữ ký'
+								options={Object.values(ELoaiChuKy).map((item) => ({
+									label: item,
+									value: item,
+								}))}
+							/>
+						</Form.Item>
+					</Col>
 
-					<Col span={24}>
+					{/* <Col span={24} md={12}>
 						{edit ? (
 							<div style={{ marginBottom: 24 }}>
 								<a href={record?.certIpfs} target='_blank' rel='noreferrer'>
@@ -114,7 +146,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 								<UploadFile accept='.crt' maxCount={1} />
 							</Form.Item>
 						)}
-					</Col>
+					</Col> */}
 				</Row>
 
 				<div className='form-footer'>
