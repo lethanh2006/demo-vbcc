@@ -1,10 +1,12 @@
+import UploadFile from '@/components/Upload/UploadFile';
 import SelectNhanSuDebounce from '@/pages/ToChucNhanSu/NhanSu/Select';
 import { ELoaiChuKy } from '@/services/VanBang/constant';
 import { NguoiKyVanBang } from '@/services/VanBang/NguoiKy/typing';
 import { ipIPFS, preIPFS } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd';
+import { AuditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Form, Input, Popover, Row, Select, message } from 'antd';
 import { create as createIPFS } from 'ipfs-http-client';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -12,6 +14,8 @@ import { useIntl, useModel } from 'umi';
 const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, setFormSubmiting } =
 		useModel('vbcc.nguoiky');
+	const { settings } = useModel('tienich.caidat');
+	const { INFO_TENANT: settingVbcc } = settings;
 	const [clientIPFS] = useState(createIPFS({ url: ipIPFS }));
 	const intl = useIntl();
 	const [form] = Form.useForm();
@@ -28,7 +32,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 			putModel(record?._id ?? '', values)
 				.then()
 				.catch((er) => console.log(er));
-		} else {
+		} else if (settingVbcc?.require_IPFS) {
 			let certIpfs = '';
 			setFormSubmiting(true);
 			try {
@@ -44,7 +48,10 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 				postModel({ ...values, certIpfs })
 					.then()
 					.catch((er) => console.log(er));
-		}
+		} else
+			postModel(values)
+				.then()
+				.catch((er) => console.log(er));
 	};
 
 	return (
@@ -115,38 +122,40 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 						</Form.Item>
 					</Col>
 
-					{/* <Col span={24} md={12}>
-						{edit ? (
-							<div style={{ marginBottom: 24 }}>
-								<a href={record?.certIpfs} target='_blank' rel='noreferrer'>
-									<AuditOutlined /> Xem chữ ký số
-								</a>
-							</div>
-						) : (
-							<Form.Item
-								name='certIpfs'
-								label={
-									<>
-										Chữ ký số
-										<Popover
-											content={
-												<>
-													File chữ ký số dưới dạng .crt, dùng để xác thực định danh cá nhân.
-													<br />
-													Mỗi người sẽ có 1 file chữ ký số riêng biệt, được cơ quan có thẩm quyền cấp.
-												</>
-											}
-										>
-											<QuestionCircleOutlined style={{ marginLeft: 8 }} />
-										</Popover>
-									</>
-								}
-								rules={[...rules.fileRequired]}
-							>
-								<UploadFile accept='.crt' maxCount={1} />
-							</Form.Item>
-						)}
-					</Col> */}
+					{settingVbcc?.require_IPFS && (
+						<Col span={24} md={12}>
+							{edit ? (
+								<div style={{ marginBottom: 24 }}>
+									<a href={record?.certIpfs} target='_blank' rel='noreferrer'>
+										<AuditOutlined /> Xem chữ ký số
+									</a>
+								</div>
+							) : (
+								<Form.Item
+									name='certIpfs'
+									label={
+										<>
+											Chữ ký số
+											<Popover
+												content={
+													<>
+														File chữ ký số dưới dạng .crt, dùng để xác thực định danh cá nhân.
+														<br />
+														Mỗi người sẽ có 1 file chữ ký số riêng biệt, được cơ quan có thẩm quyền cấp.
+													</>
+												}
+											>
+												<QuestionCircleOutlined style={{ marginLeft: 8 }} />
+											</Popover>
+										</>
+									}
+									rules={[...rules.fileRequired]}
+								>
+									<UploadFile accept='.crt' maxCount={1} />
+								</Form.Item>
+							)}
+						</Col>
+					)}
 				</Row>
 
 				<div className='form-footer'>

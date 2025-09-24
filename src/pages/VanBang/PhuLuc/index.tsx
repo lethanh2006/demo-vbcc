@@ -4,7 +4,7 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
-import { ESettingKey, ETagColor } from '@/services/base/constant';
+import { ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
@@ -90,7 +90,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 	const [visibleSinhSo, setVisibleSinhSo] = useState<boolean>(false);
 	const [visibleTrinhKy, setVisibleTrinhKy] = useState<boolean>(false);
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
-	const settingVbcc = settings[ESettingKey.INFO_TENANT_VBCC];
+	const { INFO_TENANT: settingVbcc } = settings;
 
 	// set lại quyết định sau khi sinh số vào sổ
 	useEffect(() => {

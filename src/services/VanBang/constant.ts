@@ -143,3 +143,8 @@ export enum ELoaiChuKy {
 	KY_SO = 'Ký số',
 	DONG_DAU_VAN_THU = 'Đóng dấu văn thư',
 }
+
+export const colorLoaiChuKy: Record<ELoaiChuKy, ETagColor> = {
+	[ELoaiChuKy.KY_SO]: ETagColor.BLUE,
+	[ELoaiChuKy.DONG_DAU_VAN_THU]: ETagColor.GREEN,
+};

@@ -1,11 +1,11 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import { ELoaiChuKy } from '@/services/VanBang/constant';
+import { colorLoaiChuKy, ELoaiChuKy } from '@/services/VanBang/constant';
 import { NguoiKyVanBang } from '@/services/VanBang/NguoiKy/typing';
 import { formatPhoneNumber } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { Popconfirm, Popover } from 'antd';
+import { Popconfirm, Popover, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
 
@@ -22,17 +22,19 @@ const NguoiKyVanBangPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Loại chữ ký',
-			dataIndex: 'loaiChuKy',
-			width: 120,
-			filterType: 'select',
-			filterData: Object.values(ELoaiChuKy),
-		},
-		{
 			title: 'Chức vụ',
 			dataIndex: 'chucVu',
 			width: 160,
 			filterType: 'string',
+		},
+		{
+			title: 'Loại chữ ký',
+			dataIndex: 'loaiChuKy',
+			align: 'center',
+			width: 140,
+			filterType: 'select',
+			filterData: Object.values(ELoaiChuKy),
+			render: (val: ELoaiChuKy) => val && <Tag color={colorLoaiChuKy[val]}>{val}</Tag>,
 		},
 		{
 			title: 'Email',
