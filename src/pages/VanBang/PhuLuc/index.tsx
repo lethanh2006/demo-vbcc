@@ -227,21 +227,28 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			width: 120,
 			children: [
 				{
-					title: 'File ký',
+					title: 'Tập tin',
 					dataIndex: 'fileVanBang',
 					align: 'center',
 					width: 120,
-					render: (val, rec) => (
-						<Space>
-							{!val ? (
-								<Tag color='red'>Chưa trình ký</Tag>
-							) : (
-								<a href={val} target='_blank' rel='noreferrer'>
-									Tập tin
-								</a>
-							)}
-
-							{val && (
+					render: (val) =>
+						!val ? (
+							<Tag color='red'>Chưa trình ký</Tag>
+						) : (
+							<a href={val} target='_blank' rel='noreferrer'>
+								Tập tin
+							</a>
+						),
+				},
+				{
+					title: 'Ký số',
+					dataIndex: 'daKy',
+					align: 'center',
+					width: 120,
+					render: (val, rec) =>
+						val ? (
+							<Space>
+								<Tag color='green'>Đã ký</Tag>
 								<Popover
 									content={
 										<div style={{ maxWidth: 300 }}>
@@ -250,6 +257,30 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 												<Descriptions.Item label='Thời gian ký'>
 													{rec?.thoiGianKy ? dayjs(rec?.thoiGianKy).format('HH:mm DD/MM/YYYY') : '--'}
 												</Descriptions.Item>
+											</Descriptions>
+										</div>
+									}
+								>
+									<InfoCircleOutlined />
+								</Popover>
+							</Space>
+						) : (
+							<Tag color='orange'>Chưa ký</Tag>
+						),
+				},
+				{
+					title: 'Đóng dấu',
+					dataIndex: 'daDongDau',
+					align: 'center',
+					width: 120,
+					render: (val, rec) =>
+						val ? (
+							<Space>
+								<Tag color='green'>Đã đóng dấu</Tag>
+								<Popover
+									content={
+										<div style={{ maxWidth: 300 }}>
+											<Descriptions column={1} size='small'>
 												<Descriptions.Item label='Người đóng dấu'>
 													{rec?.nguoiDongGiau?.hoTen ?? '--'}
 												</Descriptions.Item>
@@ -259,27 +290,13 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 											</Descriptions>
 										</div>
 									}
-									trigger='hover'
 								>
 									<InfoCircleOutlined />
 								</Popover>
-							)}
-						</Space>
-					),
-				},
-				{
-					title: 'Ký số',
-					dataIndex: 'daKy',
-					align: 'center',
-					width: 120,
-					render: (val, rec) => (val ? <Tag color='green'>Đã ký</Tag> : <Tag color='orange'>Chưa ký</Tag>),
-				},
-				{
-					title: 'Đóng dấu',
-					dataIndex: 'daDongDau',
-					align: 'center',
-					width: 120,
-					render: (val, rec) => (val ? <Tag color='green'>Đã đóng dấu</Tag> : <Tag color='orange'>Chưa đóng dấu</Tag>),
+							</Space>
+						) : (
+							<Tag color='orange'>Chưa đóng dấu</Tag>
+						),
 				},
 			],
 		},

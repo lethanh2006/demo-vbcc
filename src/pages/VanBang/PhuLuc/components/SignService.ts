@@ -1,6 +1,6 @@
 // Request to localhost, port 9669, is listened by Sign Tool
-// const server_url = 'ws://localhost:9669';
-const server_url = 'ws://192.168.1.15:9669';
+const server_url = 'ws://localhost:9669';
+// const server_url = 'ws://192.168.1.15:9669';
 
 export type TSignData = {
 	status: string;
