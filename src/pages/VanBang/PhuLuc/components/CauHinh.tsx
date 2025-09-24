@@ -29,7 +29,7 @@ const CauHinhPhuLucVanBang = (props: { visible: boolean; setVisible: (val: boole
 					<Row gutter={[12, 0]}>
 						<Col span={24}>
 							<Form.Item name='require_signature' valuePropName='checked' initialValue={false}>
-								<Checkbox>Cho phép chữ ký số?</Checkbox>
+								<Checkbox>Cho phép chữ ký số thông tin?</Checkbox>
 							</Form.Item>
 						</Col>
 						<Col span={24}>

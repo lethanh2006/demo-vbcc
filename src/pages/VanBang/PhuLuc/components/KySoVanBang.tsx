@@ -4,8 +4,8 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ip3 } from '@/utils/ip';
-import { FormOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { Button, Modal, Popover, Progress, message } from 'antd';
+import { SignatureOutlined } from '@ant-design/icons';
+import { Button, Modal, Progress, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { useModel } from 'umi';
@@ -101,12 +101,12 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 		{
 			dataIndex: 'soVaoSoBang',
 			title: 'Số vào sổ',
-			width: 100,
+			width: 120,
 		},
 		{
 			dataIndex: 'soHieuVanBang',
 			title: 'Số hiệu văn bằng',
-			width: 100,
+			width: 120,
 		},
 		{
 			dataIndex: 'hoTen',
@@ -133,34 +133,20 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 		{
 			dataIndex: 'message' as any,
 			title: 'Trạng thái',
-			width: 180,
+			width: 200,
 		},
 	];
 
 	return (
-		<Modal
-			open={visibleSignVanBang}
-			title={
-				<>
-					Ký số tệp tin văn bằng{' '}
-					<Popover
-						content={
-							<>
-								Ký số các thông tin của từng phụ lục, đảm bảo tính toàn vẹn dữ liệu trong mỗi phụ lục.
-								<br />
-								Mỗi khi thông tin phụ lục thay đổi, chữ ký số sẽ bị loại bỏ.
-							</>
-						}
-					>
-						<QuestionCircleOutlined />
-					</Popover>
-				</>
-			}
-			width={1000}
-			onCancel={onCancel}
-			footer={null}
-		>
-			<TableStaticData columns={columns} size='small' data={dataToSignOrPush} addStt hasTotal />
+		<Modal open={visibleSignVanBang} title='Ký số tệp tin văn bằng' width={1000} onCancel={onCancel} footer={null}>
+			<TableStaticData
+				columns={columns}
+				size='small'
+				data={dataToSignOrPush}
+				addStt
+				hasTotal
+				otherProps={{ pagination: false, scroll: { y: 560 } }}
+			/>
 
 			{signing && (
 				<>
@@ -182,11 +168,8 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 				title='Chi tiết tệp tin'
 				width={1000}
 				open={visibleFormFile}
-				footer={
-					<div className='form-footer'>
-						<Button onClick={() => setVisibleFormFile(false)}>Đóng</Button>
-					</div>
-				}
+				okButtonProps={{ hidden: true }}
+				cancelText='Đóng'
 				onCancel={() => setVisibleFormFile(false)}
 			>
 				<PreviewFile file={url ?? ''} />
@@ -194,7 +177,7 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 
 			<div className='form-footer'>
 				<Button
-					icon={<FormOutlined />}
+					icon={<SignatureOutlined />}
 					type='primary'
 					disabled={
 						!dataToSignOrPush?.length ||

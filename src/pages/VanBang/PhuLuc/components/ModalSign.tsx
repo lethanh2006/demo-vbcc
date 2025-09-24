@@ -3,7 +3,7 @@ import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import dayjs from '@/utils/dayjs';
-import { FormOutlined, QuestionCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, SaveOutlined, SignatureOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Progress, Typography, message } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
@@ -34,7 +34,7 @@ const ModalSign = (props: { getData?: () => void }) => {
 		{
 			title: 'Trạng thái',
 			dataIndex: 'message',
-			width: 150,
+			width: 200,
 		},
 	];
 
@@ -138,12 +138,12 @@ const ModalSign = (props: { getData?: () => void }) => {
 		{
 			dataIndex: 'soVaoSoBang',
 			title: 'Số vào sổ',
-			width: 100,
+			width: 120,
 		},
 		{
 			dataIndex: 'soHieuVanBang',
 			title: 'Số hiệu văn bằng',
-			width: 100,
+			width: 120,
 		},
 		{
 			dataIndex: 'hoTen',
@@ -153,7 +153,7 @@ const ModalSign = (props: { getData?: () => void }) => {
 		{
 			dataIndex: 'signature',
 			title: 'Chữ ký',
-			width: 100,
+			width: 120,
 			align: 'center',
 			render: (text) => (text ? <Typography.Paragraph copyable={{ text }}>(đã ký)</Typography.Paragraph> : ''),
 		},
@@ -207,7 +207,7 @@ const ModalSign = (props: { getData?: () => void }) => {
 
 			<div className='form-footer'>
 				<Button
-					icon={<FormOutlined />}
+					icon={<SignatureOutlined />}
 					type='primary'
 					disabled={!dataToSignOrPush?.length}
 					onClick={execSignBatch}

@@ -1,6 +1,8 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import { ESettingKey, ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
@@ -67,6 +69,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		handleView,
 		putModel,
 		setVisibleSignVanBang,
+		record,
 	} = useModel('vbcc.phulucvanbang');
 	const {
 		record: recQuyetDinh,
@@ -75,6 +78,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		dsAllQuyeDinh,
 	} = useModel('vbcc.quyetdinhtotnghiep');
 	const { record: recDotCapCang } = useModel('vbcc.dotcapbangtotnghiep');
+	const { record: recNguoiKy, getByIdModel: getNguoiKy } = useModel('vbcc.nguoiky');
 	const { settings } = useModel('tienich.caidat');
 	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 	const [showUpload, setShowUpload] = useState(false);
@@ -85,12 +89,17 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
 	const [visibleSinhSo, setVisibleSinhSo] = useState<boolean>(false);
 	const [visibleTrinhKy, setVisibleTrinhKy] = useState<boolean>(false);
+	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const settingVbcc = settings[ESettingKey.INFO_TENANT_VBCC];
 
 	// set lại quyết định sau khi sinh số vào sổ
 	useEffect(() => {
 		setQuyetDinh(danhsachQuyetDinh?.find((item) => item?._id === recQuyetDinh?._id));
 	}, [JSON.stringify(danhsachQuyetDinh)]);
+
+	useEffect(() => {
+		getNguoiKy('me');
+	}, []);
 
 	const condition: any = {};
 
@@ -231,12 +240,18 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 					dataIndex: 'fileVanBang',
 					align: 'center',
 					width: 120,
-					render: (val) =>
+					render: (val, rec) =>
 						!val ? (
 							<Tag color='red'>Chưa trình ký</Tag>
 						) : (
-							<a href={val} target='_blank' rel='noreferrer'>
-								Tập tin
+							<a
+								onClick={(e) => {
+									e.preventDefault();
+									setRecord(rec);
+									setVisibleFormFile(true);
+								}}
+							>
+								Xem chi tiết
 							</a>
 						),
 				},
@@ -420,12 +435,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			<ButtonExtend icon={<DatabaseOutlined />} onClick={() => setVisibleSinhSo(true)} key='sinhSo'>
 				Sinh số vào sổ
 			</ButtonExtend>,
-			<ButtonExtend
-				icon={<SignatureOutlined />}
-				onClick={() => setVisibleTrinhKy(true)}
-				key='trinhky'
-				disabled={!total}
-			>
+			<ButtonExtend icon={<FormOutlined />} onClick={() => setVisibleTrinhKy(true)} key='trinhky' disabled={!total}>
 				Trình ký ({selectedIds?.length || 'Tất cả'})
 			</ButtonExtend>,
 			<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total}>
@@ -433,21 +443,24 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			</ButtonExtend>,
 		);
 
-	if (settingVbcc?.require_signature)
+	if (recNguoiKy?._id)
 		otherButtons.push(
 			<Dropdown
 				overlay={
 					<Menu>
-						{/* <Menu.Item key='thongtin' onClick={handleSign}>
-							Thông tin
-						</Menu.Item> */}
+						{settingVbcc?.require_signature && (
+							<Menu.Item key='thongtin' onClick={handleSign}>
+								Thông tin
+							</Menu.Item>
+						)}
 						<Menu.Item key='vanbang' onClick={handlePrintVanBang}>
 							Văn bằng
 						</Menu.Item>
 					</Menu>
 				}
+				disabled={!selectedIds?.length}
 			>
-				<ButtonExtend disabled={!selectedIds?.length} className='btn-success' icon={<FormOutlined />} key='sign'>
+				<ButtonExtend disabled={!selectedIds?.length} className='btn-success' icon={<SignatureOutlined />} key='sign'>
 					Ký số ({selectedIds?.length ?? 0})
 				</ButtonExtend>
 			</Dropdown>,
@@ -515,17 +528,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 						/>
 					</Space>
 				}
-				otherProps={{
-					rowKey: (rec: PhuLucVanBang.IRecord) => rec._id,
-					rowSelection: {
-						type: 'checkbox',
-						selectedRowKeys: selectedIds,
-						preserveSelectedRowKeys: true,
-						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
-						columnWidth: 40,
-						// hideSelectAll: true,
-					},
-				}}
+				rowSelection
 			>
 				{!isQuyetDinh && !isDotCapBang ? (
 					<Space wrap style={{ marginBottom: 12 }}>
@@ -576,27 +579,37 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				}}
 			/>
 
-			<ModalUploadFolder visible={showUpload} setVisible={setShowUpload} getData={getData} />
-
-			<ModalSign
-				getData={() => {
-					getData();
-					setSelectedIds([]);
-				}}
-			/>
-
-			<ModalPushBlockchain
-				getData={() => {
-					getData();
-					setSelectedIds([]);
-				}}
-			/>
-
 			<ModalExportData />
 
 			<CauHinhPhuLucVanBang visible={visibleCauHinh} setVisible={setVisibleCauHinh} />
 
-			<PreviewIPFS visible={visibleModal} setVisible={setVisibleModal} />
+			{settingVbcc?.require_IPFS && (
+				<>
+					<ModalUploadFolder visible={showUpload} setVisible={setShowUpload} getData={getData} />
+
+					<PreviewIPFS visible={visibleModal} setVisible={setVisibleModal} />
+				</>
+			)}
+
+			{settingVbcc?.blockChain && (
+				<ModalPushBlockchain
+					getData={() => {
+						getData();
+						setSelectedIds([]);
+					}}
+				/>
+			)}
+
+			{settingVbcc?.require_signature && (
+				<>
+					<ModalSign
+						getData={() => {
+							getData();
+							setSelectedIds([]);
+						}}
+					/>
+				</>
+			)}
 
 			<ModalCapBang visible={showModalCapBang} setVisible={setShowModalCapBang} getData={getData} />
 
@@ -618,6 +631,17 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			<ModalTrinhKyVanBang visible={visibleTrinhKy} setVisible={setVisibleTrinhKy} getData={getData} />
 
 			<ModalSignVanBang getData={() => getData()} />
+
+			<ModalExpandable
+				title='Chi tiết tệp tin'
+				width={1000}
+				open={visibleFormFile}
+				okButtonProps={{ hidden: true }}
+				cancelText='Đóng'
+				onCancel={() => setVisibleFormFile(false)}
+			>
+				<PreviewFile file={record?.fileVanBang ?? ''} />
+			</ModalExpandable>
 		</>
 	);
 };
