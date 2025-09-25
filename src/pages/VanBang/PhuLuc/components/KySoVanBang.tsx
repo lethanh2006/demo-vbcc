@@ -2,11 +2,11 @@ import PreviewFile from '@/components/PreviewFile';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
-import { ELoaiChuKy } from '@/services/VanBang/constant';
+import { colorLoaiChuKy, ELoaiChuKy } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ip3 } from '@/utils/ip';
 import { SignatureOutlined } from '@ant-design/icons';
-import { Alert, Button, Modal, Progress, message } from 'antd';
+import { Button, Descriptions, message, Modal, Progress, Tag } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { useModel } from 'umi';
@@ -31,10 +31,10 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 		if (!dataToSignOrPush?.length) return [];
 
 		if (recNguoiKy?.loaiChuKy === ELoaiChuKy.KY_SO) {
-			return dataToSignOrPush.filter((item) => !item.daKy);
+			return dataToSignOrPush.filter((item) => !!item?.fileVanBang && !item.daKy);
 		}
 		if (recNguoiKy?.loaiChuKy === ELoaiChuKy.DONG_DAU_VAN_THU) {
-			return dataToSignOrPush.filter((item) => !item.daDongDau);
+			return dataToSignOrPush.filter((item) => !!item?.daKy && !item.daDongDau);
 		}
 		return dataToSignOrPush;
 	}, [dataToSignOrPush, recNguoiKy]);
@@ -54,11 +54,12 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 
 	const callbackDone1Document = (response: any) => {
 		const { status, message: msg } = response;
-		if (status === 'success') {
+		if (response?.data?.id) {
 			const { id, signature, uploaded } = response.data;
 			setDataToSignOrPush((data) =>
-				data.map((item) => (item._id === id ? { ...item, signature, message: msg, uploaded } : item)),
+				data.map((item) => (item._id === id ? { ...item, signature, message: msg, uploaded, status } : item)),
 			);
+		} else if (status === 'success') {
 		} else message.error(msg);
 	};
 
@@ -139,29 +140,36 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 				),
 		},
 		{
-			dataIndex: 'message' as any,
+			dataIndex: 'message',
 			title: 'Trạng thái',
 			width: 200,
+			render: (val, rec) => <span style={{ color: rec?.status === 'success' ? 'green' : 'red' }}>{val}</span>,
 		},
 	];
 
-	const noteText = useMemo(() => {
-		if (recNguoiKy?.loaiChuKy === ELoaiChuKy.KY_SO) {
-			const daKy = dataToSignOrPush?.filter((item) => item.daKy)?.length ?? 0;
-			const chuaKy = dataToSignOrPush?.filter((item) => !item.daKy)?.length ?? 0;
-			return `Hệ thống đã kiểm tra danh sách: Có ${chuaKy} phụ lục văn bằng Chưa Được Ký Số và ${daKy} phụ lục văn bằng ĐÃ Ký Số. Chỉ các phụ lục chưa được ký số mới hiển thị trong bảng dưới đây.`;
-		}
-		if (recNguoiKy?.loaiChuKy === ELoaiChuKy.DONG_DAU_VAN_THU) {
-			const daDongDau = dataToSignOrPush?.filter((item) => item.daDongDau)?.length ?? 0;
-			const chuaDongDau = dataToSignOrPush?.filter((item) => !item.daDongDau)?.length ?? 0;
-			return `Hệ thống đã kiểm tra danh sách: Có ${chuaDongDau} phụ lục văn bằng Chưa Được Đóng Dấu và ${daDongDau} phụ lục văn bằng Đã Đóng Dấu. Chỉ các phụ lục chưa được đóng dấu mới hiển thị trong bảng dưới đây.`;
-		}
-		return '';
-	}, [recNguoiKy, dataToSignOrPush]);
-
 	return (
 		<Modal open={visibleSignVanBang} title='Ký số tệp tin văn bằng' width={1000} onCancel={onCancel} footer={null}>
-			{noteText && <Alert message={noteText} type='info' showIcon style={{ marginBottom: 12 }} />}
+			<Descriptions column={1} style={{ marginBottom: 8 }}>
+				<Descriptions.Item label='Vai trò ký số'>
+					{recNguoiKy?.loaiChuKy ? (
+						<Tag color={colorLoaiChuKy[recNguoiKy?.loaiChuKy as ELoaiChuKy]}>{recNguoiKy?.loaiChuKy}</Tag>
+					) : (
+						'--'
+					)}
+				</Descriptions.Item>
+			</Descriptions>
+
+			{recNguoiKy?.loaiChuKy === ELoaiChuKy.KY_SO ? (
+				<i style={{ color: 'red' }}>
+					Hệ thống tự động lọc dữ liệu tương ứng với vai trò ký số, chỉ các phụ lục <b>đã được trình ký</b> và{' '}
+					<b>chưa được ký số</b> mới hiển thị trong bảng dưới đây
+				</i>
+			) : recNguoiKy?.loaiChuKy === ELoaiChuKy.DONG_DAU_VAN_THU ? (
+				<i style={{ color: 'red' }}>
+					Hệ thống tự động lọc dữ liệu tương ứng với vai trò ký số, chỉ các phụ lục <b>đã được ký số</b> và{' '}
+					<b>chưa đóng dấu</b> mới hiển thị trong bảng dưới đây
+				</i>
+			) : null}
 
 			<TableStaticData
 				columns={columns}
@@ -196,7 +204,7 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 				<PreviewFile file={url ?? ''} />
 			</ModalExpandable>
 
-			<div className='form-footer'>
+			<div className='form-footer' style={{ marginTop: 24 }}>
 				<Button
 					icon={<SignatureOutlined />}
 					type='primary'

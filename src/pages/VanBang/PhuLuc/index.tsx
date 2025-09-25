@@ -20,11 +20,9 @@ import {
 	FormOutlined,
 	ImportOutlined,
 	InfoCircleOutlined,
-	PlusCircleOutlined,
 	SearchOutlined,
 	SettingOutlined,
 	SignatureOutlined,
-	UserAddOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
 import { Descriptions, Dropdown, Menu, Popconfirm, Popover, Space, Tag } from 'antd';
@@ -33,7 +31,6 @@ import { useIntl, useModel } from 'umi';
 import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
 import ModalChonPhuLuc from '../DotCapBangTotNghiep/components/ModalChonPhuLuc';
 import SelectQuyetDinh from '../QuyetDinhTotNghiep/components/Select';
-import SelectQuyetDinhTotNghiepDot from '../QuyetDinhTotNghiep/components/SelectQuyetDinhDot';
 import CauHinhPhuLucVanBang from './components/CauHinh';
 import Form from './components/Form';
 import ModalSignVanBang from './components/KySoVanBang';
@@ -47,9 +44,9 @@ import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import ViewPhuLucVanBang from './components/ViewRender';
 
-const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolean; getData?: any }) => {
+const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 	const intl = useIntl();
-	const { isQuyetDinh = false, isDotCapBang = false, getData: getDataV2 } = props;
+	const { isQuyetDinh = false, getData: getDataV2 } = props;
 	const {
 		page,
 		limit,
@@ -67,7 +64,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		total,
 		isView,
 		handleView,
-		putModel,
 		setVisibleSignVanBang,
 		record,
 	} = useModel('vbcc.phulucvanbang');
@@ -75,9 +71,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		record: recQuyetDinh,
 		danhSach: danhsachQuyetDinh,
 		setRecord: setQuyetDinh,
-		dsAllQuyeDinh,
 	} = useModel('vbcc.quyetdinhtotnghiep');
-	const { record: recDotCapCang } = useModel('vbcc.dotcapbangtotnghiep');
 	const { record: recNguoiKy, getByIdModel: getNguoiKy } = useModel('vbcc.nguoiky');
 	const { settings } = useModel('tienich.caidat');
 	const [yearSelect, setYearSelect] = useState<any>(dayjs());
@@ -101,17 +95,12 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		getNguoiKy('me');
 	}, []);
 
-	const condition: any = {};
-
-	if (recQuyetDinh?._id) {
-		condition.idQuyetDinh = recQuyetDinh?._id;
-	}
-
-	if (isDotCapBang) {
-		condition.idDotCapBang = recDotCapCang?._id;
-	}
-
-	const getData = () => getModel(condition).then(() => setSelectedIds([]));
+	const getData = () => {
+		if (recQuyetDinh?._id)
+			getModel({
+				idQuyetDinh: recQuyetDinh?._id,
+			});
+	};
 
 	const handleSign = () => {
 		if (selectedIds?.length) {
@@ -144,10 +133,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			setDataToSignOrPush(danhSach.filter((item) => selectedIds?.includes(item._id)));
 			setVisibleSignVanBang(true);
 		}
-	};
-
-	const delePhuLucDot = (rec: PhuLucVanBang.IRecord) => {
-		putModel(rec?._id ?? '', { idDotCapBang: null }, getData);
 	};
 
 	const onCell = (rec: PhuLucVanBang.IRecord) => ({
@@ -206,7 +191,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 					{rec.quyetDinh?.ngayBanHanh ? dayjs(rec.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''}
 				</>
 			),
-			hide: isQuyetDinh || !!recQuyetDinh?._id,
+			hide: !!recQuyetDinh?._id,
 			onCell,
 		},
 		{
@@ -380,16 +365,15 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: isDotCapBang ? 90 : 120,
+			width: 120,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
 					<ButtonExtend tooltip='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
-					{!isDotCapBang && (
-						<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
-					)}
+					<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
+
 					<Popconfirm
-						onConfirm={() => (isDotCapBang ? delePhuLucDot(rec) : deleteModel(rec._id, getData))}
+						onConfirm={() => deleteModel(rec._id, getData)}
 						title='Bạn có chắc chắn muốn xóa phụ lục này?'
 						placement='topRight'
 					>
@@ -479,38 +463,20 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 			</ButtonExtend>,
 		);
 
-	if (isDotCapBang) {
-		otherButtons.push(
-			<>
-				<ButtonExtend type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisibleModalChonPhuLuc(true)}>
-					Thêm phụ lục
-				</ButtonExtend>
-				<ButtonExtend
-					tooltip='Xác nhận đã cấp bằng cho những phục lục này'
-					disabled={!selectedIds?.length}
-					icon={<UserAddOutlined />}
-					onClick={() => setShowModalCapBang(true)}
-				>
-					Cấp bằng ({selectedIds?.length})
-				</ButtonExtend>
-			</>,
-		);
-	}
-
 	return (
 		<>
 			<TableBase
 				getData={getData}
 				columns={columns}
-				params={condition}
-				dependencies={[page, limit, recQuyetDinh?._id, recDotCapCang?._id]}
+				params={{ idQuyetDinh: recQuyetDinh?._id }}
+				dependencies={[page, limit, recQuyetDinh?._id]}
 				modelName='vbcc.phulucvanbang'
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
 				widthDrawer={1000}
 				Form={isView ? ViewPhuLucVanBang : Form}
-				formProps={{ getData, isQuyetDinh, vbccSettings: settingVbcc }}
-				buttons={{ create: !!recQuyetDinh?._id && !isDotCapBang }}
-				hideCard={isQuyetDinh || isDotCapBang}
+				formProps={{ getData, vbccSettings: settingVbcc }}
+				buttons={{ create: !!recQuyetDinh?._id }}
+				hideCard={isQuyetDinh}
 				otherButtons={otherButtons}
 				extra={
 					<Space wrap>
@@ -530,7 +496,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 				}
 				rowSelection
 			>
-				{!isQuyetDinh && !isDotCapBang ? (
+				{!isQuyetDinh ? (
 					<Space wrap style={{ marginBottom: 12 }}>
 						<MyDatePicker
 							style={{ width: 150 }}
@@ -557,16 +523,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; isDotCapBang?: boolea
 							// allowClear
 						/>
 					</Space>
-				) : null}
-
-				{isDotCapBang ? (
-					<SelectQuyetDinhTotNghiepDot
-						style={{ width: 250, marginBottom: 12 }}
-						value={recQuyetDinh?._id}
-						onChange={(val) => setQuyetDinh(dsAllQuyeDinh?.find((item) => item._id === val))}
-						isSetRecord
-						allowClear
-					/>
 				) : null}
 			</TableBase>
 
