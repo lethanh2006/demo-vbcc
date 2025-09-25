@@ -2,11 +2,12 @@ import PreviewFile from '@/components/PreviewFile';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
+import { ELoaiChuKy } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ip3 } from '@/utils/ip';
 import { SignatureOutlined } from '@ant-design/icons';
-import { Button, Modal, Progress, message } from 'antd';
-import { useEffect, useState } from 'react';
+import { Alert, Button, Modal, Progress, message } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { useModel } from 'umi';
 import { sign_service, type TSignData } from './SignService';
@@ -16,14 +17,29 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 	const auth = useAuth();
 	const { visibleSignVanBang, setVisibleSignVanBang, dataToSignOrPush, setDataToSignOrPush, setSelectedIds } =
 		useModel('vbcc.phulucvanbang');
+	const { record: recNguoiKy } = useModel('vbcc.nguoiky');
+
 	const [signProgress, setSignProgress] = useState<number>(0);
-	const signStatus = dataToSignOrPush?.length && signProgress === dataToSignOrPush.length ? 'active' : 'normal';
 	const [signing, setSigning] = useState(false);
 	const [currentSocket, setCurrentSocket] = useState<WebSocket>();
 	const [url, setUrl] = useState<string>('');
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 
 	const increSignCurrent = () => setSignProgress((current) => current + 1);
+
+	const filteredData = useMemo(() => {
+		if (!dataToSignOrPush?.length) return [];
+
+		if (recNguoiKy?.loaiChuKy === ELoaiChuKy.KY_SO) {
+			return dataToSignOrPush.filter((item) => !item.daKy);
+		}
+		if (recNguoiKy?.loaiChuKy === ELoaiChuKy.DONG_DAU_VAN_THU) {
+			return dataToSignOrPush.filter((item) => !item.daDongDau);
+		}
+		return dataToSignOrPush;
+	}, [dataToSignOrPush, recNguoiKy]);
+
+	const signStatus = filteredData?.length && signProgress === filteredData.length ? 'active' : 'normal';
 
 	useEffect(() => {
 		if (!visibleSignVanBang) {
@@ -47,18 +63,10 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 	};
 
 	const startSignDocument = (socket: WebSocket, index: number) => {
-		if (index < dataToSignOrPush.length) {
+		if (index < filteredData.length) {
 			increSignCurrent();
 
-			const {
-				signature,
-				createdBlockchain,
-				index: i,
-				key,
-				idQuyetDinh,
-				urlIpfs,
-				...dataToSign
-			} = dataToSignOrPush[index];
+			const { signature, createdBlockchain, index: i, key, idQuyetDinh, urlIpfs, ...dataToSign } = filteredData[index];
 
 			dataToSign.token = auth?.user?.access_token;
 			dataToSign.url = dataToSign.fileVanBang;
@@ -89,11 +97,11 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 	};
 
 	const execSignBatch = () => {
-		if (dataToSignOrPush?.length) {
+		if (filteredData?.length) {
 			setSigning(true);
 			setSignProgress(0);
 
-			sign_service.init_sign_batch(dataToSignOrPush.length, callbackSignBatch);
+			sign_service.init_sign_batch(filteredData.length, callbackSignBatch);
 		}
 	};
 
@@ -118,10 +126,10 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 			title: 'Tập tin văn bằng',
 			align: 'center',
 			width: 120,
-			render: (val, rec) =>
+			render: (val) =>
 				val && (
 					<a
-						onClick={(e) => {
+						onClick={() => {
 							setUrl(val);
 							setVisibleFormFile(true);
 						}}
@@ -137,12 +145,28 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 		},
 	];
 
+	const noteText = useMemo(() => {
+		if (recNguoiKy?.loaiChuKy === ELoaiChuKy.KY_SO) {
+			const daKy = dataToSignOrPush?.filter((item) => item.daKy)?.length ?? 0;
+			const chuaKy = dataToSignOrPush?.filter((item) => !item.daKy)?.length ?? 0;
+			return `Hệ thống đã kiểm tra danh sách: Có ${chuaKy} phụ lục văn bằng Chưa Được Ký Số và ${daKy} phụ lục văn bằng ĐÃ Ký Số. Chỉ các phụ lục chưa được ký số mới hiển thị trong bảng dưới đây.`;
+		}
+		if (recNguoiKy?.loaiChuKy === ELoaiChuKy.DONG_DAU_VAN_THU) {
+			const daDongDau = dataToSignOrPush?.filter((item) => item.daDongDau)?.length ?? 0;
+			const chuaDongDau = dataToSignOrPush?.filter((item) => !item.daDongDau)?.length ?? 0;
+			return `Hệ thống đã kiểm tra danh sách: Có ${chuaDongDau} phụ lục văn bằng Chưa Được Đóng Dấu và ${daDongDau} phụ lục văn bằng Đã Đóng Dấu. Chỉ các phụ lục chưa được đóng dấu mới hiển thị trong bảng dưới đây.`;
+		}
+		return '';
+	}, [recNguoiKy, dataToSignOrPush]);
+
 	return (
 		<Modal open={visibleSignVanBang} title='Ký số tệp tin văn bằng' width={1000} onCancel={onCancel} footer={null}>
+			{noteText && <Alert message={noteText} type='info' showIcon style={{ marginBottom: 12 }} />}
+
 			<TableStaticData
 				columns={columns}
 				size='small'
-				data={dataToSignOrPush}
+				data={filteredData}
 				addStt
 				hasTotal
 				otherProps={{ pagination: false, scroll: { y: 560 } }}
@@ -151,14 +175,11 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 			{signing && (
 				<>
 					<div style={{ width: '100%' }}>
-						<Progress
-							percent={Math.round((signProgress / (dataToSignOrPush?.length ?? 1)) * 100)}
-							status={signStatus}
-						/>
+						<Progress percent={Math.round((signProgress / (filteredData?.length ?? 1)) * 100)} status={signStatus} />
 					</div>
 
 					<div className='form-footer' style={{ marginBottom: 24 }}>
-						<span>({`${signProgress}/${dataToSignOrPush?.length ?? 0} bản`}). </span>
+						<span>({`${signProgress}/${filteredData?.length ?? 0} bản`}). </span>
 						{signStatus !== 'active' ? <>Vui lòng đợi trong ít phút....</> : <>Quá trình đã hoàn tất</>}
 					</div>
 				</>
@@ -180,8 +201,7 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 					icon={<SignatureOutlined />}
 					type='primary'
 					disabled={
-						!dataToSignOrPush?.length ||
-						dataToSignOrPush?.filter((item) => item?.uploaded)?.length === dataToSignOrPush?.length
+						!filteredData?.length || filteredData?.filter((item) => item?.uploaded)?.length === filteredData?.length
 					}
 					onClick={execSignBatch}
 					loading={signing}
