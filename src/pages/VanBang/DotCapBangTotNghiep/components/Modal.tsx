@@ -1,7 +1,6 @@
 import { Card, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import PhuLucVanBangPage from '../../PhuLuc';
 import QuyetDinhTotNghiepPage from '../../QuyetDinhTotNghiep';
 import Form from './Form';
 
@@ -36,7 +35,8 @@ const ModalKhaoSat = (props: any) => {
 			) : currentStep === 1 ? (
 				<QuyetDinhTotNghiepPage isDotCapBang />
 			) : currentStep === 2 ? (
-				<PhuLucVanBangPage isDotCapBang />
+				// <PhuLucVanBangPage isDotCapBang />
+				<></>
 			) : null}
 		</Card>
 	);

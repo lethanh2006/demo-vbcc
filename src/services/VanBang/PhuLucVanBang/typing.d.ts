@@ -63,6 +63,8 @@ declare module PhuLucVanBang {
 		url?: string;
 		uploadUrl?: string;
 		uploaded?: boolean;
+		message?: string;
+		status?: string;
 	}
 
 	export type TUploadFolder = Pick<IRecord, 'urlIpfs' | 'idVanBangIPFS'> & {
