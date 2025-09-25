@@ -106,7 +106,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='soDienThoai' label='SĐT' rules={[...rules.text, ...rules.length(20)]}>
+						<Form.Item name='soDienThoai' label='SĐT' rules={[...rules.soDienThoai]}>
 							<Input placeholder='Nhập số điện thoại' />
 						</Form.Item>
 					</Col>
