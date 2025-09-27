@@ -1,11 +1,12 @@
 import { FilePdfOutlined } from '@ant-design/icons';
-import { Button, Card } from 'antd';
+import { Button } from 'antd';
 import { useIntl, useModel } from 'umi';
-import PhuLucDetailView from '../../TraCuuPublic/PhuLucDetailView';
+import PhuLucDetailView from './PhuLucDetailView';
 
-const ViewPhuLucVanBang = () => {
+const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
 	const intl = useIntl();
 	const { record, setVisibleForm, setDataToSignOrPush, setVisiblePrint } = useModel('vbcc.phulucvanbang');
+	const { hasPrint = true } = props;
 
 	const handlePrintOne = (rec?: any) => {
 		if (!rec) return;
@@ -14,19 +15,21 @@ const ViewPhuLucVanBang = () => {
 	};
 
 	return (
-		<Card title='Chi tiết phụ lục văn bằng' style={{ padding: 0 }}>
-			<PhuLucDetailView record={record} />
+		<>
+			<PhuLucDetailView />
 
 			<div className='form-footer'>
-				<Button type='primary' icon={<FilePdfOutlined />} onClick={() => handlePrintOne(record)}>
-					In phụ lục
-				</Button>
+				{hasPrint && record && (
+					<Button type='primary' icon={<FilePdfOutlined />} onClick={() => handlePrintOne(record)}>
+						In phụ lục
+					</Button>
+				)}
 
 				<Button onClick={() => setVisibleForm(false)}>
 					{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
 				</Button>
 			</div>
-		</Card>
+		</>
 	);
 };
 

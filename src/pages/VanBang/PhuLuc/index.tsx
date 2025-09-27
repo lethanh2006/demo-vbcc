@@ -63,6 +63,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 		setRecord,
 		total,
 		isView,
+		edit,
 		handleView,
 		setVisibleSignVanBang,
 		record,
@@ -473,6 +474,10 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 				modelName='vbcc.phulucvanbang'
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
 				widthDrawer={1000}
+				modalTitle={
+					isView ? 'Xem chi tiết phụ lục văn bằng' : edit ? 'Cập nhật phụ lục văn bằng' : 'Thêm mới phụ lục văn bằng'
+				}
+				showModalTitle
 				Form={isView ? ViewPhuLucVanBang : Form}
 				formProps={{ getData, vbccSettings: settingVbcc }}
 				buttons={{ create: !!recQuyetDinh?._id }}

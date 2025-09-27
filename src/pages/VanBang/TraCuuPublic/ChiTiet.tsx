@@ -1,9 +1,9 @@
 import { Empty, Spin } from 'antd';
 import { useEffect } from 'react';
 import { useModel, useParams } from 'umi';
+import PhuLucDetailView from '../PhuLuc/components/PhuLucDetailView';
 import Footer from './Footer';
 import Header from './Header';
-import PhuLucDetailView from './PhuLucDetailView';
 import './style.less';
 
 const ChiTietTraCuuVanBang = () => {
@@ -21,6 +21,7 @@ const ChiTietTraCuuVanBang = () => {
 	return (
 		<>
 			<Header subTitle={APP_CONFIG_TITLE_VBCC} />
+
 			<Spin spinning={loading}>
 				<div style={{ maxWidth: 1200, margin: 'auto', paddingTop: 30, paddingBottom: 30 }}>
 					<div style={{ textAlign: 'center', fontSize: 22, marginBottom: 36 }}>
@@ -28,9 +29,9 @@ const ChiTietTraCuuVanBang = () => {
 					</div>
 
 					{record?._id ? (
-						<PhuLucDetailView record={record} isPublic />
+						<PhuLucDetailView isPublic />
 					) : (
-						<Empty description='Không có thông tin sinh viên' style={{ marginBottom: 32, marginTop: 32 }} />
+						<Empty description='Không tìm thấy thông tin phụ lục' style={{ marginBottom: 32, marginTop: 32 }} />
 					)}
 				</div>
 			</Spin>
