@@ -16,7 +16,9 @@ import { useState } from 'react';
 export default () => {
 	// const quanTri = useCheckAccess('van-bang-chung-chi|quan-tri-vien');
 	// const objInit = useInitModel<PhuLucVanBang.IRecord>(quanTri ? 'phu-luc-van-bang' : 'phu-luc-van-bang/don-vi');
-	const objInit = useInitModel<PhuLucVanBang.IRecord>('phu-luc-van-bang');
+	const objInit = useInitModel<PhuLucVanBang.IRecord>('phu-luc-van-bang', undefined, undefined, undefined, {
+		soVaoSoBang: 1,
+	});
 	const { formSubmiting, setFormSubmiting, setLoading, setRecord } = objInit;
 	const [dataToSignOrPush, setDataToSignOrPush] = useState<PhuLucVanBang.IRecord[]>([]);
 	const [visibleSign, setVisibleSign] = useState<boolean>(false);
