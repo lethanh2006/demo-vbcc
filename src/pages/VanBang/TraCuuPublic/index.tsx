@@ -3,7 +3,8 @@ import SelectMucDichTraCuuPublic from '@/pages/DanhMuc/MucDichTraCuuPhuLuc/compo
 import rules from '@/utils/rules';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, message, Row, Typography } from 'antd';
-import { useModel } from 'umi';
+import { useEffect } from 'react';
+import { useIntl, useModel } from 'umi';
 import Footer from './Footer';
 import Header from './Header';
 import KetQuaVanBang from './KetQua';
@@ -11,8 +12,13 @@ import KetQuaVanBang from './KetQua';
 const { Title } = Typography;
 
 const TraCuuVanBangPublic = () => {
+	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { formSubmiting, traCuuPhuLucVanBanPublicModel } = useModel('vbcc.phulucvanbang');
+
+	useEffect(() => {
+		document.title = `${intl.formatMessage({ id: 'menu.TraCuuVanBangPublic' })} - ` + APP_CONFIG_TITLE_VBCC;
+	}, []);
 
 	const onFinish = async (values: any) => {
 		const filledFields = Object.values(values).filter((value) => value).length;
@@ -32,7 +38,7 @@ const TraCuuVanBangPublic = () => {
 				flexDirection: 'column',
 			}}
 		>
-			<Header subTitle='HỆ THỐNG TRA CỨU VĂN BẰNG' />
+			<Header subTitle={APP_CONFIG_TITLE_VBCC} />
 
 			<div
 				style={{
@@ -78,7 +84,7 @@ const TraCuuVanBangPublic = () => {
 										label={<strong>Mục đích tra cứu</strong>}
 										rules={[...rules.required]}
 									>
-										<SelectMucDichTraCuuPublic size='large' />
+										<SelectMucDichTraCuuPublic hasDefault size='large' />
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
@@ -97,12 +103,12 @@ const TraCuuVanBangPublic = () => {
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='hoTen' label={<strong>Họ tên</strong>}>
+									<Form.Item name='hoTen' label={<strong>Họ tên</strong>} rules={[...rules.required]}>
 										<Input placeholder='Nhập họ tên' size='large' />
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='ngaySinh' label={<strong>Ngày sinh</strong>}>
+									<Form.Item name='ngaySinh' label={<strong>Ngày sinh</strong>} rules={[...rules.required]}>
 										<MyDatePicker style={{ width: '100%' }} size='large' />
 									</Form.Item>
 								</Col>
