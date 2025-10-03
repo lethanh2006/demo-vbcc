@@ -1,14 +1,19 @@
 import { Empty, Spin } from 'antd';
 import { useEffect } from 'react';
-import { useModel, useParams } from 'umi';
+import { useIntl, useModel, useParams } from 'umi';
 import PhuLucDetailView from '../PhuLuc/components/PhuLucDetailView';
 import Footer from './Footer';
 import Header from './Header';
 import './style.less';
 
 const ChiTietTraCuuVanBang = () => {
+	const intl = useIntl();
 	const { id } = useParams<{ id: string }>();
 	const { chiTietPhuLucVanBanPublicModel, record, loading } = useModel('vbcc.phulucvanbang');
+
+	useEffect(() => {
+		document.title = `${intl.formatMessage({ id: 'menu.ChiTietVanBangPublic' })} - ` + APP_CONFIG_TITLE_VBCC;
+	}, []);
 
 	const getData = () => {
 		if (id) chiTietPhuLucVanBanPublicModel(id);
