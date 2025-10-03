@@ -18,6 +18,8 @@ const TongHopVanBang = () => {
 	const { record: recSoVanBang, danhSach: danhSachSo, setRecord: setSoVanBang } = useModel('vbcc.sovanbang');
 	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 	const [loading, setLoading] = useState<boolean>(false);
+	const { settings } = useModel('tienich.caidat');
+	const { INFO_TENANT: settingVbcc } = settings;
 
 	// const quanTri = !useCheckAccess('van-bang-chung-chi|quan-tri-vien');
 
@@ -85,15 +87,17 @@ const TongHopVanBang = () => {
 					</Card>
 				</Col>
 
-				<Col span={24} md={6} className='dashboard-card-with-icon'>
-					<Card variant='borderless'>
-						<BoldOutlined style={{ color: '#0e6499' }} />
-						<div>
-							<CountUp className='number' end={data?.tongSoDaDuaLenBlockchain ?? 0} duration={1.5} separator='.' />
-							<div className='text'>Đẩy lên blockchain</div>
-						</div>
-					</Card>
-				</Col>
+				{settingVbcc?.blockChain && (
+					<Col span={24} md={6} className='dashboard-card-with-icon'>
+						<Card variant='borderless'>
+							<BoldOutlined style={{ color: '#0e6499' }} />
+							<div>
+								<CountUp className='number' end={data?.tongSoDaDuaLenBlockchain ?? 0} duration={1.5} separator='.' />
+								<div className='text'>Đẩy lên blockchain</div>
+							</div>
+						</Card>
+					</Col>
+				)}
 
 				<Col span={24} md={6} className='dashboard-card-with-icon' variant='borderless'>
 					<Card onClick={() => setVisibleForm(true)} style={{ cursor: 'pointer' }}>
