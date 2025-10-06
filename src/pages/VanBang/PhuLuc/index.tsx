@@ -148,6 +148,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 			filterType: 'string',
 			width: 120,
 			onCell,
+			sortable: true,
 		},
 		{
 			title: 'Số hiệu VB',
@@ -155,6 +156,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 			filterType: 'string',
 			width: 120,
 			onCell,
+			sortable: true,
 		},
 		{
 			title: 'Họ tên',
@@ -477,7 +479,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 				modalTitle={
 					isView ? 'Xem chi tiết phụ lục văn bằng' : edit ? 'Cập nhật phụ lục văn bằng' : 'Thêm mới phụ lục văn bằng'
 				}
-				showModalTitle
 				Form={isView ? ViewPhuLucVanBang : Form}
 				formProps={{ getData, vbccSettings: settingVbcc }}
 				buttons={{ create: !!recQuyetDinh?._id }}
@@ -500,6 +501,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 					</Space>
 				}
 				rowSelection
+				showModalTitle
 			>
 				{!isQuyetDinh ? (
 					<Space wrap style={{ marginBottom: 12 }}>

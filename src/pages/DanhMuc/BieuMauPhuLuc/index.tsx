@@ -72,6 +72,7 @@ const BieuMauPhuLucPage = () => {
 			title={intl.formatMessage({ id: 'vanbang.bieumauphuluc.title' })}
 			Form={isView ? ChiTietBieuMauPhuLuc : Form}
 			widthDrawer={isView ? 1000 : 800}
+			showModalTitle
 		/>
 	);
 };

@@ -1,13 +1,13 @@
 import PhuLucVanBangPage from '@/pages/VanBang/PhuLuc';
-import { Button, Card, Steps } from 'antd';
+import { Button, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import Form from './Form';
 
 const ModalQuyetDinhTotNghiep = (props: any) => {
 	const intl = useIntl();
-	const { title, getData, yearSelect } = props;
-	const { record, edit, setVisibleForm } = useModel('vbcc.quyetdinhtotnghiep');
+	const { getData, yearSelect } = props;
+	const { record, setVisibleForm } = useModel('vbcc.quyetdinhtotnghiep');
 	const [currentStep, setCurrentStep] = useState(0);
 
 	useEffect(() => {
@@ -19,7 +19,7 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<>
 			<Steps
 				current={currentStep}
 				style={{ marginBottom: 18, paddingTop: 0 }}
@@ -41,7 +41,7 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 					<Button onClick={() => setVisibleForm(false)}>Đóng</Button>
 				</div>
 			) : null}
-		</Card>
+		</>
 	);
 };
 

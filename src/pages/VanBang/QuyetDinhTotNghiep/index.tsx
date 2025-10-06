@@ -172,6 +172,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 						: []
 				}
 				hideCard={isdotCapBang}
+				showModalTitle
 			>
 				{!isdotCapBang ? (
 					<MyDatePicker

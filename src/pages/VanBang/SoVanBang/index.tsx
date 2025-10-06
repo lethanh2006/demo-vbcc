@@ -142,6 +142,7 @@ const SoVanBangPage = () => {
 			Form={SoVanBangForm}
 			dependencies={[page, limit]}
 			widthDrawer={800}
+			showModalTitle
 		/>
 	);
 };

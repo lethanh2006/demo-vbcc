@@ -85,6 +85,7 @@ const DotCapBangTotNghiepPage = () => {
 			Form={Modal}
 			dependencies={[page, limit]}
 			widthDrawer={1200}
+			showModalTitle
 		/>
 	);
 };

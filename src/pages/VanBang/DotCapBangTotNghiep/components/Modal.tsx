@@ -1,12 +1,11 @@
-import { Card, Steps } from 'antd';
+import { Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import QuyetDinhTotNghiepPage from '../../QuyetDinhTotNghiep';
 import Form from './Form';
 
 const ModalKhaoSat = (props: any) => {
-	const { title } = props;
-	const { record, edit } = useModel('vbcc.dotcapbangtotnghiep');
+	const { record } = useModel('vbcc.dotcapbangtotnghiep');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
 	useEffect(() => {
@@ -18,7 +17,7 @@ const ModalKhaoSat = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<>
 			<Steps
 				current={currentStep}
 				type='navigation'
@@ -38,7 +37,7 @@ const ModalKhaoSat = (props: any) => {
 				// <PhuLucVanBangPage isDotCapBang />
 				<></>
 			) : null}
-		</Card>
+		</>
 	);
 };
 
