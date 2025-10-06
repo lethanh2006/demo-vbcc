@@ -220,6 +220,7 @@ const XacMinhVanBangPage = () => {
 						tooltip='Biểu mẫu'
 					/>,
 				]}
+				showModalTitle
 			/>
 
 			<ModalExpandable

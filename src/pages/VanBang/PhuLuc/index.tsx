@@ -501,6 +501,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 					</Space>
 				}
 				rowSelection
+				showModalTitle
 			>
 				{!isQuyetDinh ? (
 					<Space wrap style={{ marginBottom: 12 }}>

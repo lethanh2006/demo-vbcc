@@ -7,7 +7,7 @@ import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import rules from '@/utils/rules';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Descriptions, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
+import { Button, Col, Descriptions, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormItemFileBieuMau from '../FileBieuMau/FormItem';
@@ -129,7 +129,7 @@ const ChiTietBieuMauPhuLuc = () => {
 	};
 
 	return (
-		<Card title='Chi tiết biểu mẫu phụ lục'>
+		<>
 			<Descriptions column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }}>
 				<Descriptions.Item label='Mã biểu mẫu'>{record?.ma ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Tên biểu mẫu'>{record?.ten ?? '--'}</Descriptions.Item>
@@ -190,7 +190,7 @@ const ChiTietBieuMauPhuLuc = () => {
 			<div className='form-footer'>
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
-		</Card>
+		</>
 	);
 };
 
