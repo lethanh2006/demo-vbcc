@@ -85,6 +85,7 @@ declare module PhuLucVanBang {
 	export type TSetting = {
 		_id?: string;
 		require_signature?: boolean;
+		require_diploma_signature?: boolean;
 		require_IPFS?: boolean;
 		blockChain?: boolean;
 	};

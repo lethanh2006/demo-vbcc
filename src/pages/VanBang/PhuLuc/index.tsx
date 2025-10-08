@@ -302,6 +302,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 						),
 				},
 			],
+			hide: !settingVbcc?.require_diploma_signature,
 		},
 
 		{
@@ -417,18 +418,25 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 				Upload văn bằng
 			</ButtonExtend>,
 		);
-	if (!!recQuyetDinh?._id)
+	if (!!recQuyetDinh?._id) {
 		otherButtons.push(
 			<ButtonExtend icon={<DatabaseOutlined />} onClick={() => setVisibleSinhSo(true)} key='sinhSo'>
 				Sinh số vào sổ
 			</ButtonExtend>,
-			<ButtonExtend icon={<FormOutlined />} onClick={() => setVisibleTrinhKy(true)} key='trinhky' disabled={!total}>
-				Trình ký ({selectedIds?.length || 'Tất cả'})
-			</ButtonExtend>,
+		);
+		if (settings?.INFO_TENANT?.require_diploma_signature) {
+			otherButtons.push(
+				<ButtonExtend icon={<FormOutlined />} onClick={() => setVisibleTrinhKy(true)} key='trinhky' disabled={!total}>
+					Trình ký ({selectedIds?.length || 'Tất cả'})
+				</ButtonExtend>,
+			);
+		}
+		otherButtons.push(
 			<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total}>
 				In phụ lục ({selectedIds?.length || 'Tất cả'})
 			</ButtonExtend>,
 		);
+	}
 
 	if (recNguoiKy?._id)
 		otherButtons.push(
