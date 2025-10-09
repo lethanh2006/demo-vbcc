@@ -28,6 +28,11 @@ const CauHinhPhuLucVanBang = (props: { visible: boolean; setVisible: (val: boole
 				<Form form={form} layout='vertical' onFinish={onFinish}>
 					<Row gutter={[12, 0]}>
 						<Col span={24}>
+							<Form.Item name='require_diploma_signature' valuePropName='checked' initialValue={false}>
+								<Checkbox>Cho phép ký số văn bằng?</Checkbox>
+							</Form.Item>
+						</Col>
+						<Col span={24}>
 							<Form.Item name='require_signature' valuePropName='checked' initialValue={false}>
 								<Checkbox>Cho phép chữ ký số thông tin?</Checkbox>
 							</Form.Item>
