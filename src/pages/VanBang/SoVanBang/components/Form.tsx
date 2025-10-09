@@ -130,7 +130,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
 							<i style={{ color: '#888' }}>
-								Ví dụ: TS25/{'{'}soVaoSo{'}'}
+								Ví dụ: TS25/{'{'}0001{'}'}
 							</i>
 						}
 					>
@@ -144,7 +144,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
 							<i style={{ color: '#888' }}>
-								Ví dụ: TS25/{'{'}soVaoSo{'}'}
+								Ví dụ: TS25/{'{'}0001{'}'}
 							</i>
 						}
 					>
