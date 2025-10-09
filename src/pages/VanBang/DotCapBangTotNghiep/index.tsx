@@ -18,13 +18,12 @@ const DotCapBangTotNghiepPage = () => {
 			title: 'Đợt cấp bằng',
 			dataIndex: 'ten',
 			width: 180,
-			sorter: true,
 			filterType: 'string',
 		},
 		{
 			title: 'Thời gian bắt đầu',
 			dataIndex: 'ngayBatDau',
-			width: 110,
+			width: 100,
 			sorter: true,
 			filterType: 'date',
 			align: 'center',
@@ -33,7 +32,7 @@ const DotCapBangTotNghiepPage = () => {
 		{
 			title: 'Thời gian kết thúc',
 			dataIndex: 'ngayKetThuc',
-			width: 110,
+			width: 100,
 			sorter: true,
 			filterType: 'date',
 			align: 'center',
@@ -42,7 +41,7 @@ const DotCapBangTotNghiepPage = () => {
 		{
 			title: 'Ghi chú',
 			dataIndex: 'ghiChu',
-			width: 180,
+			width: 140,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},

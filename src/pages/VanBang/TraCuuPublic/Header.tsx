@@ -39,7 +39,7 @@ const Header = (props: { subTitle?: string }) => {
 							objectFit: 'contain',
 							filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))',
 						}}
-						src='/logo-white.png'
+						src='/logo.png'
 						alt='logo'
 					/>
 

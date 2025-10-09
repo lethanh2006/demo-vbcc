@@ -1,11 +1,11 @@
 import { FilePdfOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Empty } from 'antd';
 import { useIntl, useModel } from 'umi';
 import PhuLucDetailView from './PhuLucDetailView';
 
 const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
 	const intl = useIntl();
-	const { record, setVisibleForm, setDataToSignOrPush, setVisiblePrint } = useModel('vbcc.phulucvanbang');
+	const { record, setVisibleForm, setDataToSignOrPush, setVisiblePrint, loading } = useModel('vbcc.phulucvanbang');
 	const { hasPrint = true } = props;
 
 	const handlePrintOne = (rec?: any) => {
@@ -13,6 +13,19 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
 		setDataToSignOrPush([rec]);
 		setVisiblePrint(true);
 	};
+
+	if (!loading && !record) {
+		return (
+			<>
+				<Empty description='Phụ lục văn bằng không tồn tại' />
+				<div className='form-footer'>
+					<Button onClick={() => setVisibleForm(false)}>
+						{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
+					</Button>
+				</div>
+			</>
+		);
+	}
 
 	return (
 		<>

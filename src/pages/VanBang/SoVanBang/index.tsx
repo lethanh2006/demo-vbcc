@@ -37,7 +37,6 @@ const SoVanBangPage = () => {
 			title: 'Tên sổ',
 			dataIndex: 'ten',
 			width: 220,
-			sorter: true,
 			filterType: 'string',
 		},
 		{

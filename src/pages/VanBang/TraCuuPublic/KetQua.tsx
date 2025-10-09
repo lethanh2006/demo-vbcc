@@ -32,7 +32,7 @@ const KetQuaVanBang = () => {
 			render: (val, rec) => rec?.DuLieu?.ngaySinh && moment(rec?.DuLieu?.ngaySinh).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Mã SV',
+			title: 'Mã người học',
 			width: 120,
 			render: (val, rec) => rec?.DuLieu?.maSinhVien,
 		},
