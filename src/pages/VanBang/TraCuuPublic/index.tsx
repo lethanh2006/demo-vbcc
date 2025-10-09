@@ -88,7 +88,15 @@ const TraCuuVanBangPublic = () => {
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='soVaoSoBang' label={<strong>Số vào sổ</strong>}>
+									<Form.Item
+										name='soVaoSoBang'
+										label={<strong>Số vào sổ</strong>}
+										extra={
+											<i style={{ color: '#888' }}>
+												Ví dụ: TS25/{'{'}soVaoSo{'}'}
+											</i>
+										}
+									>
 										<Input placeholder='Nhập số vào sổ' size='large' />
 									</Form.Item>
 								</Col>
@@ -103,12 +111,12 @@ const TraCuuVanBangPublic = () => {
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='hoTen' label={<strong>Họ tên</strong>} rules={[...rules.required]}>
+									<Form.Item name='hoTen' label={<strong>Họ tên</strong>}>
 										<Input placeholder='Nhập họ tên' size='large' />
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='ngaySinh' label={<strong>Ngày sinh</strong>} rules={[...rules.required]}>
+									<Form.Item name='ngaySinh' label={<strong>Ngày sinh</strong>}>
 										<MyDatePicker style={{ width: '100%' }} size='large' />
 									</Form.Item>
 								</Col>

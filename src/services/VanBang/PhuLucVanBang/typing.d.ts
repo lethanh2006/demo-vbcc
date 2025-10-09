@@ -10,6 +10,7 @@ declare module PhuLucVanBang {
 		maTruong?: string;
 
 		soVaoSoBang: string;
+		bookEntryNumberFormat: string;
 		soHieuVanBang: string;
 		hoTen: string;
 		fullName: string;

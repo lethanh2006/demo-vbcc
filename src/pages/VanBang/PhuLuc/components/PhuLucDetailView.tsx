@@ -43,7 +43,7 @@ const PhuLucDetailView: React.FC<Props> = ({ isPublic = false }) => {
 
 			<Col span={24}>
 				<Divider orientation='left'>Thông tin văn bằng</Divider>
-				<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered>
+				<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered size='small'>
 					<Descriptions.Item label='Họ tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
 					<Descriptions.Item label='Mã sinh viên'>{record?.maSinhVien ?? '--'}</Descriptions.Item>
 					<Descriptions.Item label='Ngày sinh'>
@@ -64,12 +64,13 @@ const PhuLucDetailView: React.FC<Props> = ({ isPublic = false }) => {
 							</Space>
 						</Descriptions.Item>
 					)}
+					<Descriptions.Item label='Số vào sổ (Tiếng Anh)'>{record?.bookEntryNumberFormat ?? '--'}</Descriptions.Item>
 				</Descriptions>
 			</Col>
 
 			<Col span={24}>
 				<Divider orientation='left'>Thông tin quyết định</Divider>
-				<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered>
+				<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered size='small'>
 					<Descriptions.Item label='Số quyết định'>{record?.quyetDinh?.soQuyetDinh ?? '--'}</Descriptions.Item>
 					<Descriptions.Item label='Ngày ban hành'>
 						{record?.quyetDinh?.ngayBanHanh ? dayjs(record?.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : '--'}

@@ -176,7 +176,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 			onCell,
 		},
 		{
-			title: 'Mã SV',
+			title: 'Mã người học',
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			width: 120,

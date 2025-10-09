@@ -76,7 +76,7 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Mã SV',
+			title: 'Mã người học',
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			width: 120,

@@ -74,7 +74,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 		{
 			title: 'Ngày ký',
 			dataIndex: 'ngayBanHanh',
-			width: 120,
+			width: 100,
 			filterType: 'date',
 			sortable: true,
 			align: 'center',
@@ -84,7 +84,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 		{
 			title: 'Sổ văn bằng',
 			dataIndex: 'idSoVanBang',
-			width: 120,
+			width: 180,
 			render: (val, rec) => rec?.soVanBang?.ten ?? val,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectSoVanBang multiple />,
@@ -102,7 +102,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 		{
 			title: 'Nội dung',
 			dataIndex: 'noiDung',
-			width: 250,
+			width: 160,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 		{

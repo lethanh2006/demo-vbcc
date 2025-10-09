@@ -240,6 +240,20 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 						<Input placeholder='Nhập số vào sổ' />
 					</Form.Item>
 				</Col>
+				<Col>
+					<Form.Item
+						name='bookEntryNumberFormat'
+						label='Số vào sổ (Tiếng Anh)'
+						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
+						extra={
+							<i style={{ color: '#888' }}>
+								Ví dụ: TS25/{'{'}soVaoSo{'}'}
+							</i>
+						}
+					>
+						<Input placeholder='VD: TS25/{soVaoSo}' />
+					</Form.Item>
+				</Col>
 				<Col span={24} md={12}>
 					<Form.Item
 						label='Số hiệu văn bằng'
