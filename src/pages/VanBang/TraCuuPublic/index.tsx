@@ -88,15 +88,7 @@ const TraCuuVanBangPublic = () => {
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item
-										name='soVaoSoBang'
-										label={<strong>Số vào sổ</strong>}
-										extra={
-											<i style={{ color: '#888' }}>
-												Ví dụ: TS25/{'{'}soVaoSo{'}'}
-											</i>
-										}
-									>
+									<Form.Item name='soVaoSoBang' label={<strong>Số vào sổ</strong>}>
 										<Input placeholder='Nhập số vào sổ' size='large' />
 									</Form.Item>
 								</Col>
