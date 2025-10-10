@@ -240,7 +240,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 						<Input placeholder='Nhập số vào sổ' />
 					</Form.Item>
 				</Col>
-				<Col>
+				<Col span={24} md={12}>
 					<Form.Item
 						name='bookEntryNumberFormat'
 						label='Số vào sổ (Tiếng Anh)'
