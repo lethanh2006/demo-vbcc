@@ -73,14 +73,12 @@ axios.interceptors.request.use(
 		// }
 
 		const isExcluded = excludedPaths.some((path) => config.url?.startsWith(path));
-
 		if (!isExcluded) {
 			const partitionCode = localStorage.getItem('partitionCode');
 			if (partitionCode) {
 				config.headers['x-data-partition-code'] = partitionCode;
 			}
 		}
-
 		return config;
 	},
 	(error) => Promise.reject(error),
