@@ -1,37 +1,21 @@
-import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
-import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import { ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import { CheckCircleOutlined, EditOutlined, InfoCircleOutlined, WarningOutlined } from '@ant-design/icons';
-import { Descriptions, Popover, Space, Tag } from 'antd';
-import { useEffect, useState } from 'react';
+import { CheckCircleOutlined, EditOutlined, WarningOutlined } from '@ant-design/icons';
+import { Space, Tag } from 'antd';
+import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalUploadFolder from './ModalUploadFolder';
-import PreviewIPFS from './Preview';
 
 const FilterPhuLuc = (props: { getData?: any }) => {
 	const intl = useIntl();
 	const { getData } = props;
 	const { settings } = useModel('tienich.caidat');
-	const { page, limit, record, getModel, setRecord, handleView } = useModel('vbcc.phulucvanbang');
-	const {
-		record: recQuyetDinh,
-		danhSach: danhsachQuyetDinh,
-		setRecord: setQuyetDinh,
-	} = useModel('vbcc.quyetdinhtotnghiep');
+	const { page, limit, getModel, handleView } = useModel('vbcc.phulucvanbang');
+	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const { INFO_TENANT: settingVbcc } = settings;
-	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
-	const [visibleModal, setVisibleModal] = useState<boolean>(false);
-	const [showUpload, setShowUpload] = useState(false);
-
-	// set lại quyết định sau khi sinh số vào sổ
-	useEffect(() => {
-		setQuyetDinh(danhsachQuyetDinh?.find((item) => item?._id === recQuyetDinh?._id));
-	}, [JSON.stringify(danhsachQuyetDinh)]);
 
 	useEffect(() => {
 		if (recQuyetDinh?._id) {
@@ -97,112 +81,6 @@ const FilterPhuLuc = (props: { getData?: any }) => {
 			),
 			hide: !!recQuyetDinh?._id,
 			onCell,
-		},
-		{
-			title: 'Tập tin',
-			dataIndex: 'urlIpfs',
-			align: 'center',
-			width: 120,
-			render: (val, rec) =>
-				val ? (
-					<a
-						onClick={(e) => {
-							e.preventDefault();
-							setRecord(rec);
-							setVisibleModal(true);
-						}}
-					>
-						Xem chi tiết
-					</a>
-				) : (
-					<i>(Chưa upload)</i>
-				),
-			hide: !settingVbcc?.require_IPFS,
-		},
-		{
-			title: 'Văn bằng',
-			width: 120,
-			children: [
-				{
-					title: 'Tập tin',
-					dataIndex: 'fileVanBang',
-					align: 'center',
-					width: 120,
-					render: (val, rec) =>
-						!val ? (
-							<Tag color='red'>Chưa trình ký</Tag>
-						) : (
-							<a
-								onClick={(e) => {
-									e.preventDefault();
-									setRecord(rec);
-									setVisibleFormFile(true);
-								}}
-							>
-								Xem chi tiết
-							</a>
-						),
-				},
-				{
-					title: 'Ký số',
-					dataIndex: 'daKy',
-					align: 'center',
-					width: 120,
-					render: (val, rec) =>
-						val ? (
-							<Space>
-								<Tag color='green'>Đã ký</Tag>
-								<Popover
-									content={
-										<div style={{ maxWidth: 300 }}>
-											<Descriptions column={1} size='small'>
-												<Descriptions.Item label='Người ký'>{rec?.nguoiKy?.hoTen ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Thời gian ký'>
-													{rec?.thoiGianKy ? dayjs(rec?.thoiGianKy).format('HH:mm DD/MM/YYYY') : '--'}
-												</Descriptions.Item>
-											</Descriptions>
-										</div>
-									}
-								>
-									<InfoCircleOutlined />
-								</Popover>
-							</Space>
-						) : (
-							<Tag color='orange'>Chưa ký</Tag>
-						),
-				},
-				{
-					title: 'Đóng dấu',
-					dataIndex: 'daDongDau',
-					align: 'center',
-					width: 120,
-					render: (val, rec) =>
-						val ? (
-							<Space>
-								<Tag color='green'>Đã đóng dấu</Tag>
-								<Popover
-									content={
-										<div style={{ maxWidth: 300 }}>
-											<Descriptions column={1} size='small'>
-												<Descriptions.Item label='Người đóng dấu'>
-													{rec?.nguoiDongGiau?.hoTen ?? '--'}
-												</Descriptions.Item>
-												<Descriptions.Item label='Thời gian đóng dấu'>
-													{rec?.thoiGianDongGiau ? dayjs(rec?.thoiGianDongGiau).format('HH:mm DD/MM/YYYY') : '--'}
-												</Descriptions.Item>
-											</Descriptions>
-										</div>
-									}
-								>
-									<InfoCircleOutlined />
-								</Popover>
-							</Space>
-						) : (
-							<Tag color='orange'>Chưa đóng dấu</Tag>
-						),
-				},
-			],
-			hide: !settingVbcc?.require_diploma_signature,
 		},
 		{
 			title: 'Cấp bằng',
@@ -279,26 +157,7 @@ const FilterPhuLuc = (props: { getData?: any }) => {
 				hideCard
 				rowSelection
 				buttons={{ create: false }}
-			></TableBase>
-
-			{settingVbcc?.require_IPFS && (
-				<>
-					<ModalUploadFolder visible={showUpload} setVisible={setShowUpload} getData={getData} />
-
-					<PreviewIPFS visible={visibleModal} setVisible={setVisibleModal} />
-				</>
-			)}
-
-			<ModalExpandable
-				title='Chi tiết tệp tin'
-				width={1000}
-				open={visibleFormFile}
-				okButtonProps={{ hidden: true }}
-				cancelText='Đóng'
-				onCancel={() => setVisibleFormFile(false)}
-			>
-				<PreviewFile file={record?.fileVanBang ?? ''} />
-			</ModalExpandable>
+			/>
 		</>
 	);
 };
