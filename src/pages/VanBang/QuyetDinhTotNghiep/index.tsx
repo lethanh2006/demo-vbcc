@@ -136,10 +136,10 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 
 					<Popconfirm
 						onConfirm={() => (isdotCapBang ? deleQuyetDinhDot(rec) : deleteModel(rec._id, getData))}
-						title='Bạn có chắc chắn muốn xóa quyết định tốt nghiệp này?'
+						title='Bạn có chắc chắn muốn loại bỏ quyết định tốt nghiệp này?'
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend tooltip='loại bỏ quyết định' danger type='link' icon={<DeleteOutlined />} />
 					</Popconfirm>
 				</>
 			),
@@ -152,6 +152,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 				params={condition}
 				getData={getData}
 				columns={columns}
+				deleteMany={true}
 				dependencies={[page, limit, yearSelect, recDotCapBang?._id]}
 				modelName='vbcc.quyetdinhtotnghiep'
 				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
@@ -163,7 +164,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 				otherButtons={
 					isdotCapBang
 						? [
-								<Tooltip title='Thêm quyết định hiện có vào Đợt cấp bằng này' key='apply-tooltip'>
+								<Tooltip title='Thêm quyết định hiện có vào đợt cấp bằng này' key='apply-tooltip'>
 									<Button type='primary' icon={<PlusCircleOutlined />} onClick={handleApply}>
 										Thêm quyết định
 									</Button>

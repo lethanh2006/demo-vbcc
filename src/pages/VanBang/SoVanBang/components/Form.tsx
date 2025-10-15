@@ -17,6 +17,8 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 	const { danhSach: dsHinhThuc } = useModel('daotao.hinhthucdaotao');
 	const intl = useIntl();
 	const [form] = Form.useForm();
+	const soVaoSoHienTai = Form.useWatch('soVaoSoHienTai', form);
+	const soChuSoVaoSo = Form.useWatch('soChuSoVaoSo', form);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -85,6 +87,14 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		}
 	};
 
+	const soVaoSoExample = (soHienTai: number, soChuSo: number) => {
+		if (soHienTai === undefined || soChuSo === undefined || soChuSo <= 0) {
+			return null;
+		}
+		const soVaoSoVd = String(soHienTai + 1).padStart(soChuSo, '0');
+		return `TS25/${soVaoSoVd}`;
+	};
+
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical' onValuesChange={handleValuesChange}>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
@@ -129,12 +139,10 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						label='Định dạng số vào sổ'
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
-							<i style={{ color: '#888' }}>
-								Ví dụ: TS25/{'{'}0001{'}'}
-							</i>
+							<i style={{ color: '#888' }}>Ví dụ: {soVaoSoExample(soVaoSoHienTai, soChuSoVaoSo) ?? `TS25/{soVaoSo}`}</i>
 						}
 					>
-						<Input placeholder='VD: TS25/{soVaoSo}' />
+						<Input placeholder='Nhập định dạng số vào sổ' />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
@@ -143,12 +151,10 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						label='Định dạng số vào sổ (Tiếng Anh)'
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
-							<i style={{ color: '#888' }}>
-								Ví dụ: TS25/{'{'}0001{'}'}
-							</i>
+							<i style={{ color: '#888' }}>Ví dụ: {soVaoSoExample(soVaoSoHienTai, soChuSoVaoSo) ?? `TS25/{soVaoSo}`}</i>
 						}
 					>
-						<Input placeholder='VD: TS25/{soVaoSo}' />
+						<Input placeholder='Nhập định dạng số vào sổ (Tiếng Anh)' />
 					</Form.Item>
 				</Col>
 

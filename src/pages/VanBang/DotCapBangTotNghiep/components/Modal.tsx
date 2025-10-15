@@ -6,6 +6,7 @@ import QuyetDinhTotNghiepPage from '../../QuyetDinhTotNghiep';
 import Form from './Form';
 
 const ModalKhaoSat = (props: any) => {
+	// const { isDotCapBang } = props;
 	const { record } = useModel('vbcc.dotcapbangtotnghiep');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
@@ -35,7 +36,7 @@ const ModalKhaoSat = (props: any) => {
 			) : currentStep === 1 ? (
 				<QuyetDinhTotNghiepPage isDotCapBang />
 			) : currentStep === 2 ? (
-				<FilterPhuLuc />
+				<FilterPhuLuc isDotCapBang />
 			) : null}
 		</>
 	);

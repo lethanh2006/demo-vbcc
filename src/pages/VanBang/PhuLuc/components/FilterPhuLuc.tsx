@@ -1,21 +1,33 @@
 import TableBase from '@/components/Table';
+import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import { ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import { CheckCircleOutlined, EditOutlined, WarningOutlined } from '@ant-design/icons';
-import { Space, Tag } from 'antd';
-import { useEffect } from 'react';
+import {
+	CheckCircleOutlined,
+	DeleteOutlined,
+	EditOutlined,
+	EyeOutlined,
+	PlusCircleOutlined,
+	WarningOutlined,
+} from '@ant-design/icons';
+import { Button, Popconfirm, Space, Tag, Tooltip } from 'antd';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import ModalChonPhuLuc from '../../DotCapBangTotNghiep/components/ModalChonPhuLuc';
+import Form from './Form';
+import ViewPhuLucVanBang from './ViewRender';
 
-const FilterPhuLuc = (props: { getData?: any }) => {
+const FilterPhuLuc = (props: { getData?: any; isDotCapBang?: boolean }) => {
 	const intl = useIntl();
-	const { getData } = props;
+	const { getData, isDotCapBang: isdotCapBang = false } = props;
 	const { settings } = useModel('tienich.caidat');
-	const { page, limit, getModel, handleView } = useModel('vbcc.phulucvanbang');
+	const { page, limit, getModel, handleView, handleEdit, isView, deleteModel, record } = useModel('vbcc.phulucvanbang');
 	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const { INFO_TENANT: settingVbcc } = settings;
+	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (recQuyetDinh?._id) {
@@ -143,6 +155,33 @@ const FilterPhuLuc = (props: { getData?: any }) => {
 			hide: !settingVbcc?.blockChain,
 			onCell,
 		},
+		{
+			title: 'Thao tác',
+			align: 'center',
+			width: 120,
+			fixed: 'right',
+			render: (val, rec) => (
+				<>
+					<ButtonExtend tooltip='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
+					<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
+
+					<Popconfirm
+						onConfirm={() => deleteModel(rec._id, getData)}
+						title='Bạn có chắc chắn muốn loại bỏ phụ lục này?'
+						placement='topRight'
+					>
+						<ButtonExtend
+							// disabled={isQuyetDinh && rec.trangThaiPhuLuc === ETrangThaiPhuLuc.DA_VAO_SO}
+							// disabled={rec.kichHoat === true}
+							tooltip='loại bỏ phụ lục'
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
+					</Popconfirm>
+				</>
+			),
+		},
 	];
 
 	return (
@@ -157,6 +196,26 @@ const FilterPhuLuc = (props: { getData?: any }) => {
 				hideCard
 				rowSelection
 				buttons={{ create: false }}
+				Form={isView ? ViewPhuLucVanBang : Form}
+				deleteMany={true}
+				widthDrawer={800}
+				otherButtons={
+					isdotCapBang
+						? [
+								<Tooltip title='Thêm phụ lục hiện có vào đợt cấp bằng này' key='apply-tooltip'>
+									<Button type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisibleModalChonPhuLuc(true)}>
+										Thêm phụ lục
+									</Button>
+								</Tooltip>,
+							]
+						: []
+				}
+			/>
+
+			<ModalChonPhuLuc
+				visible={visibleModalChonPhuLuc}
+				onCancel={() => setVisibleModalChonPhuLuc(false)}
+				getData={getData}
 			/>
 		</>
 	);

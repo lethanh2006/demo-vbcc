@@ -1,9 +1,10 @@
 import ExpandText from '@/components/ExpandText';
+import MyDatePicker from '@/components/MyDatePicker';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
-import { Button, message, Modal } from 'antd';
+import { Button, message, Modal, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
@@ -24,11 +25,17 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 		setSelectedIds,
 	} = useModel('vbcc.quyetdinhtotnghiep');
 	const [danhSach, setDanhSach] = useState<QuyetDinhTotNghiep.IRecord[]>([]);
+	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 
 	const getData = () =>
-		getAllQuyetDinh(undefined, undefined, { dotCapBangId: null }, undefined, undefined, false).then((res) =>
-			setDanhSach(res),
-		);
+		getAllQuyetDinh(
+			undefined,
+			undefined,
+			{ dotCapBangId: null, nam: yearSelect ? dayjs(yearSelect).format('YYYY') : undefined },
+			undefined,
+			undefined,
+			false,
+		).then((res) => setDanhSach(res));
 
 	useEffect(() => {
 		if (visible && recDot?._id) {
@@ -37,7 +44,7 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 			setDanhSach([]);
 			setSelectedIds([]);
 		}
-	}, [visible, recDot?._id]);
+	}, [visible, recDot?._id, yearSelect]);
 
 	const handleSubmit = async () => {
 		if (selectedIds?.length === 0) {
@@ -77,6 +84,8 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 
 	return (
 		<Modal title='Chọn quyết định tốt nghiệp' open={visible} width={800} onCancel={onCancel} footer={null}>
+			<p style={{ margin: '0 0 16px', fontSize: 14 }}>Chọn quyết định tốt nghiệp thêm vào đợt cấp bằng này!</p>
+
 			<TableStaticData
 				columns={columns}
 				data={danhSach}
@@ -95,6 +104,22 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 						columnWidth: 40,
 					},
 				}}
+				otherButtons={[
+					<Space style={{ marginBottom: 16 }}>
+						<MyDatePicker
+							style={{ width: 150 }}
+							value={yearSelect}
+							pickerStyle='year'
+							placeholder='Chọn năm quyết định'
+							format='YYYY'
+							onChange={(val) => {
+								setYearSelect(val);
+								setSelectedIds([]);
+							}}
+							allowClear
+						/>
+					</Space>,
+				]}
 			/>
 
 			<div className='form-footer'>

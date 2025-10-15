@@ -29,7 +29,6 @@ import { Descriptions, Dropdown, Menu, Popconfirm, Popover, Space, Tag } from 'a
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
-import ModalChonPhuLuc from '../DotCapBangTotNghiep/components/ModalChonPhuLuc';
 import SelectQuyetDinh from '../QuyetDinhTotNghiep/components/Select';
 import CauHinhPhuLucVanBang from './components/CauHinh';
 import Form from './components/Form';
@@ -81,7 +80,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [showModalCapBang, setShowModalCapBang] = useState<boolean>(false);
-	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
 	const [visibleSinhSo, setVisibleSinhSo] = useState<boolean>(false);
 	const [visibleTrinhKy, setVisibleTrinhKy] = useState<boolean>(false);
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
@@ -583,12 +581,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 			)}
 
 			<ModalCapBang visible={showModalCapBang} setVisible={setShowModalCapBang} getData={getData} />
-
-			<ModalChonPhuLuc
-				visible={visibleModalChonPhuLuc}
-				onCancel={() => setVisibleModalChonPhuLuc(false)}
-				getData={getData}
-			/>
 
 			<ModalSinhSoVaoSo
 				visible={visibleSinhSo}

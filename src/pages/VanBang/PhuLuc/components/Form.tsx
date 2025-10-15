@@ -11,7 +11,7 @@ import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormTable from './FormTable';
@@ -215,108 +215,110 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 	};
 
 	return (
-		<Form onFinish={onFinish} form={form} layout='vertical'>
-			<Row gutter={[12, 0]}>
-				<Col span={24}>
-					<Form.Item label='Quyết định tốt nghiệp'>
-						<Input
-							value={
-								recQuyetDinh?.soQuyetDinh ??
-								`${record?.quyetDinh?.soQuyetDinh ?? ''}, ${
-									record?.quyetDinh?.ngayBanHanh ? dayjs(record.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''
-								}`
-							}
-							disabled
-						/>
-					</Form.Item>
-				</Col>
-
-				<Col span={24} md={12}>
-					<Form.Item
-						label='Số vào sổ'
-						name='soVaoSoBang'
-						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-					>
-						<Input placeholder='Nhập số vào sổ' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item
-						name='bookEntryNumberFormat'
-						label='Số vào sổ (Tiếng Anh)'
-						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
-					>
-						<Input placeholder='Nhập số vào sổ (Tiếng Anh)' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item
-						label='Số hiệu văn bằng'
-						name='soHieuVanBang'
-						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-					>
-						<Input placeholder='Nhập số hiệu văn bằng' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item
-						label='Họ tên sinh viên'
-						name='hoTen'
-						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-					>
-						<Input placeholder='Nhập họ tên sinh viên' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item label='Ngày sinh' name='ngaySinh'>
-						<MyDatePicker />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item
-						label='Mã sinh viên'
-						name='maSinhVien'
-						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
-					>
-						<Input placeholder='Nhập mã sinh viên' />
-					</Form.Item>
-				</Col>
-				{!vbccSettings?.require_IPFS && (
-					<Col span={24} md={12}>
-						<Form.Item label='Tập tin văn bằng (file scan)' name='urlIpfs'>
-							<UploadFile maxCount={1} otherProps={{ accept: '.pdf' }} />
+		<Card>
+			<Form onFinish={onFinish} form={form} layout='vertical'>
+				<Row gutter={[12, 0]}>
+					<Col span={24}>
+						<Form.Item label='Quyết định tốt nghiệp'>
+							<Input
+								value={
+									recQuyetDinh?.soQuyetDinh ??
+									`${record?.quyetDinh?.soQuyetDinh ?? ''}, ${
+										record?.quyetDinh?.ngayBanHanh ? dayjs(record.quyetDinh?.ngayBanHanh).format('DD/MM/YYYY') : ''
+									}`
+								}
+								disabled
+							/>
 						</Form.Item>
 					</Col>
-				)}
-				{recBieuMau?._id && (
-					<>
-						<Col span={24}>
-							Theo biểu mẫu phụ lục: <b>{recBieuMau.ten}</b>
-						</Col>
-						{recBieuMau.elements.map((element, index) => (
-							<Col span={24} md={element.type === ELoaiDuLieuBieuMau.Table ? 24 : 12} key={element.headerName}>
-								<Form.Item
-									label={element.headerName}
-									name={['templateData', index, 'value']}
-									rules={element.type === ELoaiDuLieuBieuMau.Text ? [...rules.text, ...rules.length(300)] : []}
-								>
-									{renderFormItemByType(element)}
-								</Form.Item>
-							</Col>
-						))}
-					</>
-				)}
-			</Row>
 
-			<div className='form-footer'>
-				<Button loading={formSubmiting} htmlType='submit' type='primary'>
-					{!edit
-						? intl.formatMessage({ id: 'global.button.themmoi' })
-						: intl.formatMessage({ id: 'global.button.luulai' })}
-				</Button>
-				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
-			</div>
-		</Form>
+					<Col span={24} md={12}>
+						<Form.Item
+							label='Số vào sổ'
+							name='soVaoSoBang'
+							rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+						>
+							<Input placeholder='Nhập số vào sổ' />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item
+							name='bookEntryNumberFormat'
+							label='Số vào sổ (Tiếng Anh)'
+							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
+						>
+							<Input placeholder='Nhập số vào sổ (Tiếng Anh)' />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item
+							label='Số hiệu văn bằng'
+							name='soHieuVanBang'
+							rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+						>
+							<Input placeholder='Nhập số hiệu văn bằng' />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item
+							label='Họ tên sinh viên'
+							name='hoTen'
+							rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+						>
+							<Input placeholder='Nhập họ tên sinh viên' />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item label='Ngày sinh' name='ngaySinh'>
+							<MyDatePicker />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={12}>
+						<Form.Item
+							label='Mã sinh viên'
+							name='maSinhVien'
+							rules={[...rules.required, ...rules.text, ...rules.length(20)]}
+						>
+							<Input placeholder='Nhập mã sinh viên' />
+						</Form.Item>
+					</Col>
+					{!vbccSettings?.require_IPFS && (
+						<Col span={24} md={12}>
+							<Form.Item label='Tập tin văn bằng (file scan)' name='urlIpfs'>
+								<UploadFile maxCount={1} otherProps={{ accept: '.pdf' }} />
+							</Form.Item>
+						</Col>
+					)}
+					{recBieuMau?._id && (
+						<>
+							<Col span={24}>
+								Theo biểu mẫu phụ lục: <b>{recBieuMau.ten}</b>
+							</Col>
+							{recBieuMau.elements.map((element, index) => (
+								<Col span={24} md={element.type === ELoaiDuLieuBieuMau.Table ? 24 : 12} key={element.headerName}>
+									<Form.Item
+										label={element.headerName}
+										name={['templateData', index, 'value']}
+										rules={element.type === ELoaiDuLieuBieuMau.Text ? [...rules.text, ...rules.length(300)] : []}
+									>
+										{renderFormItemByType(element)}
+									</Form.Item>
+								</Col>
+							))}
+						</>
+					)}
+				</Row>
+
+				<div className='form-footer'>
+					<Button loading={formSubmiting} htmlType='submit' type='primary'>
+						{!edit
+							? intl.formatMessage({ id: 'global.button.themmoi' })
+							: intl.formatMessage({ id: 'global.button.luulai' })}
+					</Button>
+					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+				</div>
+			</Form>
+		</Card>
 	);
 };
 

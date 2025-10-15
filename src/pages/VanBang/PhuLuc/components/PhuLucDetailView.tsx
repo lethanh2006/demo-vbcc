@@ -90,6 +90,24 @@ const PhuLucDetailView: React.FC<Props> = ({ isPublic = false }) => {
 				</Descriptions>
 			</Col>
 
+			<Col span={24}>
+				<Divider orientation='left'>Thông tin biểu mẫu phụ lục</Divider>
+				<Descriptions column={{ xs: 1, sm: 1, md: 2 }} bordered size='small'>
+					<Descriptions.Item label='Mã biểu mẫu'>{record?.quyetDinh?.bieuMau?.ma ?? '--'}</Descriptions.Item>
+					<Descriptions.Item label='Tên biểu mẫu'>{record?.quyetDinh?.bieuMau?.ten ?? '--'}</Descriptions.Item>
+					<Descriptions.Item label='Ngày tạo'>
+						{record?.quyetDinh?.bieuMau?.createdAt
+							? dayjs(record?.quyetDinh?.bieuMau?.createdAt).format('DD/MM/YYYY')
+							: '--'}
+					</Descriptions.Item>
+					<Descriptions.Item label='Ngày cập nhật'>
+						{record?.quyetDinh?.bieuMau?.updatedAt
+							? dayjs(record?.quyetDinh?.bieuMau?.updatedAt).format('DD/MM/YYYY')
+							: '--'}
+					</Descriptions.Item>
+				</Descriptions>
+			</Col>
+
 			{(() => {
 				const templateElements = recQuyetDinh?.bieuMau?.elements ?? [];
 				const dataElements = record?.templateData ?? [];

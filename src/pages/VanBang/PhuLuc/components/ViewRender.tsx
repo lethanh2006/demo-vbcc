@@ -1,5 +1,5 @@
 import { FilePdfOutlined } from '@ant-design/icons';
-import { Button, Empty } from 'antd';
+import { Button, Card, Empty } from 'antd';
 import { useIntl, useModel } from 'umi';
 import PhuLucDetailView from './PhuLucDetailView';
 
@@ -28,7 +28,7 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
 	}
 
 	return (
-		<>
+		<Card>
 			<PhuLucDetailView />
 
 			<div className='form-footer'>
@@ -42,7 +42,7 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
 					{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
 				</Button>
 			</div>
-		</>
+		</Card>
 	);
 };
 

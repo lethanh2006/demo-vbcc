@@ -34,6 +34,7 @@ declare module PhuLucVanBang {
 		idDotCapBang?: string | null;
 		ngayCapPhuLuc?: Date | string;
 		ghiChu: string;
+		bieuMau: BieuMauPhuLuc.IRecord;
 
 		createdAt?: string;
 		updatedAt?: string;
