@@ -19,6 +19,8 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 	const [form] = Form.useForm();
 	const soVaoSoHienTai = Form.useWatch('soVaoSoHienTai', form);
 	const soChuSoVaoSo = Form.useWatch('soChuSoVaoSo', form);
+	const soVaoSoFormat = Form.useWatch('soVaoSoFormat', form);
+	const bookEntryNumberFormat = Form.useWatch('bookEntryNumberFormat', form);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -137,12 +139,24 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 					<Form.Item
 						name='soVaoSoFormat'
 						label='Định dạng số vào sổ'
-						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
-							<i style={{ color: '#888' }}>Ví dụ: {soVaoSoExample(soVaoSoHienTai, soChuSoVaoSo) ?? `TS25/{soVaoSo}`}</i>
+							<div>
+								<i style={{ color: '#888' }}>
+									Ví dụ: {soVaoSoExample(soVaoSoHienTai, soChuSoVaoSo) ?? `TS25/{soVaoSo}`}
+								</i>
+								{soVaoSoFormat?.includes('/') && (
+									<div style={{ color: '#888', marginTop: 4 }}>
+										Số vào sổ tiếp theo là:{' '}
+										<b>
+											{soVaoSoFormat.split('/')[0]}/{String(soVaoSoHienTai + 1).padStart(soChuSoVaoSo || 0, '0')}
+										</b>
+									</div>
+								)}
+							</div>
 						}
+						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
-						<Input placeholder='Nhập định dạng số vào sổ' />
+						<Input placeholder='TS25/{soVaoSo}' />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
@@ -151,10 +165,23 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						label='Định dạng số vào sổ (Tiếng Anh)'
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
-							<i style={{ color: '#888' }}>Ví dụ: {soVaoSoExample(soVaoSoHienTai, soChuSoVaoSo) ?? `TS25/{soVaoSo}`}</i>
+							<div>
+								<i style={{ color: '#888' }}>
+									Ví dụ: {soVaoSoExample(soVaoSoHienTai, soChuSoVaoSo) ?? `TS25/{soVaoSo}`}
+								</i>
+								{bookEntryNumberFormat?.includes('/') && (
+									<div style={{ color: '#888', marginTop: 4 }}>
+										Số vào sổ tiếp theo là:{' '}
+										<b>
+											{bookEntryNumberFormat.split('/')[0]}/
+											{String(soVaoSoHienTai + 1).padStart(soChuSoVaoSo || 0, '0')}
+										</b>
+									</div>
+								)}
+							</div>
 						}
 					>
-						<Input placeholder='Nhập định dạng số vào sổ (Tiếng Anh)' />
+						<Input placeholder='TS25/{soVaoSo}' />
 					</Form.Item>
 				</Col>
 
