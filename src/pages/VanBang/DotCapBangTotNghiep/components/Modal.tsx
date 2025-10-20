@@ -1,7 +1,7 @@
 import { Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import FilterPhuLuc from '../../PhuLuc/components/FilterPhuLuc';
+import ViewPhuLucQuyetDinh from '../../PhuLuc/components/ViewPhuLucQuyetDinh';
 import QuyetDinhTotNghiepPage from '../../QuyetDinhTotNghiep';
 import Form from './Form';
 
@@ -36,7 +36,7 @@ const ModalDotCapBang = (props: any) => {
 			) : currentStep === 1 ? (
 				<QuyetDinhTotNghiepPage isDotCapBang />
 			) : currentStep === 2 ? (
-				<FilterPhuLuc isDotCapBang />
+				<ViewPhuLucQuyetDinh isDotCapBang />
 			) : null}
 		</>
 	);

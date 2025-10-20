@@ -20,7 +20,7 @@ import ModalChonPhuLuc from '../../DotCapBangTotNghiep/components/ModalChonPhuLu
 import Form from './Form';
 import ViewPhuLucVanBang from './ViewRender';
 
-const FilterPhuLuc = (props: { getData?: any; isDotCapBang?: boolean }) => {
+const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) => {
 	const intl = useIntl();
 	const { getData, isDotCapBang: isdotCapBang = false } = props;
 	const { settings } = useModel('tienich.caidat');
@@ -221,4 +221,4 @@ const FilterPhuLuc = (props: { getData?: any; isDotCapBang?: boolean }) => {
 	);
 };
 
-export default FilterPhuLuc;
+export default ViewPhuLucQuyetDinh;
