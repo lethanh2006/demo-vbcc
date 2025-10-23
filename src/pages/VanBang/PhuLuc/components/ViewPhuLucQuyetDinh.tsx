@@ -12,12 +12,10 @@ import {
 	EditOutlined,
 	ExportOutlined,
 	EyeOutlined,
-	ImportOutlined,
-	PlusCircleOutlined,
 	SyncOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Button, Popconfirm, Space, Tag, Tooltip } from 'antd';
+import { Button, Popconfirm, Space, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -164,6 +162,13 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 			onCell,
 		},
 		{
+			title: 'Ghi chú cấp bằng',
+			dataIndex: 'ghiChuCapBang',
+			width: 120,
+			filterType: 'string',
+			onCell,
+		},
+		{
 			title: 'Ký số thông tin',
 			dataIndex: 'signature',
 			align: 'center',
@@ -205,26 +210,27 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				<>
 					{rec.kichHoat ? (
 						<Popconfirm
-							title='Hoàn tác cấp bằng cho phụ lục này?'
+							title={<input id={`note-${rec._id}`} placeholder='Ghi chú hoàn tác' style={{ width: '100%' }} />}
+							description='Thu hồi cấp bằng cho phục lục này?'
 							onConfirm={async () => {
-								const payload: any = { kichHoat: false, ngayCapPhuLuc: null, idDotCapBang: null };
-								await putModel(rec._id, payload, fetchData, true);
+								const ghiChuCapBang = (document.getElementById(`note-${rec._id}`) as HTMLInputElement)?.value || '';
+								await putModel(rec._id, { kichHoat: false, idDotCapBang: null, ghiChuCapBang }, fetchData, true);
 							}}
-							placement='topRight'
 						>
-							<ButtonExtend tooltip='Hoàn tác cấp bằng' danger type='link' icon={<SyncOutlined />} />
+							<ButtonExtend tooltip='Hoàn tác' danger type='link' icon={<SyncOutlined />} />
 						</Popconfirm>
 					) : (
 						<Popconfirm
-							title='Cấp bằng cho phụ lục này?'
+							title={<input id={`note-${rec._id}`} placeholder='Ghi chú cấp bằng' style={{ width: '100%' }} />}
+							description='Cấp bằng cho phụ lục này?'
 							onConfirm={async () => {
-								const payload: any = { kichHoat: true, ngayCapPhuLuc: dayjs().format('YYYY-MM-DD') };
+								const ghiChuCapBang = (document.getElementById(`note-${rec._id}`) as HTMLInputElement)?.value || '';
+								const payload: any = { kichHoat: true, ghiChuCapBang };
 								if (isdotCapBang && recDot?._id) payload.idDotCapBang = recDot._id;
 								await putModel(rec._id, payload, fetchData, true);
 							}}
-							placement='topRight'
 						>
-							<ButtonExtend tooltip='Cấp bằng' danger={false} type='link' icon={<CheckCircleOutlined />} />
+							<ButtonExtend tooltip='Cấp bằng' type='link' icon={<CheckCircleOutlined />} />
 						</Popconfirm>
 					)}
 
@@ -271,19 +277,19 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				otherButtons={
 					isdotCapBang
 						? ([
-								<ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleImport(true)} key='import'>
-									Nhập dữ liệu
-								</ButtonExtend>,
+								// <ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleImport(true)} key='import'>
+								// 	Nhập dữ liệu
+								// </ButtonExtend>,
 
 								<Button icon={<ExportOutlined />} onClick={handleExportTemplate} disabled={!recDot?._id}>
 									Xuất dữ liệu
 								</Button>,
 
-								<Tooltip title='Thêm phụ lục hiện có vào đợt cấp bằng này' key='apply-tooltip'>
-									<Button type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisibleModalChonPhuLuc(true)}>
-										Thêm phụ lục
-									</Button>
-								</Tooltip>,
+								// <Tooltip title='Thêm phụ lục hiện có vào đợt cấp bằng này' key='apply-tooltip'>
+								// 	<Button type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisibleModalChonPhuLuc(true)}>
+								// 		Thêm phụ lục
+								// 	</Button>
+								// </Tooltip>,
 
 								selectedIds && selectedIds.length > 0 ? (
 									<Popconfirm
@@ -291,7 +297,7 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 										title={`Cấp bằng cho ${unactivatedIds.length} phụ lục chưa được cấp?`}
 										placement='topRight'
 										onConfirm={async () => {
-											const payload: any = { kichHoat: true, ngayCapPhuLuc: dayjs().format('YYYY-MM-DD') };
+											const payload: any = { kichHoat: true };
 											if (isdotCapBang && recDot?._id) payload.idDotCapBang = recDot._id;
 											await putManyModel(unactivatedIds, payload, fetchData, true);
 											setSelectedIds([]);
