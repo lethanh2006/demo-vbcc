@@ -1,21 +1,11 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
-import { ETagColor } from '@/services/base/constant';
-import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
 import { getExportDanhSachPhuLuc, getPhuLucCapBang } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import {
-	CheckCircleOutlined,
-	CloseOutlined,
-	EditOutlined,
-	ExportOutlined,
-	EyeOutlined,
-	SyncOutlined,
-	WarningOutlined,
-} from '@ant-design/icons';
-import { Button, Popconfirm, Space, Tag } from 'antd';
+import { CheckCircleOutlined, CloseOutlined, ExportOutlined, EyeOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -166,39 +156,6 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 			dataIndex: 'ghiChuCapBang',
 			width: 120,
 			filterType: 'string',
-			onCell,
-		},
-		{
-			title: 'Ký số thông tin',
-			dataIndex: 'signature',
-			align: 'center',
-			width: 80,
-			render: (val) => <Tag color={!!val ? ETagColor.GREEN : ETagColor.RED}>{!!val ? 'Đã ký' : 'Chưa ký'}</Tag>,
-			hide: !settingVbcc?.require_signature,
-			onCell,
-		},
-		{
-			title: 'Blockchain',
-			dataIndex: 'createdBlockchain',
-			align: 'center',
-			width: 180,
-			filterType: 'select',
-			filterData: Object.values(ETrangThaiBlockchain).map((item) => ({ label: item, value: item })),
-			render: (val: ETrangThaiBlockchain) => (
-				<div style={{ color: colorTrangThaiBlc[val] }}>
-					<Space>
-						{val === ETrangThaiBlockchain.DA_LUU ? (
-							<CheckCircleOutlined />
-						) : val === ETrangThaiBlockchain.CHUA_CAP_NHAT ? (
-							<EditOutlined />
-						) : (
-							<WarningOutlined />
-						)}{' '}
-						{val}
-					</Space>
-				</div>
-			),
-			hide: !settingVbcc?.blockChain,
 			onCell,
 		},
 		{
