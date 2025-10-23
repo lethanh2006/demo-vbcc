@@ -3,42 +3,83 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import { ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
+import { getExportDanhSachPhuLuc, getPhuLucCapBang } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import {
 	CheckCircleOutlined,
-	DeleteOutlined,
+	CloseOutlined,
 	EditOutlined,
+	ExportOutlined,
 	EyeOutlined,
+	ImportOutlined,
 	PlusCircleOutlined,
+	SyncOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
 import { Button, Popconfirm, Space, Tag, Tooltip } from 'antd';
+import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalChonPhuLuc from '../../DotCapBangTotNghiep/components/ModalChonPhuLuc';
 import Form from './Form';
+import ModalImportCapBang from './ModalImportPhuLucCapBang';
 import ViewPhuLucVanBang from './ViewRender';
 
 const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) => {
 	const intl = useIntl();
 	const { getData, isDotCapBang: isdotCapBang = false } = props;
 	const { settings } = useModel('tienich.caidat');
-	const { page, limit, getModel, handleView, handleEdit, isView, deleteModel, record } = useModel('vbcc.phulucvanbang');
+	const {
+		page,
+		limit,
+		handleView,
+		isView,
+		deleteModel,
+		putModel,
+		putManyModel,
+		selectedIds,
+		setSelectedIds,
+		danhSach,
+		setDanhSach,
+	} = useModel('vbcc.phulucvanbang');
 	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
+	const { record: recDot } = useModel('vbcc.dotcapbangtotnghiep');
 	const { INFO_TENANT: settingVbcc } = settings;
 	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
+	const [visibleImport, setVisibleImport] = useState<boolean>(false);
+
+	const unactivatedIds: string[] =
+		selectedIds && Array.isArray(danhSach)
+			? (danhSach ?? [])
+					.filter((r: PhuLucVanBang.IRecord) => selectedIds.includes(r._id) && !r?.idDotCapBang)
+					.map((r: PhuLucVanBang.IRecord) => r._id)
+			: [];
+
+	const fetchData = async () => {
+		if (!recDot?._id) return;
+		const res = await getPhuLucCapBang(recDot._id);
+		setDanhSach(res?.data ?? res ?? []);
+	};
 
 	useEffect(() => {
-		if (recQuyetDinh?._id) {
-			getModel({ idQuyetDinh: recQuyetDinh?._id });
-		}
-	}, [recQuyetDinh?._id, page, limit]);
+		fetchData();
+	}, [recDot?._id, page, limit]);
 
 	const onCell = (rec: PhuLucVanBang.IRecord) => ({
 		onClick: () => handleView(rec),
 		style: { cursor: 'pointer' },
 	});
+
+	const handleExportTemplate = async () => {
+		if (!recDot?._id) return;
+		try {
+			const res = await getExportDanhSachPhuLuc(recDot._id);
+			fileDownload(res.data, `DanhSach_PhuLuc_CapBang${recDot.ten}.xlsx`);
+		} catch (e) {
+			console.error(e);
+		}
+	};
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
@@ -106,12 +147,12 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 					<Tag color='red'>Chưa cấp bằng</Tag>
 				);
 
-				const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
+				// const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
 
 				return (
 					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
 						<div>{trangThai}</div>
-						{ngayCap && <div>{ngayCap}</div>}
+						{/* {ngayCap && <div>{ngayCap}</div>} */}
 					</div>
 				);
 			},
@@ -158,27 +199,50 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 120,
+			width: 140,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
-					<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
+					{rec.kichHoat ? (
+						<Popconfirm
+							title='Hoàn tác cấp bằng cho phụ lục này?'
+							onConfirm={async () => {
+								const payload: any = { kichHoat: false, ngayCapPhuLuc: null, idDotCapBang: null };
+								await putModel(rec._id, payload, fetchData, true);
+							}}
+							placement='topRight'
+						>
+							<ButtonExtend tooltip='Hoàn tác cấp bằng' danger type='link' icon={<SyncOutlined />} />
+						</Popconfirm>
+					) : (
+						<Popconfirm
+							title='Cấp bằng cho phụ lục này?'
+							onConfirm={async () => {
+								const payload: any = { kichHoat: true, ngayCapPhuLuc: dayjs().format('YYYY-MM-DD') };
+								if (isdotCapBang && recDot?._id) payload.idDotCapBang = recDot._id;
+								await putModel(rec._id, payload, fetchData, true);
+							}}
+							placement='topRight'
+						>
+							<ButtonExtend tooltip='Cấp bằng' danger={false} type='link' icon={<CheckCircleOutlined />} />
+						</Popconfirm>
+					)}
 
-					<Popconfirm
-						onConfirm={() => deleteModel(rec._id, getData)}
-						title='Bạn có chắc chắn muốn loại bỏ phụ lục này?'
-						placement='topRight'
-					>
-						<ButtonExtend
-							// disabled={isQuyetDinh && rec.trangThaiPhuLuc === ETrangThaiPhuLuc.DA_VAO_SO}
-							// disabled={rec.kichHoat === true}
-							tooltip='loại bỏ phụ lục'
-							danger
-							type='link'
-							icon={<DeleteOutlined />}
-						/>
-					</Popconfirm>
+					<ButtonExtend tooltip='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
+
+					{!rec.kichHoat && (
+						<>
+							<Popconfirm
+								title='Loại bỏ phụ lục khỏi đợt này?'
+								placement='topRight'
+								onConfirm={async () => {
+									await deleteModel(rec._id);
+								}}
+							>
+								<ButtonExtend tooltip='Loại bỏ khỏi đợt' danger type='link' icon={<CloseOutlined />} />
+							</Popconfirm>
+						</>
+					)}
 				</>
 			),
 		},
@@ -187,7 +251,7 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 	return (
 		<>
 			<TableBase
-				getData={getData}
+				getData={async () => danhSach}
 				columns={columns}
 				params={{ idQuyetDinh: recQuyetDinh?._id }}
 				dependencies={[page, limit, recQuyetDinh?._id]}
@@ -195,19 +259,50 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
 				hideCard
 				rowSelection
+				detailRow={{
+					getCheckboxProps: (record: PhuLucVanBang.IRecord) => ({
+						disabled: record.kichHoat === true,
+					}),
+				}}
 				buttons={{ create: false }}
 				Form={isView ? ViewPhuLucVanBang : Form}
-				deleteMany={true}
+				// deleteMany={true}
 				widthDrawer={800}
 				otherButtons={
 					isdotCapBang
-						? [
+						? ([
+								<ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleImport(true)} key='import'>
+									Nhập dữ liệu
+								</ButtonExtend>,
+
+								<Button icon={<ExportOutlined />} onClick={handleExportTemplate} disabled={!recDot?._id}>
+									Xuất dữ liệu
+								</Button>,
+
 								<Tooltip title='Thêm phụ lục hiện có vào đợt cấp bằng này' key='apply-tooltip'>
 									<Button type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisibleModalChonPhuLuc(true)}>
 										Thêm phụ lục
 									</Button>
 								</Tooltip>,
-							]
+
+								selectedIds && selectedIds.length > 0 ? (
+									<Popconfirm
+										key='capbang-many'
+										title={`Cấp bằng cho ${unactivatedIds.length} phụ lục chưa được cấp?`}
+										placement='topRight'
+										onConfirm={async () => {
+											const payload: any = { kichHoat: true, ngayCapPhuLuc: dayjs().format('YYYY-MM-DD') };
+											if (isdotCapBang && recDot?._id) payload.idDotCapBang = recDot._id;
+											await putManyModel(unactivatedIds, payload, fetchData, true);
+											setSelectedIds([]);
+										}}
+									>
+										<Button type='link' icon={<CheckCircleOutlined />}>
+											Cấp bằng
+										</Button>
+									</Popconfirm>
+								) : null,
+							].filter(Boolean) as React.JSX.Element[])
 						: []
 				}
 			/>
@@ -215,7 +310,17 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 			<ModalChonPhuLuc
 				visible={visibleModalChonPhuLuc}
 				onCancel={() => setVisibleModalChonPhuLuc(false)}
-				getData={getData}
+				getData={fetchData}
+			/>
+
+			<ModalImportCapBang
+				visible={visibleImport}
+				onCancel={() => setVisibleImport(false)}
+				onOk={() => {
+					setVisibleImport(false);
+					fetchData();
+				}}
+				idDotCapBang={recDot?._id || ''}
 			/>
 		</>
 	);

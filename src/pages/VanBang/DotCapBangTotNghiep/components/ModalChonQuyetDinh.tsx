@@ -2,6 +2,10 @@ import ExpandText from '@/components/ExpandText';
 import MyDatePicker from '@/components/MyDatePicker';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
+import {
+	getDanhSachQuyetDinhChuaThemVaoDotCapBang,
+	themQuyetDinhVaoDotCapBang,
+} from '@/services/VanBang/PhuLucVanBang';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import { Button, message, Modal, Space } from 'antd';
@@ -16,26 +20,24 @@ type TProps = {
 
 const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getDataExternal }) => {
 	const { record: recDot } = useModel('vbcc.dotcapbangtotnghiep');
-	const {
-		getAllModel: getAllQuyetDinh,
-		putManyModel,
-		formSubmiting,
-		loading,
-		selectedIds,
-		setSelectedIds,
-	} = useModel('vbcc.quyetdinhtotnghiep');
+	const { formSubmiting, loading, selectedIds = [], setSelectedIds } = useModel('vbcc.quyetdinhtotnghiep');
 	const [danhSach, setDanhSach] = useState<QuyetDinhTotNghiep.IRecord[]>([]);
 	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 
-	const getData = () =>
-		getAllQuyetDinh(
-			undefined,
-			undefined,
-			{ dotCapBangId: null, nam: yearSelect ? dayjs(yearSelect).format('YYYY') : undefined },
-			undefined,
-			undefined,
-			false,
-		).then((res) => setDanhSach(res));
+	const getData = async () => {
+		if (!recDot?._id) return;
+		try {
+			const res = await getDanhSachQuyetDinhChuaThemVaoDotCapBang(
+				recDot._id,
+				yearSelect ? dayjs(yearSelect).format('YYYY') : undefined,
+			);
+			const data = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+			setDanhSach(data);
+		} catch (error) {
+			console.error(error);
+			setDanhSach([]);
+		}
+	};
 
 	useEffect(() => {
 		if (visible && recDot?._id) {
@@ -47,15 +49,18 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 	}, [visible, recDot?._id, yearSelect]);
 
 	const handleSubmit = async () => {
-		if (selectedIds?.length === 0) {
+		if (!selectedIds?.length) {
 			message.warning('Vui lòng chọn ít nhất một quyết định');
 			return;
 		}
-
+		if (!recDot?._id) return;
 		try {
-			await putManyModel(selectedIds ?? [], { dotCapBangId: recDot?._id }, getDataExternal);
+			await themQuyetDinhVaoDotCapBang(recDot._id, selectedIds);
+			await getDataExternal();
+			setSelectedIds([]);
 			onCancel();
-		} catch (error) {
+			message.success('Thêm quyết định vào đợt cấp bằng thành công');
+		} catch {
 			message.error('Có lỗi xảy ra khi thêm quyết định');
 		}
 	};
@@ -85,7 +90,6 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 	return (
 		<Modal title='Chọn quyết định tốt nghiệp' open={visible} width={800} onCancel={onCancel} footer={null}>
 			<p style={{ margin: '0 0 16px', fontSize: 14 }}>Chọn quyết định tốt nghiệp thêm vào đợt cấp bằng này!</p>
-
 			<TableStaticData
 				columns={columns}
 				data={danhSach}
@@ -121,10 +125,9 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 					</Space>,
 				]}
 			/>
-
 			<div className='form-footer'>
-				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={selectedIds?.length === 0}>
-					Thêm vào đợt cấp bằng {(selectedIds?.length ?? 0 > 0) ? `(${selectedIds?.length})` : ''}
+				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={!selectedIds?.length}>
+					Thêm vào đợt cấp bằng {selectedIds?.length > 0 ? `(${selectedIds.length})` : ''}
 				</Button>
 				<Button onClick={onCancel}>Hủy</Button>
 			</div>

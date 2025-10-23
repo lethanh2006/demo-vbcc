@@ -37,6 +37,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 				maTrinhDoDaoTao: APP_CONFIG_INIT_TRINH_DO,
 				maHinhThucDaoTao: APP_CONFIG_INIT_HINH_THUC,
 				ten: `Sổ văn bằng ${trinhDo?.ten} - ${hinhThuc?.ten} năm ${dayjs().format('YYYY')}`,
+				soVaoSoHienTai: 0,
 			});
 		}
 	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
@@ -89,14 +90,6 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		}
 	};
 
-	const soVaoSoExample = (soHienTai: number, soChuSo: number) => {
-		if (soHienTai === undefined || soChuSo === undefined || soChuSo <= 0) {
-			return null;
-		}
-		const soVaoSoVd = String(soHienTai + 1).padStart(soChuSo, '0');
-		return `TS25/${soVaoSoVd}`;
-	};
-
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical' onValuesChange={handleValuesChange}>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
@@ -141,14 +134,12 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						label='Định dạng số vào sổ'
 						extra={
 							<div>
-								<i style={{ color: '#888' }}>
-									Ví dụ: {soVaoSoExample(soVaoSoHienTai, soChuSoVaoSo) ?? `TS25/{soVaoSo}`}
-								</i>
-								{soVaoSoFormat?.includes('/') && (
+								<i style={{ color: '#888' }}>Ví dụ: TS25/{'{soVaoSo}'}</i>
+								{soVaoSoFormat && (
 									<div style={{ color: '#888', marginTop: 4 }}>
 										Số vào sổ tiếp theo là:{' '}
 										<b>
-											{soVaoSoFormat.split('/')[0]}/{String(soVaoSoHienTai + 1).padStart(soChuSoVaoSo || 0, '0')}
+											{soVaoSoFormat}/{String((soVaoSoHienTai ?? 0) + 1).padStart(soChuSoVaoSo || 0, '0')}
 										</b>
 									</div>
 								)}
@@ -156,32 +147,40 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						}
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
-						<Input placeholder='TS25/{soVaoSo}' />
+						<Input
+							placeholder='TS25/{soVaoSo}'
+							suffix='/{soVaoSo}'
+							value={soVaoSoFormat || ''}
+							onChange={(e) => form.setFieldsValue({ soVaoSoFormat: e.target.value })}
+						/>
 					</Form.Item>
 				</Col>
+
 				<Col span={24} md={12}>
 					<Form.Item
 						name='bookEntryNumberFormat'
 						label='Định dạng số vào sổ (Tiếng Anh)'
-						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
 							<div>
-								<i style={{ color: '#888' }}>
-									Ví dụ: {soVaoSoExample(soVaoSoHienTai, soChuSoVaoSo) ?? `TS25/{soVaoSo}`}
-								</i>
-								{bookEntryNumberFormat?.includes('/') && (
+								<i style={{ color: '#888' }}>Ví dụ: TS25/{'{soVaoSo}'}</i>
+								{bookEntryNumberFormat && (
 									<div style={{ color: '#888', marginTop: 4 }}>
 										Số vào sổ tiếp theo là:{' '}
 										<b>
-											{bookEntryNumberFormat.split('/')[0]}/
-											{String(soVaoSoHienTai + 1).padStart(soChuSoVaoSo || 0, '0')}
+											{bookEntryNumberFormat}/{String((soVaoSoHienTai ?? 0) + 1).padStart(soChuSoVaoSo || 0, '0')}
 										</b>
 									</div>
 								)}
 							</div>
 						}
+						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
-						<Input placeholder='TS25/{soVaoSo}' />
+						<Input
+							placeholder='TS25/{soVaoSo}'
+							suffix='/{soVaoSo}'
+							value={bookEntryNumberFormat || ''}
+							onChange={(e) => form.setFieldsValue({ bookEntryNumberFormat: e.target.value })}
+						/>
 					</Form.Item>
 				</Col>
 

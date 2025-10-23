@@ -1,7 +1,9 @@
 import useInitModel from '@/hooks/useInitModel';
 import {
 	chiTietPhuLucVanBanPublic,
+	getImportPhuLucCapBangTemplate,
 	importPhuLucVanBang,
+	importPhuLucVanBangCapBang,
 	postTrinhKyVanBang,
 	putUpdateIpfs,
 	sinhSoVaoSo,
@@ -11,6 +13,7 @@ import {
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { preIPFS } from '@/utils/ip';
 import { message } from 'antd';
+import fileDownload from 'js-file-download';
 import { useState } from 'react';
 
 export default () => {
@@ -101,6 +104,39 @@ export default () => {
 			setFormSubmiting(false);
 		}
 	};
+
+	// Thêm function import cấp bằng aaaaaaaaaaaaaaaaaaa
+
+	const importPhuLucVanBangCapBangModel = async (row: any, idDotCapBang: string) => {
+		if (formSubmiting) return;
+		setFormSubmiting(true);
+
+		return importPhuLucVanBangCapBang({ ...row, idDotCapBang })
+			.then((res) => {
+				return res?.data;
+			})
+			.catch(() => message.error('Lỗi khi import cấp bằng'))
+			.finally(() => setFormSubmiting(false));
+	};
+
+	const getImportPhuLucCapBangTemplateModel = async (idDotCapBang: string) => {
+		if (formSubmiting) return;
+		setFormSubmiting(true);
+		return getImportPhuLucCapBangTemplate(idDotCapBang)
+			.then((res) => {
+				fileDownload(
+					res.data,
+					`Template_Import_Cap_Bang_${idDotCapBang}.xlsx`,
+					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+				);
+				message.success('Tải xuống thành công');
+				return res.data;
+			})
+			.catch(() => message.error('Lỗi tải xuống'))
+			.finally(() => setFormSubmiting(false));
+	};
+
+	//kết thúc
 
 	const traCuuPhuLucVanBanPublicModel = async (payload: {
 		hoTen?: string;
@@ -218,5 +254,8 @@ export default () => {
 		postTrinhKyVanBangModel,
 		visibleSignVanBang,
 		setVisibleSignVanBang,
+
+		importPhuLucVanBangCapBangModel,
+		getImportPhuLucCapBangTemplateModel,
 	};
 };

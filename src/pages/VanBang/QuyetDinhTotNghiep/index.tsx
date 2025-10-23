@@ -6,10 +6,11 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
+import { getQuyetDinhTheoDotCapBang, loaiBoQuyetDinhKhoiDotCapBang } from '@/services/VanBang/PhuLucVanBang';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Tooltip } from 'antd';
+import { Button, message, Popconfirm, Tooltip } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalChonQuyetDinh from '../DotCapBangTotNghiep/components/ModalChonQuyetDinh';
@@ -20,24 +21,24 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 	const { isDotCapBang: isdotCapBang = false } = props;
 	const intl = useIntl();
 	const { record: recDotCapBang } = useModel('vbcc.dotcapbangtotnghiep');
-	const { getModel, handleEdit, page, limit, deleteModel, setRecord, record, putModel } =
+	const { handleEdit, page, limit, deleteModel, setRecord, record, putModel, setDanhSach } =
 		useModel('vbcc.quyetdinhtotnghiep');
 	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const [visibleModalChonQuyetDinh, setVisibleModalChonQuyetDinh] = useState<boolean>(false);
 
-	const condition: any = {};
-
-	if (yearSelect && !isdotCapBang) {
-		condition.nam = dayjs(yearSelect).format('YYYY');
-	}
-
-	if (isdotCapBang) {
-		condition.dotCapBangId = recDotCapBang?._id;
-	}
-
-	const getData = () => {
-		getModel(condition);
+	const getData = async () => {
+		if (!isdotCapBang || !recDotCapBang?._id) return;
+		const res: any = await getQuyetDinhTheoDotCapBang(recDotCapBang._id);
+		const payload = res?.data ?? res;
+		const list = Array.isArray(payload)
+			? payload
+			: Array.isArray(payload?.data)
+				? payload.data
+				: Array.isArray(payload?.items)
+					? payload.items
+					: [];
+		setDanhSach?.(list);
 	};
 
 	const handleApply = () => {
@@ -50,7 +51,15 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 	});
 
 	const deleQuyetDinhDot = (rec: QuyetDinhTotNghiep.IRecord) => {
-		putModel(rec?._id ?? '', { dotCapBangId: null }, getData);
+		if (!recDotCapBang?._id) return;
+		loaiBoQuyetDinhKhoiDotCapBang(recDotCapBang._id, [rec._id])
+			.then(() => {
+				message.success('Loại bỏ quyết định khỏi đợt cấp bằng thành công');
+				return getData();
+			})
+			.catch((err) => {
+				console.error(err);
+			});
 	};
 
 	const columns: IColumn<QuyetDinhTotNghiep.IRecord>[] = [
@@ -126,7 +135,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 90,
+			width: 80,
 			fixed: 'right',
 			render: (rec: QuyetDinhTotNghiep.IRecord) => (
 				<>
@@ -149,7 +158,6 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 	return (
 		<>
 			<TableBase
-				params={condition}
 				getData={getData}
 				columns={columns}
 				deleteMany={true}
