@@ -1,4 +1,5 @@
 import type { BieuMauPhuLuc } from '../BieuMauPhuLuc/typing';
+import { DotCapBangTotNghiep } from '../DotCapBangTotNghiep/typing';
 import type { QuyetDinhTotNghiep } from '../QuyetDinh/typing';
 import type { ETrangThaiBlockchain } from '../constant';
 
@@ -7,9 +8,11 @@ declare module PhuLucVanBang {
 		_id: string;
 		idQuyetDinh: string;
 		quyetDinh?: QuyetDinhTotNghiep.IRecord;
+		dotCapBang?: DotCapBangTotNghiep.IRecord;
 		maTruong?: string;
 
 		soVaoSoBang: string;
+		soVaoSoTamThoi: string;
 		bookEntryNumberFormat: string;
 		soHieuVanBang: string;
 		hoTen: string;

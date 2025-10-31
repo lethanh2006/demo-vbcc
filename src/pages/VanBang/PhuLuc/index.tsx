@@ -37,7 +37,7 @@ import ModalExportData from './components/ModalExportData';
 import ModalImportPhuLucVanBang from './components/ModalImportPhuLuc';
 import ModalPushBlockchain from './components/ModalPushBlockchain';
 import ModalSign from './components/ModalSign';
-import ModalSinhSoVaoSo from './components/ModalSinhSo';
+import ModalSinhSoVaoSoTong from './components/ModalSinhSo';
 import ModalTrinhKyVanBang from './components/ModalTrinhKy';
 import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
@@ -582,14 +582,16 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 
 			<ModalCapBang visible={showModalCapBang} setVisible={setShowModalCapBang} getData={getData} />
 
-			<ModalSinhSoVaoSo
+			{/* <ModalSinhSoVaoSo
 				visible={visibleSinhSo}
 				setVisibe={setVisibleSinhSo}
 				getData={() => {
 					getData();
 					if (getDataV2) getDataV2();
 				}}
-			/>
+			/> */}
+
+			<ModalSinhSoVaoSoTong visible={visibleSinhSo} setVisible={setVisibleSinhSo} getData={getData} />
 
 			<ModalTrinhKyVanBang visible={visibleTrinhKy} setVisible={setVisibleTrinhKy} getData={getData} />
 

@@ -7,6 +7,7 @@ import {
 	postTrinhKyVanBang,
 	putUpdateIpfs,
 	sinhSoVaoSo,
+	sortPhuLucTam,
 	traCuuPhuLucVanBanPublic,
 	updBlockchain,
 } from '@/services/VanBang/PhuLucVanBang';
@@ -181,8 +182,8 @@ export default () => {
 			soVaoSoHienTai: number;
 			idSoVanBang: string;
 			sinhLaiToanBo: boolean;
-			sortTheoHoTen: boolean;
-			sortTheoMaSinhVien: boolean;
+			// sortTheoHoTen: boolean;
+			// sortTheoMaSinhVien: boolean;
 		},
 		getData?: () => void,
 	): Promise<any> => {
@@ -197,6 +198,27 @@ export default () => {
 			return res.data?.data;
 		} catch (er) {
 			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const sortPhuLucTamModel = async (
+		idQuyetDinh: string,
+		payload: {
+			soVaoSoHienTai: number;
+			idSoVanBang: string;
+			sinhLaiToanBo: boolean;
+		},
+	): Promise<any> => {
+		if (formSubmiting) return Promise.reject('Form submitting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await sortPhuLucTam(idQuyetDinh, payload);
+			return res.data;
+		} catch (err) {
+			return Promise.reject(err);
 		} finally {
 			setFormSubmiting(false);
 		}
@@ -251,6 +273,7 @@ export default () => {
 		tableData,
 		setTableData,
 		sinhSoVaoSoModel,
+		sortPhuLucTamModel,
 		postTrinhKyVanBangModel,
 		visibleSignVanBang,
 		setVisibleSignVanBang,

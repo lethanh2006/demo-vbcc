@@ -67,6 +67,13 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 
 	const columns: IColumn<QuyetDinhTotNghiep.IRecord>[] = [
 		{
+			title: 'Năm hành chính',
+			dataIndex: 'nam',
+			align: 'center',
+			width: 120,
+			filterType: 'string',
+		},
+		{
 			title: 'Số quyết định',
 			dataIndex: 'soQuyetDinh',
 			align: 'center',

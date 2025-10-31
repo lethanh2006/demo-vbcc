@@ -42,6 +42,12 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		}
 	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
 
+	const appendFormat = (value: string) => {
+		const key = '/{soVaoSo}';
+		const str = String(value || '');
+		return !edit && !str.endsWith(key) ? `${str}${key}` : str;
+	};
+
 	const onFinish = async (values: SoVanBang.IRecord) => {
 		const trinhDo = dsTrinhDo.find((x) => x.ma === values?.maTrinhDoDaoTao);
 		const hinhThuc = dsHinhThuc.find((x) => x.ma === values?.maHinhThucDaoTao);
@@ -51,6 +57,12 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 			namHanhChinh: dayjs(values.namHanhChinh).format('YYYY'),
 			tenTrinhDoDaoTao: trinhDo?.ten,
 			tenHinhThucDaoTao: hinhThuc?.ten,
+			ruleSortPhuLuc: String(values.ruleSortPhuLuc)
+				.split(',')
+				.map((x) => x.trim())
+				.filter(Boolean),
+			soVaoSoFormat: appendFormat(values.soVaoSoFormat),
+			bookEntryNumberFormat: appendFormat(values.bookEntryNumberFormat),
 		};
 
 		if (edit) {
@@ -149,7 +161,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 					>
 						<Input
 							placeholder='TS25/{soVaoSo}'
-							suffix='/{soVaoSo}'
+							suffix={!edit ? '/{soVaoSo}' : null}
 							value={soVaoSoFormat || ''}
 							onChange={(e) => form.setFieldsValue({ soVaoSoFormat: e.target.value })}
 						/>
@@ -177,10 +189,16 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 					>
 						<Input
 							placeholder='TS25/{soVaoSo}'
-							suffix='/{soVaoSo}'
+							suffix={!edit ? '/{soVaoSo}' : null}
 							value={bookEntryNumberFormat || ''}
 							onChange={(e) => form.setFieldsValue({ bookEntryNumberFormat: e.target.value })}
 						/>
+					</Form.Item>
+				</Col>
+
+				<Col span={24}>
+					<Form.Item name='ruleSortPhuLuc' label='Quy tắc sắp xếp phụ lục sinh số vào sổ' rules={[...rules.required]}>
+						<Input placeholder='Nhập quy tắc' style={{ width: '100%' }} />
 					</Form.Item>
 				</Col>
 

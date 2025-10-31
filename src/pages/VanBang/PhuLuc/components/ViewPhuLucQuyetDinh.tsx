@@ -4,8 +4,15 @@ import type { IColumn } from '@/components/Table/typing';
 import { getExportDanhSachPhuLuc, getPhuLucCapBang } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import { CheckCircleOutlined, CloseOutlined, ExportOutlined, EyeOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Tag } from 'antd';
+import {
+	CheckCircleOutlined,
+	CloseOutlined,
+	CommentOutlined,
+	ExportOutlined,
+	EyeOutlined,
+	SyncOutlined,
+} from '@ant-design/icons';
+import { Button, Popconfirm, Popover, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -112,7 +119,7 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 		},
 		{
 			title: 'Quyết định',
-			dataIndex: 'idQuyetDinh',
+			dataIndex: ['quyetDinh', 'soQuyetDinh'],
 			width: 140,
 			render: (val, rec) => (
 				<>
@@ -134,13 +141,28 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				) : (
 					<Tag color='red'>Chưa cấp bằng</Tag>
 				);
-
-				// const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
-
+				const content = (
+					<>
+						{record.dotCapBang?.ten && (
+							<div>
+								<b>Được cấp bằng bởi đợt: </b> {record.dotCapBang.ten}
+							</div>
+						)}
+						{record.ghiChuCapBang && (
+							<div>
+								<b>Ghi chú: </b> {record.ghiChuCapBang}
+							</div>
+						)}
+					</>
+				);
 				return (
-					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-						<div>{trangThai}</div>
-						{/* {ngayCap && <div>{ngayCap}</div>} */}
+					<div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+						{trangThai}
+						{(record.dotCapBang?.ten || record?.ghiChuCapBang?.trim()) && (
+							<Popover content={content}>
+								<CommentOutlined style={{ color: '#faad14', cursor: 'pointer' }} />
+							</Popover>
+						)}
 					</div>
 				);
 			},
@@ -149,14 +171,6 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				{ value: true as any, label: 'Đã cấp bằng' },
 				{ value: false, label: 'Chưa cấp bằng' },
 			],
-			onCell,
-		},
-		{
-			title: 'Ghi chú cấp bằng',
-			dataIndex: 'ghiChuCapBang',
-			width: 120,
-			filterType: 'string',
-			onCell,
 		},
 		{
 			title: 'Thao tác',
@@ -166,16 +180,25 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 			render: (val, rec) => (
 				<>
 					{rec.kichHoat ? (
-						<Popconfirm
-							title={<input id={`note-${rec._id}`} placeholder='Ghi chú hoàn tác' style={{ width: '100%' }} />}
-							description='Thu hồi cấp bằng cho phục lục này?'
-							onConfirm={async () => {
-								const ghiChuCapBang = (document.getElementById(`note-${rec._id}`) as HTMLInputElement)?.value || '';
-								await putModel(rec._id, { kichHoat: false, idDotCapBang: null, ghiChuCapBang }, fetchData, true);
-							}}
-						>
-							<ButtonExtend tooltip='Hoàn tác' danger type='link' icon={<SyncOutlined />} />
-						</Popconfirm>
+						rec.idDotCapBang === recDot?._id ? (
+							<Popconfirm
+								title={<input id={`note-${rec._id}`} placeholder='Ghi chú hoàn tác' style={{ width: '100%' }} />}
+								description='Thu hồi cấp bằng cho phụ lục này?'
+								onConfirm={async () => {
+									const ghiChuCapBang = (document.getElementById(`note-${rec._id}`) as HTMLInputElement)?.value || '';
+									await putModel(rec._id, { kichHoat: false, idDotCapBang: null, ghiChuCapBang }, fetchData, true);
+								}}
+							>
+								<ButtonExtend tooltip='Hoàn tác' danger type='link' icon={<SyncOutlined />} />
+							</Popconfirm>
+						) : (
+							<ButtonExtend
+								tooltip='Phụ lục này thuộc đợt khác, không thể thu hồi ở đợt này'
+								type='link'
+								disabled
+								icon={<SyncOutlined />}
+							/>
+						)
 					) : (
 						<Popconfirm
 							title={<input id={`note-${rec._id}`} placeholder='Ghi chú cấp bằng' style={{ width: '100%' }} />}

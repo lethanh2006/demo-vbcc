@@ -233,20 +233,12 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 					</Col>
 
 					<Col span={24} md={12}>
-						<Form.Item
-							label='Số vào sổ'
-							name='soVaoSoBang'
-							rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-						>
+						<Form.Item label='Số vào sổ' name='soVaoSoBang'>
 							<Input placeholder='Nhập số vào sổ' />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item
-							name='bookEntryNumberFormat'
-							label='Số vào sổ (Tiếng Anh)'
-							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
-						>
+						<Form.Item name='bookEntryNumberFormat' label='Số vào sổ (Tiếng Anh)'>
 							<Input placeholder='Nhập số vào sổ (Tiếng Anh)' />
 						</Form.Item>
 					</Col>

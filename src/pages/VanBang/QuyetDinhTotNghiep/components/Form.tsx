@@ -62,11 +62,11 @@ const FormQuyetDinhTotNghiep = (props: {
 
 		setFormSubmiting(false);
 		if (edit) {
-			putModel(record?._id ?? '', values, getData, undefined, false)
+			putModel(record?._id ?? '', values, getData, undefined)
 				.then()
 				.catch((er) => console.log(er));
 		} else
-			postModel({ ...values, loai: ELoaiQuyetDinh.TOT_NGHIEP }, getData, false)
+			postModel({ ...values, loai: ELoaiQuyetDinh.TOT_NGHIEP }, getData)
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);

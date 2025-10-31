@@ -68,6 +68,10 @@ export async function sinhSoVaoSo(idQuyetDinh: string, payLoad: any) {
 	return axios.post(`${ip3}/phu-luc-van-bang/sinh-so-vao-so/${idQuyetDinh}`, payLoad);
 }
 
+export async function sortPhuLucTam(idQuyetDinh: string, payLoad: any) {
+	return axios.post(`${ip3}/phu-luc-van-bang/sort-phu-luc-tam/${idQuyetDinh}`, payLoad);
+}
+
 export async function postTrinhKyVanBang(payLoad: any) {
 	return axios.post(`${ip3}/phu-luc-van-bang/trinh-ky-van-bang`, payLoad);
 }
@@ -119,7 +123,7 @@ export async function getImportPhuLucCapBangTemplate(idDotCapBang: string) {
 }
 
 export async function getExportDanhSachPhuLuc(idDotCapBang: string) {
-	return axios.get(`${ip3}/phu-luc-van-bang-import-cap-bang/import-xlsx-template-by-dot/${idDotCapBang}`, {
+	return axios.get(`${ip3}/phu-luc-van-bang/export-phu-luc/dot-cap-bang/${idDotCapBang}`, {
 		responseType: 'arraybuffer',
 	});
 }

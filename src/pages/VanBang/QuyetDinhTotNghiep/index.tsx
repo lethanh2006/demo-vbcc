@@ -158,7 +158,7 @@ const QuyetDinhTotNghiepPage = (props: { isDotCapBang?: boolean }) => {
 	return (
 		<>
 			<TableBase
-				getData={getData}
+				getData={isdotCapBang ? getData : undefined}
 				columns={columns}
 				deleteMany={true}
 				dependencies={[page, limit, yearSelect, recDotCapBang?._id]}
