@@ -1,5 +1,6 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import ModalImport from '@/components/Table/Import';
 import type { IColumn } from '@/components/Table/typing';
 import { getExportDanhSachPhuLuc, getPhuLucCapBang } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
@@ -14,17 +15,15 @@ import {
 } from '@ant-design/icons';
 import { Button, Popconfirm, Popover, Tag } from 'antd';
 import fileDownload from 'js-file-download';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalChonPhuLuc from '../../DotCapBangTotNghiep/components/ModalChonPhuLuc';
 import Form from './Form';
-import ModalImportCapBang from './ModalImportPhuLucCapBang';
 import ViewPhuLucVanBang from './ViewRender';
 
 const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) => {
 	const intl = useIntl();
-	const { getData, isDotCapBang: isdotCapBang = false } = props;
-	const { settings } = useModel('tienich.caidat');
+	const { isDotCapBang: isdotCapBang = false } = props;
 	const {
 		page,
 		limit,
@@ -37,12 +36,12 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 		setSelectedIds,
 		danhSach,
 		setDanhSach,
+		getImportPhuLucCapBangTemplateModel,
+		visibleForm: visibleModalChonPhuLuc,
+		setVisibleForm: setVisibleModalChonPhuLuc,
 	} = useModel('vbcc.phulucvanbang');
-	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
+	const { record: recQuyetDinh, visibleForm, setVisibleForm } = useModel('vbcc.quyetdinhtotnghiep');
 	const { record: recDot } = useModel('vbcc.dotcapbangtotnghiep');
-	const { INFO_TENANT: settingVbcc } = settings;
-	const [visibleModalChonPhuLuc, setVisibleModalChonPhuLuc] = useState<boolean>(false);
-	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 
 	const unactivatedIds: string[] =
 		selectedIds && Array.isArray(danhSach)
@@ -257,20 +256,17 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				otherButtons={
 					isdotCapBang
 						? ([
-								// <ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleImport(true)} key='import'>
+								// <ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleForm(true)} key='import'>
 								// 	Nhập dữ liệu
 								// </ButtonExtend>,
-
 								<Button icon={<ExportOutlined />} onClick={handleExportTemplate} disabled={!recDot?._id}>
 									Xuất dữ liệu
 								</Button>,
-
 								// <Tooltip title='Thêm phụ lục hiện có vào đợt cấp bằng này' key='apply-tooltip'>
 								// 	<Button type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisibleModalChonPhuLuc(true)}>
 								// 		Thêm phụ lục
 								// 	</Button>
 								// </Tooltip>,
-
 								selectedIds && selectedIds.length > 0 ? (
 									<Popconfirm
 										key='capbang-many'
@@ -299,14 +295,17 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				getData={fetchData}
 			/>
 
-			<ModalImportCapBang
-				visible={visibleImport}
-				onCancel={() => setVisibleImport(false)}
+			<ModalImport
+				visible={visibleForm}
+				onCancel={() => setVisibleForm(false)}
 				onOk={() => {
-					setVisibleImport(false);
+					setVisibleForm(false);
 					fetchData();
 				}}
-				idDotCapBang={recDot?._id || ''}
+				modelName='vbcc.phulucvanbang'
+				getTemplate={() => getImportPhuLucCapBangTemplateModel(recDot?._id || '')}
+				titleTemplate='Template_Cap_Bang.xlsx'
+				extendData={{ idDotCapBang: recDot?._id || '' }}
 			/>
 		</>
 	);

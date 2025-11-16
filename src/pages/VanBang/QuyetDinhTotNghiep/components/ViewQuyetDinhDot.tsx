@@ -1,35 +1,55 @@
 import ExpandText from '@/components/ExpandText';
-import MyDatePicker from '@/components/MyDatePicker';
 import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
+import { getQuyetDinhTheoDotCapBang, loaiBoQuyetDinhKhoiDotCapBang } from '@/services/VanBang/PhuLucVanBang';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Popconfirm } from 'antd';
+import { CloseOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Button, message, Popconfirm, Tooltip } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectSoVanBang from '../SoVanBang/components/Select';
-import ModalQuyetDinhTotNghiep from './components/Modal';
+import ModalChonQuyetDinh from '../../DotCapBangTotNghiep/components/ModalChonQuyetDinh';
+import SelectSoVanBang from '../../SoVanBang/components/Select';
+import ModalQuyetDinhTotNghiep from './Modal';
 
-const QuyetDinhTotNghiepPage = () => {
+const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
+	const { isDotCapBang: isdotCapBang = false } = props;
 	const intl = useIntl();
 	const { record: recDotCapBang } = useModel('vbcc.dotcapbangtotnghiep');
-	const { handleEdit, page, limit, deleteModel, setRecord, record, getModel } = useModel('vbcc.quyetdinhtotnghiep');
-	const [yearSelect, setYearSelect] = useState<any>(dayjs());
+	const { handleEdit, page, limit, setRecord, record, setDanhSach } = useModel('vbcc.quyetdinhtotnghiep');
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
+	const [visibleModalChonQuyetDinh, setVisibleModalChonQuyetDinh] = useState<boolean>(false);
 
-	const getData = () => {
-		getModel();
+	const getData = async () => {
+		if (!isdotCapBang || !recDotCapBang?._id) return;
+		const res = await getQuyetDinhTheoDotCapBang(recDotCapBang._id);
+		setDanhSach?.(Array.isArray(res?.data) ? res?.data : []);
+	};
+
+	const handleApply = () => {
+		setVisibleModalChonQuyetDinh(true);
 	};
 
 	const onCell = (rec: QuyetDinhTotNghiep.IRecord) => ({
 		onClick: () => handleEdit(rec),
 		style: { cursor: 'pointer' },
 	});
+
+	const deleQuyetDinhDot = (rec: QuyetDinhTotNghiep.IRecord) => {
+		if (!recDotCapBang?._id) return;
+		loaiBoQuyetDinhKhoiDotCapBang(recDotCapBang._id, [rec._id])
+			.then(() => {
+				message.success('Loại bỏ quyết định khỏi đợt cấp bằng thành công');
+				return getData();
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
 
 	const columns: IColumn<QuyetDinhTotNghiep.IRecord>[] = [
 		{
@@ -39,7 +59,6 @@ const QuyetDinhTotNghiepPage = () => {
 			width: 120,
 			filterType: 'string',
 			onCell,
-			hide: !!yearSelect,
 		},
 		{
 			title: 'Số quyết định',
@@ -104,17 +123,16 @@ const QuyetDinhTotNghiepPage = () => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 80,
+			width: 60,
 			fixed: 'right',
 			render: (rec: QuyetDinhTotNghiep.IRecord) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
-						onConfirm={() => deleteModel(rec._id)}
+						onConfirm={() => deleQuyetDinhDot(rec)}
 						title='Bạn có chắc chắn muốn loại bỏ quyết định tốt nghiệp này?'
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='loại bỏ quyết định' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend tooltip='loại bỏ quyết định' danger type='link' icon={<CloseOutlined />} />
 					</Popconfirm>
 				</>
 			),
@@ -127,32 +145,28 @@ const QuyetDinhTotNghiepPage = () => {
 				getData={getData}
 				columns={columns}
 				deleteMany={true}
-				dependencies={[page, limit, yearSelect, recDotCapBang?._id]}
+				dependencies={[page, limit, recDotCapBang?._id]}
 				modelName='vbcc.quyetdinhtotnghiep'
 				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
 				widthDrawer={1200}
 				Form={ModalQuyetDinhTotNghiep}
-				formProps={{ yearSelect: dayjs(yearSelect).format('YYYY') }}
+				formProps={{ getData }}
 				rowSelection
-				buttons={{ export: true }}
+				buttons={{ create: isdotCapBang ? false : true, export: true }}
+				otherButtons={
+					isdotCapBang
+						? [
+								<Tooltip title='Thêm quyết định hiện có vào đợt cấp bằng này' key='apply-tooltip'>
+									<Button type='primary' icon={<PlusCircleOutlined />} onClick={handleApply}>
+										Thêm quyết định
+									</Button>
+								</Tooltip>,
+							]
+						: []
+				}
+				hideCard
 				showModalTitle
-			>
-				<MyDatePicker
-					style={{ width: 150, marginBottom: 12 }}
-					value={yearSelect ? dayjs(yearSelect) : null}
-					pickerStyle='year'
-					placeholder='Chọn năm hành chính'
-					format='YYYY'
-					onChange={(val) => {
-						if (val) {
-							setYearSelect(dayjs(val));
-						} else {
-							setYearSelect(null);
-						}
-					}}
-					allowClear
-				/>
-			</TableBase>
+			/>
 
 			<ModalExpandable
 				title='Chi tiết minh chứng'
@@ -167,8 +181,14 @@ const QuyetDinhTotNghiepPage = () => {
 			>
 				<PreviewFile file={record?.url ?? ''} />
 			</ModalExpandable>
+
+			<ModalChonQuyetDinh
+				visible={visibleModalChonQuyetDinh}
+				onCancel={() => setVisibleModalChonQuyetDinh(false)}
+				getData={getData}
+			/>
 		</>
 	);
 };
 
-export default QuyetDinhTotNghiepPage;
+export default ViewQuyetDinhTheoDot;

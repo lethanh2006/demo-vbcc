@@ -106,38 +106,20 @@ export default () => {
 		}
 	};
 
-	// Thêm function import cấp bằng aaaaaaaaaaaaaaaaaaa
-
-	const importPhuLucVanBangCapBangModel = async (row: any, idDotCapBang: string) => {
-		if (formSubmiting) return;
-		setFormSubmiting(true);
-
-		return importPhuLucVanBangCapBang({ ...row, idDotCapBang })
-			.then((res) => {
-				return res?.data;
-			})
-			.catch(() => message.error('Lỗi khi import cấp bằng'))
-			.finally(() => setFormSubmiting(false));
+	const postExecuteImportModel = async (data: any[], extendData?: any) => {
+		const results = [];
+		for (const row of data) {
+			const res = await importPhuLucVanBangCapBang({ ...row, idDotCapBang: extendData?.idDotCapBang });
+			results.push(res?.data);
+		}
+		return results;
 	};
 
 	const getImportPhuLucCapBangTemplateModel = async (idDotCapBang: string) => {
-		if (formSubmiting) return;
-		setFormSubmiting(true);
-		return getImportPhuLucCapBangTemplate(idDotCapBang)
-			.then((res) => {
-				fileDownload(
-					res.data,
-					`Template_Import_Cap_Bang_${idDotCapBang}.xlsx`,
-					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-				);
-				message.success('Tải xuống thành công');
-				return res.data;
-			})
-			.catch(() => message.error('Lỗi tải xuống'))
-			.finally(() => setFormSubmiting(false));
+		const res = await getImportPhuLucCapBangTemplate(idDotCapBang);
+		fileDownload(res.data, `Template_Cap_Bang_${idDotCapBang}.xlsx`);
+		return res.data;
 	};
-
-	//kết thúc
 
 	const traCuuPhuLucVanBanPublicModel = async (payload: {
 		hoTen?: string;
@@ -278,7 +260,7 @@ export default () => {
 		visibleSignVanBang,
 		setVisibleSignVanBang,
 
-		importPhuLucVanBangCapBangModel,
+		postExecuteImportModel,
 		getImportPhuLucCapBangTemplateModel,
 	};
 };

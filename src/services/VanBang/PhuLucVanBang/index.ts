@@ -79,11 +79,8 @@ export async function postTrinhKyVanBang(payLoad: any) {
 export const getDanhSachQuyetDinhChuaThemVaoDotCapBang = async (idDotCapBang?: string, nam?: string) => {
 	const res = await axios.get(
 		`${ip3}/quyet-dinh-dot-cap-bang/danh-sach-quyet-dinh-chua-them-vao-dot-cap-bang/${idDotCapBang}/${nam}`,
-		// { params: { nam } },
 	);
 	return res.data;
-	// const data = res.data?.items ?? res.data ?? [];
-	// return Array.isArray(data) ? data : [];
 };
 
 export const getQuyetDinhTheoDotCapBang = async (idDotCapBang: string) => {

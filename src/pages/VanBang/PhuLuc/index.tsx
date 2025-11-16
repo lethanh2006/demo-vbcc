@@ -582,15 +582,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 
 			<ModalCapBang visible={showModalCapBang} setVisible={setShowModalCapBang} getData={getData} />
 
-			{/* <ModalSinhSoVaoSo
-				visible={visibleSinhSo}
-				setVisibe={setVisibleSinhSo}
-				getData={() => {
-					getData();
-					if (getDataV2) getDataV2();
-				}}
-			/> */}
-
 			<ModalSinhSoVaoSoTong visible={visibleSinhSo} setVisible={setVisibleSinhSo} getData={getData} />
 
 			<ModalTrinhKyVanBang visible={visibleTrinhKy} setVisible={setVisibleTrinhKy} getData={getData} />

@@ -31,8 +31,7 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 				recDot._id,
 				yearSelect ? dayjs(yearSelect).format('YYYY') : undefined,
 			);
-			const data = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
-			setDanhSach(data);
+			setDanhSach(Array.isArray(res?.data) ? res.data : Array.isArray(res));
 		} catch (error) {
 			console.error(error);
 			setDanhSach([]);
@@ -111,7 +110,7 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 						type: 'checkbox',
 						selectedRowKeys: selectedIds,
 						preserveSelectedRowKeys: true,
-						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+						onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
 						columnWidth: 40,
 					},
 				}}

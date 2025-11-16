@@ -26,7 +26,6 @@ const ModalSinhSo: React.FC<Props> = ({ onNext, onCancel }) => {
 
 	const onFinish = async (values: any) => {
 		if (!recQuyetDinh?._id) return;
-
 		try {
 			const res = await sortPhuLucTamModel(recQuyetDinh._id, values);
 			onNext(values, res?.data ?? []);
@@ -75,7 +74,6 @@ const ModalSinhSo: React.FC<Props> = ({ onNext, onCancel }) => {
 									ruleSortPhuLuc: index?.ruleSortPhuLuc,
 								});
 							}}
-							disabled
 						/>
 					</Form.Item>
 				</Col>

@@ -42,10 +42,10 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		}
 	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
 
-	const appendFormat = (value: string) => {
-		const key = '/{soVaoSo}';
-		const str = String(value || '');
-		return !edit && !str.endsWith(key) ? `${str}${key}` : str;
+	const appendFormat = (format: string) => {
+		if (!format) return '';
+		const nextNumber = String((soVaoSoHienTai ?? 0) + 1).padStart(soChuSoVaoSo || 0, '0');
+		return format.replace('{soVaoSo}', nextNumber);
 	};
 
 	const onFinish = async (values: SoVanBang.IRecord) => {
@@ -61,8 +61,6 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 				.split(',')
 				.map((x) => x.trim())
 				.filter(Boolean),
-			soVaoSoFormat: appendFormat(values.soVaoSoFormat),
-			bookEntryNumberFormat: appendFormat(values.bookEntryNumberFormat),
 		};
 
 		if (edit) {
@@ -149,25 +147,16 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 								<i style={{ color: '#888' }}>Ví dụ: TS25/{'{soVaoSo}'}</i>
 								{soVaoSoFormat && (
 									<div style={{ color: '#888', marginTop: 4 }}>
-										Số vào sổ tiếp theo là:{' '}
-										<b>
-											{soVaoSoFormat}/{String((soVaoSoHienTai ?? 0) + 1).padStart(soChuSoVaoSo || 0, '0')}
-										</b>
+										Số vào sổ tiếp theo là: <b>{appendFormat(soVaoSoFormat)}</b>
 									</div>
 								)}
 							</div>
 						}
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
-						<Input
-							placeholder='TS25/{soVaoSo}'
-							suffix={!edit ? '/{soVaoSo}' : null}
-							value={soVaoSoFormat || ''}
-							onChange={(e) => form.setFieldsValue({ soVaoSoFormat: e.target.value })}
-						/>
+						<Input placeholder='VD: TS25/{soVaoSo}' />
 					</Form.Item>
 				</Col>
-
 				<Col span={24} md={12}>
 					<Form.Item
 						name='bookEntryNumberFormat'
@@ -177,28 +166,19 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 								<i style={{ color: '#888' }}>Ví dụ: TS25/{'{soVaoSo}'}</i>
 								{bookEntryNumberFormat && (
 									<div style={{ color: '#888', marginTop: 4 }}>
-										Số vào sổ tiếp theo là:{' '}
-										<b>
-											{bookEntryNumberFormat}/{String((soVaoSoHienTai ?? 0) + 1).padStart(soChuSoVaoSo || 0, '0')}
-										</b>
+										Số vào sổ tiếp theo là: <b>{appendFormat(bookEntryNumberFormat)}</b>
 									</div>
 								)}
 							</div>
 						}
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
-						<Input
-							placeholder='TS25/{soVaoSo}'
-							suffix={!edit ? '/{soVaoSo}' : null}
-							value={bookEntryNumberFormat || ''}
-							onChange={(e) => form.setFieldsValue({ bookEntryNumberFormat: e.target.value })}
-						/>
+						<Input placeholder='VD: TS25/{soVaoSo}' />
 					</Form.Item>
 				</Col>
-
 				<Col span={24}>
 					<Form.Item name='ruleSortPhuLuc' label='Quy tắc sắp xếp phụ lục sinh số vào sổ' rules={[...rules.required]}>
-						<Input placeholder='Nhập quy tắc' style={{ width: '100%' }} />
+						<Input placeholder='VD: maSinhVien,hoTen,nganh' style={{ width: '100%' }} />
 					</Form.Item>
 				</Col>
 

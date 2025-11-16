@@ -44,17 +44,6 @@ const DotCapBangTotNghiepPage = () => {
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
-		// {
-		// 	title: 'Trạng thái',
-		// 	dataIndex: 'trangThai',
-		// 	align: 'center',
-		// 	width: 120,
-		// 	render: (val, rec) => (
-		// 		<Tag color={colorTrangThaiCapBangToiNghiep[val as ETrangThaiDotCapBangTotNghiep]}>{val}</Tag>
-		// 	),
-		// 	filterType: 'select',
-		// 	filterData: Object.values(ETrangThaiDotCapBangTotNghiep),
-		// },
 		{
 			title: 'Thao tác',
 			align: 'center',
