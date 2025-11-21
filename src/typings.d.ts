@@ -10,6 +10,10 @@ declare module '*.gif';
 declare module '*.bmp';
 declare module '*.tiff';
 declare module 'react-split-pane/lib/Pane';
+declare module 'react-big-calendar';
+declare module 'react-big-calendar/lib/addons/dragAndDrop';
+declare module 'react-big-calendar/lib/addons/dragAndDrop/styles';
+declare module 'react-big-calendar/lib/Toolbar';
 
 // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design Dedicated environment variable, please do not use it in your project.
@@ -45,6 +49,8 @@ declare const APP_CONFIG_URL_CSVC: string;
 declare const APP_CONFIG_URL_THU_VIEN: string;
 declare const APP_CONFIG_URL_QLVB: string;
 declare const APP_CONFIG_URL_VBCC: string;
+declare const APP_CONFIG_URL_QLND: string;
+declare const APP_CONFIG_URL_TAP_CHI_KH: string;
 
 declare const APP_CONFIG_TITLE_LANDING: string;
 declare const APP_CONFIG_TITLE_CONNECT: string;
@@ -61,6 +67,8 @@ declare const APP_CONFIG_TITLE_CSVC: string;
 declare const APP_CONFIG_TITLE_THU_VIEN: string;
 declare const APP_CONFIG_TITLE_QLVB: string;
 declare const APP_CONFIG_TITLE_VBCC: string;
+declare const APP_CONFIG_TITLE_QLND: string;
+declare const APP_CONFIG_TITLE_TAP_CHI_KH: string;
 
 declare const APP_CONFIG_INIT_TRINH_DO: string;
 declare const APP_CONFIG_INIT_HINH_THUC: string;

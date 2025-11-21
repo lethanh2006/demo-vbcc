@@ -1,4 +1,5 @@
 import { Namespaces } from '@/pages/TienIch/AuditLog/Modal';
+import { TableProps } from 'antd';
 import type { ColumnType } from 'antd/lib/table';
 import React, { JSX } from 'react';
 import { type EOperatorType } from './constant';
@@ -157,12 +158,25 @@ export type TableBaseProps = {
 };
 
 export type TFilter<T> = {
-	field: keyof T | [keyof T, string];
+	field?: keyof T | [keyof T, string];
 	operator?: EOperatorType;
-	values: (string | number)[];
+	values?: (string | number)[];
 	active?: boolean;
+	filters?: TFilter<T>[];
+	logicOperator?: 'or' | 'and';
 };
 
+export type RowFilterProps = {
+	index: number;
+	columns: IColumn<any>[];
+	filter: TFilter<any>;
+	onChange: (filter: TFilter<any>) => void;
+	fieldsFilterable: string[];
+	onRemove?: () => void;
+	allowGrouping?: boolean;
+	level?: number;
+	path?: (string | number)[];
+};
 
 export type ConditionCriteria<T> = {
 	/** Giá trị nằm trong danh sách */
