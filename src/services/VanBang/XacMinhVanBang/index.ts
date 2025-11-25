@@ -12,3 +12,7 @@ export async function exportXacMinhVanBang(idVanBang: string, bieuMauId?: string
 export const getXacMinhSetting = async () => {
 	return axios.get(`${ip3}/xac-minh-van-bang/setting`);
 };
+
+export const thongKeXacMinhVanBang = async () => {
+	return axios.get(`${ip3}/xac-minh-van-bang/thong-ke`);
+};

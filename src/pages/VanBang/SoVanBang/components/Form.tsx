@@ -176,11 +176,11 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						<Input placeholder='VD: TS25/{soVaoSo}' />
 					</Form.Item>
 				</Col>
-				<Col span={24}>
+				{/* <Col span={24}>
 					<Form.Item name='ruleSortPhuLuc' label='Quy tắc sắp xếp phụ lục sinh số vào sổ' rules={[...rules.required]}>
 						<Input placeholder='VD: maSinhVien,hoTen,nganh' style={{ width: '100%' }} />
 					</Form.Item>
-				</Col>
+				</Col> */}
 
 				<Col span={24}>
 					<Form.Item name='moTa' label='Mô tả' rules={[...rules.text, ...rules.length(200)]}>

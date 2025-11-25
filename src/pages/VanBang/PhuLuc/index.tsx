@@ -2,6 +2,7 @@ import MyDatePicker from '@/components/MyDatePicker';
 import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import { ETagColor } from '@/services/base/constant';
@@ -12,7 +13,6 @@ import {
 	BoldOutlined,
 	CheckCircleOutlined,
 	CloudUploadOutlined,
-	DatabaseOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	EyeOutlined,
@@ -37,15 +37,14 @@ import ModalExportData from './components/ModalExportData';
 import ModalImportPhuLucVanBang from './components/ModalImportPhuLuc';
 import ModalPushBlockchain from './components/ModalPushBlockchain';
 import ModalSign from './components/ModalSign';
-import ModalSinhSoVaoSoTong from './components/ModalSinhSo';
 import ModalTrinhKyVanBang from './components/ModalTrinhKy';
 import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import ViewPhuLucVanBang from './components/ViewRender';
 
-const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
+const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	const intl = useIntl();
-	const { isQuyetDinh = false, getData: getDataV2 } = props;
+	const { isQuyetDinh = false } = props;
 	const {
 		page,
 		limit,
@@ -80,7 +79,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [showModalCapBang, setShowModalCapBang] = useState<boolean>(false);
-	const [visibleSinhSo, setVisibleSinhSo] = useState<boolean>(false);
 	const [visibleTrinhKy, setVisibleTrinhKy] = useState<boolean>(false);
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const { INFO_TENANT: settingVbcc } = settings;
@@ -96,9 +94,18 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 
 	const getData = () => {
 		if (recQuyetDinh?._id)
-			getModel({
-				idQuyetDinh: recQuyetDinh?._id,
-			});
+			getModel(
+				{
+					idQuyetDinh: recQuyetDinh?._id,
+				},
+				[
+					{
+						active: true,
+						field: 'soVaoSoBang',
+						operator: EOperatorType.NOT_NULL,
+					},
+				],
+			);
 	};
 
 	const handleSign = () => {
@@ -417,11 +424,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 			</ButtonExtend>,
 		);
 	if (!!recQuyetDinh?._id) {
-		otherButtons.push(
-			<ButtonExtend icon={<DatabaseOutlined />} onClick={() => setVisibleSinhSo(true)} key='sinhSo'>
-				Sinh số vào sổ
-			</ButtonExtend>,
-		);
 		if (settings?.INFO_TENANT?.require_diploma_signature) {
 			otherButtons.push(
 				<ButtonExtend icon={<FormOutlined />} onClick={() => setVisibleTrinhKy(true)} key='trinhky' disabled={!total}>
@@ -581,8 +583,6 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; getData?: any }) => {
 			)}
 
 			<ModalCapBang visible={showModalCapBang} setVisible={setShowModalCapBang} getData={getData} />
-
-			<ModalSinhSoVaoSoTong visible={visibleSinhSo} setVisible={setVisibleSinhSo} getData={getData} />
 
 			<ModalTrinhKyVanBang visible={visibleTrinhKy} setVisible={setVisibleTrinhKy} getData={getData} />
 

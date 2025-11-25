@@ -1,9 +1,10 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
 
-export async function getImportPhuLucVbTemplate(quyetDinhId: string) {
+export async function getImportPhuLucVbTemplate(quyetDinhId: string, params?: any) {
 	return axios.get(`${ip3}/phu-luc-van-bang-import/import-template/quyet-dinh/${quyetDinhId}`, {
 		responseType: 'arraybuffer',
+		params,
 	});
 }
 
@@ -13,10 +14,12 @@ export async function getImportPhuLucVbTemplate(quyetDinhId: string) {
 // 	});
 // }
 
-export async function importPhuLucVanBang(payload: { quyetDinhId: string; file: Blob }) {
+export async function importPhuLucVanBang(payload: { quyetDinhId: string; file: Blob }, params?: any) {
 	const form = new FormData();
 	form.append('file', payload.file);
-	return axios.post(`${ip3}/phu-luc-van-bang-import/import/insert/quyet-dinh/${payload.quyetDinhId}`, form);
+	return axios.post(`${ip3}/phu-luc-van-bang-import/import/insert/quyet-dinh/${payload.quyetDinhId}`, form, {
+		params,
+	});
 }
 
 export async function putUpdateIpfs(idQuyetDinh: string, update: any[]) {

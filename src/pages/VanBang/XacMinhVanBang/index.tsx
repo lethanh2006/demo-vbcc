@@ -3,30 +3,35 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import { ESettingKey } from '@/services/base/constant';
+import { colorTrangThaiXacMinh, ETrangThaiXacMinh } from '@/services/VanBang/constant';
 import { exportXacMinhVanBang } from '@/services/VanBang/XacMinhVanBang';
+import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import { getNameFile } from '@/utils/utils';
 import {
+	ArrowLeftOutlined,
 	DeleteOutlined,
 	EditOutlined,
-	ExportOutlined,
-	FileDoneOutlined,
-	MenuOutlined,
+	InfoCircleOutlined,
 	SettingOutlined,
 } from '@ant-design/icons';
-import { Checkbox, message, Popconfirm, Popover, Space, Spin } from 'antd';
+import { Checkbox, message, Popconfirm, Popover, Space, Spin, Tag, theme } from 'antd';
 import fileDownload from 'js-file-download';
 import { useState } from 'react';
 import { Link, useModel } from 'umi';
 import ViewPhuLucVanBang from '../PhuLuc/components/ViewRender';
 import FormXacMinh from './components/FormXacMinh';
 import ModalCaiDatXacMinh from './components/ModalCaiDat';
+import ModalPhucDap from './components/PhucDap';
+import StatXacMinhVanBang from './components/Stat';
 
 const XacMinhVanBangPage = () => {
-	const { page, limit, deleteModel, handleEdit } = useModel('vbcc.xacminhvanbang');
+	const token = theme.useToken();
+	const { page, limit, deleteModel, handleEdit, setRecord } = useModel('vbcc.xacminhvanbang');
 	const { getByIdModel, visibleForm, setVisibleForm, loading } = useModel('vbcc.phulucvanbang');
 	const { getByKeyModel } = useModel('tienich.caidat');
 	const [isFormBieuMauVisible, setIsFormBieuMauVisible] = useState(false);
+	const [visiblePhucDap, setVisiblePhucDap] = useState<boolean>(false);
 
 	const showPhuLucDetail = (rec: XacMinhVanBang.IRecord) => {
 		if (rec && rec.phuLucId) {
@@ -53,6 +58,49 @@ const XacMinhVanBangPage = () => {
 			}
 		}
 	};
+
+	const renderTrangThaiInfo = (rec: XacMinhVanBang.IRecord) => (
+		<div style={{ fontSize: 12, minWidth: 200, maxWidth: 300, lineHeight: 1.45 }}>
+			<div>
+				<b>Người tạo:</b> {rec?.nguoiTao?.hoTen ?? '—'}
+				<br />
+				{rec?.nguoiTao?.thoiGian && <em>{dayjs(rec?.nguoiTao?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
+			</div>
+			<br />
+
+			<div>
+				<b>Người xử lý:</b> {rec?.nguoiXuLy?.hoTen ?? '—'}
+				<br />
+				{rec?.nguoiXuLy?.thoiGian && <em>{dayjs(rec?.nguoiXuLy?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
+			</div>
+			<br />
+
+			<div>
+				<b>Loại phúc đáp:</b>
+				<div style={{ whiteSpace: 'pre-wrap' }}>{rec?.loaiPhucDap || '—'}</div>
+			</div>
+			<br />
+
+			<div>
+				<b>Nội dung phúc đáp:</b>
+				<div style={{ whiteSpace: 'pre-wrap' }}>{rec?.noiDungPhucDap || '—'}</div>
+			</div>
+			<br />
+
+			<div>
+				<b>File phúc đáp:</b>
+				<div style={{ whiteSpace: 'pre-wrap' }}>
+					{rec?.filePhucDap ? (
+						<a href={rec.filePhucDap} target='_blank' rel='noreferrer'>
+							Chi tiết
+						</a>
+					) : (
+						'—'
+					)}
+				</div>
+			</div>
+		</div>
+	);
 
 	const columns: IColumn<XacMinhVanBang.IRecord>[] = [
 		{
@@ -160,37 +208,77 @@ const XacMinhVanBangPage = () => {
 			],
 		},
 		{
+			title: 'Trạng thái',
+			dataIndex: 'trangThaiXacMinh',
+			width: 150,
+			align: 'center',
+			fixed: 'right',
+			filterType: 'select',
+			filterData: Object.values(ETrangThaiXacMinh),
+
+			render: (val, rec) => (
+				<Space size={6}>
+					<Tag color={colorTrangThaiXacMinh[val as ETrangThaiXacMinh]} style={{ padding: '2px 8px', fontWeight: 500 }}>
+						{val}
+					</Tag>
+
+					<Popover placement='left' content={renderTrangThaiInfo(rec)}>
+						<InfoCircleOutlined style={{ cursor: 'pointer', color: token.token.colorPrimary }} />
+					</Popover>
+				</Space>
+			),
+		},
+		{
 			title: 'Thao tác',
 			width: 120,
 			fixed: 'right',
 			align: 'center',
 			render: (_, record) => (
 				<>
-					<Popover
-						placement='left'
+					{/* <Popover
+						placement='bottomLeft'
 						content={
-							<Space>
+							<Space direction='vertical' size={'small'}>
 								<ButtonExtend
-									size='middle'
 									type='link'
-									tooltip='Văn bản phản hồi'
+									icon={<ArrowLeftOutlined />}
+									onClick={() => {
+										setRecord(record);
+										setVisiblePhucDap(true);
+									}}
+								>
+									Phúc đáp
+								</ButtonExtend>
+								<ButtonExtend
+									type='link'
 									icon={<ExportOutlined />}
 									disabled={!record.coThongTin}
 									onClick={() => handleExportFile(record)}
-								/>
+								>
+									Văn bản phản hồi
+								</ButtonExtend>
 								<ButtonExtend
-									size='middle'
 									type='link'
-									tooltip='Ký số'
 									icon={<FileDoneOutlined />}
 									//onClick={() => handleSignDocument(record)}
-								/>
+								>
+									Ký số
+								</ButtonExtend>
 							</Space>
 						}
-						trigger='click'
+						trigger='hover'
 					>
 						<ButtonExtend type='link' tooltip='Thêm' icon={<MenuOutlined />} />
-					</Popover>
+					</Popover> */}
+					<ButtonExtend
+						tooltip='Phúc đáp'
+						type='link'
+						icon={<ArrowLeftOutlined />}
+						onClick={() => {
+							setRecord(record);
+							setVisiblePhucDap(true);
+						}}
+					/>
 
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
 
@@ -221,7 +309,9 @@ const XacMinhVanBangPage = () => {
 					/>,
 				]}
 				showModalTitle
-			/>
+			>
+				<StatXacMinhVanBang />
+			</TableBase>
 
 			<ModalExpandable
 				open={visibleForm}
@@ -236,6 +326,8 @@ const XacMinhVanBangPage = () => {
 			</ModalExpandable>
 
 			<ModalCaiDatXacMinh visible={isFormBieuMauVisible} onClose={() => setIsFormBieuMauVisible(false)} />
+
+			<ModalPhucDap visible={visiblePhucDap} setVisible={setVisiblePhucDap} />
 		</>
 	);
 };

@@ -71,7 +71,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 					<Form.Item
 						label='Danh sách file biểu mẫu xuất phụ lục (mặc định)'
 						name='listIdFileBieuMau'
-						rules={[...rules.required]}
+						// rules={[...rules.required]}
 					>
 						<FormItemFileBieuMau />
 					</Form.Item>

@@ -91,12 +91,12 @@ export default () => {
 		}
 	};
 
-	const importPhuLucVanBangModel = async (payload: { quyetDinhId: string; file: Blob }) => {
+	const importPhuLucVanBangModel = async (payload: { quyetDinhId: string; file: Blob }, params?: any) => {
 		if (formSubmiting) return;
 		setFormSubmiting(true);
 
 		try {
-			const res = await importPhuLucVanBang(payload);
+			const res = await importPhuLucVanBang(payload, params);
 
 			return res.data?.data;
 		} catch (err) {
@@ -192,13 +192,16 @@ export default () => {
 			idSoVanBang: string;
 			sinhLaiToanBo: boolean;
 		},
+		getData?: () => void,
 	): Promise<any> => {
 		if (formSubmiting) return Promise.reject('Form submitting');
 		setFormSubmiting(true);
 
 		try {
 			const res = await sortPhuLucTam(idQuyetDinh, payload);
-			return res.data;
+
+			if (getData) getData();
+			return res.data.data;
 		} catch (err) {
 			return Promise.reject(err);
 		} finally {

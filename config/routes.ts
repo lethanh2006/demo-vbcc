@@ -47,6 +47,12 @@
 		icon: 'FileDoneOutlined',
 	},
 	{
+		name: 'DuyetDanhSach',
+		path: 'duyet-danh-sach-quyet-dinh',
+		component: 'VanBang/QuyetDinhTotNghiep/DuyetDanhSach',
+		icon: 'FileDoneOutlined',
+	},
+	{
 		name: 'PhuLucVanBang',
 		path: 'phu-luc',
 		component: 'VanBang/PhuLuc',
