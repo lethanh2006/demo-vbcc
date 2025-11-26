@@ -1,16 +1,20 @@
 import useInitModel from '@/hooks/useInitModel';
 import {
 	chiTietPhuLucVanBanPublic,
+	getImportPhuLucCapBangTemplate,
 	importPhuLucVanBang,
+	importPhuLucVanBangCapBang,
 	postTrinhKyVanBang,
 	putUpdateIpfs,
 	sinhSoVaoSo,
+	sortPhuLucTam,
 	traCuuPhuLucVanBanPublic,
 	updBlockchain,
 } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { preIPFS } from '@/utils/ip';
 import { message } from 'antd';
+import fileDownload from 'js-file-download';
 import { useState } from 'react';
 
 export default () => {
@@ -87,12 +91,12 @@ export default () => {
 		}
 	};
 
-	const importPhuLucVanBangModel = async (payload: { quyetDinhId: string; file: Blob }) => {
+	const importPhuLucVanBangModel = async (payload: { quyetDinhId: string; file: Blob }, params?: any) => {
 		if (formSubmiting) return;
 		setFormSubmiting(true);
 
 		try {
-			const res = await importPhuLucVanBang(payload);
+			const res = await importPhuLucVanBang(payload, params);
 
 			return res.data?.data;
 		} catch (err) {
@@ -100,6 +104,21 @@ export default () => {
 		} finally {
 			setFormSubmiting(false);
 		}
+	};
+
+	const postExecuteImportModel = async (data: any[], extendData?: any) => {
+		const results = [];
+		for (const row of data) {
+			const res = await importPhuLucVanBangCapBang({ ...row, idDotCapBang: extendData?.idDotCapBang });
+			results.push(res?.data);
+		}
+		return results;
+	};
+
+	const getImportPhuLucCapBangTemplateModel = async (idDotCapBang: string) => {
+		const res = await getImportPhuLucCapBangTemplate(idDotCapBang);
+		fileDownload(res.data, `Template_Cap_Bang_${idDotCapBang}.xlsx`);
+		return res.data;
 	};
 
 	const traCuuPhuLucVanBanPublicModel = async (payload: {
@@ -145,8 +164,8 @@ export default () => {
 			soVaoSoHienTai: number;
 			idSoVanBang: string;
 			sinhLaiToanBo: boolean;
-			sortTheoHoTen: boolean;
-			sortTheoMaSinhVien: boolean;
+			// sortTheoHoTen: boolean;
+			// sortTheoMaSinhVien: boolean;
 		},
 		getData?: () => void,
 	): Promise<any> => {
@@ -161,6 +180,30 @@ export default () => {
 			return res.data?.data;
 		} catch (er) {
 			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const sortPhuLucTamModel = async (
+		idQuyetDinh: string,
+		payload: {
+			soVaoSoHienTai: number;
+			idSoVanBang: string;
+			sinhLaiToanBo: boolean;
+		},
+		getData?: () => void,
+	): Promise<any> => {
+		if (formSubmiting) return Promise.reject('Form submitting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await sortPhuLucTam(idQuyetDinh, payload);
+
+			if (getData) getData();
+			return res.data.data;
+		} catch (err) {
+			return Promise.reject(err);
 		} finally {
 			setFormSubmiting(false);
 		}
@@ -215,8 +258,12 @@ export default () => {
 		tableData,
 		setTableData,
 		sinhSoVaoSoModel,
+		sortPhuLucTamModel,
 		postTrinhKyVanBangModel,
 		visibleSignVanBang,
 		setVisibleSignVanBang,
+
+		postExecuteImportModel,
+		getImportPhuLucCapBangTemplateModel,
 	};
 };

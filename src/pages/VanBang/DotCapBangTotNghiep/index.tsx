@@ -2,11 +2,10 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
-import { colorTrangThaiCapBangToiNghiep, ETrangThaiDotCapBangTotNghiep } from '@/services/VanBang/constant';
 import type { DotCapBangTotNghiep } from '@/services/VanBang/DotCapBangTotNghiep/typing';
 import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Popconfirm, Tag } from 'antd';
+import { Popconfirm } from 'antd';
 import { useModel } from 'umi';
 import Modal from './components/Modal';
 
@@ -44,17 +43,6 @@ const DotCapBangTotNghiepPage = () => {
 			width: 140,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
-		},
-		{
-			title: 'Trạng thái',
-			dataIndex: 'trangThai',
-			align: 'center',
-			width: 120,
-			render: (val, rec) => (
-				<Tag color={colorTrangThaiCapBangToiNghiep[val as ETrangThaiDotCapBangTotNghiep]}>{val}</Tag>
-			),
-			filterType: 'select',
-			filterData: Object.values(ETrangThaiDotCapBangTotNghiep),
 		},
 		{
 			title: 'Thao tác',

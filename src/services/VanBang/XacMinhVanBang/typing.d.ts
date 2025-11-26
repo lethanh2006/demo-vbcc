@@ -1,3 +1,5 @@
+import { ELoaiPhucDap, ETrangThaiXacMinh } from '../constant';
+
 declare module XacMinhVanBang {
 	export interface IRecord {
 		// thông tin yêu cầu
@@ -23,6 +25,27 @@ declare module XacMinhVanBang {
 		phuLucId: string;
 		urlYeuCau: string;
 		urlPhanHoi: string;
+
+		filePhucDap: string | null;
+		loaiPhucDap: ELoaiPhucDap;
+		noiDungPhucDap: string;
+		trangThaiXacMinh: ETrangThaiXacMinh;
+		nguoiTao: {
+			ssoId: string;
+			hoTen: string;
+			thoiGian: Date;
+		};
+		nguoiXuLy: {
+			ssoId: string;
+			hoTen: string;
+			thoiGian: Date;
+		};
+	}
+
+	export interface IThongKeXacMinhVanBang {
+		choXuLy: number;
+		dangXacMinh: number;
+		traKetQua: number;
 	}
 
 	export interface ISetting {

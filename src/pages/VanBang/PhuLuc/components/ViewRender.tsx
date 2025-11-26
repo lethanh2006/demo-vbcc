@@ -1,4 +1,3 @@
-import { FilePdfOutlined } from '@ant-design/icons';
 import { Button, Empty } from 'antd';
 import { useIntl, useModel } from 'umi';
 import PhuLucDetailView from './PhuLucDetailView';
@@ -32,11 +31,11 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
 			<PhuLucDetailView />
 
 			<div className='form-footer'>
-				{hasPrint && record && (
+				{/* {hasPrint && record && (
 					<Button type='primary' icon={<FilePdfOutlined />} onClick={() => handlePrintOne(record)}>
 						In phụ lục
 					</Button>
-				)}
+				)} */}
 
 				<Button onClick={() => setVisibleForm(false)}>
 					{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}

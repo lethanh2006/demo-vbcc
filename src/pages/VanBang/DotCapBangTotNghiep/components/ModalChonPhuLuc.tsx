@@ -1,5 +1,4 @@
 import ExpandText from '@/components/ExpandText';
-import { EOperatorType } from '@/components/Table/constant';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
@@ -28,14 +27,7 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 			{
 				idDotCapBang: null,
 			},
-			[
-				{
-					active: true,
-					field: 'idQuyetDinh',
-					operator: EOperatorType.INCLUDE,
-					values: dsAllQuyeDinh?.map((item) => item?._id),
-				},
-			],
+			undefined,
 			undefined,
 			false,
 		).then((res) => setDanhSach(res));

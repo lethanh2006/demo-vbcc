@@ -20,6 +20,7 @@ declare module SoVanBang {
 		soVaoSoFormat: string;
 		bookEntryNumberFormat: string;
 		soChuSoVaoSo: number;
+		ruleSortPhuLuc: string[];
 	}
 
 	export type TNnguoiInfo = {

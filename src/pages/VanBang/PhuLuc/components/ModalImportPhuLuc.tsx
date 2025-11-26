@@ -13,8 +13,13 @@ import { useModel } from 'umi';
 
 const { Text } = Typography;
 
-const ModalImportPhuLucVanBang = (props: { visible: boolean; onCancel: () => void; onOk: () => void }) => {
-	const { visible, onCancel, onOk } = props;
+const ModalImportPhuLucVanBang = (props: {
+	visible: boolean;
+	onCancel: () => void;
+	onOk: () => void;
+	params?: any;
+}) => {
+	const { visible, onCancel, onOk, params } = props;
 	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const { formSubmiting, importPhuLucVanBangModel } = useModel('vbcc.phulucvanbang');
 	const [form] = Form.useForm();
@@ -30,7 +35,7 @@ const ModalImportPhuLucVanBang = (props: { visible: boolean; onCancel: () => voi
 	const onFinish = (values: any) => {
 		const file = values.file.fileList?.[0]?.originFileObj;
 		if (recQuyetDinh?._id && file)
-			importPhuLucVanBangModel({ quyetDinhId: recQuyetDinh?._id, file }).then((res) => {
+			importPhuLucVanBangModel({ quyetDinhId: recQuyetDinh?._id, file }, params).then((res) => {
 				if (res?.success === false) {
 					message.error('Nhập dữ liệu thất bại');
 					setDataThatBai(res?.error ?? []);
@@ -44,7 +49,7 @@ const ModalImportPhuLucVanBang = (props: { visible: boolean; onCancel: () => voi
 
 	const onDownloadTemplate = () => {
 		if (recQuyetDinh?._id)
-			getImportPhuLucVbTemplate(recQuyetDinh._id).then((res) =>
+			getImportPhuLucVbTemplate(recQuyetDinh._id, params).then((res) =>
 				fileDownload(res.data, `Mẫu nhập Phụ lục văn bằng QĐ ${recQuyetDinh.soQuyetDinh}.xlsx`),
 			);
 	};

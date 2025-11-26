@@ -1,4 +1,5 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
@@ -20,12 +21,15 @@ const FormXacMinhVanBang = () => {
 	}, [record?._id, visibleForm, form]);
 
 	const onFinish = (values: XacMinhVanBang.IRecord) => {
-		if (edit && record?._id) {
-			putModel(record._id, values);
+		if (record?._id) {
+			putModel(record._id, values)
+				.then()
+				.catch((err) => console.log(err));
 		} else {
-			postModel(values);
+			postModel(values)
+				.then()
+				.catch((err) => console.log(err));
 		}
-		setVisibleForm(false);
 	};
 
 	return (

@@ -17,6 +17,10 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 	const { danhSach: dsHinhThuc } = useModel('daotao.hinhthucdaotao');
 	const intl = useIntl();
 	const [form] = Form.useForm();
+	const soVaoSoHienTai = Form.useWatch('soVaoSoHienTai', form);
+	const soChuSoVaoSo = Form.useWatch('soChuSoVaoSo', form);
+	const soVaoSoFormat = Form.useWatch('soVaoSoFormat', form);
+	const bookEntryNumberFormat = Form.useWatch('bookEntryNumberFormat', form);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -33,9 +37,16 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 				maTrinhDoDaoTao: APP_CONFIG_INIT_TRINH_DO,
 				maHinhThucDaoTao: APP_CONFIG_INIT_HINH_THUC,
 				ten: `Sổ văn bằng ${trinhDo?.ten} - ${hinhThuc?.ten} năm ${dayjs().format('YYYY')}`,
+				soVaoSoHienTai: 0,
 			});
 		}
 	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
+
+	const appendFormat = (format: string) => {
+		if (!format) return '';
+		const nextNumber = String((soVaoSoHienTai ?? 0) + 1).padStart(soChuSoVaoSo || 0, '0');
+		return format.replace('{soVaoSo}', nextNumber);
+	};
 
 	const onFinish = async (values: SoVanBang.IRecord) => {
 		const trinhDo = dsTrinhDo.find((x) => x.ma === values?.maTrinhDoDaoTao);
@@ -46,6 +57,10 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 			namHanhChinh: dayjs(values.namHanhChinh).format('YYYY'),
 			tenTrinhDoDaoTao: trinhDo?.ten,
 			tenHinhThucDaoTao: hinhThuc?.ten,
+			ruleSortPhuLuc: String(values.ruleSortPhuLuc)
+				.split(',')
+				.map((x) => x.trim())
+				.filter(Boolean),
 		};
 
 		if (edit) {
@@ -127,12 +142,17 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 					<Form.Item
 						name='soVaoSoFormat'
 						label='Định dạng số vào sổ'
-						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
-							<i style={{ color: '#888' }}>
-								Ví dụ: TS25/{'{'}0001{'}'}
-							</i>
+							<div>
+								<i style={{ color: '#888' }}>Ví dụ: TS25/{'{soVaoSo}'}</i>
+								{soVaoSoFormat && (
+									<div style={{ color: '#888', marginTop: 4 }}>
+										Số vào sổ tiếp theo là: <b>{appendFormat(soVaoSoFormat)}</b>
+									</div>
+								)}
+							</div>
 						}
+						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
 						<Input placeholder='VD: TS25/{soVaoSo}' />
 					</Form.Item>
@@ -141,16 +161,26 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 					<Form.Item
 						name='bookEntryNumberFormat'
 						label='Định dạng số vào sổ (Tiếng Anh)'
-						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						extra={
-							<i style={{ color: '#888' }}>
-								Ví dụ: TS25/{'{'}0001{'}'}
-							</i>
+							<div>
+								<i style={{ color: '#888' }}>Ví dụ: TS25/{'{soVaoSo}'}</i>
+								{bookEntryNumberFormat && (
+									<div style={{ color: '#888', marginTop: 4 }}>
+										Số vào sổ tiếp theo là: <b>{appendFormat(bookEntryNumberFormat)}</b>
+									</div>
+								)}
+							</div>
 						}
+						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
 						<Input placeholder='VD: TS25/{soVaoSo}' />
 					</Form.Item>
 				</Col>
+				{/* <Col span={24}>
+					<Form.Item name='ruleSortPhuLuc' label='Quy tắc sắp xếp phụ lục sinh số vào sổ' rules={[...rules.required]}>
+						<Input placeholder='VD: maSinhVien,hoTen,nganh' style={{ width: '100%' }} />
+					</Form.Item>
+				</Col> */}
 
 				<Col span={24}>
 					<Form.Item name='moTa' label='Mô tả' rules={[...rules.text, ...rules.length(200)]}>

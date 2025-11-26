@@ -2,7 +2,7 @@ import MyDatePicker from '@/components/MyDatePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
-import UploadFile from '@/components/Upload/UploadFile';
+import FormTable from '@/pages/VanBang/PhuLuc/components/FormTable';
 import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
@@ -14,12 +14,12 @@ import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/ic
 import { Button, Col, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import FormTable from './FormTable';
 
-const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: string]: any }) => {
+const FormSinhVienQuyetDinh = (props: any) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { getData, vbccSettings } = props;
+	const { getData } = props;
+	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const {
 		record,
 		edit,
@@ -32,8 +32,6 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 		tableData,
 		setTableData,
 	} = useModel('vbcc.phulucvanbang');
-	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
-	const { record: recBieuMau, getBieuMauDetailModel } = useModel('vbcc.bieumauphuluc');
 	const [openedTableKey, setOpenedTableKey] = useState<string | null>(null);
 	const [editFormTable, setEditFormTable] = useState<boolean>(false);
 	const [recordTable, setRecordTable] = useState<any>({});
@@ -42,39 +40,35 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 		setOpenedTableKey(null);
 	};
 
+	const recBieuMau = recQuyetDinh?.bieuMau;
+
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 			setRecordTable(undefined);
 			setTableData([]);
-		} else {
-			getBieuMauDetailModel(recQuyetDinh?.maBieuMau ?? '').then((bm) => {
-				if (record?._id) {
-					const templateData = record.templateData;
+		} else if (record?._id) {
+			const templateData = record.templateData;
 
-					if (bm) {
-						const updatedTemplateData = bm.elements?.map((elm) => {
-							const matched = templateData?.find((i) => i.headerName === elm.headerName);
+			const updatedTemplateData = recBieuMau?.elements?.map((elm) => {
+				const matched = templateData?.find((i) => i.headerName === elm.headerName);
 
-							if (elm.type === ELoaiDuLieuBieuMau.Table) {
-								setTableData((prev: any) => ({
-									...prev,
-									[elm.headerName]: matched?.value ?? [],
-								}));
-							}
-
-							return {
-								...elm,
-								value: matched?.value ?? null,
-							};
-						});
-
-						record.templateData = updatedTemplateData as any;
-					}
-
-					form.setFieldsValue(record);
+				if (elm.type === ELoaiDuLieuBieuMau.Table) {
+					setTableData((prev: any) => ({
+						...prev,
+						[elm.headerName]: matched?.value ?? [],
+					}));
 				}
+
+				return {
+					...elm,
+					value: matched?.value ?? null,
+				};
 			});
+
+			record.templateData = updatedTemplateData as any;
+
+			form.setFieldsValue(record);
 		}
 	}, [record?._id, visibleForm]);
 
@@ -233,24 +227,15 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item label='Số vào sổ' name='soVaoSoBang'>
-						<Input placeholder='Nhập số vào sổ' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item name='bookEntryNumberFormat' label='Số vào sổ (Tiếng Anh)'>
-						<Input placeholder='Nhập số vào sổ (Tiếng Anh)' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
 					<Form.Item
-						label='Số hiệu văn bằng'
-						name='soHieuVanBang'
-						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+						label='Mã sinh viên'
+						name='maSinhVien'
+						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
 					>
-						<Input placeholder='Nhập số hiệu văn bằng' />
+						<Input placeholder='Nhập mã sinh viên' />
 					</Form.Item>
 				</Col>
+
 				<Col span={24} md={12}>
 					<Form.Item
 						label='Họ tên sinh viên'
@@ -260,27 +245,13 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 						<Input placeholder='Nhập họ tên sinh viên' />
 					</Form.Item>
 				</Col>
+
 				<Col span={24} md={12}>
 					<Form.Item label='Ngày sinh' name='ngaySinh'>
 						<MyDatePicker />
 					</Form.Item>
 				</Col>
-				<Col span={24} md={12}>
-					<Form.Item
-						label='Mã sinh viên'
-						name='maSinhVien'
-						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
-					>
-						<Input placeholder='Nhập mã sinh viên' />
-					</Form.Item>
-				</Col>
-				{!vbccSettings?.require_IPFS && (
-					<Col span={24} md={12}>
-						<Form.Item label='Tập tin văn bằng (file scan)' name='urlIpfs'>
-							<UploadFile maxCount={1} otherProps={{ accept: '.pdf' }} />
-						</Form.Item>
-					</Col>
-				)}
+
 				{recBieuMau?._id && (
 					<>
 						<Col span={24}>
@@ -313,4 +284,4 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 	);
 };
 
-export default FormPhuLucVanBang;
+export default FormSinhVienQuyetDinh;

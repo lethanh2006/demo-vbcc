@@ -1,10 +1,11 @@
 import { Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import QuyetDinhTotNghiepPage from '../../QuyetDinhTotNghiep';
+import ViewPhuLucQuyetDinh from '../../PhuLuc/components/ViewPhuLucQuyetDinh';
+import ViewQuyetDinhTheoDot from '../../QuyetDinhTotNghiep/components/ViewQuyetDinhDot';
 import Form from './Form';
 
-const ModalKhaoSat = (props: any) => {
+const ModalDotCapBang = (props: any) => {
 	const { record } = useModel('vbcc.dotcapbangtotnghiep');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
@@ -32,13 +33,12 @@ const ModalKhaoSat = (props: any) => {
 			{currentStep === 0 ? (
 				<Form afterAddNew={() => setCurrentStep(1)} />
 			) : currentStep === 1 ? (
-				<QuyetDinhTotNghiepPage isDotCapBang />
+				<ViewQuyetDinhTheoDot isDotCapBang />
 			) : currentStep === 2 ? (
-				// <PhuLucVanBangPage isDotCapBang />
-				<></>
+				<ViewPhuLucQuyetDinh isDotCapBang />
 			) : null}
 		</>
 	);
 };
 
-export default ModalKhaoSat;
+export default ModalDotCapBang;

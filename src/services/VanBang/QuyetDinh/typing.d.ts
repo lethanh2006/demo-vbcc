@@ -1,6 +1,7 @@
 import type { ELoaiQuyetDinh } from '@/services/DaoTao/constant';
 import type { BieuMauPhuLuc } from '../BieuMauPhuLuc/typing';
 import type { SoVanBang } from '../SoVanBang/typing';
+import { ETrangThaiQuyetDinhTotNghiep } from '../constant';
 
 declare module QuyetDinhTotNghiep {
 	export interface IRecord {
@@ -21,6 +22,22 @@ declare module QuyetDinhTotNghiep {
 		soLuotTraCuu: string;
 		idFileMau: string;
 		maDonVi: string;
+
+		soVaoSoHienTai: number;
+		ruleSortPhuLuc: string[];
+		ghiChuChinhSua: string;
+		trangThai: ETrangThaiQuyetDinhTotNghiep;
+		thoiGianGui: string;
+		nguoiTao: {
+			ssoId: string;
+			hoTen: string;
+			thoiGian: date;
+		};
+		nguoiXuLy: {
+			ssoId: string;
+			hoTen: string;
+			thoiGian: date;
+		};
 
 		dotCapBangId: string | null;
 	}

@@ -136,11 +136,6 @@ const ChiTietBieuMauPhuLuc = () => {
 			</Descriptions>
 
 			<div className='fw500' style={{ marginTop: 12 }}>
-				Danh sách file biểu mẫu xuất phụ lục
-			</div>
-			<FormItemFileBieuMau value={record?.listIdFileBieuMau ?? []} hide />
-
-			<div className='fw500' style={{ marginTop: 12 }}>
 				Cấu hình biểu mẫu
 			</div>
 			<Form layout='vertical'>
@@ -186,6 +181,11 @@ const ChiTietBieuMauPhuLuc = () => {
 					)}
 				</Row>
 			</Form>
+
+			<div className='fw500' style={{ marginTop: 12 }}>
+				Danh sách file biểu mẫu xuất phụ lục
+			</div>
+			<FormItemFileBieuMau value={record?.listIdFileBieuMau ?? []} hide />
 
 			<div className='form-footer'>
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

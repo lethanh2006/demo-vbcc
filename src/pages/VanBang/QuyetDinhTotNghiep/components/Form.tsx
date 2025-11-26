@@ -2,6 +2,7 @@ import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
 import { ELoaiQuyetDinh } from '@/services/DaoTao/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
+import { ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
@@ -12,11 +13,7 @@ import { useIntl, useModel } from 'umi';
 import SelectBieuMauPhuLuc from '../../../DanhMuc/BieuMauPhuLuc/components/Select';
 import SelectSoVanBang from '../../SoVanBang/components/Select';
 
-const FormQuyetDinhTotNghiep = (props: {
-	afterAddNew?: (rec: QuyetDinhTotNghiep.IRecord) => void;
-	getData?: () => void;
-	yearSelect?: any;
-}) => {
+const FormQuyetDinhTotNghiep = (props: { afterAddNew?: () => void; getData?: () => void; yearSelect?: any }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
@@ -33,6 +30,10 @@ const FormQuyetDinhTotNghiep = (props: {
 	} = useModel('vbcc.quyetdinhtotnghiep');
 	const { afterAddNew, getData, yearSelect } = props;
 	const nam = Form.useWatch('nam', form);
+	const disable =
+		!!record?._id &&
+		(record?.trangThai === ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO ||
+			record?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -40,14 +41,13 @@ const FormQuyetDinhTotNghiep = (props: {
 		} else if (record?._id) {
 			form.setFieldsValue({
 				...record,
-				nam: record.nam ? dayjs(record.nam, 'YYYY') : undefined,
-				ngayBanHanh: record.ngayBanHanh ? dayjs(record.ngayBanHanh) : undefined,
+				nam: dayjs(record.nam).format('YYYY'),
 			});
 		}
 
 		if (!record?._id) {
 			form.setFieldsValue({
-				nam: yearSelect ? dayjs(yearSelect, 'YYYY') : dayjs(),
+				nam: yearSelect ? dayjs(yearSelect).format('YYYY') : dayjs(),
 				ngayBanHanh: dayjs(),
 			});
 		}
@@ -59,18 +59,21 @@ const FormQuyetDinhTotNghiep = (props: {
 		values.url = url;
 		values.nam = dayjs(values.nam).format('YYYY');
 		values.ngayBanHanh = dayjs(values.ngayBanHanh).startOf('d').toISOString();
-
 		setFormSubmiting(false);
-		if (edit) {
+
+		if (record?._id) {
 			putModel(record?._id ?? '', values, getData, undefined, false)
-				.then()
+				.then((rec) => {
+					setRecord({ ...record, ...rec });
+					if (afterAddNew) afterAddNew();
+				})
 				.catch((er) => console.log(er));
 		} else
 			postModel({ ...values, loai: ELoaiQuyetDinh.TOT_NGHIEP }, getData, false)
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);
-					if (afterAddNew) afterAddNew(rec);
+					if (afterAddNew) afterAddNew();
 				})
 				.catch((er) => console.log(er));
 	};
@@ -80,22 +83,22 @@ const FormQuyetDinhTotNghiep = (props: {
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col xs={24} md={12}>
 					<Form.Item name='nam' label='Năm hành chính' rules={[...rules.required]}>
-						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' />
+						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item name='idSoVanBang' label='Sổ văn bằng' rules={[...rules.required]}>
-						<SelectSoVanBang condition={{ namHanhChinh: String(dayjs(nam).format('YYYY')) }} />
+						<SelectSoVanBang condition={{ namHanhChinh: String(dayjs(nam).format('YYYY')) }} disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item name='soQuyetDinh' label='Số quyết định' rules={[...rules.required]}>
-						<Input placeholder='Nhập số quyết định' />
+						<Input placeholder='Nhập số quyết định' disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item name='ngayBanHanh' label='Ngày ký quyết định' rules={[...rules.required]}>
-						<MyDatePicker />
+						<MyDatePicker disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
@@ -105,23 +108,23 @@ const FormQuyetDinhTotNghiep = (props: {
 						rules={[...rules.required]}
 						extra={edit ? 'Nếu đổi biểu mẫu, thông tin mẫu trong phụ lục sẽ bị xóa bỏ' : undefined}
 					>
-						<SelectBieuMauPhuLuc selectMa />
+						<SelectBieuMauPhuLuc selectMa disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item name='url' label='Tập tin đính kèm'>
-						<UploadFile />
+						<UploadFile disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24}>
 					<Form.Item name='noiDung' label='Nội dung trích yếu' rules={[...rules.text]}>
-						<Input.TextArea rows={3} placeholder='Nhập nội dung' />
+						<Input.TextArea rows={3} placeholder='Nhập nội dung' disabled={disable} />
 					</Form.Item>
 				</Col>
 			</Row>
 
 			<div className='form-footer'>
-				<Button loading={formSubmiting} htmlType='submit' type='primary'>
+				<Button loading={formSubmiting} htmlType='submit' type='primary' disabled={disable}>
 					{!edit
 						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
 						: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
