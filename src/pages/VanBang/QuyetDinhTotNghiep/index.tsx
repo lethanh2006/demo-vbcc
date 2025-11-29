@@ -3,6 +3,7 @@ import MyDatePicker from '@/components/MyDatePicker';
 import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
@@ -25,7 +26,8 @@ import SelectSoVanBang from '../SoVanBang/components/Select';
 import ModalQuyetDinhTotNghiep from './components/Modal';
 import ModalYeuCauChinhSua from './components/YeuCauChinhSua';
 
-const QuyetDinhTotNghiepPage = ({ duyetQuyetDinh = false }) => {
+const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep[] }) => {
+	const { trangThai } = props;
 	const intl = useIntl();
 	const token = theme.useToken();
 
@@ -37,7 +39,15 @@ const QuyetDinhTotNghiepPage = ({ duyetQuyetDinh = false }) => {
 	const [visibleChinhSua, setVisibleChinhSua] = useState(false);
 
 	const getData = () => {
-		getModel({ nam: dayjs(yearSelect).format('YYYY') });
+		const filter = [
+			{
+				active: true,
+				field: 'trangThai',
+				values: trangThai,
+				operator: EOperatorType.INCLUDE,
+			},
+		];
+		getModel({ nam: dayjs(yearSelect).format('YYYY') }, trangThai?.length ? filter : (undefined as any));
 	};
 
 	const onCell = (rec: QuyetDinhTotNghiep.IRecord) => ({
@@ -149,9 +159,8 @@ const QuyetDinhTotNghiepPage = ({ duyetQuyetDinh = false }) => {
 			width: 150,
 			align: 'center',
 			fixed: 'right',
-			filterType: 'select',
+			filterType: !trangThai?.length ? 'select' : undefined,
 			filterData: Object.values(ETrangThaiQuyetDinhTotNghiep),
-
 			render: (val, rec) => (
 				<Space size={6}>
 					<Tag
@@ -173,7 +182,6 @@ const QuyetDinhTotNghiepPage = ({ duyetQuyetDinh = false }) => {
 			align: 'center',
 			width: 90,
 			fixed: 'right',
-
 			render: (rec) => {
 				const { DU_THAO, YEU_CAU_CHINH_SUA, TRINH_DU_THAO } = ETrangThaiQuyetDinhTotNghiep;
 
@@ -182,7 +190,7 @@ const QuyetDinhTotNghiepPage = ({ duyetQuyetDinh = false }) => {
 
 				return (
 					<>
-						{duyetQuyetDinh ? (
+						{trangThai?.length ? (
 							<Popconfirm
 								title='Duyệt quyết định?'
 								placement='topRight'
@@ -218,21 +226,19 @@ const QuyetDinhTotNghiepPage = ({ duyetQuyetDinh = false }) => {
 							trigger='hover'
 							content={
 								<Space direction='vertical' size={'small'}>
-									{duyetQuyetDinh && (
-										<ButtonExtend
-											type='link'
-											tooltip='Yêu cầu chỉnh sửa'
-											icon={<RollbackOutlined />}
-											className='btn-warning'
-											disabled={!canXuLyQuyetDinh}
-											onClick={() => {
-												setRecord(rec);
-												setVisibleChinhSua(true);
-											}}
-										>
-											Yêu cầu chỉnh sửa
-										</ButtonExtend>
-									)}
+									<ButtonExtend
+										type='link'
+										tooltip='Yêu cầu chỉnh sửa'
+										icon={<RollbackOutlined />}
+										className='btn-warning'
+										disabled={!canXuLyQuyetDinh}
+										onClick={() => {
+											setRecord(rec);
+											setVisibleChinhSua(true);
+										}}
+									>
+										Yêu cầu chỉnh sửa
+									</ButtonExtend>
 
 									<ButtonExtend
 										type='link'
@@ -263,6 +269,7 @@ const QuyetDinhTotNghiepPage = ({ duyetQuyetDinh = false }) => {
 					</>
 				);
 			},
+			hide: trangThai?.includes(ETrangThaiQuyetDinhTotNghiep.CHINH_THUC),
 		},
 	];
 
@@ -271,15 +278,15 @@ const QuyetDinhTotNghiepPage = ({ duyetQuyetDinh = false }) => {
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, yearSelect]}
+				dependencies={[page, limit, yearSelect, trangThai]}
 				modelName='vbcc.quyetdinhtotnghiep'
 				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
-				widthDrawer={1000}
+				widthDrawer={1200}
 				deleteMany
 				rowSelection
 				buttons={{ export: true }}
 				Form={ModalQuyetDinhTotNghiep}
-				formProps={{ getData, yearSelect: dayjs(yearSelect).format('YYYY'), duyetQuyetDinh }}
+				formProps={{ getData, yearSelect: dayjs(yearSelect).format('YYYY'), trangThai }}
 			>
 				<MyDatePicker
 					style={{ width: 160, marginBottom: 12 }}

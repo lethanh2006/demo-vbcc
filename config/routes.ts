@@ -42,15 +42,25 @@
 	},
 	{
 		name: 'QuyetDinhTotNghiep',
-		path: 'quyet-dinh',
-		component: 'VanBang/QuyetDinhTotNghiep',
+		path: 'quyet-din-tot-nghiep',
 		icon: 'FileDoneOutlined',
-	},
-	{
-		name: 'DuyetDanhSach',
-		path: 'duyet-danh-sach-quyet-dinh',
-		component: 'VanBang/QuyetDinhTotNghiep/DuyetDanhSach',
-		icon: 'FileDoneOutlined',
+		routes: [
+			{
+				name: 'ThongTinQuyetDinh',
+				path: 'thong-tin-quyet-dinh',
+				component: 'VanBang/QuyetDinhTotNghiep',
+			},
+			{
+				name: 'DanhSachDuThao',
+				path: 'danh-sach-du-thao',
+				component: 'VanBang/QuyetDinhTotNghiep/DuThao.tsx',
+			},
+			{
+				name: 'QuyetDinhDaDuyet',
+				path: 'quyet-dinh-da-duyet',
+				component: 'VanBang/QuyetDinhTotNghiep/DaDuyet.tsx',
+			},
+		],
 	},
 	{
 		name: 'PhuLucVanBang',

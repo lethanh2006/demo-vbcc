@@ -9,11 +9,13 @@ import { ETagColor } from '@/services/base/constant';
 import { colorTrangThaiBlc, ETrangThaiBlockchain } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
+import rules from '@/utils/rules';
 import {
+	ArrowLeftOutlined,
 	BoldOutlined,
 	CheckCircleOutlined,
+	CloseCircleOutlined,
 	CloudUploadOutlined,
-	DeleteOutlined,
 	EditOutlined,
 	EyeOutlined,
 	FilePdfOutlined,
@@ -25,13 +27,13 @@ import {
 	SignatureOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Descriptions, Dropdown, Menu, Popconfirm, Popover, Space, Tag } from 'antd';
+import { Button, Descriptions, Dropdown, Form, Input, Menu, Popover, Space, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
 import SelectQuyetDinh from '../QuyetDinhTotNghiep/components/Select';
 import CauHinhPhuLucVanBang from './components/CauHinh';
-import Form from './components/Form';
+import FormPhuLucVanBang from './components/Form';
 import ModalSignVanBang from './components/KySoVanBang';
 import ModalExportData from './components/ModalExportData';
 import ModalImportPhuLucVanBang from './components/ModalImportPhuLuc';
@@ -42,15 +44,16 @@ import ModalUploadFolder from './components/ModalUploadFolder';
 import PreviewIPFS from './components/Preview';
 import ViewPhuLucVanBang from './components/ViewRender';
 
-const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
+const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean; afterAddNew?: (val: number) => void }) => {
 	const intl = useIntl();
-	const { isQuyetDinh = false } = props;
+	const [form] = Form.useForm();
+	const { isQuyetDinh = false, afterAddNew } = props;
 	const {
 		page,
 		limit,
-		deleteModel,
+		// deleteModel,
+		// handleEdit,
 		getModel,
-		handleEdit,
 		danhSach,
 		selectedIds,
 		setSelectedIds,
@@ -65,11 +68,13 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 		handleView,
 		setVisibleSignVanBang,
 		record,
+		putModel,
 	} = useModel('vbcc.phulucvanbang');
 	const {
 		record: recQuyetDinh,
 		danhSach: danhsachQuyetDinh,
 		setRecord: setQuyetDinh,
+		setVisibleForm,
 	} = useModel('vbcc.quyetdinhtotnghiep');
 	const { record: recNguoiKy, getByIdModel: getNguoiKy } = useModel('vbcc.nguoiky');
 	const { settings } = useModel('tienich.caidat');
@@ -81,6 +86,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 	const [showModalCapBang, setShowModalCapBang] = useState<boolean>(false);
 	const [visibleTrinhKy, setVisibleTrinhKy] = useState<boolean>(false);
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
+	const [recEditInline, setRecEditInline] = useState<PhuLucVanBang.IRecord>();
 	const { INFO_TENANT: settingVbcc } = settings;
 
 	// set lại quyết định sau khi sinh số vào sổ
@@ -141,6 +147,12 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 		}
 	};
 
+	const onFinish = (value: PhuLucVanBang.IRecord) => {
+		if (recEditInline?.soHieuVanBang !== value.soHieuVanBang)
+			putModel(recEditInline?._id ?? '', { soHieuVanBang: value.soHieuVanBang }, getData, true, false);
+		setRecEditInline(undefined);
+	};
+
 	const onCell = (rec: PhuLucVanBang.IRecord) => ({
 		onClick: () => handleView(rec),
 		style: { cursor: 'pointer' },
@@ -160,7 +172,20 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 			dataIndex: 'soHieuVanBang',
 			filterType: 'string',
 			width: 120,
-			onCell,
+			onCell: (rec) => ({
+				onClick: () => recEditInline?._id !== rec?._id && setRecEditInline(rec),
+				className: 'hovered-cell',
+			}),
+			render: (val, rec) =>
+				recEditInline?._id === rec?._id ? (
+					<Form onFinish={onFinish} form={form}>
+						<Form.Item initialValue={val} name='soHieuVanBang' rules={[...rules.required]} noStyle>
+							<Input autoFocus onBlur={() => setRecEditInline(undefined)} />
+						</Form.Item>
+					</Form>
+				) : (
+					<span>{val}</span>
+				),
 			sortable: true,
 		},
 		{
@@ -374,12 +399,12 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 120,
+			width: 60,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
 					<ButtonExtend tooltip='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
-					<ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
+					{/* <ButtonExtend tooltip='Chỉnh sửa' type='link' icon={<EditOutlined />} onClick={() => handleEdit(rec)} />
 
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id, getData)}
@@ -394,7 +419,7 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 							type='link'
 							icon={<DeleteOutlined />}
 						/>
-					</Popconfirm>
+					</Popconfirm> */}
 				</>
 			),
 		},
@@ -485,11 +510,18 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
 				widthDrawer={1000}
 				modalTitle={
-					isView ? 'Xem chi tiết phụ lục văn bằng' : edit ? 'Cập nhật phụ lục văn bằng' : 'Thêm mới phụ lục văn bằng'
+					isView
+						? 'Xem chi tiết thông tin văn bằng'
+						: edit
+							? 'Cập nhật thông tin văn bằng'
+							: 'Thêm mới thông tin văn bằng'
 				}
-				Form={isView ? ViewPhuLucVanBang : Form}
+				Form={isView ? ViewPhuLucVanBang : FormPhuLucVanBang}
 				formProps={{ getData, vbccSettings: settingVbcc }}
-				buttons={{ create: !!recQuyetDinh?._id }}
+				buttons={{
+					create: false,
+					// !!recQuyetDinh?._id
+				}}
 				hideCard={isQuyetDinh}
 				otherButtons={otherButtons}
 				extra={
@@ -540,6 +572,21 @@ const PhuLucVanBangPage = (props: { isQuyetDinh?: boolean }) => {
 					</Space>
 				) : null}
 			</TableBase>
+
+			<div className='form-footer'>
+				<Button
+					onClick={() => {
+						if (afterAddNew) afterAddNew(2);
+					}}
+					icon={<ArrowLeftOutlined />}
+				>
+					Quay lại
+				</Button>
+
+				<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
+					{intl.formatMessage({ id: 'global.button.huy' })}
+				</Button>
+			</div>
 
 			<ModalImportPhuLucVanBang
 				visible={visibleImport}

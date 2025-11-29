@@ -1,6 +1,7 @@
 import UploadFile from '@/components/Upload/UploadFile';
 import { ESettingKey } from '@/services/base/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
+import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import rules from '@/utils/rules';
 import { Button, Col, Form, Modal, Row, Spin } from 'antd';
 import { useEffect } from 'react';

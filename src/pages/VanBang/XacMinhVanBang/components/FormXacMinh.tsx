@@ -3,12 +3,14 @@ import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
+import { ArrowRightOutlined, CloseCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormXacMinhVanBang = () => {
-	const { edit, record, visibleForm, setVisibleForm, putModel, postModel, formSubmiting } =
+const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
+	const { afterAddNew } = props;
+	const { edit, record, visibleForm, setVisibleForm, putModel, postModel, formSubmiting, setRecord, setEdit } =
 		useModel('vbcc.xacminhvanbang');
 	const intl = useIntl();
 	const [form] = Form.useForm();
@@ -22,12 +24,19 @@ const FormXacMinhVanBang = () => {
 
 	const onFinish = (values: XacMinhVanBang.IRecord) => {
 		if (record?._id) {
-			putModel(record._id, values)
-				.then()
+			putModel(record?._id ?? '', values, undefined, undefined, false)
+				.then((rec) => {
+					setRecord({ ...record, ...rec });
+					if (afterAddNew) afterAddNew(1);
+				})
 				.catch((err) => console.log(err));
 		} else {
-			postModel(values)
-				.then()
+			postModel(values, undefined, false)
+				.then((rec) => {
+					setRecord(rec);
+					setEdit(true);
+					if (afterAddNew) afterAddNew(1);
+				})
 				.catch((err) => console.log(err));
 		}
 	};
@@ -102,12 +111,27 @@ const FormXacMinhVanBang = () => {
 			</Row>
 
 			<div className='form-footer'>
-				<Button loading={formSubmiting} htmlType='submit' type='primary'>
-					{!edit
-						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
-						: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+				<Button
+					loading={formSubmiting}
+					htmlType='submit'
+					type='primary'
+					icon={!edit ? <PlusCircleOutlined /> : <SaveOutlined />}
+				>
+					{!edit ? 'Thêm mới & Tiếp tục' : 'Lưu lại & Tiếp tục'}
 				</Button>
-				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+				{record?._id && (
+					<Button
+						onClick={() => {
+							if (afterAddNew) afterAddNew(1);
+						}}
+						icon={<ArrowRightOutlined />}
+					>
+						Tiếp theo
+					</Button>
+				)}
+				<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
+					{intl.formatMessage({ id: 'global.button.huy' })}
+				</Button>
 			</div>
 		</Form>
 	);

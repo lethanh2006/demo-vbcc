@@ -27,7 +27,7 @@ const ModalDotCapBang = (props: any) => {
 			>
 				<Steps.Step title='Thông tin chung' />
 				<Steps.Step title='Quyết định tốt nghiệp' disabled={!record?._id} />
-				<Steps.Step title='Phụ lục văn bằng' disabled={!record?._id} />
+				<Steps.Step title='Thông tin văn bằng' disabled={!record?._id} />
 			</Steps>
 
 			{currentStep === 0 ? (

@@ -20,10 +20,10 @@ import fileDownload from 'js-file-download';
 import { useState } from 'react';
 import { Link, useModel } from 'umi';
 import ViewPhuLucVanBang from '../PhuLuc/components/ViewRender';
-import FormXacMinh from './components/FormXacMinh';
+import ModalXacMinhVanBang from './components/Modal';
 import ModalCaiDatXacMinh from './components/ModalCaiDat';
-import ModalPhucDap from './components/PhucDap';
 import StatXacMinhVanBang from './components/Stat';
+import ModalPhucDap from './PhucDap/Modal';
 
 const XacMinhVanBangPage = () => {
 	const token = theme.useToken();
@@ -102,12 +102,18 @@ const XacMinhVanBangPage = () => {
 		</div>
 	);
 
+	const onCell = (rec: XacMinhVanBang.IRecord) => ({
+		onClick: () => handleEdit(rec),
+		style: { cursor: 'pointer' },
+	});
+
 	const columns: IColumn<XacMinhVanBang.IRecord>[] = [
 		{
 			title: 'Người yêu cầu',
 			dataIndex: 'nguoiYeuCau',
 			filterType: 'string',
 			width: 160,
+			onCell,
 		},
 		{
 			title: 'Đơn vị',
@@ -115,6 +121,7 @@ const XacMinhVanBangPage = () => {
 			filterType: 'string',
 			width: 180,
 			align: 'center',
+			onCell,
 		},
 		{
 			title: 'SĐT',
@@ -122,6 +129,7 @@ const XacMinhVanBangPage = () => {
 			filterType: 'string',
 			width: 120,
 			align: 'center',
+			onCell,
 		},
 		{
 			title: 'Email',
@@ -129,6 +137,7 @@ const XacMinhVanBangPage = () => {
 			filterType: 'string',
 			width: 180,
 			align: 'center',
+			onCell,
 		},
 		{
 			title: 'Ngày gửi',
@@ -138,12 +147,14 @@ const XacMinhVanBangPage = () => {
 			sortable: true,
 			width: 120,
 			align: 'center',
+			onCell,
 		},
 		{
 			title: 'Mục đích xác minh',
 			dataIndex: 'mucDichXacMinh',
 			filterType: 'string',
 			width: 200,
+			onCell,
 		},
 		{
 			title: 'Phản hồi',
@@ -152,6 +163,7 @@ const XacMinhVanBangPage = () => {
 			render: (value) => <Checkbox checked={value} />,
 			width: 80,
 			align: 'center',
+			onCell,
 		},
 		{
 			title: 'Có thông tin trong hệ thống?',
@@ -172,6 +184,7 @@ const XacMinhVanBangPage = () => {
 				) : (
 					<span>Không có</span>
 				),
+			onCell,
 		},
 		{
 			title: 'Thông tin tra cứu',
@@ -183,6 +196,7 @@ const XacMinhVanBangPage = () => {
 					filterType: 'string',
 					width: 120,
 					align: 'center',
+					onCell,
 				},
 				{
 					title: 'Họ tên sinh viên',
@@ -190,6 +204,7 @@ const XacMinhVanBangPage = () => {
 					filterType: 'string',
 					width: 150,
 					align: 'center',
+					onCell,
 				},
 				{
 					title: 'Số hiệu văn bằng',
@@ -197,6 +212,7 @@ const XacMinhVanBangPage = () => {
 					filterType: 'string',
 					width: 120,
 					align: 'center',
+					onCell,
 				},
 				{
 					title: 'Số vào sổ',
@@ -204,6 +220,7 @@ const XacMinhVanBangPage = () => {
 					filterType: 'string',
 					width: 120,
 					align: 'center',
+					onCell,
 				},
 			],
 		},
@@ -215,7 +232,7 @@ const XacMinhVanBangPage = () => {
 			fixed: 'right',
 			filterType: 'select',
 			filterData: Object.values(ETrangThaiXacMinh),
-
+			onCell,
 			render: (val, rec) => (
 				<Space size={6}>
 					<Tag color={colorTrangThaiXacMinh[val as ETrangThaiXacMinh]} style={{ padding: '2px 8px', fontWeight: 500 }}>
@@ -295,8 +312,8 @@ const XacMinhVanBangPage = () => {
 			<TableBase
 				columns={columns}
 				modelName={'vbcc.xacminhvanbang'}
-				Form={FormXacMinh}
-				widthDrawer={800}
+				Form={ModalXacMinhVanBang}
+				widthDrawer={1000}
 				dependencies={[page, limit]}
 				title='Xác minh văn bằng'
 				extra={[
@@ -316,7 +333,7 @@ const XacMinhVanBangPage = () => {
 			<ModalExpandable
 				open={visibleForm}
 				onCancel={() => setVisibleForm(false)}
-				title='Xem chi tiết phụ lục văn bằng'
+				title='Xem chi tiết thông tin văn bằng'
 				width={1000}
 				footer={null}
 			>

@@ -16,7 +16,7 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
 	if (!loading && !record) {
 		return (
 			<>
-				<Empty description='Phụ lục văn bằng không tồn tại' />
+				<Empty description='Thông tin văn bằng không tồn tại' />
 				<div className='form-footer'>
 					<Button onClick={() => setVisibleForm(false)}>
 						{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}

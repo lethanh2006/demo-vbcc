@@ -23,7 +23,7 @@ const CauHinhPhuLucVanBang = (props: { visible: boolean; setVisible: (val: boole
 	};
 
 	return (
-		<Modal title='Cấu hình phụ lục văn bằng' open={visible} onCancel={() => setVisible(false)} footer={null}>
+		<Modal title='Cấu hình thông tin văn bằng' open={visible} onCancel={() => setVisible(false)} footer={null}>
 			<Spin spinning={loading}>
 				<Form form={form} layout='vertical' onFinish={onFinish}>
 					<Row gutter={[12, 0]}>

@@ -1,19 +1,17 @@
-import UploadFile from '@/components/Upload/UploadFile';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { ELoaiPhucDap, ETrangThaiXacMinh } from '@/services/VanBang/constant';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
-import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd';
+import { Button, Form, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import FormPhucDap from './Form';
 
 const ModalPhucDap = (props: { visible: boolean; setVisible: (val: boolean) => void; getData?: () => void }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { visible, setVisible } = props;
 	const { record, formSubmiting, putModel, setFormSubmiting } = useModel('vbcc.xacminhvanbang');
-	const loaiPhucDap: ELoaiPhucDap = Form.useWatch('loaiPhucDap', form);
 	const [trangThai, setTrangThai] = useState<ETrangThaiXacMinh>(ETrangThaiXacMinh.CHO_XU_LY);
 
 	useEffect(() => {
@@ -42,34 +40,7 @@ const ModalPhucDap = (props: { visible: boolean; setVisible: (val: boolean) => v
 	return (
 		<Modal title='Xác nhận yêu cầu chỉnh sửa' open={visible} onCancel={() => setVisible(false)} footer={null}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<Row gutter={[12, 0]}>
-					<Col span={24}>
-						<Form.Item name='loaiPhucDap' label='Loại phúc đáp' rules={[...rules.required]}>
-							<Select
-								placeholder='Chọn loại phúc đáp'
-								options={Object.values(ELoaiPhucDap).map((item) => ({
-									key: item,
-									value: item,
-									label: item,
-								}))}
-							/>
-						</Form.Item>
-					</Col>
-					{loaiPhucDap === ELoaiPhucDap.VAN_BAN_GIAY ? (
-						<>
-							<Col span={24}>
-								<Form.Item name='noiDungPhucDap' label='Nội dung phúc đáp'>
-									<Input.TextArea rows={3} placeholder='Nhập nội dung' />
-								</Form.Item>
-							</Col>
-							<Col span={24}>
-								<Form.Item name='filePhucDap' label='File phúc đáp' extra={<a>Tải file mẫu</a>}>
-									<UploadFile maxCount={5} />
-								</Form.Item>
-							</Col>
-						</>
-					) : null}
-				</Row>
+				<FormPhucDap form={form} />
 
 				<div className='form-footer'>
 					<Button

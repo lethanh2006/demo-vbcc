@@ -1,11 +1,24 @@
 import TableBase from '@/components/Table';
+import ButtonExtend from '@/components/Table/ButtonExtend';
 import { IColumn } from '@/components/Table/typing';
 import { defaultElementBieuMau, ELoaiDuLieuBieuMau, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
-import { Button, Checkbox, Col, Form, InputNumber, Row, Select } from 'antd';
-import { useEffect } from 'react';
-import { useModel } from 'umi';
+import rules from '@/utils/rules';
+import {
+	ArrowLeftOutlined,
+	ArrowRightOutlined,
+	CheckCircleOutlined,
+	CloseCircleOutlined,
+	DeleteOutlined,
+	EditOutlined,
+	SendOutlined,
+} from '@ant-design/icons';
+import { Button, Checkbox, Col, Form, Input, InputNumber, Modal, Popconfirm, Row, Select } from 'antd';
+import { useEffect, useState } from 'react';
+import { useIntl, useModel } from 'umi';
 import SelectSoVanBang from '../../SoVanBang/components/Select';
+import ModalYeuCauChinhSua from '../components/YeuCauChinhSua';
+import FormSinhVienQuyetDinh from '../DanhSachSinhVien/components/Form';
 
 const toCamel = (str: string) => {
 	return str
@@ -24,15 +37,48 @@ const toCamel = (str: string) => {
 		.join('');
 };
 
-const DuThaoSoVaoSoQuyetDinh = () => {
+const DuThaoSoVaoSoQuyetDinh = (props: {
+	afterAddNew?: (val: number) => void;
+	trangThai?: ETrangThaiQuyetDinhTotNghiep;
+}) => {
+	const { afterAddNew, trangThai } = props;
+	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { record: recQuyetDinh, getByIdModel } = useModel('vbcc.quyetdinhtotnghiep');
-	const { getModel, sortPhuLucTamModel, formSubmiting, page, limit } = useModel('vbcc.phulucvanbang');
+	const {
+		record: recQuyetDinh,
+		setVisibleForm: setVisibleQuyetDinh,
+		trinhLanhDaoModel,
+		xuLyDuThaoModel,
+		getByIdModel,
+	} = useModel('vbcc.quyetdinhtotnghiep');
+	const {
+		getModel,
+		sortPhuLucTamModel,
+		formSubmiting,
+		page,
+		limit,
+		putModel,
+		deleteModel,
+		handleEdit,
+		visibleForm,
+		setVisibleForm,
+	} = useModel('vbcc.phulucvanbang');
 	const { danhSach: dsSoVanBang } = useModel('vbcc.sovanbang');
+	const [visibleChinhSua, setVisibleChinhSua] = useState(false);
+	const [recEditInline, setRecEditInline] = useState<PhuLucVanBang.IRecord>();
+
 	const disable =
 		!!recQuyetDinh?._id &&
 		(recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO ||
 			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC);
+
+	const trinhLanhDao =
+		recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.DU_THAO ||
+		recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA;
+
+	const canXuLyQuyetDinh =
+		recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO ||
+		recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA;
 
 	//Get quyết định lấy số vào sổ
 	const getQuyetDinh = () => {
@@ -63,11 +109,33 @@ const DuThaoSoVaoSoQuyetDinh = () => {
 			.catch((er) => console.log(er));
 	};
 
+	const onFinishSoVaoSo = (value: PhuLucVanBang.IRecord) => {
+		if (recEditInline?.soVaoSoTamThoi !== value.soVaoSoTamThoi)
+			putModel(recEditInline?._id ?? '', { soVaoSoTamThoi: value.soVaoSoTamThoi }, getData, true, false);
+		setRecEditInline(undefined);
+	};
+
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
 			title: 'Số vào sổ (dự kiến)',
 			dataIndex: 'soVaoSoTamThoi',
 			width: 110,
+			onCell: disable
+				? undefined
+				: (rec) => ({
+						onClick: () => recEditInline?._id !== rec?._id && setRecEditInline(rec),
+						className: 'hovered-cell',
+					}),
+			render: (val, rec) =>
+				recEditInline?._id === rec?._id ? (
+					<Form onFinish={onFinishSoVaoSo} form={form}>
+						<Form.Item initialValue={val} name='soVaoSoTamThoi' rules={[...rules.required]} noStyle>
+							<Input autoFocus onBlur={() => setRecEditInline(undefined)} />
+						</Form.Item>
+					</Form>
+				) : (
+					<span>{val}</span>
+				),
 			filterType: 'string',
 		},
 		{
@@ -81,6 +149,31 @@ const DuThaoSoVaoSoQuyetDinh = () => {
 			dataIndex: 'maSinhVien',
 			width: 120,
 			filterType: 'string',
+		},
+		{
+			title: 'Thao tác',
+			align: 'center',
+			width: 120,
+			fixed: 'right',
+			render: (val, rec) => (
+				<>
+					<ButtonExtend
+						disabled={disable}
+						tooltip='Chỉnh sửa'
+						type='link'
+						icon={<EditOutlined />}
+						onClick={() => handleEdit(rec)}
+					/>
+
+					<Popconfirm
+						onConfirm={() => deleteModel(rec._id, getData)}
+						title='Bạn có chắc chắn muốn xóa phụ lục này?'
+						placement='topRight'
+					>
+						<ButtonExtend disabled={disable} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+					</Popconfirm>
+				</>
+			),
 		},
 	];
 
@@ -162,6 +255,87 @@ const DuThaoSoVaoSoQuyetDinh = () => {
 					hideCard
 				/>
 			</div>
+
+			<div className='form-footer'>
+				<Button
+					onClick={() => {
+						if (afterAddNew) afterAddNew(1);
+					}}
+					icon={<ArrowLeftOutlined />}
+				>
+					Quay lại
+				</Button>
+				{trangThai?.length ? (
+					<>
+						<Popconfirm
+							onConfirm={() =>
+								xuLyDuThaoModel(
+									recQuyetDinh?._id ?? '',
+									{ trangThai: ETrangThaiQuyetDinhTotNghiep.CHINH_THUC },
+									getQuyetDinh,
+								).then(() => {
+									if (afterAddNew) afterAddNew(3);
+								})
+							}
+							title='Bạn có chắc chắn muốn duyệt định tốt nghiệp này?'
+							placement='topRight'
+						>
+							<Button
+								icon={<CheckCircleOutlined />}
+								className='btn-success'
+								type='primary'
+								disabled={!canXuLyQuyetDinh}
+							>
+								Duyệt quyết định
+							</Button>
+						</Popconfirm>
+
+						<Button
+							className='btn-warning'
+							type='primary'
+							disabled={!canXuLyQuyetDinh}
+							onClick={() => setVisibleChinhSua(true)}
+							icon={<EditOutlined />}
+						>
+							Yêu cầu chỉnh sửa
+						</Button>
+					</>
+				) : (
+					<Popconfirm
+						onConfirm={() => trinhLanhDaoModel(recQuyetDinh?._id ?? '', getQuyetDinh)}
+						title='Bạn có chắc chắn muốn trình lãnh đạo quyết định tốt nghiệp này?'
+						placement='topRight'
+					>
+						<Button icon={<SendOutlined />} type='primary' disabled={!trinhLanhDao}>
+							Trình lãnh đạo
+						</Button>
+					</Popconfirm>
+				)}
+				<Button
+					onClick={() => {
+						if (afterAddNew) afterAddNew(3);
+					}}
+					icon={<ArrowRightOutlined />}
+					disabled={recQuyetDinh?.trangThai !== ETrangThaiQuyetDinhTotNghiep.CHINH_THUC}
+				>
+					Tiếp theo
+				</Button>
+				<Button onClick={() => setVisibleQuyetDinh(false)} icon={<CloseCircleOutlined />} danger>
+					{intl.formatMessage({ id: 'global.button.huy' })}
+				</Button>
+			</div>
+
+			<ModalYeuCauChinhSua visible={visibleChinhSua} setVisible={setVisibleChinhSua} getData={getQuyetDinh} />
+
+			<Modal
+				title='Chỉnh sửa thông tin sinh viên'
+				open={visibleForm}
+				onCancel={() => setVisibleForm(false)}
+				footer={null}
+				width={800}
+			>
+				<FormSinhVienQuyetDinh getData={getData} />
+			</Modal>
 		</>
 	);
 };
