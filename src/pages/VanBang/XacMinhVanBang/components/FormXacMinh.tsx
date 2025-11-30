@@ -1,44 +1,80 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import { ELoaiPhucDap, EPhaseXacMinh } from '@/services/VanBang/constant';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { ArrowRightOutlined, CloseCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, Input, Row } from 'antd';
+import {
+	ArrowRightOutlined,
+	CloseCircleOutlined,
+	PlusCircleOutlined,
+	SafetyOutlined,
+	SaveOutlined,
+} from '@ant-design/icons';
+import { Button, Col, Divider, Form, Input, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import SinhVienXacMinhPage from '../SinhVienXacMinh';
 
-const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
-	const { afterAddNew } = props;
-	const { edit, record, visibleForm, setVisibleForm, putModel, postModel, formSubmiting, setRecord, setEdit } =
-		useModel('vbcc.xacminhvanbang');
+const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getData?: () => void }) => {
+	const { afterAddNew, getData } = props;
+	const {
+		edit,
+		record,
+		visibleForm,
+		setVisibleForm,
+		putModel,
+		postModel,
+		formSubmiting,
+		setRecord,
+		setEdit,
+		nextStepXacMinhModel,
+	} = useModel('vbcc.xacminhvanbang');
 	const intl = useIntl();
 	const [form] = Form.useForm();
 
+	const isHoanThanh = record?.phaseXuLy === EPhaseXacMinh.HOAN_THANH;
+
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) {
-			form.setFieldsValue(record);
+		else form.setFieldsValue(record);
+
+		if (!record?._id) {
+			form.setFieldsValue({
+				loaiPhucDap: ELoaiPhucDap.VAN_BAN_GIAY,
+				ngayGuiYeuCau: dayjs(),
+			});
 		}
-	}, [record?._id, visibleForm, form]);
+	}, [record?._id, visibleForm]);
 
 	const onFinish = (values: XacMinhVanBang.IRecord) => {
 		if (record?._id) {
-			putModel(record?._id ?? '', values, undefined, undefined, false)
+			putModel(record?._id ?? '', values, getData, undefined, false)
 				.then((rec) => {
 					setRecord({ ...record, ...rec });
-					if (afterAddNew) afterAddNew(1);
 				})
 				.catch((err) => console.log(err));
 		} else {
-			postModel(values, undefined, false)
+			postModel(values, getData, false)
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);
-					if (afterAddNew) afterAddNew(1);
 				})
 				.catch((err) => console.log(err));
 		}
+	};
+
+	const handleChuyenBuoc = () => {
+		nextStepXacMinhModel(
+			record?._id ?? '',
+			{
+				phaseXuLy: EPhaseXacMinh.XAC_MINH,
+			},
+			getData,
+		).then((rec) => {
+			setRecord({ ...record, ...rec });
+			if (afterAddNew) afterAddNew(1);
+		});
 	};
 
 	return (
@@ -55,32 +91,45 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 						name='nguoiYeuCau'
 						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
 					>
-						<Input placeholder='Nhập họ tên người yêu cầu' />
+						<Input placeholder='Nhập họ tên người yêu cầu' disabled={isHoanThanh} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item label='Tên đơn vị' name='tenDonVi'>
-						<Input placeholder='Nhập tên đơn vị' />
+						<Input placeholder='Nhập tên đơn vị' disabled={isHoanThanh} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item label='Số điện thoại' name='soDienThoai' rules={[...rules.text, ...rules.length(20)]}>
-						<Input placeholder='Nhập số điện thoại' />
+						<Input placeholder='Nhập số điện thoại' disabled={isHoanThanh} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item label='Email' name='email'>
-						<Input placeholder='Nhập email' />
+						<Input placeholder='Nhập email' disabled={isHoanThanh} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Ngày gửi yêu cầu' name='ngayGuiYeuCau' initialValue={dayjs()}>
-						<MyDatePicker />
+					<Form.Item label='Ngày gửi yêu cầu' name='ngayGuiYeuCau'>
+						<MyDatePicker disabled={isHoanThanh} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item label='Mục đích xác minh' name='mucDichXacMinh'>
-						<Input placeholder='Nhập mục đích xác minh' />
+						<Input placeholder='Nhập mục đích xác minh' disabled={isHoanThanh} />
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
+					<Form.Item name='loaiPhucDap' label='Loại phúc đáp' rules={[...rules.required]}>
+						<Select
+							placeholder='Chọn loại phúc đáp'
+							options={Object.values(ELoaiPhucDap).map((item) => ({
+								key: item,
+								value: item,
+								label: item,
+							}))}
+							disabled={isHoanThanh}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24}>
@@ -88,25 +137,8 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 						Thông tin tra cứu
 					</Divider>
 				</Col>
-				<Col span={24} md={12}>
-					<Form.Item label='Mã sinh viên' name='maSinhVien'>
-						<Input placeholder='Nhập mã sinh viên' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item label='Họ tên sinh viên' name='hoTen'>
-						<Input placeholder='Nhập họ tên sinh viên' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item label='Số hiệu văn bằng' name='soHieuVanBang'>
-						<Input placeholder='Nhập số hiệu văn bằng' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item label='Số vào sổ' name='soVaoSo'>
-						<Input placeholder='Nhập số vào sổ' />
-					</Form.Item>
+				<Col span={24}>
+					<SinhVienXacMinhPage isYeuCau size='small' hideThaoTac />
 				</Col>
 			</Row>
 
@@ -116,19 +148,34 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 					htmlType='submit'
 					type='primary'
 					icon={!edit ? <PlusCircleOutlined /> : <SaveOutlined />}
+					disabled={isHoanThanh}
 				>
-					{!edit ? 'Thêm mới & Tiếp tục' : 'Lưu lại & Tiếp tục'}
+					{!edit ? 'Thêm mới xác minh' : 'Lưu lại xác minh'}
 				</Button>
-				{record?._id && (
-					<Button
-						onClick={() => {
-							if (afterAddNew) afterAddNew(1);
-						}}
-						icon={<ArrowRightOutlined />}
-					>
-						Tiếp theo
-					</Button>
-				)}
+
+				<Button
+					loading={formSubmiting}
+					disabled={!record?._id || record?.phaseXuLy !== EPhaseXacMinh.YEU_CAU || isHoanThanh}
+					onClick={handleChuyenBuoc}
+					icon={<SafetyOutlined />}
+					type='primary'
+				>
+					Tiến hành xác minh
+				</Button>
+
+				<Button
+					disabled={
+						!record?._id ||
+						![EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)
+					}
+					onClick={() => {
+						if (afterAddNew) afterAddNew(1);
+					}}
+					icon={<ArrowRightOutlined />}
+				>
+					Tiếp theo
+				</Button>
+
 				<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
 					{intl.formatMessage({ id: 'global.button.huy' })}
 				</Button>

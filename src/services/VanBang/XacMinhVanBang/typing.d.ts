@@ -1,45 +1,36 @@
-import { ELoaiPhucDap, ETrangThaiXacMinh } from '../constant';
+import { ELoaiPhucDap, EPhaseXacMinh } from '../constant';
 
 declare module XacMinhVanBang {
 	export interface IRecord {
-		// thông tin yêu cầu
-		_id: number;
+		_id: string;
 		nguoiYeuCau: string;
 		tenDonVi: string;
 		soDienThoai: string;
 		email: string;
 		ngayGuiYeuCau: Date;
 		mucDichXacMinh: string;
-
-		// thông tin phản hồi
 		daPhanHoi: boolean;
-		coThongTin: boolean;
+		loaiPhucDap: ELoaiPhucDap;
+		phaseXuLy: EPhaseXacMinh;
+		ghiChu: string;
 
-		// thông tin sinh viên
+		danhSachVanBanXacMinh: ISinhVienXacMinh[];
+	}
+
+	export interface ISinhVienXacMinh {
+		_id: string;
+		coThongTin: boolean;
 		maSinhVien: string;
 		hoTen: string;
 		soHieuVanBang: string;
 		soVaoSo: string;
-
-		idVanBang: string;
 		phuLucId: string;
-		urlYeuCau: string;
-		urlPhanHoi: string;
-
-		filePhucDap: string | null;
-		loaiPhucDap: ELoaiPhucDap;
-		noiDungPhucDap: string;
-		trangThaiXacMinh: ETrangThaiXacMinh;
-		nguoiTao: {
-			ssoId: string;
-			hoTen: string;
-			thoiGian: Date;
-		};
-		nguoiXuLy: {
-			ssoId: string;
-			hoTen: string;
-			thoiGian: Date;
-		};
+		urlYeuCau: string | null;
+		urlPhanHoi: string | null;
+		ghiChuKetQuaPhucDap: string;
+		ghiChu: string;
+		yeuCauXacMinhVanBangId: string;
+		yeuCauXacMinhVanBang: IRecord;
 	}
 
 	export interface IThongKeXacMinhVanBang {

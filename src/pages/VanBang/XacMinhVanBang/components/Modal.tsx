@@ -1,85 +1,95 @@
-import dayjs from '@/utils/dayjs';
-import { Col, Descriptions, Row, Steps } from 'antd';
+import { colorTrangThaiXacMinh, EPhaseXacMinh } from '@/services/VanBang/constant';
+import { Card, Col, Row, Space, Steps, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import PhucDapPage from '../PhucDap';
+import CongVanPhucDapPage from '../CongVanPhucDap';
+import SinhVienXacMinhPage from '../SinhVienXacMinh';
+import TraKetQuaPage from '../TraKetQua';
 import FormXacMinhVanBang from './FormXacMinh';
-import ThongTinPhuLucXacMinh from './ThongTinPhuLuc';
 
-const ModalXacMinhVanBang = () => {
-	const { record, visibleForm } = useModel('vbcc.xacminhvanbang');
+const ModalXacMinhVanBang = (props: any) => {
+	const { getData } = props;
+	const { record, visibleForm, edit } = useModel('vbcc.xacminhvanbang');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
 	useEffect(() => {
-		if (!visibleForm) {
+		if (!visibleForm && !record?._id) {
 			setCurrentStep(0);
+		} else {
+			if (record?.phaseXuLy === EPhaseXacMinh.YEU_CAU) {
+				setCurrentStep(0);
+			} else if (record?.phaseXuLy === EPhaseXacMinh.XAC_MINH) {
+				setCurrentStep(1);
+			} else if (record?.phaseXuLy === EPhaseXacMinh.PHUC_DAP) {
+				setCurrentStep(2);
+			} else if (record?.phaseXuLy === EPhaseXacMinh.KET_QUA || record?.phaseXuLy === EPhaseXacMinh.HOAN_THANH) {
+				setCurrentStep(3);
+			}
 		}
-	}, [visibleForm]);
+	}, [visibleForm, record?._id]);
 
 	const onChangeStep = (step: number) => {
 		setCurrentStep(step);
 	};
 
 	return (
-		<Row gutter={[16, 16]}>
-			<Col xs={24} sm={24} md={6} lg={6} xl={6}>
-				<Steps
-					current={currentStep}
-					onChange={record?._id ? onChangeStep : undefined}
-					progressDot
-					direction='vertical'
-					size='small'
-				>
-					<Steps.Step title='Thông tin chung' />
-					<Steps.Step title='Thông tin hệ thống' disabled={!record?._id} />
-					<Steps.Step title='Phúc đáp' disabled={!record?._id} />
-				</Steps>
-			</Col>
-			<Col xs={24} sm={24} md={18} lg={18} xl={18}>
-				{currentStep === 0 ? (
-					<>
-						{record?._id ? (
-							<Descriptions
-								style={{
-									marginBottom: 12,
-								}}
-								column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
-								className='highlight'
-								layout='vertical'
-								colon={false}
-							>
-								<Descriptions.Item label='Người tạo'>{record?.nguoiTao?.hoTen ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='Thời gian tạo'>
-									{record?.nguoiTao?.thoiGian ? dayjs(record?.nguoiTao?.thoiGian).format('HH:mm DD/MM/YYYY') : '--'}
-								</Descriptions.Item>
-								<Descriptions.Item label='Người xử lý'>{record?.nguoiXuLy?.hoTen ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='Thời gian xử lý'>
-									{record?.nguoiXuLy?.thoiGian ? dayjs(record?.nguoiXuLy?.thoiGian).format('HH:mm DD/MM/YYYY') : '--'}
-								</Descriptions.Item>
-								<Descriptions.Item label='Loại phúc đáp'>{record?.loaiPhucDap ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='File phúc đáp'>
-									{record?.filePhucDap ? (
-										<a href={record?.filePhucDap} target='_blank' rel='noreferrer'>
-											Chi tiết
-										</a>
-									) : (
-										'—'
-									)}
-								</Descriptions.Item>
-								<Descriptions.Item label='Nội dung phúc đáp' span={2}>
-									{record?.noiDungPhucDap ?? '--'}
-								</Descriptions.Item>
-							</Descriptions>
-						) : null}
-						<FormXacMinhVanBang afterAddNew={setCurrentStep} />
-					</>
-				) : currentStep === 1 ? (
-					<ThongTinPhuLucXacMinh afterAddNew={setCurrentStep} />
-				) : currentStep === 2 ? (
-					<PhucDapPage afterAddNew={setCurrentStep} />
-				) : null}
-			</Col>
-		</Row>
+		<Card
+			title={
+				<Space>
+					{(edit ? 'Chỉnh sửa ' : 'Thêm mới ') + 'xác minh văn bằng '}
+					{record?._id ? (
+						<Tag color={colorTrangThaiXacMinh[record?.phaseXuLy as EPhaseXacMinh]}>{record?.phaseXuLy}</Tag>
+					) : null}
+				</Space>
+			}
+		>
+			<Row gutter={[16, 16]}>
+				<Col xs={24} sm={24} md={5} lg={5} xl={5}>
+					<Steps
+						current={currentStep}
+						onChange={record?._id ? onChangeStep : undefined}
+						progressDot
+						direction='vertical'
+						size='small'
+					>
+						<Steps.Step title='Yêu cầu xác minh' />
+						<Steps.Step
+							title='Xác minh văn bằng'
+							disabled={
+								!record?._id ||
+								![EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)
+							}
+						/>
+						<Steps.Step
+							title='Công văn phúc đáp'
+							disabled={!record?._id || ![EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)}
+						/>
+						<Steps.Step
+							title='Trả kết quả'
+							disabled={!record?._id || ![EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)}
+						/>
+					</Steps>
+				</Col>
+				<Col xs={24} sm={24} md={19} lg={19} xl={19}>
+					{currentStep === 0 ? (
+						<FormXacMinhVanBang afterAddNew={setCurrentStep} getData={getData} />
+					) : currentStep === 1 ? (
+						<SinhVienXacMinhPage
+							isXacMinh
+							size='small'
+							afterAddNew={setCurrentStep}
+							hideAdd
+							hideImport
+							getData={getData}
+						/>
+					) : currentStep === 2 ? (
+						<CongVanPhucDapPage afterAddNew={setCurrentStep} getData={getData} />
+					) : currentStep === 3 ? (
+						<TraKetQuaPage afterAddNew={setCurrentStep} getData={getData} />
+					) : null}
+				</Col>
+			</Row>
+		</Card>
 	);
 };
 

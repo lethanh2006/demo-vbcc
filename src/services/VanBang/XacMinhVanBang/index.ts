@@ -16,3 +16,7 @@ export const getXacMinhSetting = async () => {
 export const thongKeXacMinhVanBang = async () => {
 	return axios.get(`${ip3}/xac-minh-van-bang/thong-ke`);
 };
+
+export const nextStepXacMinh = async (xacMinhId: string, payLoad: any) => {
+	return axios.put(`${ip3}/xac-minh-van-bang/${xacMinhId}/next-step`, payLoad);
+};
