@@ -6,7 +6,6 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Modal, Row } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
-import ChiTietSinhVienXacMinh from './ChiTiet';
 
 const ModalPhucDap = (props: {
 	visible: boolean;
@@ -39,9 +38,9 @@ const ModalPhucDap = (props: {
 		<Modal title='Nội dung phúc đáp' open={visible} onCancel={() => setVisible(false)} footer={null}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
-					<Col span={24}>
+					{/* <Col span={24}>
 						<ChiTietSinhVienXacMinh />
-					</Col>
+					</Col> */}
 					{isKetQua ? (
 						<Col span={24}>
 							<Form.Item name='urlPhanHoi' label='File phúc đáp' rules={[...rules.required]}>
