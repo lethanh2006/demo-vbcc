@@ -114,15 +114,28 @@ const XacMinhVanBangPage = () => {
 			width: 90,
 			fixed: 'right',
 			align: 'center',
-			render: (_, record) => (
-				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+			render: (_, record) => {
+				const isHoanThanh = record?.phaseXuLy === EPhaseXacMinh.HOAN_THANH;
+				return (
+					<>
+						<ButtonExtend
+							disabled={isHoanThanh}
+							tooltip='Chỉnh sửa'
+							onClick={() => handleEdit(record)}
+							type='link'
+							icon={<EditOutlined />}
+						/>
 
-					<Popconfirm onConfirm={() => deleteModel(record._id)} title='Bạn có chắc chắn muốn xóa?' placement='topRight'>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-					</Popconfirm>
-				</>
-			),
+						<Popconfirm
+							onConfirm={() => deleteModel(record._id)}
+							title='Bạn có chắc chắn muốn xóa?'
+							placement='topRight'
+						>
+							<ButtonExtend disabled={isHoanThanh} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						</Popconfirm>
+					</>
+				);
+			},
 		},
 	];
 

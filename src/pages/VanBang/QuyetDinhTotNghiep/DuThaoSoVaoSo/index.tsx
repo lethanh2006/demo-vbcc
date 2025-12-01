@@ -39,9 +39,9 @@ const toCamel = (str: string) => {
 
 const DuThaoSoVaoSoQuyetDinh = (props: {
 	afterAddNew?: (val: number) => void;
-	trangThai?: ETrangThaiQuyetDinhTotNghiep;
+	title?: 'Thông tin quyết định' | 'Danh sách dự thảo' | 'Quyết định đã duyệt';
 }) => {
-	const { afterAddNew, trangThai } = props;
+	const { afterAddNew, title } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
@@ -265,7 +265,17 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 				>
 					Quay lại
 				</Button>
-				{trangThai?.length ? (
+				{title === 'Thông tin quyết định' ? (
+					<Popconfirm
+						onConfirm={() => trinhLanhDaoModel(recQuyetDinh?._id ?? '', getQuyetDinh)}
+						title='Bạn có chắc chắn muốn trình lãnh đạo quyết định tốt nghiệp này?'
+						placement='topRight'
+					>
+						<Button icon={<SendOutlined />} type='primary' disabled={!trinhLanhDao}>
+							Trình lãnh đạo
+						</Button>
+					</Popconfirm>
+				) : (
 					<>
 						<Popconfirm
 							onConfirm={() =>
@@ -300,16 +310,6 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 							Yêu cầu chỉnh sửa
 						</Button>
 					</>
-				) : (
-					<Popconfirm
-						onConfirm={() => trinhLanhDaoModel(recQuyetDinh?._id ?? '', getQuyetDinh)}
-						title='Bạn có chắc chắn muốn trình lãnh đạo quyết định tốt nghiệp này?'
-						placement='topRight'
-					>
-						<Button icon={<SendOutlined />} type='primary' disabled={!trinhLanhDao}>
-							Trình lãnh đạo
-						</Button>
-					</Popconfirm>
 				)}
 				<Button
 					onClick={() => {

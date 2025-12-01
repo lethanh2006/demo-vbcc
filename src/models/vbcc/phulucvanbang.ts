@@ -10,6 +10,7 @@ import {
 	sortPhuLucTam,
 	traCuuPhuLucVanBanPublic,
 	updBlockchain,
+	yeuCauCapNhatVanBang,
 } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { preIPFS } from '@/utils/ip';
@@ -238,6 +239,32 @@ export default () => {
 		}
 	};
 
+	const yeuCauCapNhatVanBangModel = async (
+		idVanBang: string,
+		payload: {
+			ghiChu?: string;
+			loai: 'Cấp lại' | 'Chỉnh sửa' | 'Thu hồi';
+			thoiGianYeuCau: any;
+			thongTinCapNhatCapLai?: PhuLucVanBang.IRecord;
+		},
+		getData?: () => void,
+	): Promise<any> => {
+		if (formSubmiting) return Promise.reject('Form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await yeuCauCapNhatVanBang(idVanBang, payload);
+			message.success('Lưu thành công');
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (er) {
+			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
 	return {
 		...objInit,
 		dataToSignOrPush,
@@ -265,5 +292,6 @@ export default () => {
 
 		postExecuteImportModel,
 		getImportPhuLucCapBangTemplateModel,
+		yeuCauCapNhatVanBangModel,
 	};
 };

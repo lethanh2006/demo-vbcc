@@ -17,14 +17,17 @@ import {
 	ExportOutlined,
 	FileTextOutlined,
 	ImportOutlined,
+	MenuOutlined,
 	PlusCircleOutlined,
+	SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Checkbox, Modal, Popconfirm, Spin } from 'antd';
+import { Button, Checkbox, Modal, Popconfirm, Popover } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ViewPhuLucVanBang from '../../PhuLuc/components/ViewRender';
 import FormSinhVienXacMinh from './components/Form';
 import ModalPhucDap from './components/PhucDap';
+import ModalTraCuuThuCong from './components/TraCuu';
 
 const SinhVienXacMinhPage = (props: {
 	isYeuCau?: boolean;
@@ -55,6 +58,7 @@ const SinhVienXacMinhPage = (props: {
 	} = props;
 	const { record: recXacMinh, setRecord: setRecXacMinh, nextStepXacMinhModel } = useModel('vbcc.xacminhvanbang');
 	const {
+		loading,
 		getAllModel,
 		danhSach,
 		putModel,
@@ -67,16 +71,13 @@ const SinhVienXacMinhPage = (props: {
 		setIsView,
 		setDanhSach,
 	} = useModel('vbcc.sinhvienxacminh');
-	const {
-		getByIdModel,
-		visibleForm: vsPhuLuc,
-		setVisibleForm: setVsPhuLuc,
-		loading: loadingPhuLuc,
-	} = useModel('vbcc.phulucvanbang');
+	const { getAllModel: getPhuLuc, getByIdModel } = useModel('vbcc.phulucvanbang');
 
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const [visibleExport, setVisibleExport] = useState<boolean>(false);
 	const [visiblePhucDap, setVisiblePhucDap] = useState<boolean>(false);
+	const [visibleTraCuu, setVisibleTraCuu] = useState<boolean>(false);
+	const [vsPhuLuc, setVsPhuLuc] = useState<boolean>(false);
 
 	const isHoanThanh = recXacMinh?.phaseXuLy === EPhaseXacMinh.HOAN_THANH;
 
@@ -106,8 +107,7 @@ const SinhVienXacMinhPage = (props: {
 	};
 
 	const showPhuLucDetail = (phuLucId: string) => {
-		setVisibleForm(true);
-
+		setVsPhuLuc(true);
 		getByIdModel(phuLucId);
 	};
 
@@ -163,6 +163,19 @@ const SinhVienXacMinhPage = (props: {
 			hide: isYeuCau || isXacMinh,
 		},
 		{
+			title: 'File phúc đáp',
+			dataIndex: 'urlPhanHoi',
+			align: 'center',
+			width: 120,
+			render: (val, rec) =>
+				val ? (
+					<a href={val} target='_blank' rel='noreferrer'>
+						Xem chi tiết
+					</a>
+				) : null,
+			hide: !isKetQua,
+		},
+		{
 			title: 'Kết quả',
 			dataIndex: 'coThongTin',
 			align: 'center',
@@ -181,7 +194,7 @@ const SinhVienXacMinhPage = (props: {
 					return (
 						<>
 							<Popconfirm
-								onConfirm={() => putModel(rec._id, { coThongTin: true }, getData)}
+								onConfirm={() => putModel(rec._id, { ...rec, coThongTin: true }, getData)}
 								title='Xác nhận có kết quả?'
 								placement='topRight'
 							>
@@ -193,25 +206,59 @@ const SinhVienXacMinhPage = (props: {
 									className='btn-success'
 								/>
 							</Popconfirm>
-							<Popconfirm
-								onConfirm={() => putModel(rec._id, { coThongTin: false }, getData)}
-								title='Xác nhận không có kết quả?'
-								placement='topRight'
+							<Popover
+								placement='bottom'
+								trigger='hover'
+								content={
+									<>
+										<ButtonExtend
+											disabled={isHoanThanh}
+											tooltip='Tra cứu thủ công'
+											type='link'
+											icon={<SearchOutlined />}
+											onClick={() => {
+												setRecord(rec);
+												setVisibleTraCuu(true);
+
+												//Get thông tin phục lục
+												getPhuLuc(
+													undefined,
+													undefined,
+													{
+														hoTen: rec?.hoTen,
+														maSinhVien: rec?.maSinhVien,
+														soVaoSoBang: rec?.soVaoSo,
+														soHieuVanBang: rec?.soHieuVanBang,
+													},
+													undefined,
+													'tra-cuu',
+												);
+											}}
+										/>
+										<Popconfirm
+											onConfirm={() => putModel(rec._id, { ...rec, coThongTin: false }, getData)}
+											title='Xác nhận không có kết quả?'
+											placement='topRight'
+										>
+											<ButtonExtend
+												disabled={isHoanThanh}
+												tooltip='Không có kết quả'
+												type='link'
+												icon={<CloseCircleOutlined />}
+												danger
+											/>
+										</Popconfirm>
+									</>
+								}
 							>
-								<ButtonExtend
-									disabled={isHoanThanh}
-									tooltip='Không có kết quả'
-									type='link'
-									icon={<CloseCircleOutlined />}
-									danger
-								/>
-							</Popconfirm>
+								<ButtonExtend disabled={isHoanThanh} type='link' tooltip='Thêm thao tác' icon={<MenuOutlined />} />
+							</Popover>
 						</>
 					);
 				if (isCongVan)
 					return (
 						<>
-							<ButtonExtend tooltip='Tải biểu mẫu' type='link' icon={<DownloadOutlined />} />
+							<ButtonExtend disabled={isHoanThanh} tooltip='Tải biểu mẫu' type='link' icon={<DownloadOutlined />} />
 
 							<ButtonExtend
 								disabled={isHoanThanh}
@@ -250,6 +297,7 @@ const SinhVienXacMinhPage = (props: {
 	return (
 		<>
 			<TableStaticData
+				loading={loading}
 				data={danhSach}
 				columns={columns}
 				hasTotal
@@ -332,7 +380,8 @@ const SinhVienXacMinhPage = (props: {
 					</Button>
 					<Button
 						disabled={
-							!recXacMinh?._id || ![EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA].includes(recXacMinh?.phaseXuLy)
+							!recXacMinh?._id ||
+							![EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(recXacMinh?.phaseXuLy)
 						}
 						onClick={() => {
 							if (afterAddNew) afterAddNew(2);
@@ -372,16 +421,22 @@ const SinhVienXacMinhPage = (props: {
 			<ModalExpandable
 				open={vsPhuLuc}
 				onCancel={() => setVsPhuLuc(false)}
-				title='Xem chi tiết thông tin văn bằng'
+				title='Chi tiết thông tin văn bằng'
 				width={1000}
-				footer={null}
+				footer={
+					<div className='form-footer'>
+						<Button onClick={() => setVisibleForm(false)}>
+							{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
+						</Button>
+					</div>
+				}
 			>
-				<Spin spinning={loadingPhuLuc}>
-					<ViewPhuLucVanBang hasPrint={false} />
-				</Spin>
+				<ViewPhuLucVanBang hasPrint={false} hideFooter />
 			</ModalExpandable>
 
 			<ModalPhucDap visible={visiblePhucDap} setVisible={setVisiblePhucDap} getData={getData} isKetQua={isKetQua} />
+
+			<ModalTraCuuThuCong visible={visibleTraCuu} setVisible={setVisibleTraCuu} getData={getData} />
 		</>
 	);
 };

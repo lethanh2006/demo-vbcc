@@ -57,16 +57,24 @@ const ModalXacMinhVanBang = (props: any) => {
 							title='Xác minh văn bằng'
 							disabled={
 								!record?._id ||
-								![EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)
+								![
+									EPhaseXacMinh.XAC_MINH,
+									EPhaseXacMinh.PHUC_DAP,
+									EPhaseXacMinh.KET_QUA,
+									EPhaseXacMinh.HOAN_THANH,
+								].includes(record?.phaseXuLy)
 							}
 						/>
 						<Steps.Step
 							title='Công văn phúc đáp'
-							disabled={!record?._id || ![EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)}
+							disabled={
+								!record?._id ||
+								![EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(record?.phaseXuLy)
+							}
 						/>
 						<Steps.Step
 							title='Trả kết quả'
-							disabled={!record?._id || ![EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)}
+							disabled={!record?._id || ![EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(record?.phaseXuLy)}
 						/>
 					</Steps>
 				</Col>

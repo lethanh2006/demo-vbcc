@@ -166,7 +166,9 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getDat
 				<Button
 					disabled={
 						!record?._id ||
-						![EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)
+						![EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(
+							record?.phaseXuLy,
+						)
 					}
 					onClick={() => {
 						if (afterAddNew) afterAddNew(1);

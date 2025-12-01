@@ -153,6 +153,7 @@ export enum ETrangThaiQuyetDinhTotNghiep {
 	TRINH_DU_THAO = 'Trình dự thảo',
 	YEU_CAU_CHINH_SUA = 'Yêu cầu chỉnh sửa',
 	CHINH_THUC = 'Chính thức',
+	HOAN_THANH = 'Hoàn thành',
 }
 
 export const colorTrangThaiQuyetDinhTotNghiep: Record<ETrangThaiQuyetDinhTotNghiep, ETagColor> = {
@@ -160,6 +161,7 @@ export const colorTrangThaiQuyetDinhTotNghiep: Record<ETrangThaiQuyetDinhTotNghi
 	[ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO]: ETagColor.BLUE,
 	[ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA]: ETagColor.RED,
 	[ETrangThaiQuyetDinhTotNghiep.CHINH_THUC]: ETagColor.GREEN,
+	[ETrangThaiQuyetDinhTotNghiep.HOAN_THANH]: ETagColor.GREEN,
 };
 
 //Xác minh văn bằng

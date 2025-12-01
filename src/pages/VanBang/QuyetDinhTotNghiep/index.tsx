@@ -17,18 +17,20 @@ import {
 	InfoCircleOutlined,
 	MenuOutlined,
 	RollbackOutlined,
+	SaveOutlined,
 	SendOutlined,
 } from '@ant-design/icons';
 import { Button, Popconfirm, Popover, Space, Tag, theme } from 'antd';
 import { useState } from 'react';
-import { useIntl, useModel } from 'umi';
+import { useModel } from 'umi';
 import SelectSoVanBang from '../SoVanBang/components/Select';
 import ModalQuyetDinhTotNghiep from './components/Modal';
 import ModalYeuCauChinhSua from './components/YeuCauChinhSua';
 
-const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep[] }) => {
-	const { trangThai } = props;
-	const intl = useIntl();
+const QuyetDinhTotNghiepPage = (props: {
+	title: 'Thông tin quyết định' | 'Danh sách dự thảo' | 'Quyết định đã duyệt';
+}) => {
+	const { title = 'Thông tin quyết định' } = props;
 	const token = theme.useToken();
 
 	const { handleEdit, page, limit, deleteModel, setRecord, record, getModel, trinhLanhDaoModel, xuLyDuThaoModel } =
@@ -39,15 +41,27 @@ const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep
 	const [visibleChinhSua, setVisibleChinhSua] = useState(false);
 
 	const getData = () => {
-		const filter = [
-			{
+		let filters: any = [];
+
+		if (title === 'Danh sách dự thảo') {
+			filters.push({
 				active: true,
 				field: 'trangThai',
-				values: trangThai,
+				values: [ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO, ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA],
 				operator: EOperatorType.INCLUDE,
-			},
-		];
-		getModel({ nam: dayjs(yearSelect).format('YYYY') }, trangThai?.length ? filter : (undefined as any));
+			});
+		}
+
+		if (title === 'Quyết định đã duyệt') {
+			filters.push({
+				active: true,
+				field: 'trangThai',
+				values: [ETrangThaiQuyetDinhTotNghiep.CHINH_THUC, ETrangThaiQuyetDinhTotNghiep.HOAN_THANH],
+				operator: EOperatorType.INCLUDE,
+			});
+		}
+
+		getModel({ nam: dayjs(yearSelect).format('YYYY') }, filters);
 	};
 
 	const onCell = (rec: QuyetDinhTotNghiep.IRecord) => ({
@@ -159,7 +173,7 @@ const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep
 			width: 150,
 			align: 'center',
 			fixed: 'right',
-			filterType: !trangThai?.length ? 'select' : undefined,
+			filterType: title === 'Thông tin quyết định' ? 'select' : undefined,
 			filterData: Object.values(ETrangThaiQuyetDinhTotNghiep),
 			render: (val, rec) => (
 				<Space size={6}>
@@ -180,7 +194,7 @@ const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 90,
+			width: title === 'Quyết định đã duyệt' ? 60 : 90,
 			fixed: 'right',
 			render: (rec) => {
 				const { DU_THAO, YEU_CAU_CHINH_SUA, TRINH_DU_THAO } = ETrangThaiQuyetDinhTotNghiep;
@@ -188,9 +202,36 @@ const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep
 				const canTrinhLanhDao = rec?.trangThai === DU_THAO || rec?.trangThai === YEU_CAU_CHINH_SUA;
 				const canXuLyQuyetDinh = rec?.trangThai === TRINH_DU_THAO || rec?.trangThai === YEU_CAU_CHINH_SUA;
 
+				if (title === 'Quyết định đã duyệt') {
+					return (
+						<Popconfirm
+							title='Xác nhận hoàn thành quyết định tốt nghiệp?'
+							placement='topRight'
+							onConfirm={() =>
+								xuLyDuThaoModel(rec?._id, { trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH }, getData)
+							}
+						>
+							<ButtonExtend tooltip='Hoàn thành' type='link' icon={<SaveOutlined />} />
+						</Popconfirm>
+					);
+				}
+
 				return (
 					<>
-						{trangThai?.length ? (
+						{title === 'Thông tin quyết định' ? (
+							<Popconfirm
+								title='Trình lãnh đạo quyết định?'
+								placement='topRight'
+								onConfirm={() => trinhLanhDaoModel(rec?._id, getData)}
+							>
+								<ButtonExtend
+									tooltip='Trình lãnh đạo'
+									type='link'
+									icon={<SendOutlined />}
+									disabled={!canTrinhLanhDao}
+								/>
+							</Popconfirm>
+						) : (
 							<Popconfirm
 								title='Duyệt quyết định?'
 								placement='topRight'
@@ -206,19 +247,6 @@ const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep
 									disabled={!canXuLyQuyetDinh}
 								/>
 							</Popconfirm>
-						) : (
-							<Popconfirm
-								title='Trình lãnh đạo quyết định?'
-								placement='topRight'
-								onConfirm={() => trinhLanhDaoModel(rec?._id, getData)}
-							>
-								<ButtonExtend
-									tooltip='Trình lãnh đạo'
-									type='link'
-									icon={<SendOutlined />}
-									disabled={!canTrinhLanhDao}
-								/>
-							</Popconfirm>
 						)}
 
 						<Popover
@@ -226,19 +254,21 @@ const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep
 							trigger='hover'
 							content={
 								<Space direction='vertical' size={'small'}>
-									<ButtonExtend
-										type='link'
-										tooltip='Yêu cầu chỉnh sửa'
-										icon={<RollbackOutlined />}
-										className='btn-warning'
-										disabled={!canXuLyQuyetDinh}
-										onClick={() => {
-											setRecord(rec);
-											setVisibleChinhSua(true);
-										}}
-									>
-										Yêu cầu chỉnh sửa
-									</ButtonExtend>
+									{title !== 'Thông tin quyết định' && (
+										<ButtonExtend
+											type='link'
+											tooltip='Yêu cầu chỉnh sửa'
+											icon={<RollbackOutlined />}
+											className='btn-warning'
+											disabled={!canXuLyQuyetDinh}
+											onClick={() => {
+												setRecord(rec);
+												setVisibleChinhSua(true);
+											}}
+										>
+											Yêu cầu chỉnh sửa
+										</ButtonExtend>
+									)}
 
 									<ButtonExtend
 										type='link'
@@ -269,7 +299,6 @@ const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep
 					</>
 				);
 			},
-			hide: trangThai?.includes(ETrangThaiQuyetDinhTotNghiep.CHINH_THUC),
 		},
 	];
 
@@ -278,15 +307,15 @@ const QuyetDinhTotNghiepPage = (props: { trangThai: ETrangThaiQuyetDinhTotNghiep
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, yearSelect, trangThai]}
+				dependencies={[page, limit, yearSelect, title]}
 				modelName='vbcc.quyetdinhtotnghiep'
-				title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.title' })}
+				title={title}
 				widthDrawer={1200}
 				deleteMany
 				rowSelection
 				buttons={{ export: true }}
 				Form={ModalQuyetDinhTotNghiep}
-				formProps={{ getData, yearSelect: dayjs(yearSelect).format('YYYY'), trangThai }}
+				formProps={{ getData, yearSelect: dayjs(yearSelect).format('YYYY'), title }}
 			>
 				<MyDatePicker
 					style={{ width: 160, marginBottom: 12 }}

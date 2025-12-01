@@ -58,7 +58,7 @@ const CongVanPhucDapPage = (props: { afterAddNew?: (val: number) => void; getDat
 						Quay lại
 					</Button>
 					<Button
-						disabled={!record?._id || ![EPhaseXacMinh.KET_QUA].includes(record?.phaseXuLy)}
+						disabled={!record?._id || ![EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(record?.phaseXuLy)}
 						onClick={() => {
 							if (afterAddNew) afterAddNew(3);
 						}}

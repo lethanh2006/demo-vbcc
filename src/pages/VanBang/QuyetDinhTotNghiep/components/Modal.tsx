@@ -10,21 +10,34 @@ import Form from './Form';
 
 const ModalQuyetDinhTotNghiep = (props: any) => {
 	const intl = useIntl();
-	const { getData, yearSelect, trangThai } = props;
+	const { getData, yearSelect, title } = props;
 	const { record, edit, visibleForm } = useModel('vbcc.quyetdinhtotnghiep');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
 	useEffect(() => {
 		if (!visibleForm) {
+			setCurrentStep(0);
 			getData();
-		} else {
-			if (trangThai?.includes(ETrangThaiQuyetDinhTotNghiep.CHINH_THUC)) {
-				setCurrentStep(3);
-			} else if (trangThai?.length) {
-				setCurrentStep(2);
-			}
+			return;
 		}
-	}, [visibleForm, trangThai]);
+
+		if (!record?._id) {
+			setCurrentStep(0);
+			return;
+		}
+
+		switch (record?.trangThai) {
+			case ETrangThaiQuyetDinhTotNghiep.DU_THAO:
+			case ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO:
+				setCurrentStep(2);
+				break;
+			case ETrangThaiQuyetDinhTotNghiep.CHINH_THUC:
+				setCurrentStep(3);
+				break;
+			default:
+				setCurrentStep(1);
+		}
+	}, [visibleForm, record?._id]);
 
 	const onChangeStep = (step: number) => {
 		setCurrentStep(step);
@@ -93,9 +106,9 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 					) : currentStep === 1 ? (
 						<DanhSachSinhVienQuyetDinh afterAddNew={setCurrentStep} />
 					) : currentStep === 2 ? (
-						<DuThaoSoVaoSoQuyetDinh afterAddNew={setCurrentStep} trangThai={trangThai} />
+						<DuThaoSoVaoSoQuyetDinh afterAddNew={setCurrentStep} title={title} />
 					) : currentStep === 3 ? (
-						<PhuLucVanBangPage isQuyetDinh afterAddNew={setCurrentStep} />
+						<PhuLucVanBangPage isQuyetDinh afterAddNew={setCurrentStep} title={title} />
 					) : null}
 				</Col>
 			</Row>

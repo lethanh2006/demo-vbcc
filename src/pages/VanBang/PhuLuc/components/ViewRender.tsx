@@ -1,11 +1,11 @@
-import { Button, Empty } from 'antd';
+import { Button, Empty, Spin } from 'antd';
 import { useIntl, useModel } from 'umi';
 import PhuLucDetailView from './PhuLucDetailView';
 
-const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
+const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) => {
 	const intl = useIntl();
 	const { record, setVisibleForm, setDataToSignOrPush, setVisiblePrint, loading } = useModel('vbcc.phulucvanbang');
-	const { hasPrint = true } = props;
+	const { hasPrint = true, hideFooter = false } = props;
 
 	const handlePrintOne = (rec?: any) => {
 		if (!rec) return;
@@ -13,34 +13,25 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean }) => {
 		setVisiblePrint(true);
 	};
 
-	if (!loading && !record) {
-		return (
-			<>
-				<Empty description='Thông tin văn bằng không tồn tại' />
-				<div className='form-footer'>
-					<Button onClick={() => setVisibleForm(false)}>
-						{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
-					</Button>
-				</div>
-			</>
-		);
-	}
-
 	return (
 		<>
-			<PhuLucDetailView />
+			<Spin spinning={loading}>
+				{record?._id ? <PhuLucDetailView /> : <Empty description='Thông tin văn bằng không tồn tại' />}
+			</Spin>
 
-			<div className='form-footer'>
-				{/* {hasPrint && record && (
+			{hideFooter ? null : (
+				<div className='form-footer'>
+					{/* {hasPrint && record && (
 					<Button type='primary' icon={<FilePdfOutlined />} onClick={() => handlePrintOne(record)}>
 						In phụ lục
 					</Button>
 				)} */}
 
-				<Button onClick={() => setVisibleForm(false)}>
-					{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
-				</Button>
-			</div>
+					<Button onClick={() => setVisibleForm(false)}>
+						{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
+					</Button>
+				</div>
+			)}
 		</>
 	);
 };

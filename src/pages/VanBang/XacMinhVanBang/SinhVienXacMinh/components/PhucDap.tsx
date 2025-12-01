@@ -6,6 +6,7 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Modal, Row } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
+import ChiTietSinhVienXacMinh from './ChiTiet';
 
 const ModalPhucDap = (props: {
 	visible: boolean;
@@ -29,7 +30,7 @@ const ModalPhucDap = (props: {
 			values.urlPhanHoi = urlPhanHoi;
 			setFormSubmiting(false);
 		}
-		putModel(record?._id ?? '', values, getData)
+		putModel(record?._id ?? '', { ...record, ...values }, getData)
 			.then(() => setVisible(false))
 			.catch((err) => console.log(err));
 	};
@@ -38,9 +39,9 @@ const ModalPhucDap = (props: {
 		<Modal title='Nội dung phúc đáp' open={visible} onCancel={() => setVisible(false)} footer={null}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
-					{/* <Col span={24}>
+					<Col span={24}>
 						<ChiTietSinhVienXacMinh />
-					</Col> */}
+					</Col>
 					{isKetQua ? (
 						<Col span={24}>
 							<Form.Item name='urlPhanHoi' label='File phúc đáp' rules={[...rules.required]}>
@@ -49,8 +50,12 @@ const ModalPhucDap = (props: {
 						</Col>
 					) : null}
 					<Col span={24}>
-						<Form.Item name='ghiChuKetQuaPhucDap' label='Nội dung phúc đáp' rules={[...rules.required, ...rules.text]}>
-							<Input.TextArea rows={3} placeholder='Nhập nội dung phúc đáp' />
+						<Form.Item
+							name='ghiChuKetQuaPhucDap'
+							label='Nội dung phúc đáp'
+							rules={isKetQua ? [] : [...rules.required, ...rules.text]}
+						>
+							<Input.TextArea rows={3} placeholder='Nhập nội dung phúc đáp' disabled={isKetQua} />
 						</Form.Item>
 					</Col>
 				</Row>
