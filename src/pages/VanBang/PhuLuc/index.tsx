@@ -6,7 +6,13 @@ import { EOperatorType } from '@/components/Table/constant';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import { ETagColor } from '@/services/base/constant';
-import { colorTrangThaiBlc, ETrangThaiBlockchain, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
+import {
+	colorLoaiYeuCauChinhSuaVanBang,
+	colorTrangThaiBlc,
+	ELoaiYeuCauChinhSuaVanBang,
+	ETrangThaiBlockchain,
+	ETrangThaiQuyetDinhTotNghiep,
+} from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
@@ -61,6 +67,7 @@ const PhuLucVanBangPage = (props: {
 		handleEdit,
 		getModel,
 		danhSach,
+		setDanhSach,
 		selectedIds,
 		setSelectedIds,
 		setDataToSignOrPush,
@@ -98,6 +105,7 @@ const PhuLucVanBangPage = (props: {
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const [recEditInline, setRecEditInline] = useState<PhuLucVanBang.IRecord>();
 	const { INFO_TENANT: settingVbcc } = settings;
+	const [trangThaiYeuCau, setTrangThaiYeuCau] = useState<'Cấp lại' | 'Chỉnh sửa' | 'Thu hồi'>('Cấp lại');
 
 	const isHoanThanh = recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.HOAN_THANH;
 
@@ -129,6 +137,7 @@ const PhuLucVanBangPage = (props: {
 					},
 				],
 			);
+		else setDanhSach([]);
 	};
 
 	const handleSign = () => {
@@ -410,6 +419,17 @@ const PhuLucVanBangPage = (props: {
 			onCell,
 		},
 		{
+			title: 'Yêu cầu',
+			dataIndex: 'loaiYeuCauChinhSua',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => <Tag color={colorLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}>{val}</Tag>,
+			fixed: 'right',
+			filterType: 'select',
+			filterData: Object.values(ELoaiYeuCauChinhSuaVanBang),
+			onCell,
+		},
+		{
 			title: 'Thao tác',
 			align: 'center',
 			width: 60,
@@ -425,7 +445,10 @@ const PhuLucVanBangPage = (props: {
 									tooltip='Yêu cầu chỉnh sửa'
 									type='link'
 									icon={<EditOutlined />}
-									onClick={() => handleEdit(rec)}
+									onClick={() => {
+										setTrangThaiYeuCau('Chỉnh sửa');
+										handleEdit(rec);
+									}}
 									size='small'
 								>
 									Yêu cầu chỉnh sửa
@@ -434,7 +457,10 @@ const PhuLucVanBangPage = (props: {
 									tooltip='Yêu cầu cấp lại'
 									type='link'
 									icon={<RollbackOutlined />}
-									onClick={() => handleEdit(rec)}
+									onClick={() => {
+										setTrangThaiYeuCau('Cấp lại');
+										handleEdit(rec);
+									}}
 									size='small'
 								>
 									Yêu cầu cấp lại
@@ -553,7 +579,7 @@ const PhuLucVanBangPage = (props: {
 							: 'Thêm mới thông tin văn bằng'
 				}
 				Form={isView ? ViewPhuLucVanBang : FormPhuLucVanBang}
-				formProps={{ getData, vbccSettings: settingVbcc }}
+				formProps={{ getData, vbccSettings: settingVbcc, trangThaiYeuCau }}
 				buttons={{
 					create: false,
 				}}
@@ -597,11 +623,11 @@ const PhuLucVanBangPage = (props: {
 						/>
 
 						<SelectQuyetDinh
-							// condition={
-							// 	yearSelect
-							// 		? { nam: dayjs(yearSelect).format('YYYY'), trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH }
-							// 		: { trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH }
-							// }
+							condition={
+								yearSelect
+									? { nam: dayjs(yearSelect).format('YYYY'), trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH }
+									: { trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH }
+							}
 							style={{ width: 250 }}
 							value={recQuyetDinh?._id}
 							onChange={(val) => setQuyetDinh(danhsachQuyetDinh?.find((item) => item._id === val))}

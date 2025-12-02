@@ -120,6 +120,11 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getDat
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
+					<Form.Item name='soCongVan' label='Số công văn' rules={[...rules.required]}>
+						<Input placeholder='Nhập số công văn' disabled={isHoanThanh} />
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
 					<Form.Item name='loaiPhucDap' label='Loại phúc đáp' rules={[...rules.required]}>
 						<Select
 							placeholder='Chọn loại phúc đáp'

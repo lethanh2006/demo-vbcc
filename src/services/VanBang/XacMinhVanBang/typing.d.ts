@@ -11,6 +11,7 @@ declare module XacMinhVanBang {
 		mucDichXacMinh: string;
 		daPhanHoi: boolean;
 		loaiPhucDap: ELoaiPhucDap;
+		soCongVan: string;
 		phaseXuLy: EPhaseXacMinh;
 		ghiChu: string;
 
@@ -41,6 +42,6 @@ declare module XacMinhVanBang {
 
 	export interface ISetting {
 		_id: string;
-		bieuMauId: string | null;
+		bieuMauId: any;
 	}
 }

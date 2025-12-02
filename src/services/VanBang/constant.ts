@@ -118,6 +118,20 @@ export const colorTrangThaiSoVanBang: Record<ETrangThaiSoVanBang, ETagColor> = {
 	[ETrangThaiSoVanBang.TU_CHOI]: ETagColor.RED,
 };
 
+export enum ELoaiYeuCauChinhSuaVanBang {
+	HOAN_THANH = 'Hoàn thành',
+	CAP_LAI = 'Cấp lại',
+	CAP_NHAT = 'Cập nhật',
+	THU_HOI = 'Thu hồi',
+}
+
+export const colorLoaiYeuCauChinhSuaVanBang: Record<ELoaiYeuCauChinhSuaVanBang, ETagColor> = {
+	[ELoaiYeuCauChinhSuaVanBang.HOAN_THANH]: ETagColor.GREEN,
+	[ELoaiYeuCauChinhSuaVanBang.CAP_LAI]: ETagColor.BLUE,
+	[ELoaiYeuCauChinhSuaVanBang.CAP_NHAT]: ETagColor.GOLD,
+	[ELoaiYeuCauChinhSuaVanBang.THU_HOI]: ETagColor.RED,
+};
+
 export enum ETrangThaiMucDichTraCuuPhuLuc {
 	CHO_XU_LY = 'Chờ xử lý',
 	KHONG_DUYET = 'Không duyệt',

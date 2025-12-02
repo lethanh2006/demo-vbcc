@@ -1,9 +1,10 @@
+import TinyEditor from '@/components/TinyEditor';
 import UploadFile from '@/components/Upload/UploadFile';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Col, Form, Input, Modal, Row } from 'antd';
+import { Button, Col, Form, Modal, Row } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import ChiTietSinhVienXacMinh from './ChiTiet';
@@ -55,7 +56,7 @@ const ModalPhucDap = (props: {
 							label='Nội dung phúc đáp'
 							rules={isKetQua ? [] : [...rules.required, ...rules.text]}
 						>
-							<Input.TextArea rows={3} placeholder='Nhập nội dung phúc đáp' disabled={isKetQua} />
+							<TinyEditor hideMenubar miniToolbar stickyToolbar={false} disabled={isKetQua} />
 						</Form.Item>
 					</Col>
 				</Row>

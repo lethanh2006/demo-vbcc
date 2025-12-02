@@ -20,3 +20,9 @@ export const thongKeXacMinhVanBang = async () => {
 export const nextStepXacMinh = async (xacMinhId: string, payLoad: any) => {
 	return axios.put(`${ip3}/xac-minh-van-bang/${xacMinhId}/next-step`, payLoad);
 };
+
+export async function exportPhieuPhucDap(idSVXacMinh: string) {
+	return axios.get(`${ip3}/sinh-vien-xac-minh-van-bang/${idSVXacMinh}/export/phieu-phuc-dap`, {
+		responseType: 'arraybuffer',
+	});
+}

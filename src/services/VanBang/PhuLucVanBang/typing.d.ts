@@ -1,7 +1,7 @@
 import type { BieuMauPhuLuc } from '../BieuMauPhuLuc/typing';
 import { DotCapBangTotNghiep } from '../DotCapBangTotNghiep/typing';
 import type { QuyetDinhTotNghiep } from '../QuyetDinh/typing';
-import type { ETrangThaiBlockchain } from '../constant';
+import type { ELoaiYeuCauChinhSuaVanBang, ETrangThaiBlockchain } from '../constant';
 
 declare module PhuLucVanBang {
 	export interface IRecord {
@@ -59,6 +59,7 @@ declare module PhuLucVanBang {
 			hoTen: string;
 			ssoId: string;
 		};
+		loaiYeuCauChinhSua: ELoaiYeuCauChinhSuaVanBang;
 
 		// Temp
 		index?: number;

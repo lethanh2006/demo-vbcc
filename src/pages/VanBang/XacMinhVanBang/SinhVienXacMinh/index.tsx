@@ -6,7 +6,9 @@ import ModalExpandable from '@/components/Table/ModalExpandable';
 import TableStaticData from '@/components/Table/TableStaticData';
 import { type IColumn } from '@/components/Table/typing';
 import { EPhaseXacMinh } from '@/services/VanBang/constant';
+import { exportPhieuPhucDap } from '@/services/VanBang/XacMinhVanBang';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
+import { getFilenameHeader } from '@/utils/utils';
 import {
 	ArrowLeftOutlined,
 	ArrowRightOutlined,
@@ -22,6 +24,7 @@ import {
 	SearchOutlined,
 } from '@ant-design/icons';
 import { Button, Checkbox, Modal, Popconfirm, Popover } from 'antd';
+import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ViewPhuLucVanBang from '../../PhuLuc/components/ViewRender';
@@ -78,6 +81,7 @@ const SinhVienXacMinhPage = (props: {
 	const [visiblePhucDap, setVisiblePhucDap] = useState<boolean>(false);
 	const [visibleTraCuu, setVisibleTraCuu] = useState<boolean>(false);
 	const [vsPhuLuc, setVsPhuLuc] = useState<boolean>(false);
+	const [loadingExport, setLoadingExport] = useState<boolean>(false);
 
 	const isHoanThanh = recXacMinh?.phaseXuLy === EPhaseXacMinh.HOAN_THANH;
 
@@ -109,6 +113,13 @@ const SinhVienXacMinhPage = (props: {
 	const showPhuLucDetail = (phuLucId: string) => {
 		setVsPhuLuc(true);
 		getByIdModel(phuLucId);
+	};
+
+	const handleDownload = (rec: XacMinhVanBang.ISinhVienXacMinh) => {
+		setLoadingExport(true);
+		exportPhieuPhucDap(rec?._id)
+			.then((res) => fileDownload(res.data, getFilenameHeader(res)))
+			.finally(() => setLoadingExport(false));
 	};
 
 	const columns: IColumn<XacMinhVanBang.ISinhVienXacMinh>[] = [
@@ -158,7 +169,11 @@ const SinhVienXacMinhPage = (props: {
 			title: 'Nội dung phúc đáp',
 			dataIndex: 'ghiChuKetQuaPhucDap',
 			width: 180,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			render: (val, rec) => (
+				<ExpandText>
+					<div dangerouslySetInnerHTML={{ __html: val }} />
+				</ExpandText>
+			),
 			filterType: 'string',
 			hide: isYeuCau || isXacMinh,
 		},
@@ -258,7 +273,14 @@ const SinhVienXacMinhPage = (props: {
 				if (isCongVan)
 					return (
 						<>
-							<ButtonExtend disabled={isHoanThanh} tooltip='Tải biểu mẫu' type='link' icon={<DownloadOutlined />} />
+							<ButtonExtend
+								loading={loadingExport}
+								onClick={() => handleDownload(rec)}
+								disabled={isHoanThanh}
+								tooltip='Tải biểu mẫu'
+								type='link'
+								icon={<DownloadOutlined />}
+							/>
 
 							<ButtonExtend
 								disabled={isHoanThanh}

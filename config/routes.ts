@@ -69,6 +69,28 @@
 		icon: 'ProfileOutlined',
 	},
 	{
+		name: 'PhuLucYeuCau',
+		path: 'phu-luc-yeu-cau',
+		icon: 'ProfileOutlined',
+		routes: [
+			{
+				name: 'YeuCauChinhSua',
+				path: 'yeu-cau-chinh-sua',
+				component: 'VanBang/PhuLucChinhSua/ChinhSua.tsx',
+			},
+			{
+				name: 'YeuCauCapLai',
+				path: 'yeu-cau-cap-lai',
+				component: 'VanBang/PhuLucChinhSua/CapLai.tsx',
+			},
+			{
+				name: 'YeuCauThuHoi',
+				path: 'yeu-cau-thu-hoi',
+				component: 'VanBang/PhuLucChinhSua/ThuHoi.tsx',
+			},
+		],
+	},
+	{
 		name: 'DotCapBangTotNghiep',
 		path: 'dot-cap-bang',
 		component: 'VanBang/DotCapBangTotNghiep',
