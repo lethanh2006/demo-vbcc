@@ -9,27 +9,44 @@ import FormXacMinhVanBang from './FormXacMinh';
 
 const ModalXacMinhVanBang = (props: any) => {
 	const { getData } = props;
-	const { record, visibleForm, edit } = useModel('vbcc.xacminhvanbang');
+	const { record, visibleForm, edit, getByIdModel } = useModel('vbcc.xacminhvanbang');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
 	useEffect(() => {
-		if (!visibleForm && !record?._id) {
-			setCurrentStep(0);
-		} else {
-			if (record?.phaseXuLy === EPhaseXacMinh.YEU_CAU) {
-				setCurrentStep(0);
-			} else if (record?.phaseXuLy === EPhaseXacMinh.XAC_MINH) {
-				setCurrentStep(1);
-			} else if (record?.phaseXuLy === EPhaseXacMinh.PHUC_DAP) {
-				setCurrentStep(2);
-			} else if (record?.phaseXuLy === EPhaseXacMinh.KET_QUA || record?.phaseXuLy === EPhaseXacMinh.HOAN_THANH) {
-				setCurrentStep(3);
-			}
+		if (!visibleForm) {
+			getData();
+			return;
 		}
-	}, [visibleForm, record?._id]);
+
+		if (!record?._id) {
+			setCurrentStep(0);
+			return;
+		}
+
+		switch (record?.phaseXuLy) {
+			case EPhaseXacMinh.YEU_CAU:
+				setCurrentStep(0);
+			case EPhaseXacMinh.XAC_MINH:
+				setCurrentStep(1);
+				break;
+			case EPhaseXacMinh.PHUC_DAP:
+				setCurrentStep(2);
+				break;
+			case EPhaseXacMinh.KET_QUA:
+			case EPhaseXacMinh.HOAN_THANH:
+				setCurrentStep(3);
+				break;
+		}
+	}, [visibleForm]);
 
 	const onChangeStep = (step: number) => {
 		setCurrentStep(step);
+	};
+
+	const getRecXacMinh = () => {
+		if (record?._id) {
+			getByIdModel(record?._id, true);
+		}
 	};
 
 	return (
@@ -80,7 +97,7 @@ const ModalXacMinhVanBang = (props: any) => {
 				</Col>
 				<Col xs={24} sm={24} md={19} lg={19} xl={19}>
 					{currentStep === 0 ? (
-						<FormXacMinhVanBang afterAddNew={setCurrentStep} getData={getData} />
+						<FormXacMinhVanBang afterAddNew={setCurrentStep} getData={getRecXacMinh} />
 					) : currentStep === 1 ? (
 						<SinhVienXacMinhPage
 							isXacMinh
@@ -88,12 +105,12 @@ const ModalXacMinhVanBang = (props: any) => {
 							afterAddNew={setCurrentStep}
 							hideAdd
 							hideImport
-							getData={getData}
+							getData={getRecXacMinh}
 						/>
 					) : currentStep === 2 ? (
-						<CongVanPhucDapPage afterAddNew={setCurrentStep} getData={getData} />
+						<CongVanPhucDapPage afterAddNew={setCurrentStep} getData={getRecXacMinh} />
 					) : currentStep === 3 ? (
-						<TraKetQuaPage afterAddNew={setCurrentStep} getData={getData} />
+						<TraKetQuaPage afterAddNew={setCurrentStep} getData={getRecXacMinh} />
 					) : null}
 				</Col>
 			</Row>

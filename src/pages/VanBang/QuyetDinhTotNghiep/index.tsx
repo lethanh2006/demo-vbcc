@@ -7,6 +7,7 @@ import { EOperatorType } from '@/components/Table/constant';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
+import { primaryColor } from '@/services/base/constant';
 import { colorTrangThaiQuyetDinhTotNghiep, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
@@ -20,7 +21,7 @@ import {
 	SaveOutlined,
 	SendOutlined,
 } from '@ant-design/icons';
-import { Button, Popconfirm, Popover, Space, Tag, theme } from 'antd';
+import { Button, Popconfirm, Popover, Space, Tag } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import SelectSoVanBang from '../SoVanBang/components/Select';
@@ -28,10 +29,9 @@ import ModalQuyetDinhTotNghiep from './components/Modal';
 import ModalYeuCauChinhSua from './components/YeuCauChinhSua';
 
 const QuyetDinhTotNghiepPage = (props: {
-	title: 'Thông tin quyết định' | 'Danh sách dự thảo' | 'Quyết định đã duyệt';
+	title: 'Thông tin quyết định' | 'Dự thảo cần duyệt' | 'Quyết định đã duyệt';
 }) => {
 	const { title = 'Thông tin quyết định' } = props;
-	const token = theme.useToken();
 
 	const { handleEdit, page, limit, deleteModel, setRecord, record, getModel, trinhLanhDaoModel, xuLyDuThaoModel } =
 		useModel('vbcc.quyetdinhtotnghiep');
@@ -43,7 +43,7 @@ const QuyetDinhTotNghiepPage = (props: {
 	const getData = () => {
 		let filters: any = [];
 
-		if (title === 'Danh sách dự thảo') {
+		if (title === 'Dự thảo cần duyệt') {
 			filters.push({
 				active: true,
 				field: 'trangThai',
@@ -185,7 +185,7 @@ const QuyetDinhTotNghiepPage = (props: {
 					</Tag>
 
 					<Popover placement='left' content={renderTrangThaiInfo(rec)}>
-						<InfoCircleOutlined style={{ cursor: 'pointer', color: token.token.colorPrimary }} />
+						<InfoCircleOutlined style={{ cursor: 'pointer', color: primaryColor }} />
 					</Popover>
 				</Space>
 			),
@@ -197,10 +197,12 @@ const QuyetDinhTotNghiepPage = (props: {
 			width: title === 'Quyết định đã duyệt' ? 60 : 90,
 			fixed: 'right',
 			render: (rec) => {
-				const { DU_THAO, YEU_CAU_CHINH_SUA, TRINH_DU_THAO } = ETrangThaiQuyetDinhTotNghiep;
+				const { DU_THAO, YEU_CAU_CHINH_SUA, TRINH_DU_THAO, HOAN_THANH } = ETrangThaiQuyetDinhTotNghiep;
 
 				const canTrinhLanhDao = rec?.trangThai === DU_THAO || rec?.trangThai === YEU_CAU_CHINH_SUA;
 				const canXuLyQuyetDinh = rec?.trangThai === TRINH_DU_THAO || rec?.trangThai === YEU_CAU_CHINH_SUA;
+
+				const isHoanThanh = rec?.trangThai === HOAN_THANH;
 
 				if (title === 'Quyết định đã duyệt') {
 					return (
@@ -211,7 +213,7 @@ const QuyetDinhTotNghiepPage = (props: {
 								xuLyDuThaoModel(rec?._id, { trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH }, getData)
 							}
 						>
-							<ButtonExtend tooltip='Hoàn thành' type='link' icon={<SaveOutlined />} />
+							<ButtonExtend disabled={isHoanThanh} tooltip='Hoàn thành' type='link' icon={<SaveOutlined />} />
 						</Popconfirm>
 					);
 				}
@@ -294,7 +296,7 @@ const QuyetDinhTotNghiepPage = (props: {
 								</Space>
 							}
 						>
-							<ButtonExtend type='link' tooltip='Thêm thao tác' icon={<MenuOutlined />} />
+							<ButtonExtend disabled={isHoanThanh} type='link' tooltip='Thêm thao tác' icon={<MenuOutlined />} />
 						</Popover>
 					</>
 				);

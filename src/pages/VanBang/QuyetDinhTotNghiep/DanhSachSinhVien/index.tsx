@@ -28,7 +28,8 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void 
 	const disable =
 		!!recQuyetDinh?._id &&
 		(recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO ||
-			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC);
+			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC ||
+			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.HOAN_THANH);
 
 	const getData = () => {
 		if (recQuyetDinh?._id) {

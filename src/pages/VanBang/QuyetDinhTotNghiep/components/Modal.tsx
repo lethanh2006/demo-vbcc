@@ -1,12 +1,40 @@
+import { primaryColor } from '@/services/base/constant';
 import { colorTrangThaiQuyetDinhTotNghiep, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
+import { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
-import { Card, Col, Descriptions, Row, Space, Steps, Tag } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { Card, Col, Descriptions, Popover, Row, Space, Steps, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import PhuLucVanBangPage from '../../PhuLuc';
 import DanhSachSinhVienQuyetDinh from '../DanhSachSinhVien';
 import DuThaoSoVaoSoQuyetDinh from '../DuThaoSoVaoSo';
 import Form from './Form';
+
+const renderTrangThaiInfo = (rec: QuyetDinhTotNghiep.IRecord) => (
+	<div style={{ fontSize: 12, maxWidth: 300, lineHeight: 1.45 }}>
+		<div>
+			<b>Người tạo:</b> {rec?.nguoiTao?.hoTen ?? '—'}
+			<br />
+			{rec?.nguoiTao?.thoiGian && <em>{dayjs(rec?.nguoiTao?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
+		</div>
+
+		<br />
+
+		<div>
+			<b>Người xử lý:</b> {rec?.nguoiXuLy?.hoTen ?? '—'}
+			<br />
+			{rec?.nguoiXuLy?.thoiGian && <em>{dayjs(rec?.nguoiXuLy?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
+		</div>
+
+		<br />
+
+		<div>
+			<b>Ghi chú chỉnh sửa:</b>
+			<div style={{ whiteSpace: 'pre-wrap' }}>{rec?.ghiChuChinhSua || '—'}</div>
+		</div>
+	</div>
+);
 
 const ModalQuyetDinhTotNghiep = (props: any) => {
 	const intl = useIntl();
@@ -16,7 +44,6 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 
 	useEffect(() => {
 		if (!visibleForm) {
-			setCurrentStep(0);
 			getData();
 			return;
 		}
@@ -34,10 +61,8 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 			case ETrangThaiQuyetDinhTotNghiep.CHINH_THUC:
 				setCurrentStep(3);
 				break;
-			default:
-				setCurrentStep(1);
 		}
-	}, [visibleForm, record?._id]);
+	}, [visibleForm]);
 
 	const onChangeStep = (step: number) => {
 		setCurrentStep(step);
@@ -49,9 +74,14 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 				<Space>
 					{(edit ? 'Chỉnh sửa ' : 'Thêm mới ') + 'quyết định '}
 					{record?._id ? (
-						<Tag color={colorTrangThaiQuyetDinhTotNghiep[record?.trangThai as ETrangThaiQuyetDinhTotNghiep]}>
-							{record?.trangThai}
-						</Tag>
+						<Space wrap>
+							<Tag color={colorTrangThaiQuyetDinhTotNghiep[record?.trangThai as ETrangThaiQuyetDinhTotNghiep]}>
+								{record?.trangThai}
+							</Tag>
+							<Popover placement='left' content={renderTrangThaiInfo(record)}>
+								<InfoCircleOutlined style={{ cursor: 'pointer', color: primaryColor }} />
+							</Popover>
+						</Space>
 					) : null}
 				</Space>
 			}
@@ -70,7 +100,11 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 						<Steps.Step title={'Dự thảo số vào sổ'} disabled={!record?._id} />
 						<Steps.Step
 							title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.step2' })}
-							disabled={!record?._id || record?.trangThai !== ETrangThaiQuyetDinhTotNghiep.CHINH_THUC}
+							disabled={
+								!record?._id ||
+								(record?.trangThai !== ETrangThaiQuyetDinhTotNghiep.CHINH_THUC &&
+									record?.trangThai !== ETrangThaiQuyetDinhTotNghiep.HOAN_THANH)
+							}
 						/>
 					</Steps>
 				</Col>

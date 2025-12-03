@@ -1,13 +1,15 @@
+import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import ModalExpandable from '@/components/Table/ModalExpandable';
-import TableStaticData from '@/components/Table/TableStaticData';
 import { IColumn } from '@/components/Table/typing';
 import ViewPhuLucVanBang from '@/pages/VanBang/PhuLuc/components/ViewRender';
 import { ETagColor } from '@/services/base/constant';
+import { ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import { CheckCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Descriptions, Modal, Popconfirm, Popover, Row, Space, Spin, Tag } from 'antd';
+import { Button, Col, Descriptions, Modal, Popconfirm, Popover, Row, Space, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChiTietSinhVienXacMinh from './ChiTiet';
@@ -16,11 +18,27 @@ const ModalTraCuuThuCong = (props: { visible: boolean; setVisible: (val: boolean
 	const intl = useIntl();
 	const { visible, setVisible, getData } = props;
 	const { record, putModel } = useModel('vbcc.sinhvienxacminh');
-	const { danhSach, loading, handleEdit } = useModel('vbcc.phulucvanbang');
+	const { getModel, page, limit, handleEdit } = useModel('vbcc.phulucvanbang');
 	const { settings } = useModel('tienich.caidat');
 	const { INFO_TENANT: settingVbcc } = settings;
 
 	const [visibleForm, setVisibleForm] = useState<boolean>(false);
+
+	const getPhuPuc = () => {
+		getModel(undefined, [
+			{
+				active: true,
+				field: ['quyetDinh', 'trangThai'],
+				operator: EOperatorType.INCLUDE,
+				values: [ETrangThaiQuyetDinhTotNghiep.HOAN_THANH],
+			},
+			{
+				active: true,
+				field: 'soVaoSoBang',
+				operator: EOperatorType.NOT_NULL,
+			},
+		]);
+	};
 
 	const onCell = (rec: PhuLucVanBang.IRecord) => ({
 		onClick: () => handleEdit(rec),
@@ -33,6 +51,7 @@ const ModalTraCuuThuCong = (props: { visible: boolean; setVisible: (val: boolean
 			dataIndex: 'soVaoSoBang',
 			filterType: 'string',
 			width: 120,
+			sortable: true,
 			onCell,
 		},
 		{
@@ -40,6 +59,7 @@ const ModalTraCuuThuCong = (props: { visible: boolean; setVisible: (val: boolean
 			dataIndex: 'soHieuVanBang',
 			filterType: 'string',
 			width: 120,
+			sortable: true,
 			onCell,
 		},
 		{
@@ -243,7 +263,7 @@ const ModalTraCuuThuCong = (props: { visible: boolean; setVisible: (val: boolean
 	return (
 		<>
 			<Modal
-				width={800}
+				width={1000}
 				title='Thông tin tra cứu thủ công'
 				open={visible}
 				onCancel={() => setVisible(false)}
@@ -251,27 +271,17 @@ const ModalTraCuuThuCong = (props: { visible: boolean; setVisible: (val: boolean
 			>
 				<Row gutter={[12, 12]}>
 					<Col span={24}>
-						<ChiTietSinhVienXacMinh />{' '}
+						<ChiTietSinhVienXacMinh />
 					</Col>
 					<Col span={24}>
-						<Spin spinning={loading}>
-							{!danhSach?.length ? (
-								<div style={{ margin: 'auto' }}>
-									<i style={{ color: 'red' }}>Không tồn tại thông tin văn bằng!</i>
-								</div>
-							) : (
-								<TableStaticData
-									columns={columns}
-									data={danhSach ?? []}
-									addStt
-									hasTotal
-									otherProps={{
-										scroll: { y: 380 },
-										pagination: false,
-									}}
-								/>
-							)}
-						</Spin>
+						<TableBase
+							getData={getPhuPuc}
+							columns={columns}
+							dependencies={[page, limit, visible]}
+							modelName='vbcc.phulucvanbang'
+							buttons={{ create: false }}
+							hideCard
+						/>
 					</Col>
 				</Row>
 				<div className='form-footer'>

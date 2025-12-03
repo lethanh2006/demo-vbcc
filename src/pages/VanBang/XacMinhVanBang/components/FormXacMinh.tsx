@@ -49,13 +49,13 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getDat
 
 	const onFinish = (values: XacMinhVanBang.IRecord) => {
 		if (record?._id) {
-			putModel(record?._id ?? '', values, getData, undefined, false)
+			putModel(record?._id ?? '', values, undefined, undefined, false)
 				.then((rec) => {
 					setRecord({ ...record, ...rec });
 				})
 				.catch((err) => console.log(err));
 		} else {
-			postModel(values, getData, false)
+			postModel(values, undefined, false)
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);

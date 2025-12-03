@@ -12,8 +12,11 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record, formSubmiting, visibleForm, setVisibleForm, nextStepXacMinhModel } = useModel('vbcc.xacminhvanbang');
+	const { danhSach } = useModel('vbcc.sinhvienxacminh');
 
 	const isHoanThanh = record?.phaseXuLy === EPhaseXacMinh.HOAN_THANH;
+
+	const isAllFilesExist = danhSach.length > 0 && danhSach.every((item) => item.urlPhanHoi);
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
@@ -54,7 +57,7 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 					</Button>
 
 					<Popconfirm
-						disabled={isHoanThanh}
+						disabled={isHoanThanh || !isAllFilesExist}
 						onConfirm={() => form.submit()}
 						title='Xác nhận hoàn thành xác minh?'
 						placement='topRight'

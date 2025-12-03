@@ -125,6 +125,13 @@ export enum ELoaiYeuCauChinhSuaVanBang {
 	THU_HOI = 'Thu hồi',
 }
 
+export const nameLoaiYeuCauChinhSuaVanBang: Record<ELoaiYeuCauChinhSuaVanBang, string> = {
+	[ELoaiYeuCauChinhSuaVanBang.HOAN_THANH]: 'Hoàn thành',
+	[ELoaiYeuCauChinhSuaVanBang.CAP_LAI]: 'Cấp lại',
+	[ELoaiYeuCauChinhSuaVanBang.CAP_NHAT]: 'Chỉnh sửa',
+	[ELoaiYeuCauChinhSuaVanBang.THU_HOI]: 'Thu hồi',
+};
+
 export const colorLoaiYeuCauChinhSuaVanBang: Record<ELoaiYeuCauChinhSuaVanBang, ETagColor> = {
 	[ELoaiYeuCauChinhSuaVanBang.HOAN_THANH]: ETagColor.GREEN,
 	[ELoaiYeuCauChinhSuaVanBang.CAP_LAI]: ETagColor.BLUE,

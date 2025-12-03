@@ -59,6 +59,9 @@ declare module PhuLucVanBang {
 			hoTen: string;
 			ssoId: string;
 		};
+
+		ghiChuYeuCau?: string;
+		isThuHoi?: boolean;
 		loaiYeuCauChinhSua: ELoaiYeuCauChinhSuaVanBang;
 
 		// Temp

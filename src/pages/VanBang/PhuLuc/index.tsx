@@ -1,3 +1,4 @@
+import ExpandText from '@/components/ExpandText';
 import MyDatePicker from '@/components/MyDatePicker';
 import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
@@ -12,6 +13,7 @@ import {
 	ELoaiYeuCauChinhSuaVanBang,
 	ETrangThaiBlockchain,
 	ETrangThaiQuyetDinhTotNghiep,
+	nameLoaiYeuCauChinhSuaVanBang,
 } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
@@ -36,7 +38,7 @@ import {
 	UndoOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Button, Descriptions, Dropdown, Form, Input, Menu, Popconfirm, Popover, Space, Tag } from 'antd';
+import { Button, Checkbox, Descriptions, Dropdown, Form, Input, Menu, Popconfirm, Popover, Space, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
@@ -56,7 +58,7 @@ import ViewPhuLucVanBang from './components/ViewRender';
 const PhuLucVanBangPage = (props: {
 	isQuyetDinh?: boolean;
 	afterAddNew?: (val: number) => void;
-	title?: 'Thông tin quyết định' | 'Danh sách dự thảo' | 'Quyết định đã duyệt';
+	title?: 'Thông tin quyết định' | 'Dự thảo cần duyệt' | 'Quyết định đã duyệt';
 }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
@@ -384,6 +386,7 @@ const PhuLucVanBangPage = (props: {
 				{ value: false, label: 'Chưa cấp bằng' },
 			],
 			onCell,
+			hide: isQuyetDinh,
 		},
 		{
 			title: 'Ký số thông tin',
@@ -419,15 +422,40 @@ const PhuLucVanBangPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Yêu cầu',
+			title: 'Thu hồi',
+			dataIndex: 'isThuHoi',
+			align: 'center',
+			width: 60,
+			render: (val) => <Checkbox checked={val} />,
+			onCell,
+			hide: isQuyetDinh,
+		},
+		{
+			title: 'Ghi chú yêu cầu',
+			dataIndex: 'ghiChuYeuCau',
+			width: 200,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			filterType: 'string',
+			hide: isQuyetDinh,
+		},
+		{
+			title: 'Trạng thái Yêu cầu',
 			dataIndex: 'loaiYeuCauChinhSua',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => <Tag color={colorLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}>{val}</Tag>,
+			render: (val, rec) => (
+				<Tag color={colorLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}>
+					{nameLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}
+				</Tag>
+			),
 			fixed: 'right',
 			filterType: 'select',
-			filterData: Object.values(ELoaiYeuCauChinhSuaVanBang),
+			filterData: Object.values(ELoaiYeuCauChinhSuaVanBang).map((item) => ({
+				label: nameLoaiYeuCauChinhSuaVanBang[item],
+				value: item,
+			})),
 			onCell,
+			hide: isQuyetDinh,
 		},
 		{
 			title: 'Thao tác',
@@ -442,6 +470,7 @@ const PhuLucVanBangPage = (props: {
 						content={
 							<Space direction='vertical' size={'small'}>
 								<ButtonExtend
+									disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.CAP_NHAT}
 									tooltip='Yêu cầu chỉnh sửa'
 									type='link'
 									icon={<EditOutlined />}
@@ -454,6 +483,7 @@ const PhuLucVanBangPage = (props: {
 									Yêu cầu chỉnh sửa
 								</ButtonExtend>
 								<ButtonExtend
+									disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.CAP_LAI}
 									tooltip='Yêu cầu cấp lại'
 									type='link'
 									icon={<RollbackOutlined />}
@@ -472,7 +502,14 @@ const PhuLucVanBangPage = (props: {
 										yeuCauCapNhatVanBangModel(rec?._id, { loai: 'Thu hồi', thoiGianYeuCau: dayjs() }, getData)
 									}
 								>
-									<ButtonExtend size='small' tooltip='Thu hồi' type='link' icon={<UndoOutlined />} danger>
+									<ButtonExtend
+										disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.THU_HOI || !!rec?.isThuHoi}
+										size='small'
+										tooltip='Thu hồi'
+										type='link'
+										icon={<UndoOutlined />}
+										danger
+									>
 										Thu hồi
 									</ButtonExtend>
 								</Popconfirm>

@@ -1,6 +1,7 @@
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import { colorTrangThaiXacMinh, ELoaiPhucDap, EPhaseXacMinh } from '@/services/VanBang/constant';
@@ -14,7 +15,10 @@ import ViewPhuLucVanBang from '../PhuLuc/components/ViewRender';
 import ModalXacMinhVanBang from './components/Modal';
 import ModalCaiDatXacMinh from './components/ModalCaiDat';
 
-const XacMinhVanBangPage = () => {
+const XacMinhVanBangPage = (props: {
+	title?: 'Yêu cầu đang xử lý' | 'Yêu cầu trình ký' | 'Yêu cầu xác minh hoàn thành';
+}) => {
+	const { title } = props;
 	const { getModel, page, limit, deleteModel, handleEdit } = useModel('vbcc.xacminhvanbang');
 	const { visibleForm, setVisibleForm, loading } = useModel('vbcc.phulucvanbang');
 	const [isFormBieuMauVisible, setIsFormBieuMauVisible] = useState(false);
@@ -23,6 +27,31 @@ const XacMinhVanBangPage = () => {
 		onClick: () => handleEdit(rec),
 		style: { cursor: 'pointer' },
 	});
+
+	const trangThai =
+		title === 'Yêu cầu đang xử lý'
+			? [EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA]
+			: title === 'Yêu cầu trình ký'
+				? [EPhaseXacMinh.KET_QUA]
+				: title === 'Yêu cầu xác minh hoàn thành'
+					? [EPhaseXacMinh.HOAN_THANH]
+					: null;
+
+	const getData = () => {
+		getModel(
+			undefined,
+			trangThai
+				? [
+						{
+							active: true,
+							field: 'phaseXuLy',
+							operator: EOperatorType.INCLUDE,
+							values: trangThai,
+						},
+					]
+				: undefined,
+		);
+	};
 
 	const columns: IColumn<XacMinhVanBang.IRecord>[] = [
 		{
@@ -105,7 +134,7 @@ const XacMinhVanBangPage = () => {
 			align: 'center',
 			fixed: 'right',
 			filterType: 'select',
-			filterData: Object.values(EPhaseXacMinh),
+			filterData: Object.values(trangThai ?? EPhaseXacMinh),
 			onCell,
 			render: (val: EPhaseXacMinh) => <Tag color={colorTrangThaiXacMinh[val]}>{val}</Tag>,
 		},
@@ -142,9 +171,11 @@ const XacMinhVanBangPage = () => {
 	return (
 		<>
 			<TableBase
+				getData={getData}
 				columns={columns}
 				modelName={'vbcc.xacminhvanbang'}
 				Form={ModalXacMinhVanBang}
+				formProps={{ getData }}
 				widthDrawer={1200}
 				dependencies={[page, limit]}
 				title='Xác minh văn bằng'
@@ -157,7 +188,6 @@ const XacMinhVanBangPage = () => {
 						tooltip='Biểu mẫu'
 					/>,
 				]}
-				formProps={{ getData: getModel }}
 			>
 				{/* <StatXacMinhVanBang /> */}
 			</TableBase>

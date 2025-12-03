@@ -37,7 +37,7 @@ const FormSinhVienXacMinh = (props: { getData?: () => void }) => {
 					<Form.Item
 						name='maSinhVien'
 						label='Mã sinh viên'
-						rules={[...rules.required, ...rules.text, ...rules.length(50)]}
+						// rules={[...rules.required, ...rules.text, ...rules.length(50)]}
 					>
 						<Input placeholder='Nhập mã sinh viên' />
 					</Form.Item>

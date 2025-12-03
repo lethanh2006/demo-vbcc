@@ -38,7 +38,8 @@ const FormQuyetDinhTotNghiep = (props: {
 	const disable =
 		!!record?._id &&
 		(record?.trangThai === ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO ||
-			record?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC);
+			record?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC ||
+			record?.trangThai === ETrangThaiQuyetDinhTotNghiep.HOAN_THANH);
 
 	useEffect(() => {
 		if (!visibleForm) {

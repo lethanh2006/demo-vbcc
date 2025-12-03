@@ -37,7 +37,7 @@ const ModalPhucDap = (props: {
 	};
 
 	return (
-		<Modal title='Nội dung phúc đáp' open={visible} onCancel={() => setVisible(false)} footer={null}>
+		<Modal title='Nội dung phúc đáp' open={visible} onCancel={() => setVisible(false)} footer={null} width={800}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24}>
@@ -49,16 +49,17 @@ const ModalPhucDap = (props: {
 								<UploadFile />
 							</Form.Item>
 						</Col>
-					) : null}
-					<Col span={24}>
-						<Form.Item
-							name='ghiChuKetQuaPhucDap'
-							label='Nội dung phúc đáp'
-							rules={isKetQua ? [] : [...rules.required, ...rules.text]}
-						>
-							<TinyEditor hideMenubar miniToolbar stickyToolbar={false} disabled={isKetQua} />
-						</Form.Item>
-					</Col>
+					) : (
+						<Col span={24}>
+							<Form.Item
+								name='ghiChuKetQuaPhucDap'
+								label='Nội dung phúc đáp'
+								rules={isKetQua ? [] : [...rules.required, ...rules.text]}
+							>
+								<TinyEditor hideMenubar miniToolbar stickyToolbar={false} disabled={isKetQua} />
+							</Form.Item>
+						</Col>
+					)}
 				</Row>
 
 				<div className='form-footer'>

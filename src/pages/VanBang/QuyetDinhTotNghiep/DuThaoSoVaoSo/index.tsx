@@ -39,7 +39,7 @@ const toCamel = (str: string) => {
 
 const DuThaoSoVaoSoQuyetDinh = (props: {
 	afterAddNew?: (val: number) => void;
-	title?: 'Thông tin quyết định' | 'Danh sách dự thảo' | 'Quyết định đã duyệt';
+	title?: 'Thông tin quyết định' | 'Dự thảo cần duyệt' | 'Quyết định đã duyệt';
 }) => {
 	const { afterAddNew, title } = props;
 	const intl = useIntl();
@@ -70,7 +70,8 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 	const disable =
 		!!recQuyetDinh?._id &&
 		(recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO ||
-			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC);
+			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC ||
+			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.HOAN_THANH);
 
 	const trinhLanhDao =
 		recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.DU_THAO ||
@@ -316,7 +317,10 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 						if (afterAddNew) afterAddNew(3);
 					}}
 					icon={<ArrowRightOutlined />}
-					disabled={recQuyetDinh?.trangThai !== ETrangThaiQuyetDinhTotNghiep.CHINH_THUC}
+					disabled={
+						recQuyetDinh?.trangThai !== ETrangThaiQuyetDinhTotNghiep.CHINH_THUC &&
+						recQuyetDinh?.trangThai !== ETrangThaiQuyetDinhTotNghiep.HOAN_THANH
+					}
 				>
 					Tiếp theo
 				</Button>

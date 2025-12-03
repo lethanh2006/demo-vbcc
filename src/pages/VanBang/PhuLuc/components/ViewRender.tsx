@@ -14,7 +14,7 @@ import PhuLucDetailView from './PhuLucDetailView';
 const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) => {
 	const intl = useIntl();
 	const { record, setVisibleForm, setDataToSignOrPush, setVisiblePrint, loading } = useModel('vbcc.phulucvanbang');
-	const { getAllModel, loading: loadingLS, danhSach } = useModel('vbcc.lichsuvanbang');
+	const { getAllModel, loading: loadingLS, danhSach, setDanhSach } = useModel('vbcc.lichsuvanbang');
 	const { hasPrint = true, hideFooter = false } = props;
 
 	const handlePrintOne = (rec?: any) => {
@@ -41,8 +41,10 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) 
 					},
 				],
 			);
+		} else {
+			setDanhSach([]);
 		}
-	}, []);
+	}, [record?._id]);
 
 	const items: CollapseProps['items'] = (() => {
 		const countMap: Record<string, number> = {};
@@ -69,8 +71,12 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) 
 			<Spin spinning={loading || loadingLS}>
 				{record?._id ? (
 					<>
-						{danhSach?.length ? <Collapse items={items} /> : null}
 						<PhuLucDetailView />
+						{danhSach?.length ? (
+							<div style={{ marginTop: 12 }}>
+								<Collapse items={items} />
+							</div>
+						) : null}
 					</>
 				) : (
 					<Empty description='Thông tin văn bằng không tồn tại' />

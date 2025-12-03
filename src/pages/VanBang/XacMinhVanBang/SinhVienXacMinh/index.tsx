@@ -74,7 +74,7 @@ const SinhVienXacMinhPage = (props: {
 		setIsView,
 		setDanhSach,
 	} = useModel('vbcc.sinhvienxacminh');
-	const { getAllModel: getPhuLuc, getByIdModel } = useModel('vbcc.phulucvanbang');
+	const { getByIdModel } = useModel('vbcc.phulucvanbang');
 
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const [visibleExport, setVisibleExport] = useState<boolean>(false);
@@ -148,7 +148,7 @@ const SinhVienXacMinhPage = (props: {
 			filterType: 'string',
 		},
 		{
-			title: 'Phụ lục',
+			title: 'Phụ lục xác minh',
 			dataIndex: 'phuLucId',
 			align: 'center',
 			width: 120,
@@ -234,20 +234,6 @@ const SinhVienXacMinhPage = (props: {
 											onClick={() => {
 												setRecord(rec);
 												setVisibleTraCuu(true);
-
-												//Get thông tin phục lục
-												getPhuLuc(
-													undefined,
-													undefined,
-													{
-														hoTen: rec?.hoTen,
-														maSinhVien: rec?.maSinhVien,
-														soVaoSoBang: rec?.soVaoSo,
-														soHieuVanBang: rec?.soHieuVanBang,
-													},
-													undefined,
-													'tra-cuu',
-												);
 											}}
 										/>
 										<Popconfirm

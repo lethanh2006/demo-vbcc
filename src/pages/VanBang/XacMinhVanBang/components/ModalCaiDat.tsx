@@ -58,7 +58,7 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 								label='Tập tin biểu mẫu kết quả xác minh'
 								rules={[...rules.required, ...rules.fileRequired]}
 							>
-								<UploadFile accept='.docx' drag />
+								<UploadFile accept='.docx' drag hasPreviewFile previewFileProps={{ isFileId: true }} />
 							</Form.Item>
 						</Col>
 					</Row>

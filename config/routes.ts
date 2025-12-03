@@ -99,8 +99,29 @@
 	{
 		name: 'XacMinhVanBang',
 		path: 'xac-minh-van-bang',
-		component: 'VanBang/XacMinhVanBang',
 		icon: 'InfoCircleOutlined',
+		routes: [
+			{
+				name: 'ThongTinYeuCau',
+				path: 'thong-tin-yeu-cau',
+				component: 'VanBang/XacMinhVanBang',
+			},
+			{
+				name: 'YeuCauXuLy',
+				path: 'yeu-cau-xac-minh',
+				component: 'VanBang/XacMinhVanBang/XuLy.tsx',
+			},
+			{
+				name: 'YeuCauTrinhKy',
+				path: 'yeu-cau-can-duyet',
+				component: 'VanBang/XacMinhVanBang/TrinhKy.tsx',
+			},
+			{
+				name: 'YeuCauHoanThanh',
+				path: 'yeu-cau-hoan-thanh',
+				component: 'VanBang/XacMinhVanBang/HoanThanh.tsx',
+			},
+		],
 	},
 
 	{
