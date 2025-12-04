@@ -19,13 +19,11 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 
 	const recLichSu = data ?? record;
 
-	// Giá trị gốc (trước khi chỉnh sửa/cập nhật)
 	const original =
 		(recLichSu?.trangThai === ETrangThaiYeuCauVanBang.CHO_XAC_NHAN
 			? recLichSu?.phuLucVanBang
 			: recLichSu?.thongTinPhuLucTruocKhiChinhSua) || ({} as PhuLucVanBang.IRecord);
 
-	// Giá trị đã cập nhật/chỉnh sửa
 	const updated = recLichSu?.thongTinCapNhatCapLai || ({} as PhuLucVanBang.IRecord);
 
 	const fields: { key: keyof PhuLucVanBang.IRecord; label: string }[] = [
@@ -37,7 +35,6 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 		{ key: 'soHieuVanBang', label: 'Số hiệu văn bằng' },
 	];
 
-	// Kiểm tra xem trường dữ liệu chính có thay đổi không
 	const isChanged = (k: keyof PhuLucVanBang.IRecord): boolean => {
 		return String(original[k] ?? '') !== String(updated[k] ?? '');
 	};
@@ -47,7 +44,6 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 	const renderValue = (key: keyof PhuLucVanBang.IRecord, value: any) =>
 		key === 'ngaySinh' ? formatDate(value) : value || '—';
 
-	// Kiểm tra xem dữ liệu trong templateData có thay đổi không
 	const isTemplateDataChanged = (headerName: string, type: string): boolean => {
 		const orig = original.templateData?.find((i) => i.headerName === headerName && i.type === type);
 		const upd = updated.templateData?.find((i) => i.headerName === headerName && i.type === type);
@@ -61,7 +57,6 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 		return String(orig.value ?? '') !== String(upd.value ?? '');
 	};
 
-	// Hàm render giá trị so sánh
 	const renderComparedValue = (key: keyof PhuLucVanBang.IRecord) => {
 		const changed = isChanged(key);
 		const originalValue = renderValue(key, original[key]);
@@ -73,13 +68,11 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 
 		return (
 			<Space direction='vertical' size={2} style={{ width: '100%' }}>
-				{/* Giá trị CŨ */}
 				<Space>
 					<Text delete type='danger' style={{ fontSize: '0.9em' }}>
 						{originalValue}
 					</Text>
 				</Space>
-				{/* Giá trị MỚI */}
 				<Space>
 					<Text strong type='success'>
 						{updatedValue}
@@ -89,7 +82,6 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 		);
 	};
 
-	// Hàm render giá trị so sánh trong phần Template Data (Text/Number/Date)
 	const renderComparedTemplateValue = (headerName: string, type: string) => {
 		const changed = isTemplateDataChanged(headerName, type);
 
@@ -112,13 +104,11 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 
 		return (
 			<Space direction='vertical' size={2} style={{ width: '100%' }}>
-				{/* Giá trị CŨ */}
 				<Space>
 					<Text delete type='danger' style={{ fontSize: '0.9em' }}>
 						{originalValue}
 					</Text>
 				</Space>
-				{/* Giá trị MỚI */}
 				<Space>
 					<Text strong type='success'>
 						{updatedValue}
@@ -128,7 +118,6 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 		);
 	};
 
-	// Hàm render bảng so sánh
 	const renderComparedTable = (headerName: string) => {
 		const changed = isTemplateDataChanged(headerName, ELoaiDuLieuBieuMau.Table);
 

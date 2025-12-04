@@ -8,11 +8,15 @@ import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
 import { primaryColor } from '@/services/base/constant';
-import { colorTrangThaiQuyetDinhTotNghiep, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
+import {
+	colorTrangThaiQuyetDinhTotNghiep,
+	ETrangThaiQuyetDinhTotNghiep,
+	nameTrangThaiQuyetDinhTotNghiep,
+} from '@/services/VanBang/constant';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import {
-	CheckOutlined,
+	CheckCircleOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	InfoCircleOutlined,
@@ -174,14 +178,17 @@ const QuyetDinhTotNghiepPage = (props: {
 			align: 'center',
 			fixed: 'right',
 			filterType: title === 'Thông tin quyết định' ? 'select' : undefined,
-			filterData: Object.values(ETrangThaiQuyetDinhTotNghiep),
+			filterData: Object.values(ETrangThaiQuyetDinhTotNghiep).map((item) => ({
+				value: item,
+				label: nameTrangThaiQuyetDinhTotNghiep[item],
+			})),
 			render: (val, rec) => (
 				<Space size={6}>
 					<Tag
 						color={colorTrangThaiQuyetDinhTotNghiep[val as ETrangThaiQuyetDinhTotNghiep]}
 						style={{ padding: '2px 8px', fontWeight: 500 }}
 					>
-						{val}
+						{nameTrangThaiQuyetDinhTotNghiep[val as ETrangThaiQuyetDinhTotNghiep]}
 					</Tag>
 
 					<Popover placement='left' content={renderTrangThaiInfo(rec)}>
@@ -245,7 +252,7 @@ const QuyetDinhTotNghiepPage = (props: {
 									tooltip='Duyệt quyết định'
 									type='link'
 									className='btn-success'
-									icon={<CheckOutlined />}
+									icon={<CheckCircleOutlined />}
 									disabled={!canXuLyQuyetDinh}
 								/>
 							</Popconfirm>
@@ -282,9 +289,9 @@ const QuyetDinhTotNghiepPage = (props: {
 										Chỉnh sửa
 									</ButtonExtend>
 
-									<Popconfirm title='Loại bỏ quyết định?' placement='topRight' onConfirm={() => deleteModel(rec._id)}>
+									<Popconfirm title='Xóa quyết định?' placement='topRight' onConfirm={() => deleteModel(rec._id)}>
 										<ButtonExtend
-											tooltip='Loại bỏ'
+											tooltip='Xóa'
 											type='link'
 											danger
 											icon={<DeleteOutlined />}
@@ -296,7 +303,7 @@ const QuyetDinhTotNghiepPage = (props: {
 								</Space>
 							}
 						>
-							<ButtonExtend disabled={isHoanThanh} type='link' tooltip='Thêm thao tác' icon={<MenuOutlined />} />
+							<ButtonExtend disabled={isHoanThanh} type='link' icon={<MenuOutlined />} />
 						</Popover>
 					</>
 				);

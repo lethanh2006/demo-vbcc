@@ -177,11 +177,19 @@ export enum ETrangThaiQuyetDinhTotNghiep {
 	HOAN_THANH = 'Hoàn thành',
 }
 
+export const nameTrangThaiQuyetDinhTotNghiep: Record<ETrangThaiQuyetDinhTotNghiep, string> = {
+	[ETrangThaiQuyetDinhTotNghiep.DU_THAO]: 'Dự thảo',
+	[ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO]: 'Trình dự thảo',
+	[ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA]: 'Yêu cầu chỉnh sửa',
+	[ETrangThaiQuyetDinhTotNghiep.CHINH_THUC]: 'Đã duyệt',
+	[ETrangThaiQuyetDinhTotNghiep.HOAN_THANH]: 'Hoàn thành',
+};
+
 export const colorTrangThaiQuyetDinhTotNghiep: Record<ETrangThaiQuyetDinhTotNghiep, ETagColor> = {
 	[ETrangThaiQuyetDinhTotNghiep.DU_THAO]: ETagColor.ORANGE,
 	[ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO]: ETagColor.BLUE,
 	[ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA]: ETagColor.RED,
-	[ETrangThaiQuyetDinhTotNghiep.CHINH_THUC]: ETagColor.GREEN,
+	[ETrangThaiQuyetDinhTotNghiep.CHINH_THUC]: ETagColor.GEEKBLUE,
 	[ETrangThaiQuyetDinhTotNghiep.HOAN_THANH]: ETagColor.GREEN,
 };
 

@@ -1,7 +1,7 @@
 import { EPhaseXacMinh } from '@/services/VanBang/constant';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import { resetFieldsForm } from '@/utils/utils';
-import { ArrowLeftOutlined, CloseCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Popconfirm, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -49,7 +49,7 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 				<div className='form-footer'>
 					<Button
 						onClick={() => {
-							if (afterAddNew) afterAddNew(2);
+							if (afterAddNew) afterAddNew(3);
 						}}
 						icon={<ArrowLeftOutlined />}
 					>
@@ -67,9 +67,7 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 						</Button>
 					</Popconfirm>
 
-					<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
-						{intl.formatMessage({ id: 'global.button.huy' })}
-					</Button>
+					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 		</>

@@ -4,14 +4,7 @@ import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import {
-	ArrowLeftOutlined,
-	ArrowRightOutlined,
-	CloseCircleOutlined,
-	DeleteOutlined,
-	EditOutlined,
-	ImportOutlined,
-} from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, DeleteOutlined, EditOutlined, ImportOutlined } from '@ant-design/icons';
 import { Button, Popconfirm } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -141,9 +134,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void 
 				>
 					Tiếp theo
 				</Button>
-				<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
-					{intl.formatMessage({ id: 'global.button.huy' })}
-				</Button>
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 
 			<ModalImportPhuLucVanBang

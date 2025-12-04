@@ -7,7 +7,7 @@ import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { ArrowRightOutlined, CloseCircleOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -149,9 +149,7 @@ const FormQuyetDinhTotNghiep = (props: {
 						Tiếp theo
 					</Button>
 				)}
-				<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
-					{intl.formatMessage({ id: 'global.button.huy' })}
-				</Button>
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Form>
 	);

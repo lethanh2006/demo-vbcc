@@ -40,11 +40,15 @@ const ModalXuLyPhuLuc = (props: {
 			>
 				<div
 					style={{ fontSize: 48 }}
-					className={trangThai === ETrangThaiYeuCauVanBang.DA_DUYET ? 'text-success' : 'text-warning'}
+					className={trangThai === ETrangThaiYeuCauVanBang.DA_DUYET ? 'text-success' : 'text-error'}
 				>
 					{trangThai === ETrangThaiYeuCauVanBang.DA_DUYET ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
 				</div>
-				<div>Xác nhận {trangThai} xử lý thông tin văn bằng?</div>
+				<div>
+					{trangThai === ETrangThaiYeuCauVanBang.DA_DUYET
+						? 'Xác nhận chấp nhận đề xuất xử lý cấp bằng tốt nghiệp !'
+						: 'Xác nhận từ chối đề xuất xử lý cấp bằng tốt nghiệp !'}
+				</div>
 			</div>
 
 			<Form onFinish={onFinish} form={form} layout='vertical'>
@@ -58,7 +62,7 @@ const ModalXuLyPhuLuc = (props: {
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Xác nhận
+						Lưu lại
 					</Button>
 					<Button onClick={() => setVisible(false)}>Hủy</Button>
 				</div>

@@ -18,7 +18,7 @@ import { useModel } from 'umi';
 import Form from './components/Form';
 import ModalXuLyPhuLuc from './components/XuLy';
 
-const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu cầu cấp lại' | 'Yêu cầu thu hồi' }) => {
+const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đề xuất cấp lại' | 'Đề xuất thu hồi' }) => {
 	const { title } = props;
 	const { getModel, page, limit, handleView } = useModel('vbcc.lichsuvanbang');
 	const [visibleXuLy, setVisibleXuLy] = useState<boolean>(false);
@@ -31,7 +31,7 @@ const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu c
 	const getData = () => {
 		const filters: any[] = [];
 
-		if (title === 'Yêu cầu chỉnh sửa') {
+		if (title === 'Đề xuất chỉnh sửa') {
 			filters.push({
 				active: true,
 				field: 'loai',
@@ -39,7 +39,7 @@ const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu c
 				operator: EOperatorType.INCLUDE,
 			});
 		}
-		if (title === 'Yêu cầu cấp lại') {
+		if (title === 'Đề xuất cấp lại') {
 			filters.push({
 				active: true,
 				field: 'loai',
@@ -47,7 +47,7 @@ const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu c
 				operator: EOperatorType.INCLUDE,
 			});
 		}
-		if (title === 'Yêu cầu thu hồi') {
+		if (title === 'Đề xuất thu hồi') {
 			filters.push({
 				active: true,
 				field: 'loai',
@@ -79,7 +79,7 @@ const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu c
 				]
 					.filter(Boolean)
 					.join(' | '),
-			onCell: title !== 'Yêu cầu thu hồi' ? onCell : undefined,
+			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
 		},
 		{
 			title: 'Thời gian yêu cầu',
@@ -89,7 +89,7 @@ const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu c
 			render: (val, rec) => val && dayjs(val).format('HH:mm DD/MM/YYYY'),
 			filterType: 'datetime',
 			sortable: true,
-			onCell: title !== 'Yêu cầu thu hồi' ? onCell : undefined,
+			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
 		},
 		{
 			title: 'Thời gian xử lý',
@@ -99,17 +99,17 @@ const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu c
 			render: (val, rec) => val && dayjs(val).format('HH:mm DD/MM/YYYY'),
 			filterType: 'datetime',
 			sortable: true,
-			onCell: title !== 'Yêu cầu thu hồi' ? onCell : undefined,
+			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
 		},
 		{
-			title: 'Yêu cầu',
+			title: 'Đề xuất',
 			dataIndex: 'loai',
 			align: 'center',
 			width: 120,
 			render: (val, rec) => <Tag color={colorLoaiYeuCauVangBang[val as ELoaiYeuCauVangBang]}>{val}</Tag>,
 			filterType: 'select',
 			filterData: Object.values(ELoaiYeuCauVangBang),
-			onCell: title !== 'Yêu cầu thu hồi' ? onCell : undefined,
+			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
 		},
 		{
 			title: 'Ghi chú',
@@ -126,12 +126,13 @@ const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu c
 			render: (val, rec) => <Tag color={colorTrangThaiYeuCauVanBang[val as ETrangThaiYeuCauVanBang]}>{val}</Tag>,
 			filterType: 'select',
 			filterData: Object.values(ETrangThaiYeuCauVanBang),
-			onCell: title !== 'Yêu cầu thu hồi' ? onCell : undefined,
+			fixed: 'right',
+			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 60,
+			width: 90,
 			fixed: 'right',
 			render: (val, rec) => {
 				const isChoXacNhan = rec?.trangThai === ETrangThaiYeuCauVanBang.CHO_XAC_NHAN;
@@ -141,10 +142,10 @@ const PhuLucChinhSuaPage = (props: { title: 'Yêu cầu chỉnh sửa' | 'Yêu c
 						<ButtonExtend
 							disabled={!isChoXacNhan}
 							onClick={() => {
-								setTrangThai({ title: 'Chấp nhập yêu cầu', trangThai: ETrangThaiYeuCauVanBang.DA_DUYET });
+								setTrangThai({ title: 'Chấp nhận yêu cầu', trangThai: ETrangThaiYeuCauVanBang.DA_DUYET });
 								setVisibleXuLy(true);
 							}}
-							tooltip='Cấp nhận'
+							tooltip='Chấp nhận'
 							className='btn-success'
 							type='link'
 							icon={<CheckCircleOutlined />}

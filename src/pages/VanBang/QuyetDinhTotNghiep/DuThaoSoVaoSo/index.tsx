@@ -4,11 +4,11 @@ import { IColumn } from '@/components/Table/typing';
 import { defaultElementBieuMau, ELoaiDuLieuBieuMau, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import rules from '@/utils/rules';
+import { resetFieldsForm } from '@/utils/utils';
 import {
 	ArrowLeftOutlined,
 	ArrowRightOutlined,
 	CheckCircleOutlined,
-	CloseCircleOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	SendOutlined,
@@ -16,7 +16,6 @@ import {
 import { Button, Checkbox, Col, Form, Input, InputNumber, Modal, Popconfirm, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectSoVanBang from '../../SoVanBang/components/Select';
 import ModalYeuCauChinhSua from '../components/YeuCauChinhSua';
 import FormSinhVienQuyetDinh from '../DanhSachSinhVien/components/Form';
 
@@ -44,6 +43,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 	const { afterAddNew, title } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
+	const [formDuKien] = Form.useForm();
 	const {
 		record: recQuyetDinh,
 		setVisibleForm: setVisibleQuyetDinh,
@@ -63,7 +63,6 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 		visibleForm,
 		setVisibleForm,
 	} = useModel('vbcc.phulucvanbang');
-	const { danhSach: dsSoVanBang } = useModel('vbcc.sovanbang');
 	const [visibleChinhSua, setVisibleChinhSua] = useState(false);
 	const [recEditInline, setRecEditInline] = useState<PhuLucVanBang.IRecord>();
 
@@ -94,14 +93,20 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 
 	useEffect(() => {
 		form.setFieldsValue({
-			idSoVanBang: recQuyetDinh?.idSoVanBang,
-			soVaoSoHienTai: recQuyetDinh?.soVaoSoHienTai ?? recQuyetDinh?.soVanBang?.soVaoSoHienTai,
+			soVaoSoHienTai: recQuyetDinh?.soVaoSoHienTai || recQuyetDinh?.soVanBang?.soVaoSoHienTai,
 			ruleSortPhuLuc: recQuyetDinh?.ruleSortPhuLuc,
 			sinhLaiToanBo: false,
 		});
-	}, [recQuyetDinh?.soVaoSoHienTai]);
+	}, [JSON.stringify(recQuyetDinh)]);
+
+	useEffect(() => {
+		if (!recEditInline) {
+			resetFieldsForm(formDuKien);
+		}
+	}, [recEditInline]);
 
 	const onFinish = (values: any) => {
+		values.idSoVanBang = recQuyetDinh?.idSoVanBang;
 		sortPhuLucTamModel(recQuyetDinh?._id ?? '', values, () => {
 			getData();
 			getQuyetDinh();
@@ -129,7 +134,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 					}),
 			render: (val, rec) =>
 				recEditInline?._id === rec?._id ? (
-					<Form onFinish={onFinishSoVaoSo} form={form}>
+					<Form onFinish={onFinishSoVaoSo} form={formDuKien}>
 						<Form.Item initialValue={val} name='soVaoSoTamThoi' rules={[...rules.required]} noStyle>
 							<Input autoFocus onBlur={() => setRecEditInline(undefined)} />
 						</Form.Item>
@@ -183,19 +188,8 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 			<Form form={form} layout='vertical' onFinish={onFinish}>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={12}>
-						<Form.Item label='Sổ văn bằng' name='idSoVanBang'>
-							<SelectSoVanBang
-								onChange={(val) => {
-									const index = dsSoVanBang?.find((item) => item?._id === val);
-
-									if (index?._id !== recQuyetDinh?.idSoVanBang) {
-										form.setFieldsValue({
-											soVaoSoHienTai: index?.soVaoSoHienTai,
-										});
-									}
-								}}
-								disabled={disable}
-							/>
+						<Form.Item label='Sổ văn bằng'>
+							<Input value={recQuyetDinh?.soVanBang?.ten} placeholder='Nhập ổ văn bằng' disabled />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
@@ -324,9 +318,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 				>
 					Tiếp theo
 				</Button>
-				<Button onClick={() => setVisibleQuyetDinh(false)} icon={<CloseCircleOutlined />} danger>
-					{intl.formatMessage({ id: 'global.button.huy' })}
-				</Button>
+				<Button onClick={() => setVisibleQuyetDinh(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 
 			<ModalYeuCauChinhSua visible={visibleChinhSua} setVisible={setVisibleChinhSua} getData={getQuyetDinh} />

@@ -1,7 +1,7 @@
 import PhuLucChinhSuaPage from '.';
 
 const YeuCauThuHoi = () => {
-	return <PhuLucChinhSuaPage title='Yêu cầu thu hồi' />;
+	return <PhuLucChinhSuaPage title='Đề xuất thu hồi' />;
 };
 
 export default YeuCauThuHoi;

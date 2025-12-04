@@ -4,32 +4,15 @@ import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import {
-	ArrowRightOutlined,
-	CloseCircleOutlined,
-	PlusCircleOutlined,
-	SafetyOutlined,
-	SaveOutlined,
-} from '@ant-design/icons';
+import { ArrowRightOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Form, Input, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import SinhVienXacMinhPage from '../SinhVienXacMinh';
 
-const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getData?: () => void }) => {
-	const { afterAddNew, getData } = props;
-	const {
-		edit,
-		record,
-		visibleForm,
-		setVisibleForm,
-		putModel,
-		postModel,
-		formSubmiting,
-		setRecord,
-		setEdit,
-		nextStepXacMinhModel,
-	} = useModel('vbcc.xacminhvanbang');
+const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
+	const { afterAddNew } = props;
+	const { edit, record, visibleForm, setVisibleForm, putModel, postModel, formSubmiting, setRecord, setEdit } =
+		useModel('vbcc.xacminhvanbang');
 	const intl = useIntl();
 	const [form] = Form.useForm();
 
@@ -62,19 +45,6 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getDat
 				})
 				.catch((err) => console.log(err));
 		}
-	};
-
-	const handleChuyenBuoc = () => {
-		nextStepXacMinhModel(
-			record?._id ?? '',
-			{
-				phaseXuLy: EPhaseXacMinh.XAC_MINH,
-			},
-			getData,
-		).then((rec) => {
-			setRecord({ ...record, ...rec });
-			if (afterAddNew) afterAddNew(1);
-		});
 	};
 
 	return (
@@ -137,14 +107,6 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getDat
 						/>
 					</Form.Item>
 				</Col>
-				<Col span={24}>
-					<Divider style={{ fontSize: 15 }} orientation='left'>
-						Thông tin tra cứu
-					</Divider>
-				</Col>
-				<Col span={24}>
-					<SinhVienXacMinhPage isYeuCau size='small' hideThaoTac />
-				</Col>
 			</Row>
 
 			<div className='form-footer'>
@@ -159,22 +121,7 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getDat
 				</Button>
 
 				<Button
-					loading={formSubmiting}
-					disabled={!record?._id || record?.phaseXuLy !== EPhaseXacMinh.YEU_CAU || isHoanThanh}
-					onClick={handleChuyenBuoc}
-					icon={<SafetyOutlined />}
-					type='primary'
-				>
-					Tiến hành xác minh
-				</Button>
-
-				<Button
-					disabled={
-						!record?._id ||
-						![EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(
-							record?.phaseXuLy,
-						)
-					}
+					disabled={!record?._id}
 					onClick={() => {
 						if (afterAddNew) afterAddNew(1);
 					}}
@@ -183,9 +130,7 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void; getDat
 					Tiếp theo
 				</Button>
 
-				<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
-					{intl.formatMessage({ id: 'global.button.huy' })}
-				</Button>
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Form>
 	);

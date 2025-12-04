@@ -30,11 +30,11 @@ const ModalXacMinhVanBang = (props: any) => {
 				setCurrentStep(1);
 				break;
 			case EPhaseXacMinh.PHUC_DAP:
-				setCurrentStep(2);
+				setCurrentStep(3);
 				break;
 			case EPhaseXacMinh.KET_QUA:
 			case EPhaseXacMinh.HOAN_THANH:
-				setCurrentStep(3);
+				setCurrentStep(4);
 				break;
 		}
 	}, [visibleForm]);
@@ -65,11 +65,11 @@ const ModalXacMinhVanBang = (props: any) => {
 					<Steps
 						current={currentStep}
 						onChange={record?._id ? onChangeStep : undefined}
-						progressDot
 						direction='vertical'
 						size='small'
 					>
 						<Steps.Step title='Yêu cầu xác minh' />
+						<Steps.Step title='Thông tin tra cứu' disabled={!record?._id} />
 						<Steps.Step
 							title='Xác minh văn bằng'
 							disabled={
@@ -97,19 +97,21 @@ const ModalXacMinhVanBang = (props: any) => {
 				</Col>
 				<Col xs={24} sm={24} md={19} lg={19} xl={19}>
 					{currentStep === 0 ? (
-						<FormXacMinhVanBang afterAddNew={setCurrentStep} getData={getRecXacMinh} />
+						<FormXacMinhVanBang afterAddNew={setCurrentStep} />
 					) : currentStep === 1 ? (
+						<SinhVienXacMinhPage isYeuCau size='small' afterAddNew={setCurrentStep} getData={getRecXacMinh} />
+					) : currentStep === 2 ? (
 						<SinhVienXacMinhPage
 							isXacMinh
-							size='small'
-							afterAddNew={setCurrentStep}
 							hideAdd
 							hideImport
+							size='small'
+							afterAddNew={setCurrentStep}
 							getData={getRecXacMinh}
 						/>
-					) : currentStep === 2 ? (
-						<CongVanPhucDapPage afterAddNew={setCurrentStep} getData={getRecXacMinh} />
 					) : currentStep === 3 ? (
+						<CongVanPhucDapPage afterAddNew={setCurrentStep} getData={getRecXacMinh} />
+					) : currentStep === 4 ? (
 						<TraKetQuaPage afterAddNew={setCurrentStep} getData={getRecXacMinh} />
 					) : null}
 				</Col>

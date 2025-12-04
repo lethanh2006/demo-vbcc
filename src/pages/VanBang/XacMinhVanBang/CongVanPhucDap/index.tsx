@@ -1,7 +1,7 @@
 import { EPhaseXacMinh } from '@/services/VanBang/constant';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import { resetFieldsForm } from '@/utils/utils';
-import { ArrowLeftOutlined, ArrowRightOutlined, CloseCircleOutlined, FileDoneOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, FileDoneOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -51,7 +51,7 @@ const CongVanPhucDapPage = (props: { afterAddNew?: (val: number) => void; getDat
 				<div className='form-footer'>
 					<Button
 						onClick={() => {
-							if (afterAddNew) afterAddNew(1);
+							if (afterAddNew) afterAddNew(2);
 						}}
 						icon={<ArrowLeftOutlined />}
 					>
@@ -60,7 +60,7 @@ const CongVanPhucDapPage = (props: { afterAddNew?: (val: number) => void; getDat
 					<Button
 						disabled={!record?._id || ![EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(record?.phaseXuLy)}
 						onClick={() => {
-							if (afterAddNew) afterAddNew(3);
+							if (afterAddNew) afterAddNew(4);
 						}}
 						icon={<ArrowRightOutlined />}
 					>
@@ -76,9 +76,7 @@ const CongVanPhucDapPage = (props: { afterAddNew?: (val: number) => void; getDat
 						Xử lý công văn
 					</Button>
 
-					<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
-						{intl.formatMessage({ id: 'global.button.huy' })}
-					</Button>
+					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 		</>

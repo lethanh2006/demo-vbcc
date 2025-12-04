@@ -18,11 +18,11 @@ import {
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
+import { resetFieldsForm } from '@/utils/utils';
 import {
 	ArrowLeftOutlined,
 	BoldOutlined,
 	CheckCircleOutlined,
-	CloseCircleOutlined,
 	CloudUploadOutlined,
 	EditOutlined,
 	FilePdfOutlined,
@@ -116,14 +116,15 @@ const PhuLucVanBangPage = (props: {
 		getByIdModel(recQuyetDinh?._id ?? '', true);
 	};
 
-	// set lại quyết định sau khi sinh số vào sổ
-	useEffect(() => {
-		setQuyetDinh(danhsachQuyetDinh?.find((item) => item?._id === recQuyetDinh?._id));
-	}, [JSON.stringify(danhsachQuyetDinh)]);
-
 	useEffect(() => {
 		getNguoiKy('me');
 	}, []);
+
+	useEffect(() => {
+		if (!recEditInline) {
+			resetFieldsForm(form);
+		}
+	}, [recEditInline]);
 
 	const getData = () => {
 		if (recQuyetDinh?._id)
@@ -431,7 +432,7 @@ const PhuLucVanBangPage = (props: {
 			hide: isQuyetDinh,
 		},
 		{
-			title: 'Ghi chú yêu cầu',
+			title: 'Ghi chú đề xuất',
 			dataIndex: 'ghiChuYeuCau',
 			width: 200,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
@@ -439,7 +440,7 @@ const PhuLucVanBangPage = (props: {
 			hide: isQuyetDinh,
 		},
 		{
-			title: 'Trạng thái Yêu cầu',
+			title: 'Trạng thái xử lý văn bằng',
 			dataIndex: 'loaiYeuCauChinhSua',
 			align: 'center',
 			width: 120,
@@ -516,7 +517,7 @@ const PhuLucVanBangPage = (props: {
 							</Space>
 						}
 					>
-						<ButtonExtend type='link' tooltip='Thêm thao tác' icon={<MenuOutlined />} />
+						<ButtonExtend type='link' icon={<MenuOutlined />} />
 					</Popover>
 				</>
 			),
@@ -524,16 +525,20 @@ const PhuLucVanBangPage = (props: {
 		},
 	];
 
-	const otherButtons = [
-		<ButtonExtend
-			icon={<ImportOutlined />}
-			onClick={() => setVisibleImport(true)}
-			key='import'
-			disabled={!recQuyetDinh?._id}
-		>
-			Nhập dữ liệu
-		</ButtonExtend>,
-	];
+	const otherButtons = [];
+
+	if (isQuyetDinh) {
+		otherButtons.push(
+			<ButtonExtend
+				icon={<ImportOutlined />}
+				onClick={() => setVisibleImport(true)}
+				key='import'
+				disabled={!recQuyetDinh?._id || isHoanThanh}
+			>
+				Nhập dữ liệu
+			</ButtonExtend>,
+		);
+	}
 
 	if (settingVbcc?.require_IPFS)
 		otherButtons.push(
@@ -557,7 +562,7 @@ const PhuLucVanBangPage = (props: {
 		}
 		otherButtons.push(
 			<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total}>
-				In phụ lục ({selectedIds?.length || 'Tất cả'})
+				In thông tin văn bằng ({selectedIds?.length || 'Tất cả'})
 			</ButtonExtend>,
 		);
 	}
@@ -704,9 +709,7 @@ const PhuLucVanBangPage = (props: {
 						</Popconfirm>
 					)}
 
-					<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
-						{intl.formatMessage({ id: 'global.button.huy' })}
-					</Button>
+					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			)}
 

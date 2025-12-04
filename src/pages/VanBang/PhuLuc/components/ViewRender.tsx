@@ -87,7 +87,7 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) 
 				<div className='form-footer'>
 					{/* {hasPrint && record && (
 					<Button type='primary' icon={<FilePdfOutlined />} onClick={() => handlePrintOne(record)}>
-						In phụ lục
+						In thông tin văn bằng
 					</Button>
 				)} */}
 

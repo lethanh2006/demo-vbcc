@@ -1,5 +1,9 @@
 import { primaryColor } from '@/services/base/constant';
-import { colorTrangThaiQuyetDinhTotNghiep, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
+import {
+	colorTrangThaiQuyetDinhTotNghiep,
+	ETrangThaiQuyetDinhTotNghiep,
+	nameTrangThaiQuyetDinhTotNghiep,
+} from '@/services/VanBang/constant';
 import { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -40,6 +44,7 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 	const intl = useIntl();
 	const { getData, yearSelect, title } = props;
 	const { record, edit, visibleForm } = useModel('vbcc.quyetdinhtotnghiep');
+	console.log('🚀 ~ ModalQuyetDinhTotNghiep ~ record:', record);
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
 	useEffect(() => {
@@ -76,7 +81,7 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 					{record?._id ? (
 						<Space wrap>
 							<Tag color={colorTrangThaiQuyetDinhTotNghiep[record?.trangThai as ETrangThaiQuyetDinhTotNghiep]}>
-								{record?.trangThai}
+								{nameTrangThaiQuyetDinhTotNghiep[record?.trangThai]}
 							</Tag>
 							<Popover placement='left' content={renderTrangThaiInfo(record)}>
 								<InfoCircleOutlined style={{ cursor: 'pointer', color: primaryColor }} />
@@ -91,7 +96,6 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 					<Steps
 						current={currentStep}
 						onChange={record?._id ? onChangeStep : undefined}
-						progressDot
 						direction='vertical'
 						size='small'
 					>

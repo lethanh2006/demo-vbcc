@@ -14,6 +14,7 @@ import {
 	ArrowRightOutlined,
 	CheckCircleOutlined,
 	CloseCircleOutlined,
+	DeleteOutlined,
 	DownloadOutlined,
 	EditOutlined,
 	ExportOutlined,
@@ -21,9 +22,10 @@ import {
 	ImportOutlined,
 	MenuOutlined,
 	PlusCircleOutlined,
+	SafetyOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Checkbox, Modal, Popconfirm, Popover } from 'antd';
+import { Button, Checkbox, Modal, Popconfirm, Popover, Space } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -59,7 +61,12 @@ const SinhVienXacMinhPage = (props: {
 		hideExport = false,
 		getData: getXacMinh,
 	} = props;
-	const { record: recXacMinh, setRecord: setRecXacMinh, nextStepXacMinhModel } = useModel('vbcc.xacminhvanbang');
+	const {
+		record: recXacMinh,
+		setRecord: setRecXacMinh,
+		nextStepXacMinhModel,
+		formSubmiting,
+	} = useModel('vbcc.xacminhvanbang');
 	const {
 		loading,
 		getAllModel,
@@ -73,6 +80,8 @@ const SinhVienXacMinhPage = (props: {
 		isView,
 		setIsView,
 		setDanhSach,
+		handleEdit,
+		deleteModel,
 	} = useModel('vbcc.sinhvienxacminh');
 	const { getByIdModel } = useModel('vbcc.phulucvanbang');
 
@@ -97,16 +106,16 @@ const SinhVienXacMinhPage = (props: {
 		getData();
 	}, [recXacMinh?._id]);
 
-	const handleChuyenBuoc = () => {
+	const handleChuyenBuoc = (trangThai: EPhaseXacMinh) => {
 		nextStepXacMinhModel(
 			recXacMinh?._id ?? '',
 			{
-				phaseXuLy: EPhaseXacMinh.PHUC_DAP,
+				phaseXuLy: trangThai,
 			},
 			getXacMinh,
 		).then((rec) => {
 			setRecXacMinh({ ...recXacMinh, ...rec });
-			if (afterAddNew) afterAddNew(2);
+			if (afterAddNew) afterAddNew(isYeuCau ? 2 : 3);
 		});
 	};
 
@@ -225,7 +234,7 @@ const SinhVienXacMinhPage = (props: {
 								placement='bottom'
 								trigger='hover'
 								content={
-									<>
+									<Space direction='vertical' size={'small'}>
 										<ButtonExtend
 											disabled={isHoanThanh}
 											tooltip='Tra cứu thủ công'
@@ -235,7 +244,10 @@ const SinhVienXacMinhPage = (props: {
 												setRecord(rec);
 												setVisibleTraCuu(true);
 											}}
-										/>
+											size='small'
+										>
+											Tra cứu thủ công
+										</ButtonExtend>
 										<Popconfirm
 											onConfirm={() => putModel(rec._id, { ...rec, coThongTin: false }, getData)}
 											title='Xác nhận không có kết quả?'
@@ -247,12 +259,15 @@ const SinhVienXacMinhPage = (props: {
 												type='link'
 												icon={<CloseCircleOutlined />}
 												danger
-											/>
+												size='small'
+											>
+												Không có kết quả
+											</ButtonExtend>
 										</Popconfirm>
-									</>
+									</Space>
 								}
 							>
-								<ButtonExtend disabled={isHoanThanh} type='link' tooltip='Thêm thao tác' icon={<MenuOutlined />} />
+								<ButtonExtend disabled={isHoanThanh} type='link' icon={<MenuOutlined />} />
 							</Popover>
 						</>
 					);
@@ -280,7 +295,6 @@ const SinhVienXacMinhPage = (props: {
 							/>
 						</>
 					);
-
 				if (isKetQua) {
 					return (
 						<ButtonExtend
@@ -295,8 +309,24 @@ const SinhVienXacMinhPage = (props: {
 						/>
 					);
 				}
-
-				return null;
+				return (
+					<>
+						<ButtonExtend
+							disabled={isHoanThanh}
+							tooltip='Chỉnh sửa'
+							onClick={() => handleEdit(rec)}
+							type='link'
+							icon={<EditOutlined />}
+						/>
+						<Popconfirm
+							onConfirm={() => deleteModel(rec._id)}
+							title='Bạn có chắc chắn muốn xóa thông tin này?'
+							placement='topRight'
+						>
+							<ButtonExtend disabled={isHoanThanh} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						</Popconfirm>
+					</>
+				);
 			},
 			hide: !!hideThaoTac,
 		},
@@ -376,11 +406,11 @@ const SinhVienXacMinhPage = (props: {
 				condition={{ yeuCauXacMinhVanBangId: recXacMinh?._id }}
 			/>
 
-			{isXacMinh ? (
+			{isXacMinh || isYeuCau ? (
 				<div className='form-footer'>
 					<Button
 						onClick={() => {
-							if (afterAddNew) afterAddNew(0);
+							if (afterAddNew) afterAddNew(isYeuCau ? 0 : 1);
 						}}
 						icon={<ArrowLeftOutlined />}
 					>
@@ -389,30 +419,45 @@ const SinhVienXacMinhPage = (props: {
 					<Button
 						disabled={
 							!recXacMinh?._id ||
-							![EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(recXacMinh?.phaseXuLy)
+							!(
+								isYeuCau
+									? [EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH]
+									: [EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH]
+							).includes(recXacMinh?.phaseXuLy)
 						}
 						onClick={() => {
-							if (afterAddNew) afterAddNew(2);
+							if (afterAddNew) afterAddNew(isYeuCau ? 2 : 3);
 						}}
 						icon={<ArrowRightOutlined />}
 					>
 						Tiếp theo
 					</Button>
-					<Button
-						disabled={
-							recXacMinh?.phaseXuLy === EPhaseXacMinh.PHUC_DAP ||
-							recXacMinh?.phaseXuLy === EPhaseXacMinh.KET_QUA ||
-							isHoanThanh
-						}
-						onClick={handleChuyenBuoc}
-						icon={<FileTextOutlined />}
-						type='primary'
-					>
-						Chuẩn bị công văn
-					</Button>
-					<Button onClick={() => setVisibleForm(false)} icon={<CloseCircleOutlined />} danger>
-						{intl.formatMessage({ id: 'global.button.huy' })}
-					</Button>
+					{isYeuCau ? (
+						<Button
+							loading={formSubmiting}
+							disabled={!recXacMinh?._id || recXacMinh?.phaseXuLy !== EPhaseXacMinh.YEU_CAU || isHoanThanh}
+							onClick={() => handleChuyenBuoc(EPhaseXacMinh.XAC_MINH)}
+							icon={<SafetyOutlined />}
+							type='primary'
+						>
+							Tiến hành xác minh
+						</Button>
+					) : (
+						<Button
+							disabled={
+								recXacMinh?.phaseXuLy === EPhaseXacMinh.PHUC_DAP ||
+								recXacMinh?.phaseXuLy === EPhaseXacMinh.KET_QUA ||
+								isHoanThanh
+							}
+							onClick={() => handleChuyenBuoc(EPhaseXacMinh.PHUC_DAP)}
+							icon={<FileTextOutlined />}
+							type='primary'
+						>
+							Chuẩn bị công văn
+						</Button>
+					)}
+
+					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			) : null}
 
