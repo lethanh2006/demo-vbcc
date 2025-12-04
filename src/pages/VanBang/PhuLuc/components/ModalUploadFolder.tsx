@@ -69,11 +69,11 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 			open={visible}
 			title={
 				<>
-					Tải lên phụ lục văn bằng{' '}
+					Tải lên thông tin văn bằng{' '}
 					<Popover
 						content={
 							<>
-								Upload danh sách Phụ lục Văn bằng chứng chỉ dưới dạng file scan PDF lên hệ thống.
+								Upload danh sách Thông tin Văn bằng chứng chỉ dưới dạng file scan PDF lên hệ thống.
 								<br />
 								Lưu ý: Tên file scan phải có định dạng <b>[Số vào sổ]_[Số hiệu văn bằng].pdf</b> tương ứng của VBCC.
 							</>

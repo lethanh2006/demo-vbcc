@@ -16,10 +16,15 @@ import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormTable from './FormTable';
 
-const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: string]: any }) => {
+const FormPhuLucVanBang = (props: {
+	getData?: () => void;
+	title?: string;
+	[key: string]: any;
+	trangThaiYeuCau?: 'Cấp lại' | 'Chỉnh sửa' | 'Thu hồi';
+}) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { getData, vbccSettings } = props;
+	const { getData, vbccSettings, trangThaiYeuCau } = props;
 	const {
 		record,
 		edit,
@@ -31,6 +36,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 		setFormSubmiting,
 		tableData,
 		setTableData,
+		yeuCauCapNhatVanBangModel,
 	} = useModel('vbcc.phulucvanbang');
 	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const { record: recBieuMau, getBieuMauDetailModel } = useModel('vbcc.bieumauphuluc');
@@ -105,7 +111,7 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 			}) ?? [];
 
 		if (values.ngaySinh) {
-			values.ngaySinh = dayjs(values.ngaySinh).startOf('day').toISOString();
+			values.ngaySinh = dayjs(values.ngaySinh).startOf('day').format('YYYY-MM-DD');
 		}
 
 		values.templateData = templateData;
@@ -215,6 +221,49 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 		}
 	};
 
+	const handleYeuCau = async (loai: 'Cấp lại' | 'Chỉnh sửa' | 'Thu hồi') => {
+		let thongTinCapNhatCapLai = form.getFieldsValue();
+
+		setFormSubmiting(true);
+		const urlIpfs = await buildUpLoadFile(thongTinCapNhatCapLai, 'urlIpfs');
+		thongTinCapNhatCapLai.urlIpfs = urlIpfs;
+		setFormSubmiting(false);
+
+		thongTinCapNhatCapLai.fullName = thongTinCapNhatCapLai.hoTen;
+
+		const templateData: any[] =
+			recBieuMau?.elements?.map((element, index) => {
+				let value = thongTinCapNhatCapLai?.templateData?.[index]?.value;
+
+				if (element.type === ELoaiDuLieuBieuMau.Date && value) {
+					value = dayjs(value).startOf('day').toISOString();
+				}
+
+				if (element.type === ELoaiDuLieuBieuMau.Table) {
+					value = tableData?.[element.headerName] ?? [];
+				}
+
+				return {
+					...element,
+					value,
+				};
+			}) ?? [];
+
+		if (thongTinCapNhatCapLai.ngaySinh) {
+			thongTinCapNhatCapLai.ngaySinh = dayjs(thongTinCapNhatCapLai.ngaySinh).format('YYYY-MM-DD');
+		}
+
+		thongTinCapNhatCapLai.templateData = templateData;
+
+		yeuCauCapNhatVanBangModel(
+			record?._id ?? '',
+			{ loai, thoiGianYeuCau: dayjs(), thongTinCapNhatCapLai: { ...record, ...thongTinCapNhatCapLai } },
+			getData,
+		)
+			.then(() => setVisibleForm(false))
+			.catch((err) => console.log(err));
+	};
+
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
@@ -302,11 +351,21 @@ const FormPhuLucVanBang = (props: { getData?: () => void; title?: string; [key: 
 			</Row>
 
 			<div className='form-footer'>
-				<Button loading={formSubmiting} htmlType='submit' type='primary'>
+				{/* <Button loading={formSubmiting} htmlType='submit' type='primary'>
 					{!edit
 						? intl.formatMessage({ id: 'global.button.themmoi' })
 						: intl.formatMessage({ id: 'global.button.luulai' })}
-				</Button>
+				</Button> */}
+				{trangThaiYeuCau === 'Chỉnh sửa' && (
+					<Button loading={formSubmiting} type='primary' onClick={() => handleYeuCau('Chỉnh sửa')}>
+						Yêu cầu chỉnh sửa
+					</Button>
+				)}
+				{trangThaiYeuCau === 'Cấp lại' && (
+					<Button loading={formSubmiting} type='primary' onClick={() => handleYeuCau('Cấp lại')}>
+						Yêu cầu cấp lại
+					</Button>
+				)}
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Form>

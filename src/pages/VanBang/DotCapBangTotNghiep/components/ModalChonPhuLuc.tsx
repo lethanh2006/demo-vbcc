@@ -111,7 +111,7 @@ const ModalChonPhuLuc: React.FC<TProps> = ({ visible, onCancel, getData: getData
 	};
 
 	return (
-		<Modal title='Chọn phụ lục văn bằng' open={visible} width={800} onCancel={onCancel} footer={null}>
+		<Modal title='Chọn thông tin văn bằng' open={visible} width={800} onCancel={onCancel} footer={null}>
 			<TableStaticData
 				columns={columns}
 				data={danhSach?.filter((item) => item?.kichHoat !== true)}

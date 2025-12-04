@@ -7,13 +7,18 @@ import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
+import { ArrowRightOutlined, PlusCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectBieuMauPhuLuc from '../../../DanhMuc/BieuMauPhuLuc/components/Select';
 import SelectSoVanBang from '../../SoVanBang/components/Select';
 
-const FormQuyetDinhTotNghiep = (props: { afterAddNew?: () => void; getData?: () => void; yearSelect?: any }) => {
+const FormQuyetDinhTotNghiep = (props: {
+	afterAddNew?: (val: number) => void;
+	getData?: () => void;
+	yearSelect?: any;
+}) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
@@ -33,7 +38,8 @@ const FormQuyetDinhTotNghiep = (props: { afterAddNew?: () => void; getData?: () 
 	const disable =
 		!!record?._id &&
 		(record?.trangThai === ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO ||
-			record?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC);
+			record?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC ||
+			record?.trangThai === ETrangThaiQuyetDinhTotNghiep.HOAN_THANH);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -65,7 +71,7 @@ const FormQuyetDinhTotNghiep = (props: { afterAddNew?: () => void; getData?: () 
 			putModel(record?._id ?? '', values, getData, undefined, false)
 				.then((rec) => {
 					setRecord({ ...record, ...rec });
-					if (afterAddNew) afterAddNew();
+					if (afterAddNew) afterAddNew(1);
 				})
 				.catch((er) => console.log(er));
 		} else
@@ -73,7 +79,7 @@ const FormQuyetDinhTotNghiep = (props: { afterAddNew?: () => void; getData?: () 
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);
-					if (afterAddNew) afterAddNew();
+					if (afterAddNew) afterAddNew(1);
 				})
 				.catch((er) => console.log(er));
 	};
@@ -124,11 +130,25 @@ const FormQuyetDinhTotNghiep = (props: { afterAddNew?: () => void; getData?: () 
 			</Row>
 
 			<div className='form-footer'>
-				<Button loading={formSubmiting} htmlType='submit' type='primary' disabled={disable}>
-					{!edit
-						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
-						: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+				<Button
+					loading={formSubmiting}
+					htmlType='submit'
+					type='primary'
+					disabled={disable}
+					icon={!edit ? <PlusCircleOutlined /> : <SaveOutlined />}
+				>
+					{!edit ? 'Thêm mới & Tiếp tục' : 'Lưu lại & Tiếp tục'}
 				</Button>
+				{record?._id && (
+					<Button
+						onClick={() => {
+							if (afterAddNew) afterAddNew(1);
+						}}
+						icon={<ArrowRightOutlined />}
+					>
+						Tiếp theo
+					</Button>
+				)}
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Form>

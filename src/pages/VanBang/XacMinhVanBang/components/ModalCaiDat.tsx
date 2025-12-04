@@ -1,6 +1,7 @@
 import UploadFile from '@/components/Upload/UploadFile';
 import { ESettingKey } from '@/services/base/constant';
-import { buildUpLoadFile } from '@/services/uploadFile';
+import { EFileScope, uploadFile } from '@/services/uploadFile';
+import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import rules from '@/utils/rules';
 import { Button, Col, Form, Modal, Row, Spin } from 'antd';
 import { useEffect } from 'react';
@@ -26,13 +27,22 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 	}, [visible]);
 
 	const onFinish = async (value: XacMinhVanBang.ISetting) => {
-		if (!!value.bieuMauId && typeof value.bieuMauId !== 'string') {
-			setFormSubmiting(true);
-			await buildUpLoadFile(value, 'bieuMauId')
-				.then((bieuMauId) => (value.bieuMauId = bieuMauId))
-				.catch(() => (value.bieuMauId = null))
-				.finally(() => setFormSubmiting(false));
+		const bieuMauId = value.bieuMauId?.fileList?.[0];
+		if (bieuMauId?.originFileObj) {
+			try {
+				setFormSubmiting(true);
+				const res = await uploadFile({
+					file: bieuMauId.originFileObj,
+					scope: EFileScope.PUBLIC,
+				});
+				value.bieuMauId = res?.data?.data?.file?._id;
+			} catch (error) {
+				return Promise.reject(error);
+			} finally {
+				setFormSubmiting(false);
+			}
 		}
+
 		await updateSettingModel({ key: ESettingKey.XAC_MINH_VAN_BANG, value }).catch((er) => console.log(er));
 		onClose();
 	};
@@ -48,7 +58,7 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 								label='Tập tin biểu mẫu kết quả xác minh'
 								rules={[...rules.required, ...rules.fileRequired]}
 							>
-								<UploadFile hasPreviewFile accept='.docx' />
+								<UploadFile accept='.docx' drag hasPreviewFile previewFileProps={{ isFileId: true }} />
 							</Form.Item>
 						</Col>
 					</Row>

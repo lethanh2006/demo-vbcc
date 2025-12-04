@@ -84,7 +84,7 @@ const TongHopVanBang = () => {
 						<CopyOutlined style={{ color: 'var(--color-primary)' }} />
 						<div>
 							<CountUp className='number' end={data?.tongSoPhuLuc ?? 0} duration={1.5} separator='.' />
-							<div className='text'>Phụ lục văn bằng</div>
+							<div className='text'>Thông tin văn bằng</div>
 						</div>
 					</Card>
 				</Col>

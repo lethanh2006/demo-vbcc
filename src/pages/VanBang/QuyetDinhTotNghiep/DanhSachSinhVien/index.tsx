@@ -4,23 +4,25 @@ import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import { DeleteOutlined, EditOutlined, ImportOutlined } from '@ant-design/icons';
-import { Popconfirm } from 'antd';
+import { ArrowLeftOutlined, ArrowRightOutlined, DeleteOutlined, EditOutlined, ImportOutlined } from '@ant-design/icons';
+import { Button, Popconfirm } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalImportPhuLucVanBang from '../../PhuLuc/components/ModalImportPhuLuc';
 import ViewPhuLucVanBang from '../../PhuLuc/components/ViewRender';
 import Form from './components/Form';
 
-const DanhSachSinhVienQuyetDinh = () => {
+const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void }) => {
+	const { afterAddNew } = props;
 	const intl = useIntl();
-	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
+	const { record: recQuyetDinh, setVisibleForm } = useModel('vbcc.quyetdinhtotnghiep');
 	const { getModel, page, limit, deleteModel, handleEdit, handleView, isView } = useModel('vbcc.phulucvanbang');
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const disable =
 		!!recQuyetDinh?._id &&
 		(recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO ||
-			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC);
+			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC ||
+			recQuyetDinh?.trangThai === ETrangThaiQuyetDinhTotNghiep.HOAN_THANH);
 
 	const getData = () => {
 		if (recQuyetDinh?._id) {
@@ -114,6 +116,26 @@ const DanhSachSinhVienQuyetDinh = () => {
 				]}
 				showModalTitle
 			/>
+
+			<div className='form-footer'>
+				<Button
+					onClick={() => {
+						if (afterAddNew) afterAddNew(0);
+					}}
+					icon={<ArrowLeftOutlined />}
+				>
+					Quay lại
+				</Button>
+				<Button
+					onClick={() => {
+						if (afterAddNew) afterAddNew(2);
+					}}
+					icon={<ArrowRightOutlined />}
+				>
+					Tiếp theo
+				</Button>
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+			</div>
 
 			<ModalImportPhuLucVanBang
 				visible={visibleImport}

@@ -42,21 +42,53 @@
 	},
 	{
 		name: 'QuyetDinhTotNghiep',
-		path: 'quyet-dinh',
-		component: 'VanBang/QuyetDinhTotNghiep',
+		path: 'quyet-din-tot-nghiep',
 		icon: 'FileDoneOutlined',
-	},
-	{
-		name: 'DuyetDanhSach',
-		path: 'duyet-danh-sach-quyet-dinh',
-		component: 'VanBang/QuyetDinhTotNghiep/DuyetDanhSach',
-		icon: 'FileDoneOutlined',
+		routes: [
+			{
+				name: 'ThongTinQuyetDinh',
+				path: 'thong-tin-quyet-dinh',
+				component: 'VanBang/QuyetDinhTotNghiep',
+			},
+			{
+				name: 'DanhSachDuThao',
+				path: 'danh-sach-du-thao',
+				component: 'VanBang/QuyetDinhTotNghiep/DuThao.tsx',
+			},
+			{
+				name: 'QuyetDinhDaDuyet',
+				path: 'quyet-dinh-da-duyet',
+				component: 'VanBang/QuyetDinhTotNghiep/DaDuyet.tsx',
+			},
+		],
 	},
 	{
 		name: 'PhuLucVanBang',
 		path: 'phu-luc',
 		component: 'VanBang/PhuLuc',
 		icon: 'ProfileOutlined',
+	},
+	{
+		name: 'PhuLucYeuCau',
+		path: 'phu-luc-yeu-cau',
+		icon: 'ProfileOutlined',
+		routes: [
+			{
+				name: 'YeuCauChinhSua',
+				path: 'yeu-cau-chinh-sua',
+				component: 'VanBang/PhuLucChinhSua/ChinhSua.tsx',
+			},
+			{
+				name: 'YeuCauCapLai',
+				path: 'yeu-cau-cap-lai',
+				component: 'VanBang/PhuLucChinhSua/CapLai.tsx',
+			},
+			{
+				name: 'YeuCauThuHoi',
+				path: 'yeu-cau-thu-hoi',
+				component: 'VanBang/PhuLucChinhSua/ThuHoi.tsx',
+			},
+		],
 	},
 	{
 		name: 'DotCapBangTotNghiep',
@@ -67,8 +99,29 @@
 	{
 		name: 'XacMinhVanBang',
 		path: 'xac-minh-van-bang',
-		component: 'VanBang/XacMinhVanBang',
 		icon: 'InfoCircleOutlined',
+		routes: [
+			{
+				name: 'ThongTinYeuCau',
+				path: 'thong-tin-yeu-cau',
+				component: 'VanBang/XacMinhVanBang',
+			},
+			{
+				name: 'YeuCauXuLy',
+				path: 'yeu-cau-xac-minh',
+				component: 'VanBang/XacMinhVanBang/XuLy.tsx',
+			},
+			{
+				name: 'YeuCauTrinhKy',
+				path: 'yeu-cau-can-duyet',
+				component: 'VanBang/XacMinhVanBang/TrinhKy.tsx',
+			},
+			{
+				name: 'YeuCauHoanThanh',
+				path: 'yeu-cau-hoan-thanh',
+				component: 'VanBang/XacMinhVanBang/HoanThanh.tsx',
+			},
+		],
 	},
 
 	{

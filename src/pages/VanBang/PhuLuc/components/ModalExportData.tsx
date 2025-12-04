@@ -113,7 +113,7 @@ const ModalExportData = () => {
 			closable={false}
 			maskClosable={false}
 			onCancel={() => setVisiblePrint(false)}
-			title='In phụ lục'
+			title='In thông tin văn bằng'
 			footer={null}
 		>
 			{recQuyetDinh?._id || dataToSignOrPush.length === 1 ? (
@@ -219,7 +219,7 @@ const ModalExportData = () => {
 
 			<div className='form-footer'>
 				<Button type='primary' loading={exporting} onClick={onExport} icon={<FilePdfOutlined />}>
-					In phụ lục
+					In thông tin văn bằng
 				</Button>
 				<Button onClick={() => setVisiblePrint(false)}>Hủy</Button>
 			</div>

@@ -50,7 +50,7 @@ const ModalImportPhuLucVanBang = (props: {
 	const onDownloadTemplate = () => {
 		if (recQuyetDinh?._id)
 			getImportPhuLucVbTemplate(recQuyetDinh._id, params).then((res) =>
-				fileDownload(res.data, `Mẫu nhập Phụ lục văn bằng QĐ ${recQuyetDinh.soQuyetDinh}.xlsx`),
+				fileDownload(res.data, `Mẫu nhập Thông tin văn bằng QĐ ${recQuyetDinh.soQuyetDinh}.xlsx`),
 			);
 	};
 
@@ -99,7 +99,7 @@ const ModalImportPhuLucVanBang = (props: {
 	];
 
 	return (
-		<Modal title='Nhập phụ lục văn bằng' open={visible} onCancel={onCancel} footer={null} maskClosable={false}>
+		<Modal title='Nhập thông tin văn bằng' open={visible} onCancel={onCancel} footer={null} maskClosable={false}>
 			<Form form={form} layout='vertical' onFinish={onFinish}>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24}>
@@ -109,7 +109,7 @@ const ModalImportPhuLucVanBang = (props: {
 					</Col>
 
 					<Col span={24}>
-						<Form.Item name='file' label='Tập tin danh sách phụ lục' rules={[...rules.fileRequired]}>
+						<Form.Item name='file' label='Tập tin thông tin văn bằng' rules={[...rules.fileRequired]}>
 							<UploadFile drag />
 						</Form.Item>
 					</Col>

@@ -127,3 +127,7 @@ export async function getExportDanhSachPhuLuc(idDotCapBang: string) {
 		responseType: 'arraybuffer',
 	});
 }
+
+export async function yeuCauCapNhatVanBang(idVanBang: string, payLoad: any) {
+	return axios.post(`${ip3}/phu-luc-van-bang/${idVanBang}/yeu-cau-cap-nhat`, payLoad);
+}

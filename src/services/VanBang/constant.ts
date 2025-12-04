@@ -1,6 +1,5 @@
 import { ETagColor } from '../base/constant';
 import type { BieuMauPhuLuc } from './BieuMauPhuLuc/typing';
-import { XacMinhVanBang } from './XacMinhVanBang/typing';
 
 // BIỂU MẪU PHỤ LỤC
 export enum ELoaiDuLieuBieuMau {
@@ -119,6 +118,27 @@ export const colorTrangThaiSoVanBang: Record<ETrangThaiSoVanBang, ETagColor> = {
 	[ETrangThaiSoVanBang.TU_CHOI]: ETagColor.RED,
 };
 
+export enum ELoaiYeuCauChinhSuaVanBang {
+	HOAN_THANH = 'Hoàn thành',
+	CAP_LAI = 'Cấp lại',
+	CAP_NHAT = 'Cập nhật',
+	THU_HOI = 'Thu hồi',
+}
+
+export const nameLoaiYeuCauChinhSuaVanBang: Record<ELoaiYeuCauChinhSuaVanBang, string> = {
+	[ELoaiYeuCauChinhSuaVanBang.HOAN_THANH]: 'Hoàn thành',
+	[ELoaiYeuCauChinhSuaVanBang.CAP_LAI]: 'Cấp lại',
+	[ELoaiYeuCauChinhSuaVanBang.CAP_NHAT]: 'Chỉnh sửa',
+	[ELoaiYeuCauChinhSuaVanBang.THU_HOI]: 'Thu hồi',
+};
+
+export const colorLoaiYeuCauChinhSuaVanBang: Record<ELoaiYeuCauChinhSuaVanBang, ETagColor> = {
+	[ELoaiYeuCauChinhSuaVanBang.HOAN_THANH]: ETagColor.GREEN,
+	[ELoaiYeuCauChinhSuaVanBang.CAP_LAI]: ETagColor.BLUE,
+	[ELoaiYeuCauChinhSuaVanBang.CAP_NHAT]: ETagColor.GOLD,
+	[ELoaiYeuCauChinhSuaVanBang.THU_HOI]: ETagColor.RED,
+};
+
 export enum ETrangThaiMucDichTraCuuPhuLuc {
 	CHO_XU_LY = 'Chờ xử lý',
 	KHONG_DUYET = 'Không duyệt',
@@ -154,13 +174,23 @@ export enum ETrangThaiQuyetDinhTotNghiep {
 	TRINH_DU_THAO = 'Trình dự thảo',
 	YEU_CAU_CHINH_SUA = 'Yêu cầu chỉnh sửa',
 	CHINH_THUC = 'Chính thức',
+	HOAN_THANH = 'Hoàn thành',
 }
+
+export const nameTrangThaiQuyetDinhTotNghiep: Record<ETrangThaiQuyetDinhTotNghiep, string> = {
+	[ETrangThaiQuyetDinhTotNghiep.DU_THAO]: 'Dự thảo',
+	[ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO]: 'Trình dự thảo',
+	[ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA]: 'Yêu cầu chỉnh sửa',
+	[ETrangThaiQuyetDinhTotNghiep.CHINH_THUC]: 'Đã duyệt',
+	[ETrangThaiQuyetDinhTotNghiep.HOAN_THANH]: 'Hoàn thành',
+};
 
 export const colorTrangThaiQuyetDinhTotNghiep: Record<ETrangThaiQuyetDinhTotNghiep, ETagColor> = {
 	[ETrangThaiQuyetDinhTotNghiep.DU_THAO]: ETagColor.ORANGE,
 	[ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO]: ETagColor.BLUE,
 	[ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA]: ETagColor.RED,
-	[ETrangThaiQuyetDinhTotNghiep.CHINH_THUC]: ETagColor.GREEN,
+	[ETrangThaiQuyetDinhTotNghiep.CHINH_THUC]: ETagColor.GEEKBLUE,
+	[ETrangThaiQuyetDinhTotNghiep.HOAN_THANH]: ETagColor.GREEN,
 };
 
 //Xác minh văn bằng
@@ -169,20 +199,18 @@ export enum ELoaiPhucDap {
 	VAN_BAN_GIAY = 'Văn bản giấy',
 }
 
-export enum ETrangThaiXacMinh {
-	CHO_XU_LY = 'Chờ xử lý',
-	DANG_XAC_MINH = 'Đang xác minh',
-	TRA_KET_QUA = 'Trả kết quả',
+export enum EPhaseXacMinh {
+	YEU_CAU = 'Yêu cầu xác minh',
+	XAC_MINH = 'Xác minh văn bằng',
+	PHUC_DAP = 'Công văn phúc đáp',
+	KET_QUA = 'Trả kết quả',
+	HOAN_THANH = 'Hoàn thành',
 }
 
-export const colorTrangThaiXacMinh: Record<ETrangThaiXacMinh, ETagColor> = {
-	[ETrangThaiXacMinh.CHO_XU_LY]: ETagColor.ORANGE,
-	[ETrangThaiXacMinh.DANG_XAC_MINH]: ETagColor.BLUE,
-	[ETrangThaiXacMinh.TRA_KET_QUA]: ETagColor.GREEN,
-};
-
-export const fieldTrangThaiXacMinh: Record<ETrangThaiXacMinh, keyof XacMinhVanBang.IThongKeXacMinhVanBang> = {
-	[ETrangThaiXacMinh.CHO_XU_LY]: 'choXuLy',
-	[ETrangThaiXacMinh.DANG_XAC_MINH]: 'dangXacMinh',
-	[ETrangThaiXacMinh.TRA_KET_QUA]: 'traKetQua',
+export const colorTrangThaiXacMinh: Record<EPhaseXacMinh, ETagColor> = {
+	[EPhaseXacMinh.YEU_CAU]: ETagColor.ORANGE,
+	[EPhaseXacMinh.XAC_MINH]: ETagColor.BLUE,
+	[EPhaseXacMinh.PHUC_DAP]: ETagColor.GEEKBLUE,
+	[EPhaseXacMinh.KET_QUA]: ETagColor.GREEN,
+	[EPhaseXacMinh.HOAN_THANH]: ETagColor.GREEN,
 };

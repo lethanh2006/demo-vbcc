@@ -4,6 +4,7 @@ const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 
 // Ip Chính => Mặc định dùng trong các useInitModel
 const ip3 = ipRoot + 'vbcc'; // ip dev
+// const ip3 = 'http://192.168.1.136:3010'; // ip dev
 
 // Ip khác
 const iplocal = 'https://acf55d3c8451.ngrok-free.app';
@@ -18,7 +19,7 @@ const preIPFS = 'https://ipfs.aisenote.com/ipfs/';
 
 const currentRole = EModuleKey.VBCC;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
-const oneSignalRole = EModuleKey.CONG_CAN_BO;
+const oneSignalRole = EModuleKey.VBCC;
 
 // DO NOT TOUCH
 const keycloakClientID = AppModules[currentRole].clientId;
