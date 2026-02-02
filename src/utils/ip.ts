@@ -7,7 +7,6 @@ const ip3 = ipRoot + 'vbcc'; // ip dev
 // const ip3 = 'http://192.168.1.136:3010'; // ip dev
 
 // Ip khác
-const iplocal = 'https://acf55d3c8451.ngrok-free.app';
 const ipNotif = ipRoot + 'notification'; // ip dev
 const ipSlink = ipRoot + 'slink'; // ip dev
 const ipCore = ipRoot + 'core'; // ip dev
@@ -37,7 +36,6 @@ export {
 	ipCore,
 	ipDaoTao,
 	ipIPFS,
-	iplocal,
 	ipNhanSu,
 	ipNotif,
 	ipSlink,

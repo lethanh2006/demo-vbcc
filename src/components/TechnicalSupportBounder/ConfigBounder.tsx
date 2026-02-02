@@ -1,4 +1,5 @@
 import { primaryColor } from '@/services/base/constant';
+import { getLocale } from '@umijs/max';
 import { ConfigProvider, Spin } from 'antd';
 import { useEffect } from 'react';
 
@@ -17,8 +18,11 @@ const ConfigBounder = (props: { children?: any }) => {
 		Spin.setDefaultIndicator(<div className='circle-loader' />);
 	}, [primaryColor]);
 
+	const locale = getLocale();
+
 	return (
 		<ConfigProvider
+			locale={locale}
 			theme={{
 				token: { borderRadius: 4, colorPrimary: primaryColor, colorLink: primaryColor },
 				hashed: false,
@@ -29,12 +33,16 @@ const ConfigBounder = (props: { children?: any }) => {
 						dotOffset: 2, // khoảng cách từ bottom
 					},
 					Spin: {
-						dotSize: 50,
-						dotSizeSM: 35,
-						dotSizeLG: 65,
+						dotSize: 45,
+						dotSizeSM: 30,
+						dotSizeLG: 60,
 					},
 					Divider: {
 						orientationMargin: 0,
+					},
+					Table: {
+						borderColor: '#e8e8e8',
+						headerBg: '#f8f8f8',
 					},
 				},
 			}}

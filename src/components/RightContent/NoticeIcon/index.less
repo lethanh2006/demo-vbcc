@@ -1,14 +1,8 @@
-::-webkit-scrollbar {
-	width: 1px;
-}
-
 .list {
 	// max-height: 500px;
 
 	// overflow: auto;
-	// &::-webkit-scrollbar {
-	//   display: none;
-	// }
+
 	.item {
 		padding: 6px 12px 6px 12px;
 		overflow: hidden;
@@ -124,5 +118,48 @@
 	:global(.ant-badge-count) {
 		padding: 0;
 		transform: translate(16px, -13px);
+	}
+
+	.ringing {
+		animation: noti-shake 1s ease-in-out infinite;
+	}
+}
+
+.reloadIcon {
+	transition: opacity 0.2s;
+}
+
+.spinning {
+	animation: rotate 1s infinite;
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+// Đồng bộ với animation của custom spinner
+@keyframes rotate {
+	100% {
+		transform: rotate(0.5turn);
+	}
+}
+
+/* Định nghĩa hiệu ứng lắc */
+@keyframes noti-shake {
+	0% {
+		transform: rotate(0deg);
+	}
+	20% {
+		transform: rotate(-15deg);
+	}
+	40% {
+		transform: rotate(15deg);
+	}
+	60% {
+		transform: rotate(-10deg);
+	}
+	80% {
+		transform: rotate(10deg);
+	}
+	100% {
+		transform: rotate(0deg);
 	}
 }
