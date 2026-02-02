@@ -1,0 +1,86 @@
+.title-print-wrapper {
+	width: 100%;
+	margin-bottom: 24px;
+}
+
+.title-print-content {
+	text-align: center;
+}
+
+.title-main {
+	margin-bottom: 4px !important;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+}
+
+.title-sub {
+	font-style: italic;
+	font-size: 14px;
+	color: #000;
+}
+
+@media print {
+	@page {
+		size: A4 landscape;
+		margin: 12mm;
+	}
+
+	body {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+
+	.to-print {
+		width: 100%;
+	}
+
+	.to-print table {
+		width: 100% !important;
+		border-collapse: collapse !important;
+		table-layout: fixed;
+	}
+
+	.to-print th,
+	.to-print td {
+		border: 0.5px solid #999 !important;
+		padding: 4px 6px !important;
+		font-size: 13px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		line-height: 1.4;
+		color: #000;
+	}
+
+	.to-print th {
+		font-weight: 600;
+		background: #f5f5f5 !important;
+	}
+
+	/* Fix Ant Design */
+	.ant-table-cell {
+		border-color: #999 !important;
+	}
+
+	/* Remove double border between Ho - Ten */
+	.to-print th:nth-child(2),
+	.to-print td:nth-child(2) {
+		border-right: none !important;
+	}
+
+	.to-print th:nth-child(3),
+	.to-print td:nth-child(3) {
+		border-left: none !important;
+	}
+
+	/* STT center */
+	.to-print th:first-child,
+	.to-print td:first-child {
+		text-align: center;
+	}
+
+	/* Page break fix */
+	.to-print tr {
+		page-break-inside: avoid;
+	}
+}

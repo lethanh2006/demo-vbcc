@@ -42,7 +42,8 @@ const LoginWithKeycloak = () => {
 				}}
 				size='large'
 			>
-				Đăng nhập bằng {tenTruongVietTatTiengAnh.toUpperCase()} Connect
+				Đăng nhập bằng Slink ID
+				{/* {tenTruongVietTatTiengAnh.toUpperCase()} Connect */}
 			</Button>
 		</>
 	);

@@ -1,4 +1,3 @@
-import ExpandText from '@/components/ExpandText';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import ModalExport from '@/components/Table/Export';
 import ModalImport from '@/components/Table/Import';
@@ -6,26 +5,25 @@ import ModalExpandable from '@/components/Table/ModalExpandable';
 import TableStaticData from '@/components/Table/TableStaticData';
 import { type IColumn } from '@/components/Table/typing';
 import { EPhaseXacMinh } from '@/services/VanBang/constant';
-import { exportPhieuPhucDap } from '@/services/VanBang/XacMinhVanBang';
+import { exportXacMinhVanBang } from '@/services/VanBang/XacMinhVanBang';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
+import dayjs from '@/utils/dayjs';
 import { getFilenameHeader } from '@/utils/utils';
 import {
 	ArrowLeftOutlined,
 	ArrowRightOutlined,
-	CheckCircleOutlined,
-	CloseCircleOutlined,
+	CloseOutlined,
 	DeleteOutlined,
 	DownloadOutlined,
 	EditOutlined,
 	ExportOutlined,
 	FileTextOutlined,
 	ImportOutlined,
-	MenuOutlined,
 	PlusCircleOutlined,
 	SafetyOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Checkbox, Modal, Popconfirm, Popover, Space } from 'antd';
+import { Button, Modal, Popconfirm, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -66,6 +64,7 @@ const SinhVienXacMinhPage = (props: {
 		setRecord: setRecXacMinh,
 		nextStepXacMinhModel,
 		formSubmiting,
+		setVisibleForm: setvsXacMinh,
 	} = useModel('vbcc.xacminhvanbang');
 	const {
 		loading,
@@ -82,6 +81,8 @@ const SinhVienXacMinhPage = (props: {
 		setDanhSach,
 		handleEdit,
 		deleteModel,
+		selectedIds,
+		setSelectedIds,
 	} = useModel('vbcc.sinhvienxacminh');
 	const { getByIdModel } = useModel('vbcc.phulucvanbang');
 
@@ -124,24 +125,47 @@ const SinhVienXacMinhPage = (props: {
 		getByIdModel(phuLucId);
 	};
 
-	const handleDownload = (rec: XacMinhVanBang.ISinhVienXacMinh) => {
-		setLoadingExport(true);
-		exportPhieuPhucDap(rec?._id)
-			.then((res) => fileDownload(res.data, getFilenameHeader(res)))
-			.finally(() => setLoadingExport(false));
+	const handleExportPhieuPhucDap = (rec?: XacMinhVanBang.ISinhVienXacMinh, isAll?: boolean) => {
+		if (recXacMinh?._id) {
+			setLoadingExport(true);
+			exportXacMinhVanBang(recXacMinh?._id, {
+				ids: isAll ? [] : rec?._id ? [rec?._id] : selectedIds,
+				getAll: isAll,
+			})
+				.then((res) => fileDownload(res.data, getFilenameHeader(res)))
+				.finally(() => {
+					setSelectedIds([]);
+					setLoadingExport(false);
+				});
+		}
 	};
 
 	const columns: IColumn<XacMinhVanBang.ISinhVienXacMinh>[] = [
 		{
-			title: 'Mã SV',
+			title: 'Mã người học',
 			dataIndex: 'maSinhVien',
-			width: 120,
+			align: 'center',
+			width: 130,
 			filterType: 'string',
 		},
 		{
 			title: 'Họ tên',
 			dataIndex: 'hoTen',
 			width: 160,
+			filterType: 'string',
+		},
+		{
+			title: 'Ngày sinh',
+			dataIndex: 'ngaySinh',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
+			sortable: true,
+		},
+		{
+			title: 'Xếp loại',
+			dataIndex: 'xepLoai',
+			width: 120,
 			filterType: 'string',
 		},
 		{
@@ -157,7 +181,7 @@ const SinhVienXacMinhPage = (props: {
 			filterType: 'string',
 		},
 		{
-			title: 'Phụ lục xác minh',
+			title: 'Thông tin VB tương ứng',
 			dataIndex: 'phuLucId',
 			align: 'center',
 			width: 120,
@@ -165,7 +189,7 @@ const SinhVienXacMinhPage = (props: {
 				val ? (
 					<a
 						onClick={(e) => {
-							showPhuLucDetail(rec?.phuLucId);
+							showPhuLucDetail(val);
 						}}
 					>
 						Xem chi tiết
@@ -173,19 +197,20 @@ const SinhVienXacMinhPage = (props: {
 				) : (
 					<i>Không có</i>
 				),
+			hide: isYeuCau,
 		},
-		{
-			title: 'Nội dung phúc đáp',
-			dataIndex: 'ghiChuKetQuaPhucDap',
-			width: 180,
-			render: (val, rec) => (
-				<ExpandText>
-					<div dangerouslySetInnerHTML={{ __html: val }} />
-				</ExpandText>
-			),
-			filterType: 'string',
-			hide: isYeuCau || isXacMinh,
-		},
+		// {
+		// 	title: 'Nội dung phúc đáp',
+		// 	dataIndex: 'ghiChuKetQuaPhucDap',
+		// 	width: 180,
+		// 	render: (val, rec) => (
+		// 		<ExpandText>
+		// 			<div dangerouslySetInnerHTML={{ __html: val }} />
+		// 		</ExpandText>
+		// 	),
+		// 	filterType: 'string',
+		// 	hide: isYeuCau || isXacMinh,
+		// },
 		{
 			title: 'File phúc đáp',
 			dataIndex: 'urlPhanHoi',
@@ -203,21 +228,46 @@ const SinhVienXacMinhPage = (props: {
 			title: 'Kết quả',
 			dataIndex: 'coThongTin',
 			align: 'center',
-			width: 90,
-			render: (val, rec) => <Checkbox checked={!!val} />,
+			width: 140,
+			render: (val, rec) => (val ? <Tag color='green'>Có kết quả</Tag> : <Tag color='red'>Không có kết quả</Tag>),
 			fixed: 'right',
 			hide: isYeuCau,
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: isKetQua ? 60 : 90,
+			width: isKetQua || isCongVan ? 60 : 90,
 			fixed: 'right',
 			render: (val, rec) => {
 				if (isXacMinh)
 					return (
 						<>
+							<ButtonExtend
+								disabled={isHoanThanh}
+								tooltip='Tra cứu thủ công'
+								type='link'
+								icon={<SearchOutlined />}
+								onClick={() => {
+									setRecord(rec);
+									setVisibleTraCuu(true);
+								}}
+							/>
+
 							<Popconfirm
+								onConfirm={() => putModel(rec._id, { ...rec, coThongTin: false, phuLucId: null }, getData)}
+								title='Xác nhận không có kết quả?'
+								placement='topRight'
+							>
+								<ButtonExtend
+									disabled={isHoanThanh}
+									tooltip='Không có kết quả'
+									type='link'
+									icon={<CloseOutlined />}
+									danger
+								/>
+							</Popconfirm>
+
+							{/* <Popconfirm
 								onConfirm={() => putModel(rec._id, { ...rec, coThongTin: true }, getData)}
 								title='Xác nhận có kết quả?'
 								placement='topRight'
@@ -226,11 +276,11 @@ const SinhVienXacMinhPage = (props: {
 									disabled={isHoanThanh}
 									tooltip='Có kết quả'
 									type='link'
-									icon={<CheckCircleOutlined />}
+									icon={<CheckOutlined />}
 									className='btn-success'
 								/>
-							</Popconfirm>
-							<Popover
+							</Popconfirm> */}
+							{/* <Popover
 								placement='bottom'
 								trigger='hover'
 								content={
@@ -257,7 +307,7 @@ const SinhVienXacMinhPage = (props: {
 												disabled={isHoanThanh}
 												tooltip='Không có kết quả'
 												type='link'
-												icon={<CloseCircleOutlined />}
+												icon={<CloseOutlined />}
 												danger
 												size='small'
 											>
@@ -268,7 +318,7 @@ const SinhVienXacMinhPage = (props: {
 								}
 							>
 								<ButtonExtend disabled={isHoanThanh} type='link' icon={<MenuOutlined />} />
-							</Popover>
+							</Popover> */}
 						</>
 					);
 				if (isCongVan)
@@ -276,14 +326,14 @@ const SinhVienXacMinhPage = (props: {
 						<>
 							<ButtonExtend
 								loading={loadingExport}
-								onClick={() => handleDownload(rec)}
+								onClick={() => handleExportPhieuPhucDap(rec)}
 								disabled={isHoanThanh}
 								tooltip='Tải biểu mẫu'
 								type='link'
 								icon={<DownloadOutlined />}
 							/>
 
-							<ButtonExtend
+							{/* <ButtonExtend
 								disabled={isHoanThanh}
 								tooltip='Phúc đáp'
 								type='link'
@@ -292,7 +342,7 @@ const SinhVienXacMinhPage = (props: {
 									setRecord(rec);
 									setVisiblePhucDap(true);
 								}}
-							/>
+							/> */}
 						</>
 					);
 				if (isKetQua) {
@@ -319,7 +369,7 @@ const SinhVienXacMinhPage = (props: {
 							icon={<EditOutlined />}
 						/>
 						<Popconfirm
-							onConfirm={() => deleteModel(rec._id)}
+							onConfirm={() => deleteModel(rec._id, getData)}
 							title='Bạn có chắc chắn muốn xóa thông tin này?'
 							placement='topRight'
 						>
@@ -371,7 +421,7 @@ const SinhVienXacMinhPage = (props: {
 								Nhập dữ liệu
 							</ButtonExtend>
 						) : null}
-						{!hideExport ? (
+						{/* {!hideExport ? (
 							<ButtonExtend
 								tooltip={!recXacMinh?._id ? 'Chưa thêm mới yêu cầu xác minh' : 'Xuất dữ liệu'}
 								disabled={!recXacMinh?._id}
@@ -381,10 +431,51 @@ const SinhVienXacMinhPage = (props: {
 							>
 								Xuất dữ liệu
 							</ButtonExtend>
+						) : null} */}
+						{isCongVan ? (
+							<>
+								<ButtonExtend
+									disabled={!selectedIds?.length || isHoanThanh}
+									icon={<ExportOutlined />}
+									size={size}
+									onClick={() => handleExportPhieuPhucDap()}
+									loading={loadingExport}
+								>
+									Xuất biểu mẫu cá nhân {selectedIds?.length ? `(${selectedIds?.length})` : null}
+								</ButtonExtend>
+								<ButtonExtend
+									disabled={isHoanThanh}
+									icon={<ExportOutlined />}
+									size={size}
+									onClick={() => {
+										setSelectedIds([]);
+										handleExportPhieuPhucDap(undefined, true);
+									}}
+									loading={loadingExport}
+								>
+									Xuất biểu mẫu chung
+								</ButtonExtend>
+							</>
 						) : null}
 					</>,
 				]}
 				onReload={getData}
+				otherProps={
+					isCongVan
+						? {
+								pagination: false,
+								scroll: { y: 400 },
+								rowKey: (rec: XacMinhVanBang.ISinhVienXacMinh) => rec._id,
+								rowSelection: {
+									type: 'checkbox',
+									selectedRowKeys: selectedIds,
+									preserveSelectedRowKeys: true,
+									onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
+									columnWidth: 40,
+								},
+							}
+						: { pagination: false, scroll: { y: 400 } }
+				}
 			/>
 
 			<ModalImport
@@ -457,12 +548,12 @@ const SinhVienXacMinhPage = (props: {
 						</Button>
 					)}
 
-					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+					<Button onClick={() => setvsXacMinh(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			) : null}
 
 			<Modal
-				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} sinh viên xác minh`}
+				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} văn bằng cần xác minh`}
 				open={visibleForm}
 				width={600}
 				footer={null}
@@ -478,7 +569,7 @@ const SinhVienXacMinhPage = (props: {
 				width={1000}
 				footer={
 					<div className='form-footer'>
-						<Button onClick={() => setVisibleForm(false)}>
+						<Button onClick={() => setVsPhuLuc(false)}>
 							{intl.formatMessage({ id: 'global.button.dong', defaultMessage: 'Đóng' })}
 						</Button>
 					</div>

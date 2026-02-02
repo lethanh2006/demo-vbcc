@@ -5,10 +5,15 @@ import ModalExpandable from '@/components/Table/ModalExpandable';
 import { IColumn } from '@/components/Table/typing';
 import ViewPhuLucVanBang from '@/pages/VanBang/PhuLuc/components/ViewRender';
 import { ETagColor } from '@/services/base/constant';
-import { ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
+import {
+	colorTrangThaiTotNghiep,
+	ETrangThaiCapBang,
+	ETrangThaiQuyetDinhTotNghiep,
+	nameTrangThaiTotNghiep,
+} from '@/services/VanBang/constant';
 import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import { CheckCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { CheckOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Descriptions, Modal, Popconfirm, Popover, Row, Space, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -197,31 +202,32 @@ const ModalTraCuuThuCong = (props: { visible: boolean; setVisible: (val: boolean
 			hide: !settingVbcc?.require_diploma_signature,
 		},
 		{
-			title: 'Cấp bằng',
-			dataIndex: 'kichHoat',
+			title: 'Trạng thái phát bằng',
+			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
 			render: (_: any, record: PhuLucVanBang.IRecord) => {
-				const trangThai = record?.kichHoat ? (
-					<Tag color='green'>Đã cấp bằng</Tag>
-				) : (
-					<Tag color='red'>Chưa cấp bằng</Tag>
+				const trangThai = (
+					<Tag color={colorTrangThaiTotNghiep[_ as ETrangThaiCapBang]}>
+						{nameTrangThaiTotNghiep[_ as ETrangThaiCapBang]}
+					</Tag>
 				);
 
-				const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
+				const ngayCap = record?.ngayCapPhuLuc ? `${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
 
 				return (
 					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
 						<div>{trangThai}</div>
-						{ngayCap && <div>{ngayCap}</div>}
+						{record?.trangThai === ETrangThaiCapBang.DA_CAP_BANG && ngayCap && (
+							<div style={{ fontSize: 12 }}>{ngayCap}</div>
+						)}
 					</div>
 				);
 			},
-			filterType: 'select',
-			filterData: [
-				{ value: true as any, label: 'Đã cấp bằng' },
-				{ value: false, label: 'Chưa cấp bằng' },
-			],
+			filterData: Object.values(ETrangThaiCapBang).map((item) => ({
+				value: item,
+				label: nameTrangThaiTotNghiep[item as ETrangThaiCapBang],
+			})),
 			onCell,
 		},
 		{
@@ -251,7 +257,7 @@ const ModalTraCuuThuCong = (props: { visible: boolean; setVisible: (val: boolean
 					<ButtonExtend
 						tooltip='Xác nhận thông tin'
 						type='link'
-						icon={<CheckCircleOutlined />}
+						icon={<CheckOutlined />}
 						onClick={() => {}}
 						className='btn-success'
 					/>

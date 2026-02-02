@@ -1,6 +1,7 @@
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import UploadFile from '@/components/Upload/UploadFile';
+import { ELoaiThongTinUpdate } from '@/services/VanBang/constant';
 import { getImportPhuLucVbTemplate } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import rules from '@/utils/rules';
@@ -18,8 +19,9 @@ const ModalImportPhuLucVanBang = (props: {
 	onCancel: () => void;
 	onOk: () => void;
 	params?: any;
+	isThongTin?: boolean;
 }) => {
-	const { visible, onCancel, onOk, params } = props;
+	const { visible, onCancel, onOk, params, isThongTin } = props;
 	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const { formSubmiting, importPhuLucVanBangModel } = useModel('vbcc.phulucvanbang');
 	const [form] = Form.useForm();
@@ -35,7 +37,12 @@ const ModalImportPhuLucVanBang = (props: {
 	const onFinish = (values: any) => {
 		const file = values.file.fileList?.[0]?.originFileObj;
 		if (recQuyetDinh?._id && file)
-			importPhuLucVanBangModel({ quyetDinhId: recQuyetDinh?._id, file }, params).then((res) => {
+			importPhuLucVanBangModel(
+				isThongTin
+					? { quyetDinhId: recQuyetDinh?._id, file, loaiThongTin: ELoaiThongTinUpdate.THONG_TIN_VAN_BANG }
+					: { quyetDinhId: recQuyetDinh?._id, file },
+				params,
+			).then((res) => {
 				if (res?.success === false) {
 					message.error('Nhập dữ liệu thất bại');
 					setDataThatBai(res?.error ?? []);

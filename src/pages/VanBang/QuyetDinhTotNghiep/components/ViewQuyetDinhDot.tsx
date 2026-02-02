@@ -88,7 +88,7 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 			onCell,
 		},
 		{
-			title: 'Biểu mẫu phụ lục',
+			title: 'Biểu mẫu thông tin văn bằng',
 			dataIndex: 'maBieuMau',
 			width: 150,
 			render: (val, rec) => rec?.bieuMau?.ten ?? val,

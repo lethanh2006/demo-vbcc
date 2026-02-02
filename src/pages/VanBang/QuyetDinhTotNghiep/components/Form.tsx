@@ -2,7 +2,7 @@ import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
 import { ELoaiQuyetDinh } from '@/services/DaoTao/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
-import { ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
+import { EQuyetDinhStep, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
@@ -15,9 +15,10 @@ import SelectBieuMauPhuLuc from '../../../DanhMuc/BieuMauPhuLuc/components/Selec
 import SelectSoVanBang from '../../SoVanBang/components/Select';
 
 const FormQuyetDinhTotNghiep = (props: {
-	afterAddNew?: (val: number) => void;
+	afterAddNew?: (val: EQuyetDinhStep) => void;
 	getData?: () => void;
 	yearSelect?: any;
+	themMoiHoanThanh?: boolean;
 }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
@@ -33,7 +34,7 @@ const FormQuyetDinhTotNghiep = (props: {
 		visibleForm,
 		setFormSubmiting,
 	} = useModel('vbcc.quyetdinhtotnghiep');
-	const { afterAddNew, getData, yearSelect } = props;
+	const { afterAddNew, getData, yearSelect, themMoiHoanThanh } = props;
 	const nam = Form.useWatch('nam', form);
 	const disable =
 		!!record?._id &&
@@ -71,7 +72,7 @@ const FormQuyetDinhTotNghiep = (props: {
 			putModel(record?._id ?? '', values, getData, undefined, false)
 				.then((rec) => {
 					setRecord({ ...record, ...rec });
-					if (afterAddNew) afterAddNew(1);
+					if (afterAddNew) afterAddNew(EQuyetDinhStep.DANH_SACH_SV);
 				})
 				.catch((er) => console.log(er));
 		} else
@@ -79,7 +80,7 @@ const FormQuyetDinhTotNghiep = (props: {
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);
-					if (afterAddNew) afterAddNew(1);
+					if (afterAddNew) afterAddNew(themMoiHoanThanh ? EQuyetDinhStep.PHU_LUC : EQuyetDinhStep.DANH_SACH_SV);
 				})
 				.catch((er) => console.log(er));
 	};
@@ -89,7 +90,17 @@ const FormQuyetDinhTotNghiep = (props: {
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col xs={24} md={12}>
 					<Form.Item name='nam' label='Năm hành chính' rules={[...rules.required]}>
-						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' disabled={disable} />
+						<MyDatePicker
+							pickerStyle='year'
+							placeholder='Năm'
+							format='YYYY'
+							disabled={disable}
+							onChange={() => {
+								form.setFieldsValue({
+									idSoVanBang: null,
+								});
+							}}
+						/>
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
@@ -110,7 +121,7 @@ const FormQuyetDinhTotNghiep = (props: {
 				<Col xs={24} md={12}>
 					<Form.Item
 						name='maBieuMau'
-						label='Biểu mẫu phụ lục'
+						label='Biểu mẫu thông tin văn bằng'
 						rules={[...rules.required]}
 						extra={edit ? 'Nếu đổi biểu mẫu, thông tin mẫu trong phụ lục sẽ bị xóa bỏ' : undefined}
 					>
@@ -142,7 +153,7 @@ const FormQuyetDinhTotNghiep = (props: {
 				{record?._id && (
 					<Button
 						onClick={() => {
-							if (afterAddNew) afterAddNew(1);
+							if (afterAddNew) afterAddNew(themMoiHoanThanh ? EQuyetDinhStep.PHU_LUC : EQuyetDinhStep.DANH_SACH_SV);
 						}}
 						icon={<ArrowRightOutlined />}
 					>

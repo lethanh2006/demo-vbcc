@@ -2,22 +2,15 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import ModalImport from '@/components/Table/Import';
 import type { IColumn } from '@/components/Table/typing';
+import { colorTrangThaiTotNghiep, ETrangThaiCapBang, nameTrangThaiTotNghiep } from '@/services/VanBang/constant';
 import { getExportDanhSachPhuLuc, getPhuLucCapBang } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import {
-	CheckCircleOutlined,
-	CloseOutlined,
-	CommentOutlined,
-	ExportOutlined,
-	EyeOutlined,
-	SyncOutlined,
-} from '@ant-design/icons';
-import { Button, Popconfirm, Popover, Tag } from 'antd';
+import { CheckOutlined, CloseOutlined, ExportOutlined, EyeOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalChonPhuLuc from '../../DotCapBangTotNghiep/components/ModalChonPhuLuc';
 import Form from './Form';
 import ViewPhuLucVanBang from './ViewRender';
 
@@ -37,8 +30,6 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 		danhSach,
 		setDanhSach,
 		getImportPhuLucCapBangTemplateModel,
-		visibleForm: visibleModalChonPhuLuc,
-		setVisibleForm: setVisibleModalChonPhuLuc,
 	} = useModel('vbcc.phulucvanbang');
 	const { record: recQuyetDinh, visibleForm, setVisibleForm } = useModel('vbcc.quyetdinhtotnghiep');
 	const { record: recDot } = useModel('vbcc.dotcapbangtotnghiep');
@@ -130,46 +121,33 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 			onCell,
 		},
 		{
-			title: 'Cấp bằng',
-			dataIndex: 'kichHoat',
+			title: 'Trạng thái phát bằng',
+			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
 			render: (_: any, record: PhuLucVanBang.IRecord) => {
-				const trangThai = record?.kichHoat ? (
-					<Tag color='green'>Đã cấp bằng</Tag>
-				) : (
-					<Tag color='red'>Chưa cấp bằng</Tag>
+				const trangThai = (
+					<Tag color={colorTrangThaiTotNghiep[_ as ETrangThaiCapBang]}>
+						{nameTrangThaiTotNghiep[_ as ETrangThaiCapBang]}
+					</Tag>
 				);
-				const content = (
-					<>
-						{record.dotCapBang?.ten && (
-							<div>
-								<b>Được cấp bằng bởi đợt: </b> {record.dotCapBang.ten}
-							</div>
-						)}
-						{record.ghiChuCapBang && (
-							<div>
-								<b>Ghi chú: </b> {record.ghiChuCapBang}
-							</div>
-						)}
-					</>
-				);
+
+				const ngayCap = record?.ngayCapPhuLuc ? `${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
+
 				return (
-					<div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-						{trangThai}
-						{(record.dotCapBang?.ten || record?.ghiChuCapBang?.trim()) && (
-							<Popover content={content}>
-								<CommentOutlined style={{ color: '#faad14', cursor: 'pointer' }} />
-							</Popover>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+						<div>{trangThai}</div>
+						{record?.trangThai === ETrangThaiCapBang.DA_CAP_BANG && ngayCap && (
+							<div style={{ fontSize: 12 }}>{ngayCap}</div>
 						)}
 					</div>
 				);
 			},
-			filterType: 'select',
-			filterData: [
-				{ value: true as any, label: 'Đã cấp bằng' },
-				{ value: false, label: 'Chưa cấp bằng' },
-			],
+			filterData: Object.values(ETrangThaiCapBang).map((item) => ({
+				value: item,
+				label: nameTrangThaiTotNghiep[item as ETrangThaiCapBang],
+			})),
+			onCell,
 		},
 		{
 			title: 'Thao tác',
@@ -209,7 +187,7 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 								await putModel(rec._id, payload, fetchData, true);
 							}}
 						>
-							<ButtonExtend tooltip='Cấp bằng' type='link' icon={<CheckCircleOutlined />} />
+							<ButtonExtend tooltip='Cấp bằng' type='link' icon={<CheckOutlined />} />
 						</Popconfirm>
 					)}
 
@@ -256,17 +234,9 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				otherButtons={
 					isdotCapBang
 						? ([
-								// <ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleForm(true)} key='import'>
-								// 	Nhập dữ liệu
-								// </ButtonExtend>,
 								<Button icon={<ExportOutlined />} onClick={handleExportTemplate} disabled={!recDot?._id}>
 									Xuất dữ liệu
 								</Button>,
-								// <Tooltip title='Thêm phụ lục hiện có vào đợt cấp bằng này' key='apply-tooltip'>
-								// 	<Button type='primary' icon={<PlusCircleOutlined />} onClick={() => setVisibleModalChonPhuLuc(true)}>
-								// 		Thêm phụ lục
-								// 	</Button>
-								// </Tooltip>,
 								selectedIds && selectedIds.length > 0 ? (
 									<Popconfirm
 										key='capbang-many'
@@ -279,7 +249,7 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 											setSelectedIds([]);
 										}}
 									>
-										<Button type='link' icon={<CheckCircleOutlined />}>
+										<Button type='link' icon={<CheckOutlined />}>
 											Cấp bằng
 										</Button>
 									</Popconfirm>
@@ -287,12 +257,6 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 							].filter(Boolean) as React.JSX.Element[])
 						: []
 				}
-			/>
-
-			<ModalChonPhuLuc
-				visible={visibleModalChonPhuLuc}
-				onCancel={() => setVisibleModalChonPhuLuc(false)}
-				getData={fetchData}
 			/>
 
 			<ModalImport

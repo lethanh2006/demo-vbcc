@@ -1,4 +1,4 @@
-import { colorTrangThaiXacMinh, EPhaseXacMinh } from '@/services/VanBang/constant';
+import { colorTrangThaiXacMinh, EPhaseXacMinh, nameTrangThaiXacMinh } from '@/services/VanBang/constant';
 import { Card, Col, Row, Space, Steps, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
@@ -55,7 +55,9 @@ const ModalXacMinhVanBang = (props: any) => {
 				<Space>
 					{(edit ? 'Chỉnh sửa ' : 'Thêm mới ') + 'xác minh văn bằng '}
 					{record?._id ? (
-						<Tag color={colorTrangThaiXacMinh[record?.phaseXuLy as EPhaseXacMinh]}>{record?.phaseXuLy}</Tag>
+						<Tag color={colorTrangThaiXacMinh[record?.phaseXuLy as EPhaseXacMinh]}>
+							{nameTrangThaiXacMinh[record?.phaseXuLy]}
+						</Tag>
 					) : null}
 				</Space>
 			}

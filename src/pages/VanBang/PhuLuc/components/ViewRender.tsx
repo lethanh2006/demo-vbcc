@@ -8,6 +8,7 @@ import type { CollapseProps } from 'antd';
 import { Button, Collapse, Empty, Spin, Tag } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import ViewCapMoiPhuLuc from '../../PhuLucChinhSua/components/CapMoi';
 import FormPhuLucChinhSua from '../../PhuLucChinhSua/components/Form';
 import PhuLucDetailView from './PhuLucDetailView';
 
@@ -27,7 +28,9 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) 
 		if (record?._id) {
 			getAllModel(
 				undefined,
-				undefined,
+				{
+					updatedAt: 1,
+				},
 				{
 					phuLucVanBangId: record?._id,
 					trangThai: ETrangThaiYeuCauVanBang.DA_DUYET,
@@ -61,7 +64,8 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) 
 						Lịch sử <Tag color={colorLoaiYeuCauVangBang[loai]}>{loai}</Tag> lần {lan}
 					</b>
 				),
-				children: <FormPhuLucChinhSua data={item} />,
+				children:
+					loai === ELoaiYeuCauVangBang.CAP_MOI ? <ViewCapMoiPhuLuc data={item} /> : <FormPhuLucChinhSua data={item} />,
 			};
 		});
 	})();

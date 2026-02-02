@@ -1,3 +1,4 @@
+import dayjs from '@/utils/dayjs';
 import { Descriptions } from 'antd';
 import { useModel } from 'umi';
 
@@ -11,16 +12,13 @@ const ChiTietSinhVienXacMinh = () => {
 			layout='vertical'
 			colon={false}
 		>
-			<Descriptions.Item label='Mã sinh viên' span={2}>
-				{record?.maSinhVien ?? '--'}
+			<Descriptions.Item label='Mã người học'>{record?.maSinhVien ?? '--'}</Descriptions.Item>
+			<Descriptions.Item label='Họ tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
+			<Descriptions.Item label='Ngày sinh'>
+				{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
 			</Descriptions.Item>
-
-			<Descriptions.Item label='Họ tên' span={2}>
-				{record?.hoTen ?? '--'}
-			</Descriptions.Item>
-
+			<Descriptions.Item label='Xếp loại'>{record?.xepLoai ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? '--'}</Descriptions.Item>
-
 			<Descriptions.Item label='Số vào sổ'>{record?.soVaoSo ?? '--'}</Descriptions.Item>
 		</Descriptions>
 	);

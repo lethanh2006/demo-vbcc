@@ -1,27 +1,28 @@
 import ExpandText from '@/components/ExpandText';
+import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
-import { colorTrangThaiXacMinh, ELoaiPhucDap, EPhaseXacMinh } from '@/services/VanBang/constant';
+import { colorTrangThaiXacMinh, ELoaiPhucDap, EPhaseXacMinh, nameTrangThaiXacMinh } from '@/services/VanBang/constant';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons';
-import { Checkbox, Popconfirm, Spin, Tag } from 'antd';
+import { Popconfirm, Spin, Tag } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import ViewPhuLucVanBang from '../PhuLuc/components/ViewRender';
 import ModalXacMinhVanBang from './components/Modal';
 import ModalCaiDatXacMinh from './components/ModalCaiDat';
 
-const XacMinhVanBangPage = (props: {
-	title?: 'Yêu cầu đang xử lý' | 'Yêu cầu trình ký' | 'Yêu cầu xác minh hoàn thành';
-}) => {
+const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu cầu chờ ký' | 'Yêu cầu hoàn thành' }) => {
 	const { title } = props;
-	const { getModel, page, limit, deleteModel, handleEdit } = useModel('vbcc.xacminhvanbang');
+	const { getModel, page, limit, deleteModel, handleEdit, record, setRecord } = useModel('vbcc.xacminhvanbang');
 	const { visibleForm, setVisibleForm, loading } = useModel('vbcc.phulucvanbang');
+
 	const [isFormBieuMauVisible, setIsFormBieuMauVisible] = useState(false);
+	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 
 	const onCell = (rec: XacMinhVanBang.IRecord) => ({
 		onClick: () => handleEdit(rec),
@@ -31,9 +32,9 @@ const XacMinhVanBangPage = (props: {
 	const trangThai =
 		title === 'Yêu cầu đang xử lý'
 			? [EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA]
-			: title === 'Yêu cầu trình ký'
+			: title === 'Yêu cầu chờ ký'
 				? [EPhaseXacMinh.KET_QUA]
-				: title === 'Yêu cầu xác minh hoàn thành'
+				: title === 'Yêu cầu hoàn thành'
 					? [EPhaseXacMinh.HOAN_THANH]
 					: null;
 
@@ -112,31 +113,43 @@ const XacMinhVanBangPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Phản hồi',
-			dataIndex: 'daPhanHoi',
-			filterType: 'select',
-			render: (value: boolean) => <Checkbox checked={value} />,
-			width: 80,
-			align: 'center',
-			onCell,
-		},
-		{
 			title: 'Ghi chú',
 			dataIndex: 'ghiChu',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
+			onCell,
 		},
 		{
-			title: 'Xử lý',
+			title: 'Kết quả phúc đáp',
+			dataIndex: 'urlFilePhucDapChung',
+			width: 120,
+			render: (val, rec) =>
+				val?.length && (
+					<a
+						onClick={() => {
+							setRecord(rec);
+							setVisibleFormFile(true);
+						}}
+					>
+						Xem chi tiết
+					</a>
+				),
+			onCell,
+		},
+		{
+			title: 'Trạng thái',
 			dataIndex: 'phaseXuLy',
 			width: 150,
 			align: 'center',
 			fixed: 'right',
 			filterType: 'select',
-			filterData: Object.values(trangThai ?? EPhaseXacMinh),
+			filterData: Object.values(trangThai ?? EPhaseXacMinh).map((item) => ({
+				value: item,
+				label: nameTrangThaiXacMinh[item],
+			})),
 			onCell,
-			render: (val: EPhaseXacMinh) => <Tag color={colorTrangThaiXacMinh[val]}>{val}</Tag>,
+			render: (val: EPhaseXacMinh) => <Tag color={colorTrangThaiXacMinh[val]}>{nameTrangThaiXacMinh[val]}</Tag>,
 		},
 		{
 			title: 'Thao tác',
@@ -178,7 +191,7 @@ const XacMinhVanBangPage = (props: {
 				formProps={{ getData }}
 				widthDrawer={1200}
 				dependencies={[page, limit]}
-				title='Xác minh văn bằng'
+				title={title ?? 'Tất cả yêu cầu'}
 				extra={[
 					<ButtonExtend
 						key='add'
@@ -205,6 +218,17 @@ const XacMinhVanBangPage = (props: {
 			</ModalExpandable>
 
 			<ModalCaiDatXacMinh visible={isFormBieuMauVisible} onClose={() => setIsFormBieuMauVisible(false)} />
+
+			<ModalExpandable
+				title='Chi tiết tệp tin'
+				width={1000}
+				open={visibleFormFile}
+				okButtonProps={{ hidden: true }}
+				cancelText='Đóng'
+				onCancel={() => setVisibleFormFile(false)}
+			>
+				<PreviewFile file={record?.urlFilePhucDapChung ?? []} />
+			</ModalExpandable>
 		</>
 	);
 };

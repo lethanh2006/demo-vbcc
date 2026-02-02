@@ -1,3 +1,5 @@
+import UploadFile from '@/components/Upload/UploadFile';
+import { buildUpLoadMultiFile } from '@/services/uploadFile';
 import { EPhaseXacMinh } from '@/services/VanBang/constant';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import { resetFieldsForm } from '@/utils/utils';
@@ -11,19 +13,22 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 	const { afterAddNew, getData } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { record, formSubmiting, visibleForm, setVisibleForm, nextStepXacMinhModel } = useModel('vbcc.xacminhvanbang');
-	const { danhSach } = useModel('vbcc.sinhvienxacminh');
+	const { record, formSubmiting, visibleForm, setVisibleForm, nextStepXacMinhModel, setFormSubmiting } =
+		useModel('vbcc.xacminhvanbang');
 
 	const isHoanThanh = record?.phaseXuLy === EPhaseXacMinh.HOAN_THANH;
-
-	const isAllFilesExist = danhSach.length > 0 && danhSach.every((item) => item.urlPhanHoi);
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
 		else form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = (values: XacMinhVanBang.IRecord) => {
+	const onFinish = async (values: XacMinhVanBang.IRecord) => {
+		setFormSubmiting(true);
+		const urlFilePhucDapChung = await buildUpLoadMultiFile(values, 'urlFilePhucDapChung');
+		values.urlFilePhucDapChung = urlFilePhucDapChung;
+		setFormSubmiting(false);
+
 		nextStepXacMinhModel(
 			record?._id ?? '',
 			{
@@ -39,6 +44,11 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
+					<Col span={24}>
+						<Form.Item label='Kết quả phúc đáp' name='urlFilePhucDapChung'>
+							<UploadFile maxCount={5} />
+						</Form.Item>
+					</Col>
 					<Col span={24}>
 						<Form.Item label='Ghi chú' name='ghiChu'>
 							<Input.TextArea disabled={isHoanThanh} placeholder='Nhập ghi chú' />
@@ -57,7 +67,7 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 					</Button>
 
 					<Popconfirm
-						disabled={isHoanThanh || !isAllFilesExist}
+						disabled={isHoanThanh}
 						onConfirm={() => form.submit()}
 						title='Xác nhận hoàn thành xác minh?'
 						placement='topRight'

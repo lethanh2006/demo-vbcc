@@ -2,6 +2,9 @@ import MyDatePicker from '@/components/MyDatePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
+import SelectHinhThucDaoTao from '@/pages/DanhMuc/HinhThucDaoTao/components/Select';
+import SelectNganhDaoTao from '@/pages/DanhMuc/NganhDaoTao/components/Select';
+import SelectTrinhDoDaoTao from '@/pages/DanhMuc/TrinhDoTaoTao/components/Select';
 import FormTable from '@/pages/VanBang/PhuLuc/components/FormTable';
 import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
@@ -11,7 +14,7 @@ import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, InputNumber, Modal, Popconfirm, Row } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Modal, Popconfirm, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -225,33 +228,72 @@ const FormSinhVienQuyetDinh = (props: any) => {
 						/>
 					</Form.Item>
 				</Col>
-
 				<Col span={24} md={12}>
 					<Form.Item
-						label='Mã sinh viên'
+						label='Mã người học'
 						name='maSinhVien'
 						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
 					>
-						<Input placeholder='Nhập mã sinh viên' />
+						<Input placeholder='Nhập mã người học' />
 					</Form.Item>
 				</Col>
-
 				<Col span={24} md={12}>
-					<Form.Item
-						label='Họ tên sinh viên'
-						name='hoTen'
-						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-					>
-						<Input placeholder='Nhập họ tên sinh viên' />
+					<Form.Item label='Họ tên' name='hoTen' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
+						<Input placeholder='Nhập họ tên' />
 					</Form.Item>
 				</Col>
-
 				<Col span={24} md={12}>
 					<Form.Item label='Ngày sinh' name='ngaySinh'>
 						<MyDatePicker />
 					</Form.Item>
 				</Col>
-
+				<Col span={24} md={12}>
+					<Form.Item label='Giới tính' name='gioiTinh'>
+						<Select
+							placeholder='Chọn giới tính'
+							options={[
+								{ label: 'Nam', value: 'Nam' },
+								{ label: 'Nữ', value: 'Nữ' },
+								{ label: 'Khác', value: 'Khác' },
+							]}
+						/>
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
+					<Form.Item label='Nơi sinh' name='noiSinh'>
+						<Input placeholder='Nhập nơi sinh' />
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
+					<Form.Item label='Quốc tịch' name='quocTich'>
+						<Input placeholder='Nhập quốc tịch' />
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
+					<Form.Item label='Số CMND/CCCD' name='cmtCccd'>
+						<Input placeholder='Nhập số CMMD/CCCD' />
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
+					<Form.Item label='Trình độ đào tạo' name='trinhDoDaoTao'>
+						<SelectTrinhDoDaoTao selectMa />
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
+					<Form.Item label='Hình thức đào tạo' name='hinhThucDaoTao'>
+						<SelectHinhThucDaoTao selectMa />
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
+					<Form.Item label='Ngành đào tạo' name='nganhDaoTao'>
+						<SelectNganhDaoTao selectMa />
+					</Form.Item>
+				</Col>
+				<Col span={24} md={12}>
+					<Form.Item label='Năm tốt nghiệp' name='namTotNghiep'>
+						<Input placeholder='Nhập năm tốt nghiệp' />
+					</Form.Item>
+				</Col>
 				{recBieuMau?._id && (
 					<>
 						<Col span={24}>

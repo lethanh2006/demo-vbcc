@@ -26,24 +26,16 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 		}
 	}, [visible]);
 
-	const onFinish = async (value: XacMinhVanBang.ISetting) => {
-		const bieuMauId = value.bieuMauId?.fileList?.[0];
+	const onFinish = async (values: XacMinhVanBang.ISetting) => {
+		setFormSubmiting(true);
+		const bieuMauId = values.bieuMauId?.fileList?.[0];
 		if (bieuMauId?.originFileObj) {
-			try {
-				setFormSubmiting(true);
-				const res = await uploadFile({
-					file: bieuMauId.originFileObj,
-					scope: EFileScope.PUBLIC,
-				});
-				value.bieuMauId = res?.data?.data?.file?._id;
-			} catch (error) {
-				return Promise.reject(error);
-			} finally {
-				setFormSubmiting(false);
-			}
-		}
+			const res = await uploadFile({ file: bieuMauId?.originFileObj, scope: EFileScope.PUBLIC });
+			values.bieuMauId = res?.data?.data?.file?._id;
+		} else values.bieuMauId = bieuMauId.url;
+		setFormSubmiting(false);
 
-		await updateSettingModel({ key: ESettingKey.XAC_MINH_VAN_BANG, value }).catch((er) => console.log(er));
+		await updateSettingModel({ key: ESettingKey.XAC_MINH_VAN_BANG, value: values }).catch((er) => console.log(er));
 		onClose();
 	};
 
@@ -61,6 +53,29 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 								<UploadFile accept='.docx' drag hasPreviewFile previewFileProps={{ isFileId: true }} />
 							</Form.Item>
 						</Col>
+						{/* <Col span={24} style={{ color: '#259efa' }}>
+							<i>
+								{`Có thể sử dụng các biến động như {{hoTen}}, {{maSV}}, {{ngaySinh}} để tự động điền vào nội dung khi gửi cho người học. Ví dụ: '{{hoTen}} đã được chấp nhận phúc đáp'.`}
+							</i>
+						</Col>
+						<Col span={24}>
+							<Form.Item
+								name='mauNoiDungPhucDapChapNhan'
+								label='Nội dung phúc đáp khi có kết quả'
+								rules={[...rules.required]}
+							>
+								<Input.TextArea rows={2} placeholder='Nhập nội dung' />
+							</Form.Item>
+						</Col>
+						<Col span={24}>
+							<Form.Item
+								name='mauNoiDungPhucDapTuChoi'
+								label='Nội dung phúc đáp khi không có kết quả'
+								rules={[...rules.required]}
+							>
+								<Input.TextArea rows={2} placeholder='Nhập nội dung' />
+							</Form.Item>
+						</Col> */}
 					</Row>
 
 					<div className='form-footer' style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>

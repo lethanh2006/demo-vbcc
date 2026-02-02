@@ -141,12 +141,8 @@ const ChiTietBieuMauPhuLuc = () => {
 			<Form layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={12}>
-						<Form.Item
-							label='Họ tên sinh viên'
-							name='hoTen'
-							rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-						>
-							<Input placeholder='Nhập họ tên sinh viên' />
+						<Form.Item label='Họ tên' name='hoTen' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
+							<Input placeholder='Nhập họ tên' />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
@@ -156,11 +152,11 @@ const ChiTietBieuMauPhuLuc = () => {
 					</Col>
 					<Col span={24} md={12}>
 						<Form.Item
-							label='Mã sinh viên'
+							label='Mã người học'
 							name='maSinhVien'
 							rules={[...rules.required, ...rules.text, ...rules.length(20)]}
 						>
-							<Input placeholder='Nhập mã sinh viên' />
+							<Input placeholder='Nhập mã người học' />
 						</Form.Item>
 					</Col>
 

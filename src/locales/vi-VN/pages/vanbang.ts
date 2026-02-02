@@ -11,5 +11,5 @@ export default {
 	'vanbang.nguoiky.title': 'Người ký văn bằng',
 
 	// Danh mục biểu mẫu phụ lục
-	'vanbang.bieumauphuluc.title': 'Biểu mẫu phụ lục',
+	'vanbang.bieumauphuluc.title': 'Biểu mẫu thông tin văn bằng',
 };

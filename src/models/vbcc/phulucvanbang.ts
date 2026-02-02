@@ -1,5 +1,7 @@
 import useInitModel from '@/hooks/useInitModel';
+import { ELoaiThongTinUpdate } from '@/services/VanBang/constant';
 import {
+	capPhatVanBang,
 	chiTietPhuLucVanBanPublic,
 	getImportPhuLucCapBangTemplate,
 	importPhuLucVanBang,
@@ -8,6 +10,7 @@ import {
 	putUpdateIpfs,
 	sinhSoVaoSo,
 	sortPhuLucTam,
+	thongKePhuLucTheoNam,
 	traCuuPhuLucVanBanPublic,
 	updBlockchain,
 	yeuCauCapNhatVanBang,
@@ -32,6 +35,8 @@ export default () => {
 	const [visiblePrint, setVisiblePrint] = useState<boolean>(false);
 	const [thongTinTraCuu, setThongTinTraCuu] = useState<PhuLucVanBang.IThongTinTraCuu[] | any>();
 	const [tableData, setTableData] = useState<any>();
+	const [loadingThongKe, setLoadingThongKe] = useState<any>();
+	const [dataThongKe, setDataThongKe] = useState<PhuLucVanBang.IThongKePhuLucTheoNam[]>([]);
 
 	const uploadFolderModel = async (
 		idQuyetDinh: string,
@@ -92,7 +97,10 @@ export default () => {
 		}
 	};
 
-	const importPhuLucVanBangModel = async (payload: { quyetDinhId: string; file: Blob }, params?: any) => {
+	const importPhuLucVanBangModel = async (
+		payload: { quyetDinhId: string; file: Blob; loaiThongTin?: ELoaiThongTinUpdate },
+		params?: any,
+	) => {
 		if (formSubmiting) return;
 		setFormSubmiting(true);
 
@@ -265,6 +273,38 @@ export default () => {
 		}
 	};
 
+	const thongKePhuLucTheoNamModel = async (condition?: any, filters?: any[]) => {
+		setLoadingThongKe(true);
+
+		try {
+			const res = await thongKePhuLucTheoNam(condition, filters);
+			setDataThongKe(res.data?.data);
+
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoadingThongKe(false);
+		}
+	};
+
+	const capPhatVanBangModel = async (idVanBang: string, payLoad: any, getData?: () => void): Promise<any> => {
+		if (formSubmiting) return Promise.reject('Form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await capPhatVanBang(idVanBang, payLoad);
+			message.success('Lưu thành công');
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (er) {
+			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
 	return {
 		...objInit,
 		dataToSignOrPush,
@@ -293,5 +333,10 @@ export default () => {
 		postExecuteImportModel,
 		getImportPhuLucCapBangTemplateModel,
 		yeuCauCapNhatVanBangModel,
+		loadingThongKe,
+		dataThongKe,
+		thongKePhuLucTheoNamModel,
+
+		capPhatVanBangModel,
 	};
 };

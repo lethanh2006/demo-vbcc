@@ -2,21 +2,22 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
-import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
-import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
+import SelectTrinhDoDaoTao from '@/pages/DanhMuc/TrinhDoTaoTao/components/Select';
 import { ETrangThaiSoVanBang } from '@/services/VanBang/constant';
 import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useModel } from 'umi';
+import ChiTietSoVanBang from './components/ChiTiet';
 import SoVanBangForm from './components/Form';
-
 const SoVanBangPage = () => {
 	const {
 		page,
 		limit,
 		handleEdit,
 		deleteModel,
+		handleView,
+		isView,
 		//  duyetModel, getModel
 	} = useModel('vbcc.sovanbang');
 
@@ -24,6 +25,10 @@ const SoVanBangPage = () => {
 	// 	if (soVanBangId) duyetModel(soVanBangId, getModel).catch(console.log);
 	// };
 
+	const onCell = (rec: SoVanBang.IRecord) => ({
+		onClick: () => handleView(rec),
+		style: { cursor: 'pointer' },
+	});
 	const columns: IColumn<SoVanBang.IRecord>[] = [
 		{
 			title: 'Năm',
@@ -32,12 +37,14 @@ const SoVanBangPage = () => {
 			sorter: true,
 			filterType: 'string',
 			align: 'center',
+			onCell,
 		},
 		{
 			title: 'Tên sổ',
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
+			onCell,
 		},
 		{
 			title: 'Số vào sổ hiện tại',
@@ -46,28 +53,23 @@ const SoVanBangPage = () => {
 			sorter: true,
 			filterType: 'number',
 			align: 'center',
+			onCell,
 		},
 		{
 			title: 'Trình độ',
 			dataIndex: 'maTrinhDoDaoTao',
 			width: 120,
-			render: (val, rec) => rec?.tenTrinhDoDaoTao,
+			render: (val, rec) => rec?.trinhDoDaoTao?.ten ?? rec?.tenTrinhDoDaoTao ?? val,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectTrinhDo selectMa multiple />,
-		},
-		{
-			title: 'Hình thức',
-			dataIndex: 'maHinhThucDaoTao',
-			width: 120,
-			render: (val, rec) => rec?.tenHinhThucDaoTao,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectHinhThuc selectMa multiple />,
+			filterCustomSelect: <SelectTrinhDoDaoTao selectMa multiple />,
+			onCell,
 		},
 		{
 			title: 'Mô tả',
 			dataIndex: 'moTa',
 			width: 180,
 			render: (val) => <ExpandText>{val}</ExpandText>,
+			onCell,
 		},
 		// {
 		// 	title: 'Trạng thái',
@@ -138,9 +140,9 @@ const SoVanBangPage = () => {
 			columns={columns}
 			modelName={'vbcc.sovanbang'}
 			title='Sổ văn bằng'
-			Form={SoVanBangForm}
+			Form={isView ? ChiTietSoVanBang : SoVanBangForm}
 			dependencies={[page, limit]}
-			widthDrawer={800}
+			widthDrawer={isView ? 1200 : 800}
 			showModalTitle
 		/>
 	);

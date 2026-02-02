@@ -10,14 +10,18 @@ import { ETagColor } from '@/services/base/constant';
 import {
 	colorLoaiYeuCauChinhSuaVanBang,
 	colorTrangThaiBlc,
+	colorTrangThaiTotNghiep,
 	ELoaiYeuCauChinhSuaVanBang,
+	EQuyetDinhStep,
 	ETrangThaiBlockchain,
+	ETrangThaiCapBang,
 	ETrangThaiQuyetDinhTotNghiep,
 	nameLoaiYeuCauChinhSuaVanBang,
+	nameTrangThaiTotNghiep,
 } from '@/services/VanBang/constant';
+import { validateHoanThanh, xuatVanBangQuyetDinh } from '@/services/VanBang/PhuLucVanBang';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import {
 	ArrowLeftOutlined,
@@ -25,11 +29,13 @@ import {
 	CheckCircleOutlined,
 	CloudUploadOutlined,
 	EditOutlined,
+	ExportOutlined,
 	FilePdfOutlined,
 	FormOutlined,
 	ImportOutlined,
 	InfoCircleOutlined,
 	MenuOutlined,
+	ReloadOutlined,
 	RollbackOutlined,
 	SaveOutlined,
 	SearchOutlined,
@@ -38,11 +44,11 @@ import {
 	UndoOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Button, Checkbox, Descriptions, Dropdown, Form, Input, Menu, Popconfirm, Popover, Space, Tag } from 'antd';
+import { Alert, Button, Descriptions, Dropdown, Form, Input, Menu, Popconfirm, Popover, Space, Tag } from 'antd';
+import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalCapBang from '../DotCapBangTotNghiep/components/ModalCapBang';
-import SelectQuyetDinh from '../QuyetDinhTotNghiep/components/Select';
+import SelectQuyetDinhTotNghiep from '../QuyetDinhTotNghiep/components/Select';
 import CauHinhPhuLucVanBang from './components/CauHinh';
 import FormPhuLucVanBang from './components/Form';
 import ModalSignVanBang from './components/KySoVanBang';
@@ -57,19 +63,19 @@ import ViewPhuLucVanBang from './components/ViewRender';
 
 const PhuLucVanBangPage = (props: {
 	isQuyetDinh?: boolean;
-	afterAddNew?: (val: number) => void;
-	title?: 'Thông tin quyết định' | 'Dự thảo cần duyệt' | 'Quyết định đã duyệt';
+	afterAddNew?: (val: EQuyetDinhStep) => void;
+	title?: 'Tất cả quyết định' | 'Dự thảo cần duyệt' | 'Quyết định đã duyệt';
+	themMoiHoanThanh?: boolean;
 }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { isQuyetDinh = false, afterAddNew, title } = props;
+	const { isQuyetDinh = false, afterAddNew, title, themMoiHoanThanh } = props;
 	const {
 		page,
 		limit,
 		handleEdit,
 		getModel,
 		danhSach,
-		setDanhSach,
 		selectedIds,
 		setSelectedIds,
 		setDataToSignOrPush,
@@ -97,15 +103,17 @@ const PhuLucVanBangPage = (props: {
 	} = useModel('vbcc.quyetdinhtotnghiep');
 	const { record: recNguoiKy, getByIdModel: getNguoiKy } = useModel('vbcc.nguoiky');
 	const { settings } = useModel('tienich.caidat');
-	const [yearSelect, setYearSelect] = useState<any>(dayjs());
+	const [yearSelect, setYearSelect] = useState<any>();
 	const [showUpload, setShowUpload] = useState(false);
 	const [visibleImport, setVisibleImport] = useState<boolean>(false);
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
-	const [showModalCapBang, setShowModalCapBang] = useState<boolean>(false);
 	const [visibleTrinhKy, setVisibleTrinhKy] = useState<boolean>(false);
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const [recEditInline, setRecEditInline] = useState<PhuLucVanBang.IRecord>();
+	const [valiHoanThanh, setValiHoanThanh] = useState<boolean>(false);
+	const [loadingExport, setLoadingExport] = useState<boolean>(false);
+	const [loadingValidate, setLoadingValidate] = useState<boolean>(false);
 	const { INFO_TENANT: settingVbcc } = settings;
 	const [trangThaiYeuCau, setTrangThaiYeuCau] = useState<'Cấp lại' | 'Chỉnh sửa' | 'Thu hồi'>('Cấp lại');
 
@@ -116,9 +124,22 @@ const PhuLucVanBangPage = (props: {
 		getByIdModel(recQuyetDinh?._id ?? '', true);
 	};
 
+	const getValidateHoanThanh = () => {
+		if (isQuyetDinh && recQuyetDinh?._id) {
+			setLoadingValidate(true);
+			validateHoanThanh(recQuyetDinh?._id)
+				.then((res) => setValiHoanThanh(res?.data?.data))
+				.finally(() => setLoadingValidate(false));
+		}
+	};
+
 	useEffect(() => {
 		getNguoiKy('me');
 	}, []);
+
+	useEffect(() => {
+		getValidateHoanThanh();
+	}, [recQuyetDinh?._id, isQuyetDinh]);
 
 	useEffect(() => {
 		if (!recEditInline) {
@@ -127,20 +148,32 @@ const PhuLucVanBangPage = (props: {
 	}, [recEditInline]);
 
 	const getData = () => {
-		if (recQuyetDinh?._id)
-			getModel(
-				{
-					idQuyetDinh: recQuyetDinh?._id,
-				},
-				[
-					{
-						active: true,
-						field: 'soVaoSoBang',
-						operator: EOperatorType.NOT_NULL,
-					},
+		const filters: any[] = [
+			{
+				active: true,
+				field: 'soVaoSoBang',
+				operator: EOperatorType.NOT_NULL,
+			},
+		];
+
+		if (yearSelect) {
+			filters.push({
+				active: true,
+				field: ['quyetDinh', 'ngayBanHanh'],
+				operator: EOperatorType.BETWEEN,
+				values: [
+					dayjs(yearSelect.toString()).startOf('year').toISOString(),
+					dayjs(yearSelect.toString()).endOf('year').toISOString(),
 				],
-			);
-		else setDanhSach([]);
+			});
+		}
+
+		getModel(
+			{
+				idQuyetDinh: recQuyetDinh?._id,
+			},
+			filters,
+		);
 	};
 
 	const handleSign = () => {
@@ -173,8 +206,32 @@ const PhuLucVanBangPage = (props: {
 
 	const onFinish = (value: PhuLucVanBang.IRecord) => {
 		if (recEditInline?.soHieuVanBang !== value.soHieuVanBang)
-			putModel(recEditInline?._id ?? '', { soHieuVanBang: value.soHieuVanBang }, getData, true, false);
+			putModel(
+				recEditInline?._id ?? '',
+				{ soHieuVanBang: value.soHieuVanBang ?? null },
+				() => {
+					getData();
+					if (isQuyetDinh) getValidateHoanThanh();
+				},
+				true,
+				false,
+			);
 		setRecEditInline(undefined);
+	};
+
+	const handleXuatVanBangQuyetDinh = async () => {
+		if (!recQuyetDinh?._id) return;
+		setLoadingExport(true);
+		try {
+			const res = await xuatVanBangQuyetDinh(recQuyetDinh._id, {
+				sort: { soVaoSoBang: 1 },
+			});
+			fileDownload(res.data, `DanhSach_ThongTinVanBang_${recQuyetDinh.soQuyetDinh}.xlsx`);
+		} catch (e) {
+			console.error(e);
+		} finally {
+			setLoadingExport(false);
+		}
 	};
 
 	const onCell = (rec: PhuLucVanBang.IRecord) => ({
@@ -206,7 +263,7 @@ const PhuLucVanBangPage = (props: {
 			render: (val, rec) =>
 				recEditInline?._id === rec?._id ? (
 					<Form onFinish={onFinish} form={form}>
-						<Form.Item initialValue={val} name='soHieuVanBang' rules={[...rules.required]} noStyle>
+						<Form.Item initialValue={val} name='soHieuVanBang' noStyle>
 							<Input autoFocus onBlur={() => setRecEditInline(undefined)} />
 						</Form.Item>
 					</Form>
@@ -361,31 +418,32 @@ const PhuLucVanBangPage = (props: {
 			hide: !settingVbcc?.require_diploma_signature,
 		},
 		{
-			title: 'Cấp bằng',
-			dataIndex: 'kichHoat',
+			title: 'Trạng thái phát bằng',
+			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
 			render: (_: any, record: PhuLucVanBang.IRecord) => {
-				const trangThai = record?.kichHoat ? (
-					<Tag color='green'>Đã cấp bằng</Tag>
-				) : (
-					<Tag color='red'>Chưa cấp bằng</Tag>
+				const trangThai = (
+					<Tag color={colorTrangThaiTotNghiep[_ as ETrangThaiCapBang]}>
+						{nameTrangThaiTotNghiep[_ as ETrangThaiCapBang]}
+					</Tag>
 				);
 
-				const ngayCap = record?.ngayCapPhuLuc ? `Ngày: ${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
+				const ngayCap = record?.ngayCapPhuLuc ? `${dayjs(record.ngayCapPhuLuc).format('DD/MM/YYYY')}` : null;
 
 				return (
 					<div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
 						<div>{trangThai}</div>
-						{ngayCap && <div>{ngayCap}</div>}
+						{record?.trangThai === ETrangThaiCapBang.DA_CAP_BANG && ngayCap && (
+							<div style={{ fontSize: 12 }}>{ngayCap}</div>
+						)}
 					</div>
 				);
 			},
-			filterType: 'select',
-			filterData: [
-				{ value: true as any, label: 'Đã cấp bằng' },
-				{ value: false, label: 'Chưa cấp bằng' },
-			],
+			filterData: Object.values(ETrangThaiCapBang).map((item) => ({
+				value: item,
+				label: nameTrangThaiTotNghiep[item as ETrangThaiCapBang],
+			})),
 			onCell,
 			hide: isQuyetDinh,
 		},
@@ -423,15 +481,6 @@ const PhuLucVanBangPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Thu hồi',
-			dataIndex: 'isThuHoi',
-			align: 'center',
-			width: 60,
-			render: (val) => <Checkbox checked={val} />,
-			onCell,
-			hide: isQuyetDinh,
-		},
-		{
 			title: 'Ghi chú đề xuất',
 			dataIndex: 'ghiChuYeuCau',
 			width: 200,
@@ -444,11 +493,14 @@ const PhuLucVanBangPage = (props: {
 			dataIndex: 'loaiYeuCauChinhSua',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => (
-				<Tag color={colorLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}>
-					{nameLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}
-				</Tag>
-			),
+			render: (val, rec) =>
+				rec?.isThuHoi ? (
+					<Tag color='red'>Đã thu hồi</Tag>
+				) : (
+					<Tag color={colorLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}>
+						{nameLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}
+					</Tag>
+				),
 			fixed: 'right',
 			filterType: 'select',
 			filterData: Object.values(ELoaiYeuCauChinhSuaVanBang).map((item) => ({
@@ -472,7 +524,7 @@ const PhuLucVanBangPage = (props: {
 							<Space direction='vertical' size={'small'}>
 								<ButtonExtend
 									disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.CAP_NHAT}
-									tooltip='Yêu cầu chỉnh sửa'
+									tooltip='Đề xuất chỉnh sửa'
 									type='link'
 									icon={<EditOutlined />}
 									onClick={() => {
@@ -481,11 +533,11 @@ const PhuLucVanBangPage = (props: {
 									}}
 									size='small'
 								>
-									Yêu cầu chỉnh sửa
+									Đề xuất chỉnh sửa
 								</ButtonExtend>
 								<ButtonExtend
 									disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.CAP_LAI}
-									tooltip='Yêu cầu cấp lại'
+									tooltip='Đề xuất cấp lại'
 									type='link'
 									icon={<RollbackOutlined />}
 									onClick={() => {
@@ -494,10 +546,10 @@ const PhuLucVanBangPage = (props: {
 									}}
 									size='small'
 								>
-									Yêu cầu cấp lại
+									Đề xuất cấp lại
 								</ButtonExtend>
 								<Popconfirm
-									title='Xác nhận thu hồi phụ lục?'
+									title='Xác nhận đề xuất thu hồi thông tin văn bằng?'
 									placement='topRight'
 									onConfirm={() =>
 										yeuCauCapNhatVanBangModel(rec?._id, { loai: 'Thu hồi', thoiGianYeuCau: dayjs() }, getData)
@@ -506,12 +558,12 @@ const PhuLucVanBangPage = (props: {
 									<ButtonExtend
 										disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.THU_HOI || !!rec?.isThuHoi}
 										size='small'
-										tooltip='Thu hồi'
+										tooltip='Đề xuất Thu hồi'
 										type='link'
 										icon={<UndoOutlined />}
 										danger
 									>
-										Thu hồi
+										Đề xuất thu hồi
 									</ButtonExtend>
 								</Popconfirm>
 							</Space>
@@ -525,20 +577,25 @@ const PhuLucVanBangPage = (props: {
 		},
 	];
 
-	const otherButtons = [];
-
-	if (isQuyetDinh) {
-		otherButtons.push(
-			<ButtonExtend
-				icon={<ImportOutlined />}
-				onClick={() => setVisibleImport(true)}
-				key='import'
-				disabled={!recQuyetDinh?._id || isHoanThanh}
-			>
-				Nhập dữ liệu
-			</ButtonExtend>,
-		);
-	}
+	const otherButtons = [
+		<ButtonExtend
+			icon={<ImportOutlined />}
+			onClick={() => setVisibleImport(true)}
+			key='import'
+			disabled={!recQuyetDinh?._id}
+		>
+			Nhập dữ liệu
+		</ButtonExtend>,
+		<ButtonExtend
+			icon={<ExportOutlined />}
+			onClick={handleXuatVanBangQuyetDinh}
+			key='export'
+			disabled={!recQuyetDinh?._id}
+			loading={loadingExport}
+		>
+			Xuất văn bằng theo biểu mẫu
+		</ButtonExtend>,
+	];
 
 	if (settingVbcc?.require_IPFS)
 		otherButtons.push(
@@ -552,21 +609,23 @@ const PhuLucVanBangPage = (props: {
 				Upload văn bằng
 			</ButtonExtend>,
 		);
-	if (!!recQuyetDinh?._id) {
-		if (settings?.INFO_TENANT?.require_diploma_signature) {
-			otherButtons.push(
-				<ButtonExtend icon={<FormOutlined />} onClick={() => setVisibleTrinhKy(true)} key='trinhky' disabled={!total}>
-					Trình ký ({selectedIds?.length || 'Tất cả'})
-				</ButtonExtend>,
-			);
-		}
+	if (settings?.INFO_TENANT?.require_diploma_signature) {
 		otherButtons.push(
-			<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total}>
-				In thông tin văn bằng ({selectedIds?.length || 'Tất cả'})
+			<ButtonExtend
+				icon={<FormOutlined />}
+				onClick={() => setVisibleTrinhKy(true)}
+				key='trinhky'
+				disabled={!total || !recQuyetDinh?._id}
+			>
+				Trình ký ({selectedIds?.length || 'Tất cả'})
 			</ButtonExtend>,
 		);
 	}
-
+	otherButtons.push(
+		<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total || !recQuyetDinh?._id}>
+			In thông tin văn bằng ({selectedIds?.length || 'Tất cả'})
+		</ButtonExtend>,
+	);
 	if (recNguoiKy?._id)
 		otherButtons.push(
 			<Dropdown
@@ -589,7 +648,6 @@ const PhuLucVanBangPage = (props: {
 				</ButtonExtend>
 			</Dropdown>,
 		);
-
 	if (settingVbcc?.blockChain)
 		otherButtons.push(
 			<ButtonExtend
@@ -605,11 +663,19 @@ const PhuLucVanBangPage = (props: {
 
 	return (
 		<>
+			{isQuyetDinh && !valiHoanThanh ? (
+				<Alert
+					style={{ marginBottom: 12 }}
+					type='warning'
+					showIcon
+					message='Vui lòng nhập đầy đủ thông tin số hiệu văn bằng'
+				/>
+			) : null}
+
 			<TableBase
 				getData={getData}
 				columns={columns}
-				params={{ idQuyetDinh: recQuyetDinh?._id }}
-				dependencies={[page, limit, recQuyetDinh?._id]}
+				dependencies={[page, limit, recQuyetDinh?._id, yearSelect]}
 				modelName='vbcc.phulucvanbang'
 				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
 				widthDrawer={1000}
@@ -621,9 +687,10 @@ const PhuLucVanBangPage = (props: {
 							: 'Thêm mới thông tin văn bằng'
 				}
 				Form={isView ? ViewPhuLucVanBang : FormPhuLucVanBang}
-				formProps={{ getData, vbccSettings: settingVbcc, trangThaiYeuCau }}
+				formProps={{ getData, trangThaiYeuCau }}
 				buttons={{
 					create: false,
+					export: true,
 				}}
 				hideCard={isQuyetDinh}
 				otherButtons={otherButtons}
@@ -664,7 +731,7 @@ const PhuLucVanBangPage = (props: {
 							allowClear
 						/>
 
-						<SelectQuyetDinh
+						<SelectQuyetDinhTotNghiep
 							condition={
 								yearSelect
 									? { nam: dayjs(yearSelect).format('YYYY'), trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH }
@@ -673,7 +740,7 @@ const PhuLucVanBangPage = (props: {
 							style={{ width: 250 }}
 							value={recQuyetDinh?._id}
 							onChange={(val) => setQuyetDinh(danhsachQuyetDinh?.find((item) => item._id === val))}
-							isSetRecord
+							allowClear
 						/>
 					</Space>
 				) : null}
@@ -683,30 +750,40 @@ const PhuLucVanBangPage = (props: {
 				<div className='form-footer'>
 					<Button
 						onClick={() => {
-							if (afterAddNew) afterAddNew(2);
+							if (afterAddNew) afterAddNew(themMoiHoanThanh ? EQuyetDinhStep.THONG_TIN : EQuyetDinhStep.DU_THAO_SO);
 						}}
 						icon={<ArrowLeftOutlined />}
 					>
 						Quay lại
 					</Button>
 
-					{title === 'Quyết định đã duyệt' && (
-						<Popconfirm
-							disabled={isHoanThanh}
-							onConfirm={() =>
-								xuLyDuThaoModel(
-									recQuyetDinh?._id ?? '',
-									{ trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH },
-									getQuyetDinh,
-								)
-							}
-							title='Xác nhận hoàn thành quyết định tốt nghiệp?'
-							placement='topRight'
-						>
-							<Button disabled={isHoanThanh} loading={formSubmiting} type='primary' icon={<SaveOutlined />}>
-								Hoàn thành
+					{(title === 'Quyết định đã duyệt' || themMoiHoanThanh) && (
+						<>
+							<Popconfirm
+								disabled={isHoanThanh || !valiHoanThanh}
+								onConfirm={() =>
+									xuLyDuThaoModel(
+										recQuyetDinh?._id ?? '',
+										{ trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH },
+										getQuyetDinh,
+									)
+								}
+								title='Xác nhận hoàn thành quyết định tốt nghiệp?'
+								placement='topRight'
+							>
+								<Button
+									disabled={isHoanThanh || !valiHoanThanh}
+									loading={formSubmiting || loadingValidate}
+									type='primary'
+									icon={<SaveOutlined />}
+								>
+									Hoàn thành
+								</Button>
+							</Popconfirm>
+							<Button disabled={loadingValidate} loading={loadingValidate} icon={<ReloadOutlined />}>
+								Làm mới số hiệu VB
 							</Button>
-						</Popconfirm>
+						</>
 					)}
 
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
@@ -718,8 +795,13 @@ const PhuLucVanBangPage = (props: {
 				onCancel={() => setVisibleImport(false)}
 				onOk={() => {
 					getData();
+					if (isQuyetDinh) getValidateHoanThanh();
 					setVisibleImport(false);
 				}}
+				params={{
+					sort: { soVaoSoBang: 1 },
+				}}
+				isThongTin
 			/>
 
 			<ModalExportData />
@@ -753,8 +835,6 @@ const PhuLucVanBangPage = (props: {
 					/>
 				</>
 			)}
-
-			<ModalCapBang visible={showModalCapBang} setVisible={setShowModalCapBang} getData={getData} />
 
 			<ModalTrinhKyVanBang visible={visibleTrinhKy} setVisible={setVisibleTrinhKy} getData={getData} />
 

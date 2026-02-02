@@ -1,3 +1,4 @@
+import MyDatePicker from '@/components/MyDatePicker';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
@@ -36,10 +37,10 @@ const FormSinhVienXacMinh = (props: { getData?: () => void }) => {
 				<Col span={24}>
 					<Form.Item
 						name='maSinhVien'
-						label='Mã sinh viên'
+						label='Mã người học'
 						// rules={[...rules.required, ...rules.text, ...rules.length(50)]}
 					>
-						<Input placeholder='Nhập mã sinh viên' />
+						<Input placeholder='Nhập mã người học' />
 					</Form.Item>
 				</Col>
 
@@ -48,7 +49,16 @@ const FormSinhVienXacMinh = (props: { getData?: () => void }) => {
 						<Input placeholder='Nhập họ và tên' />
 					</Form.Item>
 				</Col>
-
+				<Col span={24}>
+					<Form.Item name='ngaySinh' label='Ngày sinh'>
+						<MyDatePicker />
+					</Form.Item>
+				</Col>
+				<Col span={24}>
+					<Form.Item name='xepLoai' label='Xếp loại'>
+						<Input placeholder='Nhập xếp loại' />
+					</Form.Item>
+				</Col>
 				<Col span={24}>
 					<Form.Item name='soHieuVanBang' label='Số hiệu văn bằng' rules={[...rules.text, ...rules.length(100)]}>
 						<Input placeholder='Nhập số hiệu văn bằng' />

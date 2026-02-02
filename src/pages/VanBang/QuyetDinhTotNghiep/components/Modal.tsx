@@ -1,6 +1,7 @@
 import { primaryColor } from '@/services/base/constant';
 import {
 	colorTrangThaiQuyetDinhTotNghiep,
+	EQuyetDinhStep,
 	ETrangThaiQuyetDinhTotNghiep,
 	nameTrangThaiQuyetDinhTotNghiep,
 } from '@/services/VanBang/constant';
@@ -8,8 +9,9 @@ import { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Card, Col, Descriptions, Popover, Row, Space, Steps, Tag } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+
 import PhuLucVanBangPage from '../../PhuLuc';
 import DanhSachSinhVienQuyetDinh from '../DanhSachSinhVien';
 import DuThaoSoVaoSoQuyetDinh from '../DuThaoSoVaoSo';
@@ -42,88 +44,142 @@ const renderTrangThaiInfo = (rec: QuyetDinhTotNghiep.IRecord) => (
 
 const ModalQuyetDinhTotNghiep = (props: any) => {
 	const intl = useIntl();
-	const { getData, yearSelect, title } = props;
+	const { getData, yearSelect, title, themMoiHoanThanh, setThemMoiHoanThanh } = props;
 	const { record, edit, visibleForm } = useModel('vbcc.quyetdinhtotnghiep');
-	console.log('🚀 ~ ModalQuyetDinhTotNghiep ~ record:', record);
-	const [currentStep, setCurrentStep] = useState<number>(0);
+
+	const [currentStep, setCurrentStep] = useState<EQuyetDinhStep>(EQuyetDinhStep.THONG_TIN);
+
+	const visibleSteps = useMemo<EQuyetDinhStep[]>(() => {
+		return [
+			EQuyetDinhStep.THONG_TIN,
+
+			!themMoiHoanThanh && EQuyetDinhStep.DANH_SACH_SV,
+			!themMoiHoanThanh && EQuyetDinhStep.DU_THAO_SO,
+
+			EQuyetDinhStep.PHU_LUC,
+		].filter(Boolean) as EQuyetDinhStep[];
+	}, [themMoiHoanThanh]);
+
+	useEffect(() => {
+		if (!visibleSteps.includes(currentStep)) {
+			setCurrentStep(visibleSteps[0]);
+		}
+	}, [visibleSteps.join('|')]);
 
 	useEffect(() => {
 		if (!visibleForm) {
 			getData();
+			setThemMoiHoanThanh(false);
 			return;
 		}
 
 		if (!record?._id) {
-			setCurrentStep(0);
+			setCurrentStep(EQuyetDinhStep.THONG_TIN);
 			return;
 		}
 
 		switch (record?.trangThai) {
 			case ETrangThaiQuyetDinhTotNghiep.DU_THAO:
 			case ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO:
-				setCurrentStep(2);
+				setCurrentStep(EQuyetDinhStep.DU_THAO_SO);
 				break;
+
+			case ETrangThaiQuyetDinhTotNghiep.HOAN_THANH:
 			case ETrangThaiQuyetDinhTotNghiep.CHINH_THUC:
-				setCurrentStep(3);
+				setCurrentStep(EQuyetDinhStep.PHU_LUC);
 				break;
+
+			default:
+				setCurrentStep(EQuyetDinhStep.THONG_TIN);
 		}
 	}, [visibleForm]);
 
-	const onChangeStep = (step: number) => {
-		setCurrentStep(step);
+	const currentStepIndex = visibleSteps.indexOf(currentStep);
+
+	const onChangeStep = (index: number) => {
+		setCurrentStep(visibleSteps[index]);
 	};
 
 	return (
 		<Card
 			title={
 				<Space>
-					{(edit ? 'Chỉnh sửa ' : 'Thêm mới ') + 'quyết định '}
-					{record?._id ? (
+					{record?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC ||
+					record?.trangThai === ETrangThaiQuyetDinhTotNghiep.HOAN_THANH
+						? 'Thông tin quyết định'
+						: (edit ? 'Chỉnh sửa ' : 'Thêm mới ') + 'quyết định'}
+
+					{record?._id && (
 						<Space wrap>
 							<Tag color={colorTrangThaiQuyetDinhTotNghiep[record?.trangThai as ETrangThaiQuyetDinhTotNghiep]}>
 								{nameTrangThaiQuyetDinhTotNghiep[record?.trangThai]}
 							</Tag>
+
 							<Popover placement='left' content={renderTrangThaiInfo(record)}>
 								<InfoCircleOutlined style={{ cursor: 'pointer', color: primaryColor }} />
 							</Popover>
 						</Space>
-					) : null}
+					)}
 				</Space>
 			}
 		>
 			<Row gutter={[16, 16]}>
-				<Col xs={24} sm={24} md={6} lg={6} xl={6}>
+				<Col xs={24} md={6}>
 					<Steps
-						current={currentStep}
+						current={currentStepIndex}
 						onChange={record?._id ? onChangeStep : undefined}
 						direction='vertical'
 						size='small'
 					>
-						<Steps.Step title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.step1' })} />
-						<Steps.Step title={'Danh sách sinh viên'} disabled={!record?._id} />
-						<Steps.Step title={'Dự thảo số vào sổ'} disabled={!record?._id} />
-						<Steps.Step
-							title={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.step2' })}
-							disabled={
-								!record?._id ||
-								(record?.trangThai !== ETrangThaiQuyetDinhTotNghiep.CHINH_THUC &&
-									record?.trangThai !== ETrangThaiQuyetDinhTotNghiep.HOAN_THANH)
+						{visibleSteps.map((step) => {
+							switch (step) {
+								case EQuyetDinhStep.THONG_TIN:
+									return (
+										<Steps.Step
+											key={step}
+											title={intl.formatMessage({
+												id: 'vanbang.quyetdinhtotnghiep.step1',
+											})}
+										/>
+									);
+
+								case EQuyetDinhStep.DANH_SACH_SV:
+									return <Steps.Step key={step} title='Danh sách sinh viên' disabled={!record?._id} />;
+
+								case EQuyetDinhStep.DU_THAO_SO:
+									return <Steps.Step key={step} title='Dự thảo số vào sổ' disabled={!record?._id} />;
+
+								case EQuyetDinhStep.PHU_LUC:
+									return (
+										<Steps.Step
+											key={step}
+											title={intl.formatMessage({
+												id: 'vanbang.quyetdinhtotnghiep.step2',
+											})}
+											disabled={
+												!themMoiHoanThanh &&
+												(!record?._id ||
+													![ETrangThaiQuyetDinhTotNghiep.CHINH_THUC, ETrangThaiQuyetDinhTotNghiep.HOAN_THANH].includes(
+														record?.trangThai,
+													))
+											}
+										/>
+									);
 							}
-						/>
+						})}
 					</Steps>
 				</Col>
-				<Col xs={24} sm={24} md={18} lg={18} xl={18}>
-					{currentStep === 0 ? (
+
+				<Col xs={24} md={18}>
+					{currentStep === EQuyetDinhStep.THONG_TIN && (
 						<>
-							{record?._id ? (
+							{record?._id && (
 								<Descriptions
-									style={{
-										marginBottom: 12,
-									}}
 									column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
 									className='highlight'
 									layout='vertical'
 									colon={false}
+									style={{ marginBottom: 12 }}
 								>
 									<Descriptions.Item label='Người tạo'>{record?.nguoiTao?.hoTen ?? '--'}</Descriptions.Item>
 									<Descriptions.Item label='Thời gian tạo'>
@@ -137,17 +193,26 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 										{record?.ghiChuChinhSua ?? '--'}
 									</Descriptions.Item>
 								</Descriptions>
-							) : null}
+							)}
 
-							<Form afterAddNew={setCurrentStep} getData={getData} yearSelect={yearSelect} />
+							<Form
+								afterAddNew={setCurrentStep}
+								getData={getData}
+								yearSelect={yearSelect}
+								themMoiHoanThanh={themMoiHoanThanh}
+							/>
 						</>
-					) : currentStep === 1 ? (
-						<DanhSachSinhVienQuyetDinh afterAddNew={setCurrentStep} />
-					) : currentStep === 2 ? (
+					)}
+
+					{currentStep === EQuyetDinhStep.DANH_SACH_SV && <DanhSachSinhVienQuyetDinh afterAddNew={setCurrentStep} />}
+
+					{currentStep === EQuyetDinhStep.DU_THAO_SO && (
 						<DuThaoSoVaoSoQuyetDinh afterAddNew={setCurrentStep} title={title} />
-					) : currentStep === 3 ? (
-						<PhuLucVanBangPage isQuyetDinh afterAddNew={setCurrentStep} title={title} />
-					) : null}
+					)}
+
+					{currentStep === EQuyetDinhStep.PHU_LUC && (
+						<PhuLucVanBangPage isQuyetDinh afterAddNew={setCurrentStep} title={title} themMoiHoanThanh />
+					)}
 				</Col>
 			</Row>
 		</Card>

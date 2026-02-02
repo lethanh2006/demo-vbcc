@@ -1,7 +1,7 @@
 import XacMinhVanBangPage from '.';
 
 const HoanThanhPage = () => {
-	return <XacMinhVanBangPage title='Yêu cầu xác minh hoàn thành' />;
+	return <XacMinhVanBangPage title='Yêu cầu hoàn thành' />;
 };
 
 export default HoanThanhPage;

@@ -5,7 +5,7 @@ import './style.less';
 import vi from './vi.json';
 
 const DonutChart = (props: DataChartType) => {
-	const { xAxis, yAxis, height, colors, formatY, showTotal, width, otherOptions } = props;
+	const { xAxis, yAxis, height, colors, formatY, showTotal, width, otherOptions, totalValue } = props;
 
 	const options = {
 		chart: {
@@ -46,7 +46,8 @@ const DonutChart = (props: DataChartType) => {
 							show: showTotal,
 							label: 'Tổng số',
 							formatter: (w: any) => {
-								const val = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
+								const val = totalValue ? totalValue : w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
+
 								return formatY ? formatY(val) : tienVietNam(val);
 							},
 						},

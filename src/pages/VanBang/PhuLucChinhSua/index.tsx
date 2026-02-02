@@ -8,11 +8,12 @@ import {
 	colorTrangThaiYeuCauVanBang,
 	ELoaiYeuCauVangBang,
 	ETrangThaiYeuCauVanBang,
+	nameLoaiYeuCauVangBang,
 } from '@/services/VanBang/LichSuVanBang/constant';
 import { LichSuVanBang } from '@/services/VanBang/LichSuVanBang/typing';
 import dayjs from '@/utils/dayjs';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { CheckOutlined, CloseOutlined, FileTextOutlined, ProfileOutlined } from '@ant-design/icons';
+import { Tabs, Tag } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
@@ -20,8 +21,9 @@ import ModalXuLyPhuLuc from './components/XuLy';
 
 const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đề xuất cấp lại' | 'Đề xuất thu hồi' }) => {
 	const { title } = props;
-	const { getModel, page, limit, handleView } = useModel('vbcc.lichsuvanbang');
+	const { getModel, page, limit, setRecord, handleView } = useModel('vbcc.lichsuvanbang');
 	const [visibleXuLy, setVisibleXuLy] = useState<boolean>(false);
+	const [activeKey, setActiveKey] = useState<string>('1');
 
 	const [trangThai, setTrangThai] = useState<{
 		title: string;
@@ -52,6 +54,24 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 				active: true,
 				field: 'loai',
 				values: [ELoaiYeuCauVangBang.THU_HOI],
+				operator: EOperatorType.INCLUDE,
+			});
+		}
+
+		if (activeKey === '1') {
+			filters.push({
+				active: true,
+				field: 'trangThai',
+				values: [ETrangThaiYeuCauVanBang.CHO_XAC_NHAN],
+				operator: EOperatorType.INCLUDE,
+			});
+		}
+
+		if (activeKey === '2') {
+			filters.push({
+				active: true,
+				field: 'trangThai',
+				values: [ETrangThaiYeuCauVanBang.DA_DUYET, ETrangThaiYeuCauVanBang.KHONG_DUYET],
 				operator: EOperatorType.INCLUDE,
 			});
 		}
@@ -102,6 +122,13 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
 		},
 		{
+			title: 'Ghi chú',
+			dataIndex: 'ghiChu',
+			width: 200,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			filterType: 'string',
+		},
+		{
 			title: 'Đề xuất',
 			dataIndex: 'loai',
 			align: 'center',
@@ -112,22 +139,25 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
 		},
 		{
-			title: 'Ghi chú',
-			dataIndex: 'ghiChu',
-			width: 200,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
-			filterType: 'string',
-		},
-		{
 			title: 'Trạng thái',
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => <Tag color={colorTrangThaiYeuCauVanBang[val as ETrangThaiYeuCauVanBang]}>{val}</Tag>,
+			render: (val, rec) => (
+				<Tag color={colorTrangThaiYeuCauVanBang[val as ETrangThaiYeuCauVanBang]}>
+					{nameLoaiYeuCauVangBang[val as ETrangThaiYeuCauVanBang]}
+				</Tag>
+			),
 			filterType: 'select',
-			filterData: Object.values(ETrangThaiYeuCauVanBang),
+			filterData: Object.values([ETrangThaiYeuCauVanBang.DA_DUYET, ETrangThaiYeuCauVanBang.KHONG_DUYET]).map(
+				(item) => ({
+					value: item,
+					label: nameLoaiYeuCauVangBang[item],
+				}),
+			),
 			fixed: 'right',
 			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
+			hide: activeKey === '1',
 		},
 		{
 			title: 'Thao tác',
@@ -142,25 +172,27 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 						<ButtonExtend
 							disabled={!isChoXacNhan}
 							onClick={() => {
-								setTrangThai({ title: 'Chấp nhận yêu cầu', trangThai: ETrangThaiYeuCauVanBang.DA_DUYET });
+								setRecord(rec);
+								setTrangThai({ title: 'Chấp nhận đề xuất', trangThai: ETrangThaiYeuCauVanBang.DA_DUYET });
 								setVisibleXuLy(true);
 							}}
 							tooltip='Chấp nhận'
 							className='btn-success'
 							type='link'
-							icon={<CheckCircleOutlined />}
+							icon={<CheckOutlined />}
 						/>
 
 						<ButtonExtend
 							disabled={!isChoXacNhan}
 							onClick={() => {
-								setTrangThai({ title: 'Từ chối yêu cầu', trangThai: ETrangThaiYeuCauVanBang.KHONG_DUYET });
+								setRecord(rec);
+								setTrangThai({ title: 'Từ chối đề xuất', trangThai: ETrangThaiYeuCauVanBang.KHONG_DUYET });
 								setVisibleXuLy(true);
 							}}
 							tooltip='Từ chối'
 							danger
 							type='link'
-							icon={<CloseCircleOutlined />}
+							icon={<CloseOutlined />}
 						/>
 					</>
 				);
@@ -173,17 +205,23 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, title]}
+				dependencies={[page, limit, title, activeKey]}
 				modelName='vbcc.lichsuvanbang'
 				title={title}
 				buttons={{
 					create: false,
 				}}
 				Form={Form}
+				formProps={{ getData }}
 				widthDrawer={1200}
 				modalTitle='Chi tiết thông tin thay đổi'
 				showModalTitle
-			/>
+			>
+				<Tabs accessKey={activeKey} onChange={(tab) => setActiveKey(tab)}>
+					<Tabs.TabPane key={'1'} tab={'Chưa xử lý'} icon={<FileTextOutlined />} />
+					<Tabs.TabPane key={'2'} tab={'Lịch sử xử lý'} icon={<ProfileOutlined />} />
+				</Tabs>
+			</TableBase>
 
 			<ModalXuLyPhuLuc
 				visible={visibleXuLy}

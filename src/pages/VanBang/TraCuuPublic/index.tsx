@@ -98,8 +98,8 @@ const TraCuuVanBangPublic = () => {
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='maSinhVien' label={<strong>Mã sinh viên</strong>}>
-										<Input placeholder='Nhập mã sinh viên' size='large' />
+									<Form.Item name='maSinhVien' label={<strong>Mã người học</strong>}>
+										<Input placeholder='Nhập mã người học' size='large' />
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>

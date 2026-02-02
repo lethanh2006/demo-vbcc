@@ -23,6 +23,11 @@ declare module QuyetDinhTotNghiep {
 		idFileMau: string;
 		maDonVi: string;
 
+		soLuong: number;
+		soVaoSoHienTai: number;
+		soVaoSoBatDau: number;
+		soVaoSoKetThuc: number;
+
 		soVaoSoHienTai: number;
 		ruleSortPhuLuc: string[];
 		ghiChuChinhSua: string;
@@ -40,5 +45,11 @@ declare module QuyetDinhTotNghiep {
 		};
 
 		dotCapBangId: string | null;
+	}
+
+	export interface IThongKeQuyetDinh {
+		soLuongQuyetDinh: string;
+		soLuongVanBang: string;
+		trangThai: string;
 	}
 }

@@ -1,7 +1,9 @@
 import { ETrangThaiYeuCauVanBang } from '@/services/VanBang/LichSuVanBang/constant';
 import dayjs from '@/utils/dayjs';
+import { resetFieldsForm } from '@/utils/utils';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row } from 'antd';
+import { useEffect } from 'react';
 import { useModel } from 'umi';
 
 const ModalXuLyPhuLuc = (props: {
@@ -13,7 +15,15 @@ const ModalXuLyPhuLuc = (props: {
 }) => {
 	const { visible, setVisible, title, trangThai, getData } = props;
 	const [form] = Form.useForm();
-	const { record, formSubmiting, xuLyYauCauVanBangModel } = useModel('vbcc.lichsuvanbang');
+	const { record, formSubmiting, setVisibleForm, xuLyYauCauVanBangModel } = useModel('vbcc.lichsuvanbang');
+
+	useEffect(() => {
+		if (!visible) {
+			resetFieldsForm(form);
+		} else if (record?._id) {
+			form.setFieldsValue(record);
+		}
+	}, [record?._id, visible]);
 
 	const onFinish = async (values: any) => {
 		xuLyYauCauVanBangModel(
@@ -24,7 +34,10 @@ const ModalXuLyPhuLuc = (props: {
 				ghiChu: values.ghiChu,
 			},
 			getData,
-		);
+		).then(() => {
+			setVisible(false);
+			setVisibleForm(false);
+		});
 	};
 
 	return (
@@ -46,8 +59,8 @@ const ModalXuLyPhuLuc = (props: {
 				</div>
 				<div>
 					{trangThai === ETrangThaiYeuCauVanBang.DA_DUYET
-						? 'Xác nhận chấp nhận đề xuất xử lý cấp bằng tốt nghiệp !'
-						: 'Xác nhận từ chối đề xuất xử lý cấp bằng tốt nghiệp !'}
+						? `Chấp nhận đề xuất ${record?.loai.toLocaleLowerCase()} văn bằng !`
+						: `Từ chối đề xuất ${record?.loai.toLocaleLowerCase()} văn bằng !`}
 				</div>
 			</div>
 
@@ -62,7 +75,7 @@ const ModalXuLyPhuLuc = (props: {
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Lưu lại
+						Xác nhận
 					</Button>
 					<Button onClick={() => setVisible(false)}>Hủy</Button>
 				</div>

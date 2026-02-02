@@ -1,7 +1,7 @@
 import type { BieuMauPhuLuc } from '../BieuMauPhuLuc/typing';
 import { DotCapBangTotNghiep } from '../DotCapBangTotNghiep/typing';
 import type { QuyetDinhTotNghiep } from '../QuyetDinh/typing';
-import type { ELoaiYeuCauChinhSuaVanBang, ETrangThaiBlockchain } from '../constant';
+import type { ELoaiYeuCauChinhSuaVanBang, ETrangThaiBlockchain, ETrangThaiTotNghiep } from '../constant';
 
 declare module PhuLucVanBang {
 	export interface IRecord {
@@ -24,6 +24,16 @@ declare module PhuLucVanBang {
 		tenDeTai: string;
 		nguoiHuongDan: string;
 		moTaDeTai: string;
+		hinhThucDaoTao: string;
+		thongTinHinhThucDaoTao: HinhThucDaoTao.IRecord;
+		trinhDoDaoTao: string;
+		thongTinTrinhDoDaoTao: TrinhDoDaoTao.IRecord;
+		nganhDaoTao: string;
+		thongTinNganhDaoTao: NganhDaoTao.IRecord;
+		namTotNghiep: string;
+		cmtCccd: string;
+		gioiTinh: string;
+		quocTich: string;
 
 		// historyId?: string;
 		urlIpfs?: string | null;
@@ -35,10 +45,11 @@ declare module PhuLucVanBang {
 
 		// Cấp bằng
 		idDotCapBang?: string | null;
-		ngayCapPhuLuc?: Date | string;
+		ngayCapPhuLuc?: Date | string | null;
 		ghiChu: string;
 		ghiChuCapBang?: string;
 		bieuMau: BieuMauPhuLuc.IRecord;
+		trangThai: ETrangThaiTotNghiep;
 
 		createdAt?: string;
 		updatedAt?: string;
@@ -75,6 +86,7 @@ declare module PhuLucVanBang {
 		uploaded?: boolean;
 		message?: string;
 		status?: string;
+		soThuTuImport?: number;
 	}
 
 	export type TUploadFolder = Pick<IRecord, 'urlIpfs' | 'idVanBangIPFS'> & {
@@ -106,13 +118,47 @@ declare module PhuLucVanBang {
 		tongSoDaKy: number;
 		tongSoDaDuaLenBlockchain: number;
 		soLuotTraCuu: number;
+		soLuongXacMinh: number;
+		soLuongCapLai: number;
+		soLuongCapNhat: number;
+		soLuongThuHoi: number;
+		choLayBang: number;
+		daCapBang: number;
+
+		//Xác minh văn bằng
+		soXacMinhYeuCau: number;
+		soPLXacMinhVanBang: number;
+		soPLCongVanPhucDap: number;
+		soPLTraKetQua: number;
+		soPLHoanThanh: number;
+
 		soPhuLucTheoDotTN: TThongKeTraCuu[];
+		soPhuLucTheoTrinhDo: TThongKeTrinhDoDaoTao[];
 	};
 
 	export type TThongKeTraCuu = {
 		ten: string;
 		soLuongPhuLuc: number;
 		soLuotTraCuuThanhCong: number;
+		soQuyetDinh: string;
+		choCapBang: number;
+		daCapBang: number;
+		tongSo: number;
+	};
+
+	export type TThongKeTrinhDoDaoTao = {
+		ma: string;
+		soLuotTraCuu: number;
+		soPhuLucChoCapBang: number;
+		soPhuLucDaCapBang: number;
+		ten: string;
+		tongSoPhuLuc: number;
+	};
+
+	export type TTongHopNam = {
+		soLuongCapMoiVanBang: number;
+		soLuongDuocPhat: number;
+		thang: number;
 	};
 
 	export interface IChiTietTraCuu {
@@ -132,5 +178,16 @@ declare module PhuLucVanBang {
 			value: string;
 			error: string;
 		};
+	}
+
+	export interface IThongKePhuLucTheoNam {
+		nam: number;
+		thongKeHinhThucDaoTao: IThongKePhuLucTheoNamItem[];
+		thongKeNganhDaoTao: IThongKePhuLucTheoNamItem[];
+		thongKeTrinhDoDaoTao: IThongKePhuLucTheoNamItem[];
+	}
+	export interface IThongKePhuLucTheoNamItem {
+		ten: string;
+		soLuong: number;
 	}
 }

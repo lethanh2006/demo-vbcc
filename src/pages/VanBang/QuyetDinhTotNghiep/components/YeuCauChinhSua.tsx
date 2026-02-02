@@ -37,7 +37,7 @@ const ModalYeuCauChinhSua = (props: { visible: boolean; setVisible: (val: boolea
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
 						<Form.Item name='ghiChuChinhSua' label='Ghi chú' rules={[...rules.required, ...rules.text]}>
-							<Input.TextArea rows={3} placeholder='Nhập tên đợt cấp bằng' />
+							<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
 						</Form.Item>
 					</Col>
 				</Row>

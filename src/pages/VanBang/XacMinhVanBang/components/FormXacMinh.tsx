@@ -35,6 +35,7 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 			putModel(record?._id ?? '', values, undefined, undefined, false)
 				.then((rec) => {
 					setRecord({ ...record, ...rec });
+					if (afterAddNew) afterAddNew(1);
 				})
 				.catch((err) => console.log(err));
 		} else {
@@ -42,6 +43,7 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);
+					if (afterAddNew) afterAddNew(1);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -52,7 +54,7 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 			<Row gutter={[12, 0]}>
 				<Col span={24}>
 					<Divider style={{ fontSize: 15 }} orientation='left'>
-						Thông tin người tra cứu
+						Thông tin yêu cầu xác minh
 					</Divider>
 				</Col>
 				<Col span={24} md={12}>
@@ -103,7 +105,8 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 								value: item,
 								label: item,
 							}))}
-							disabled={isHoanThanh}
+							disabled
+							// ={isHoanThanh}
 						/>
 					</Form.Item>
 				</Col>
@@ -117,7 +120,7 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 					icon={!edit ? <PlusCircleOutlined /> : <SaveOutlined />}
 					disabled={isHoanThanh}
 				>
-					{!edit ? 'Thêm mới xác minh' : 'Lưu lại xác minh'}
+					{!edit ? 'Thêm mới yêu cầu' : 'Lưu lại yêu cầu'}
 				</Button>
 
 				<Button

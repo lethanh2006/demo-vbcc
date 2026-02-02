@@ -12,7 +12,11 @@ declare module LichSuVanBang {
 		ghiChu: string;
 		thoiGianYeuCau: Date;
 		thoiGianXacNhan: Date;
-		nguoiKy: any;
+		nguoiKy: {
+			hoTen: string;
+			maCanBo: string;
+			ssoId: string;
+		};
 		thongTinPhuLucTruocKhiChinhSua: PhuLucVanBang.IRecord;
 		createdAt: Date;
 		updatedAt: Date;

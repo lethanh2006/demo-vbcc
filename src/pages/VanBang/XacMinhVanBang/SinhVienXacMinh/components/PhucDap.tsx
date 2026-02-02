@@ -1,4 +1,3 @@
-import TinyEditor from '@/components/TinyEditor';
 import UploadFile from '@/components/Upload/UploadFile';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
@@ -43,23 +42,24 @@ const ModalPhucDap = (props: {
 					<Col span={24}>
 						<ChiTietSinhVienXacMinh />
 					</Col>
-					{isKetQua ? (
-						<Col span={24}>
-							<Form.Item name='urlPhanHoi' label='File phúc đáp' rules={[...rules.required]}>
-								<UploadFile />
-							</Form.Item>
-						</Col>
-					) : (
-						<Col span={24}>
-							<Form.Item
-								name='ghiChuKetQuaPhucDap'
-								label='Nội dung phúc đáp'
-								rules={isKetQua ? [] : [...rules.required, ...rules.text]}
-							>
-								<TinyEditor hideMenubar miniToolbar stickyToolbar={false} disabled={isKetQua} />
-							</Form.Item>
-						</Col>
-					)}
+					{
+						isKetQua ? (
+							<Col span={24}>
+								<Form.Item name='urlPhanHoi' label='File phúc đáp' rules={[...rules.required]}>
+									<UploadFile />
+								</Form.Item>
+							</Col>
+						) : null
+						// <Col span={24}>
+						// 	<Form.Item
+						// 		name='ghiChuKetQuaPhucDap'
+						// 		label='Nội dung phúc đáp'
+						// 		rules={isKetQua ? [] : [...rules.required, ...rules.text]}
+						// 	>
+						// 		<TinyEditor hideMenubar miniToolbar stickyToolbar={false} disabled={isKetQua} />
+						// 	</Form.Item>
+						// </Col>
+					}
 				</Row>
 
 				<div className='form-footer'>

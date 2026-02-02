@@ -17,7 +17,11 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) form.setFieldsValue(record);
+		else if (record?._id)
+			form.setFieldsValue({
+				...record,
+				listIdFileBieuMau: record?.listIdFileBieuMau ?? [],
+			});
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: BieuMauPhuLuc.IRecord) => {

@@ -1,6 +1,5 @@
 import MyDatePicker from '@/components/MyDatePicker';
-import SelectHinhThuc from '@/pages/DaoTao/CoSo/HinhThucDaoTao/components/Select';
-import SelectTrinhDo from '@/pages/DaoTao/CoSo/TrinhDo/components/Select';
+import SelectTrinhDoDaoTao from '@/pages/DanhMuc/TrinhDoTaoTao/components/Select';
 import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
@@ -9,12 +8,20 @@ import { Button, Col, Form, Input, InputNumber, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
+const TRINH_DO_VIET_TAT: Record<string, string> = {
+	'Trung cấp': 'TC',
+	'Cao đẳng': 'CD',
+	'Đại học': 'DH',
+	'Thạc sĩ': 'ThS',
+	'Tiến sĩ': 'TS',
+};
+
 const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
-	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } = useModel('vbcc.sovanbang');
+	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, isView } =
+		useModel('vbcc.sovanbang');
 
 	// Dùng để lấy danh sách trình độ và hình thức đào tạo từ model khác
-	const { danhSach: dsTrinhDo } = useModel('daotao.trinhdo');
-	const { danhSach: dsHinhThuc } = useModel('daotao.hinhthucdaotao');
+	const { danhSach: dsTrinhDo } = useModel('danhmuc.trinhdodaotao');
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const soVaoSoHienTai = Form.useWatch('soVaoSoHienTai', form);
@@ -30,33 +37,41 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		}
 
 		if (!record?._id) {
-			const trinhDo = dsTrinhDo?.find((x) => x.ma === String(APP_CONFIG_INIT_TRINH_DO));
-			const hinhThuc = dsHinhThuc?.find((x) => x.ma === String(APP_CONFIG_INIT_HINH_THUC));
+			const trinhDo = dsTrinhDo?.[0];
+			const year = dayjs().format('YYYY');
+			const vietTat = trinhDo ? TRINH_DO_VIET_TAT[trinhDo.ten] || '' : '';
+
 			form.setFieldsValue({
 				namHanhChinh: dayjs(),
-				maTrinhDoDaoTao: APP_CONFIG_INIT_TRINH_DO,
-				maHinhThucDaoTao: APP_CONFIG_INIT_HINH_THUC,
-				ten: `Sổ văn bằng ${trinhDo?.ten} - ${hinhThuc?.ten} năm ${dayjs().format('YYYY')}`,
+				ten: `Sổ văn bằng ${trinhDo?.ten ?? ''} năm ${year}`,
 				soVaoSoHienTai: 0,
+				soChuSoVaoSo: 4,
+				soVaoSoFormat: `{soVaoSo}/${year}/${vietTat}`,
+				bookEntryNumberFormat: `{soVaoSo}/${year}/${vietTat}`,
 			});
 		}
-	}, [record?._id, visibleForm, dsTrinhDo?.length, dsHinhThuc?.length]);
+	}, [record?._id, visibleForm, dsTrinhDo?.length]);
 
 	const appendFormat = (format: string) => {
 		if (!format) return '';
+
 		const nextNumber = String((soVaoSoHienTai ?? 0) + 1).padStart(soChuSoVaoSo || 0, '0');
-		return format.replace('{soVaoSo}', nextNumber);
+		const year = dayjs(form.getFieldValue('namHanhChinh')).format('YYYY');
+
+		const maTrinhDo = String(form.getFieldValue('maTrinhDoDaoTao') || '');
+		const trinhDo = dsTrinhDo.find((x) => x.ma === maTrinhDo);
+		const vietTat = trinhDo ? TRINH_DO_VIET_TAT[trinhDo.ten] || '' : '';
+
+		return format.replace('{soVaoSo}', nextNumber).replace('{nam}', year).replace('{trinhDo}', vietTat);
 	};
 
 	const onFinish = async (values: SoVanBang.IRecord) => {
 		const trinhDo = dsTrinhDo.find((x) => x.ma === values?.maTrinhDoDaoTao);
-		const hinhThuc = dsHinhThuc.find((x) => x.ma === values?.maHinhThucDaoTao);
 
 		const submitData = {
 			...values,
 			namHanhChinh: dayjs(values.namHanhChinh).format('YYYY'),
 			tenTrinhDoDaoTao: trinhDo?.ten,
-			tenHinhThucDaoTao: hinhThuc?.ten,
 			ruleSortPhuLuc: String(values.ruleSortPhuLuc)
 				.split(',')
 				.map((x) => x.trim())
@@ -71,32 +86,47 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 	};
 
 	const handleValuesChange = (changedValues: any, allValues: any) => {
-		const { namHanhChinh, maTrinhDoDaoTao, maHinhThucDaoTao } = allValues;
+		if (edit) return;
 
-		if (!edit) {
-			const isRelevantChange = Object.keys(changedValues).some((key) =>
-				['namHanhChinh', 'maTrinhDoDaoTao', 'maHinhThucDaoTao'].includes(key),
-			);
+		const { namHanhChinh, maTrinhDoDaoTao } = allValues;
 
-			if (isRelevantChange) {
-				const year = dayjs(namHanhChinh).format('YYYY');
-				const maTrinhDo = String(maTrinhDoDaoTao || '');
-				const maHinhThuc = String(maHinhThucDaoTao || '');
+		const isRelevantChange = Object.keys(changedValues).some((key) =>
+			['namHanhChinh', 'maTrinhDoDaoTao'].includes(key),
+		);
 
-				const trinhDo = dsTrinhDo.find((x) => x.ma === maTrinhDo);
-				const hinhThuc = dsHinhThuc.find((x) => x.ma === maHinhThuc);
+		if (!isRelevantChange) return;
 
-				if (year && trinhDo?.ten && hinhThuc?.ten) {
-					const tenSo = `Sổ văn bằng ${trinhDo.ten} - ${hinhThuc.ten} năm ${year}`;
+		const year = dayjs(namHanhChinh).format('YYYY');
+		const maTrinhDo = String(maTrinhDoDaoTao || '');
+		const trinhDo = dsTrinhDo.find((x) => x.ma === maTrinhDo);
+		const vietTat = trinhDo ? TRINH_DO_VIET_TAT[trinhDo.ten] || '' : '';
 
-					const currentTen = form.getFieldValue('ten') || '';
-					const shouldUpdate = !currentTen || currentTen.startsWith('Sổ văn bằng');
+		if (year && trinhDo?.ten) {
+			const tenSo = `Sổ văn bằng ${trinhDo.ten} năm ${year}`;
+			const currentTen = form.getFieldValue('ten') || '';
 
-					if (shouldUpdate) {
-						form.setFieldsValue({ ten: tenSo });
-					}
-				}
+			if (!currentTen || currentTen.startsWith('Sổ văn bằng')) {
+				form.setFieldsValue({ ten: tenSo });
 			}
+		}
+
+		const suggestedFormat = `{soVaoSo}/${year}/${vietTat}`;
+
+		const currentFormat = form.getFieldValue('soVaoSoFormat') || '';
+		const currentBookFormat = form.getFieldValue('bookEntryNumberFormat') || '';
+
+		const updateValues: any = {};
+
+		if (!currentFormat || currentFormat.startsWith('{soVaoSo}/')) {
+			updateValues.soVaoSoFormat = suggestedFormat;
+		}
+
+		if (!currentBookFormat || currentBookFormat.startsWith('{soVaoSo}/')) {
+			updateValues.bookEntryNumberFormat = suggestedFormat;
+		}
+
+		if (Object.keys(updateValues).length) {
+			form.setFieldsValue(updateValues);
 		}
 	};
 
@@ -105,17 +135,12 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col span={24} md={12}>
 					<Form.Item name='namHanhChinh' label='Năm hành chính' rules={[...rules.required]}>
-						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' />
+						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' disabled={isView} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item name='maTrinhDoDaoTao' label='Trình độ đào tạo' rules={[...rules.required]}>
-						<SelectTrinhDo selectMa />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item name='maHinhThucDaoTao' label='Hình thức đào tạo' rules={[...rules.required]}>
-						<SelectHinhThuc selectMa hideAll />
+						<SelectTrinhDoDaoTao selectMa disabled={isView} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
@@ -124,57 +149,54 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						label='Tên sổ văn bằng'
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
-						<Input placeholder='Nhập tên sổ' />
+						<Input placeholder='Nhập tên sổ' disabled={isView} />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
 					<Form.Item name='soVaoSoHienTai' label='Số vào sổ hiện tại' rules={[...rules.required]}>
-						<InputNumber style={{ width: '100%' }} placeholder='Nhập số vào sổ hiện tại' />
+						<InputNumber min={1} style={{ width: '100%' }} placeholder='Nhập số vào sổ hiện tại' disabled={isView} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item name='soChuSoVaoSo' label='Số chữ số vào sổ' rules={[...rules.required]}>
-						<InputNumber style={{ width: '100%' }} placeholder='Nhập số chữ số vào sổ' />
+						<InputNumber min={1} style={{ width: '100%' }} placeholder='Nhập số chữ số vào sổ' disabled={isView} />
 					</Form.Item>
 				</Col>
-				<Col span={24} md={12}>
-					<Form.Item
-						name='soVaoSoFormat'
-						label='Định dạng số vào sổ'
-						extra={
-							<div>
-								<i style={{ color: '#888' }}>Ví dụ: TS25/{'{soVaoSo}'}</i>
-								{soVaoSoFormat && (
-									<div style={{ color: '#888', marginTop: 4 }}>
-										Số vào sổ tiếp theo là: <b>{appendFormat(soVaoSoFormat)}</b>
-									</div>
-								)}
-							</div>
-						}
-						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
-					>
-						<Input placeholder='VD: TS25/{soVaoSo}' />
-					</Form.Item>
-				</Col>
-				<Col span={24} md={12}>
-					<Form.Item
-						name='bookEntryNumberFormat'
-						label='Định dạng số vào sổ (Tiếng Anh)'
-						extra={
-							<div>
-								<i style={{ color: '#888' }}>Ví dụ: TS25/{'{soVaoSo}'}</i>
-								{bookEntryNumberFormat && (
-									<div style={{ color: '#888', marginTop: 4 }}>
-										Số vào sổ tiếp theo là: <b>{appendFormat(bookEntryNumberFormat)}</b>
-									</div>
-								)}
-							</div>
-						}
-						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
-					>
-						<Input placeholder='VD: TS25/{soVaoSo}' />
-					</Form.Item>
+				<Col span={24}>
+					<Row gutter={[12, 12]}>
+						<Col span={24} md={12}>
+							<Form.Item
+								name='soVaoSoFormat'
+								label='Định dạng số vào sổ'
+								extra={
+									soVaoSoFormat && (
+										<div style={{ color: '#888' }}>
+											Số vào sổ tiếp theo: <b>{appendFormat(soVaoSoFormat)}</b>
+										</div>
+									)
+								}
+								rules={[...rules.required]}
+							>
+								<Input placeholder='VD: {soVaoSo}/2026/DH' disabled={isView} />
+							</Form.Item>
+						</Col>
+						<Col span={24} md={12}>
+							<Form.Item
+								name='bookEntryNumberFormat'
+								label='Định dạng số vào sổ (Tiếng Anh)'
+								extra={
+									bookEntryNumberFormat && (
+										<div style={{ color: '#888' }}>
+											Số vào sổ tiếp theo: <b>{appendFormat(bookEntryNumberFormat)}</b>
+										</div>
+									)
+								}
+							>
+								<Input placeholder='VD: {soVaoSo}/2026/DH' disabled={isView} />
+							</Form.Item>
+						</Col>
+					</Row>
 				</Col>
 				{/* <Col span={24}>
 					<Form.Item name='ruleSortPhuLuc' label='Quy tắc sắp xếp phụ lục sinh số vào sổ' rules={[...rules.required]}>
@@ -184,17 +206,19 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 
 				<Col span={24}>
 					<Form.Item name='moTa' label='Mô tả' rules={[...rules.text, ...rules.length(200)]}>
-						<Input.TextArea placeholder='Nhập mô tả' style={{ width: '100%' }} />
+						<Input.TextArea placeholder='Nhập mô tả' style={{ width: '100%' }} disabled={isView} />
 					</Form.Item>
 				</Col>
 			</Row>
 
 			<div className='form-footer'>
-				<Button loading={formSubmiting} htmlType='submit' type='primary'>
-					{!edit
-						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
-						: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
-				</Button>
+				{!isView && (
+					<Button loading={formSubmiting} htmlType='submit' type='primary'>
+						{!edit
+							? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
+							: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+					</Button>
+				)}
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Form>

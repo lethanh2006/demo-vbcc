@@ -1,5 +1,6 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
+import { ELoaiThongTinUpdate } from '../constant';
 
 export async function getImportPhuLucVbTemplate(quyetDinhId: string, params?: any) {
 	return axios.get(`${ip3}/phu-luc-van-bang-import/import-template/quyet-dinh/${quyetDinhId}`, {
@@ -14,9 +15,17 @@ export async function getImportPhuLucVbTemplate(quyetDinhId: string, params?: an
 // 	});
 // }
 
-export async function importPhuLucVanBang(payload: { quyetDinhId: string; file: Blob }, params?: any) {
+export async function importPhuLucVanBang(
+	payload: { quyetDinhId: string; file: Blob; loaiThongTin?: ELoaiThongTinUpdate },
+	params?: any,
+) {
 	const form = new FormData();
 	form.append('file', payload.file);
+
+	if (!!payload.loaiThongTin) {
+		form.append('loaiThongTin', payload.loaiThongTin);
+	}
+
 	return axios.post(`${ip3}/phu-luc-van-bang-import/import/insert/quyet-dinh/${payload.quyetDinhId}`, form, {
 		params,
 	});
@@ -29,9 +38,21 @@ export async function putUpdateIpfs(idQuyetDinh: string, update: any[]) {
 	});
 }
 
-export const getThongKeTong = (nam: string, idSoVanBang: string, isDonVi: boolean) => {
-	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke-tong${isDonVi ? '/don-vi' : ''}`, {
-		params: { nam, idSoVanBang },
+export const getThongKeTong = (nam: string, condition?: any, filters?: any[]) => {
+	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke/nam/${nam}`, {
+		params: { condition, filters },
+	});
+};
+
+export const getThongKeCapPhatVangBang = (nam: string, condition?: any, filters?: any[]) => {
+	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke-tong/nam/${nam}`, {
+		params: { condition, filters },
+	});
+};
+
+export const getThongKeXacMinhVanBang = (nam: string, condition?: any, filters?: any[]) => {
+	return axios.get(`${ip3}/xac-minh-van-bang/thong-ke/nam/${nam}`, {
+		params: { condition, filters },
 	});
 };
 
@@ -130,4 +151,25 @@ export async function getExportDanhSachPhuLuc(idDotCapBang: string) {
 
 export async function yeuCauCapNhatVanBang(idVanBang: string, payLoad: any) {
 	return axios.post(`${ip3}/phu-luc-van-bang/${idVanBang}/yeu-cau-cap-nhat`, payLoad);
+}
+
+export async function validateHoanThanh(idQuyetDinh: string) {
+	return axios.get(`${ip3}/phu-luc-van-bang/quyet-dinh/${idQuyetDinh}/validate-finish`);
+}
+
+export async function thongKePhuLucTheoNam(condition?: any, filters?: any[]) {
+	return axios.get(`${ip3}/phu-luc-van-bang/thong-ke-phu-luc-theo-nam`, {
+		params: { condition, filters },
+	});
+}
+
+export async function xuatVanBangQuyetDinh(idQuyetDinh: string, otherParams?: any) {
+	return axios.get(`${ip3}/phu-luc-van-bang/export/thong-tin-van-bang/quyet-dinh/${idQuyetDinh}`, {
+		params: otherParams,
+		responseType: 'arraybuffer',
+	});
+}
+
+export async function capPhatVanBang(idVanBang: string, payLoad: any) {
+	return axios.put(`${ip3}/phu-luc-van-bang/${idVanBang}/cap-bang`, payLoad);
 }

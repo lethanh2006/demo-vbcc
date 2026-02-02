@@ -1,7 +1,10 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
-import { ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
+import SelectHinhThucDaoTao from '@/pages/DanhMuc/HinhThucDaoTao/components/Select';
+import SelectNganhDaoTao from '@/pages/DanhMuc/NganhDaoTao/components/Select';
+import SelectTrinhDoDaoTao from '@/pages/DanhMuc/TrinhDoTaoTao/components/Select';
+import { EQuyetDinhStep, ETrangThaiQuyetDinhTotNghiep } from '@/services/VanBang/constant';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
 import { ArrowLeftOutlined, ArrowRightOutlined, DeleteOutlined, EditOutlined, ImportOutlined } from '@ant-design/icons';
@@ -12,7 +15,7 @@ import ModalImportPhuLucVanBang from '../../PhuLuc/components/ModalImportPhuLuc'
 import ViewPhuLucVanBang from '../../PhuLuc/components/ViewRender';
 import Form from './components/Form';
 
-const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void }) => {
+const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) => void }) => {
 	const { afterAddNew } = props;
 	const intl = useIntl();
 	const { record: recQuyetDinh, setVisibleForm } = useModel('vbcc.quyetdinhtotnghiep');
@@ -26,7 +29,9 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void 
 
 	const getData = () => {
 		if (recQuyetDinh?._id) {
-			getModel({ idQuyetDinh: recQuyetDinh._id });
+			getModel({ idQuyetDinh: recQuyetDinh._id }, undefined, {
+				soThuTuImport: 1,
+			});
 		}
 	};
 
@@ -37,7 +42,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void 
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
-			title: 'Mã sinh viên',
+			title: 'Mã người học',
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			width: 120,
@@ -60,6 +65,40 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void 
 			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Cccd',
+			dataIndex: 'cmtCccd',
+			width: 120,
+			filterType: 'string',
+			onCell,
+		},
+		{
+			title: 'Trình độ đào tạo',
+			dataIndex: 'trinhDoDaoTao',
+			width: 140,
+			render: (val, rec) => rec?.thongTinTrinhDoDaoTao?.ten ?? val,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectTrinhDoDaoTao selectMa multiple />,
+			onCell,
+		},
+		{
+			title: 'Hình thức đào tạo',
+			dataIndex: 'hinhThucDaoTao',
+			width: 150,
+			render: (val, rec) => rec?.thongTinHinhThucDaoTao?.ten ?? val,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectHinhThucDaoTao selectMa multiple />,
+			onCell,
+		},
+		{
+			title: 'Ngành đào tạo',
+			dataIndex: 'nganhDaoTao',
+			width: 140,
+			render: (val, rec) => rec?.thongTinNganhDaoTao?.ten ?? val,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectNganhDaoTao selectMa multiple />,
 			onCell,
 		},
 		{
@@ -120,7 +159,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void 
 			<div className='form-footer'>
 				<Button
 					onClick={() => {
-						if (afterAddNew) afterAddNew(0);
+						if (afterAddNew) afterAddNew(EQuyetDinhStep.THONG_TIN);
 					}}
 					icon={<ArrowLeftOutlined />}
 				>
@@ -128,7 +167,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void 
 				</Button>
 				<Button
 					onClick={() => {
-						if (afterAddNew) afterAddNew(2);
+						if (afterAddNew) afterAddNew(EQuyetDinhStep.DU_THAO_SO);
 					}}
 					icon={<ArrowRightOutlined />}
 				>
@@ -146,6 +185,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: number) => void 
 				}}
 				params={{
 					importSinhVien: '1',
+					sort: { soThuTuImport: 1 },
 				}}
 			/>
 		</>

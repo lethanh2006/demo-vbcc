@@ -40,7 +40,11 @@ export const defaultChuanDauRaColumns: { headerName: string; type: ELoaiDuLieuBi
 export const defaultElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Họ tên', type: ELoaiDuLieuBieuMau.Text, isRequired: true },
 	{ headerName: 'Ngày sinh', type: ELoaiDuLieuBieuMau.Date, isRequired: true },
-	{ headerName: 'Mã sinh viên', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Mã người học', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Trình độ đào tạo', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Hình thức đào tạo', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Ngành đào tạo', type: ELoaiDuLieuBieuMau.Text },
+	{ headerName: 'Số CMND/CCCD', type: ELoaiDuLieuBieuMau.Text },
 ];
 
 export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
@@ -51,12 +55,12 @@ export const allowElementBieuMau: BieuMauPhuLuc.TElement[] = [
 	{ headerName: 'Quốc tịch', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Tôn giáo', type: ELoaiDuLieuBieuMau.Text },
 
-	{ headerName: 'Trình độ đào tạo', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Ngành', type: ELoaiDuLieuBieuMau.Text },
+	// { headerName: 'Trình độ đào tạo', type: ELoaiDuLieuBieuMau.Text },
+	// { headerName: 'Ngành', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Ngành (Tiếng anh)', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Chuyên ngành', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Lớp', type: ELoaiDuLieuBieuMau.Text },
-	{ headerName: 'Hình thức đào tạo', type: ELoaiDuLieuBieuMau.Text },
+	// { headerName: 'Hình thức đào tạo', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Tính chất CTĐT', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Ngôn ngữ đào tạo', type: ELoaiDuLieuBieuMau.Text },
 	{ headerName: 'Khóa', type: ELoaiDuLieuBieuMau.Text },
@@ -179,7 +183,7 @@ export enum ETrangThaiQuyetDinhTotNghiep {
 
 export const nameTrangThaiQuyetDinhTotNghiep: Record<ETrangThaiQuyetDinhTotNghiep, string> = {
 	[ETrangThaiQuyetDinhTotNghiep.DU_THAO]: 'Dự thảo',
-	[ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO]: 'Trình dự thảo',
+	[ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO]: 'Chờ duyệt',
 	[ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA]: 'Yêu cầu chỉnh sửa',
 	[ETrangThaiQuyetDinhTotNghiep.CHINH_THUC]: 'Đã duyệt',
 	[ETrangThaiQuyetDinhTotNghiep.HOAN_THANH]: 'Hoàn thành',
@@ -207,6 +211,14 @@ export enum EPhaseXacMinh {
 	HOAN_THANH = 'Hoàn thành',
 }
 
+export const nameTrangThaiXacMinh: Record<EPhaseXacMinh, string> = {
+	[EPhaseXacMinh.YEU_CAU]: 'Đang xử lý',
+	[EPhaseXacMinh.XAC_MINH]: 'Xác minh văn bằng',
+	[EPhaseXacMinh.PHUC_DAP]: 'Chuẩn bị công văn',
+	[EPhaseXacMinh.KET_QUA]: 'Xử lý công văn',
+	[EPhaseXacMinh.HOAN_THANH]: 'Hoàn thành',
+};
+
 export const colorTrangThaiXacMinh: Record<EPhaseXacMinh, ETagColor> = {
 	[EPhaseXacMinh.YEU_CAU]: ETagColor.ORANGE,
 	[EPhaseXacMinh.XAC_MINH]: ETagColor.BLUE,
@@ -214,3 +226,37 @@ export const colorTrangThaiXacMinh: Record<EPhaseXacMinh, ETagColor> = {
 	[EPhaseXacMinh.KET_QUA]: ETagColor.GREEN,
 	[EPhaseXacMinh.HOAN_THANH]: ETagColor.GREEN,
 };
+
+export enum ETrangThaiCapBang {
+	CHO_CAP_BANG = 'Chờ cấp bằng',
+	DA_CAP_BANG = 'Đã cấp bằng',
+}
+
+export const nameTrangThaiTotNghiep: Record<ETrangThaiCapBang, string> = {
+	[ETrangThaiCapBang.CHO_CAP_BANG]: 'Chưa phát bằng',
+	[ETrangThaiCapBang.DA_CAP_BANG]: 'Đã phát bằng',
+};
+
+export const colorTrangThaiTotNghiep: Record<ETrangThaiCapBang, ETagColor> = {
+	[ETrangThaiCapBang.CHO_CAP_BANG]: ETagColor.BLUE,
+	[ETrangThaiCapBang.DA_CAP_BANG]: ETagColor.GREEN,
+};
+
+export enum EQuyetDinhStep {
+	THONG_TIN = 'THONG_TIN',
+	DANH_SACH_SV = 'DANH_SACH_SV',
+	DU_THAO_SO = 'DU_THAO_SO',
+	PHU_LUC = 'PHU_LUC',
+}
+
+export const STEP_ORDER: EQuyetDinhStep[] = [
+	EQuyetDinhStep.THONG_TIN,
+	EQuyetDinhStep.DANH_SACH_SV,
+	EQuyetDinhStep.DU_THAO_SO,
+	EQuyetDinhStep.PHU_LUC,
+];
+
+export enum ELoaiThongTinUpdate {
+	THONG_TIN_VAN_BANG = 'Thông tin văn bằng',
+	SO_HIEU_VAN_BANG = 'Số hiệu văn bằng',
+}

@@ -5,6 +5,7 @@ declare module SoVanBang {
 		_id: string;
 		ten: string;
 		maTrinhDoDaoTao: string;
+		trinhDoDaoTao: TrinhDoDaoTao.IRecord;
 		tenTrinhDoDaoTao: string;
 		maHinhThucDaoTao: string;
 		tenHinhThucDaoTao: string;

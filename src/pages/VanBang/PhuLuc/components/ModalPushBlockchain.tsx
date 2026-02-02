@@ -105,7 +105,7 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 		},
 		{
 			dataIndex: 'hoTen',
-			title: 'Họ tên sinh viên',
+			title: 'Họ tên',
 			width: 160,
 		},
 		{

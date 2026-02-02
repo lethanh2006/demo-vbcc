@@ -4,18 +4,27 @@ import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import { ETrangThaiYeuCauVanBang } from '@/services/VanBang/LichSuVanBang/constant';
 import { LichSuVanBang } from '@/services/VanBang/LichSuVanBang/typing';
 import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
-import { CheckCircleOutlined, EditOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Col, Descriptions, Row, Space, Typography, theme } from 'antd';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { useModel } from 'umi';
+import ModalXuLyPhuLuc from './XuLy';
 
 const { Title, Text } = Typography;
 
-const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
-	const { data } = props;
+const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () => void }) => {
+	const { data, getData } = props;
 	const { token } = theme.useToken();
 
 	const { record, setVisibleForm } = useModel('vbcc.lichsuvanbang');
+	const { settings } = useModel('tienich.caidat');
+	const { INFO_TENANT: settingVbcc } = settings;
+	const [visibleXuLy, setVisibleXuLy] = useState<boolean>(false);
+	const [trangThai, setTrangThai] = useState<{
+		title: string;
+		trangThai: ETrangThaiYeuCauVanBang;
+	}>();
 
 	const recLichSu = data ?? record;
 
@@ -26,14 +35,22 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 
 	const updated = recLichSu?.thongTinCapNhatCapLai || ({} as PhuLucVanBang.IRecord);
 
-	const fields: { key: keyof PhuLucVanBang.IRecord; label: string }[] = [
+	const fields = [
 		{ key: 'hoTen', label: 'Họ và tên' },
-		{ key: 'maSinhVien', label: 'Mã sinh viên' },
+		{ key: 'maSinhVien', label: 'Mã người học' },
 		{ key: 'ngaySinh', label: 'Ngày sinh' },
+		{ key: 'cmtCccd', label: 'Số CMND/CCCD' },
 		{ key: 'soVaoSoBang', label: 'Số vào sổ cấp bằng' },
 		{ key: 'bookEntryNumberFormat', label: 'Số vào sổ (Tiếng Anh)' },
 		{ key: 'soHieuVanBang', label: 'Số hiệu văn bằng' },
-	];
+		{ key: 'trinhDoDaoTao', label: 'Trình độ đào tạo' },
+		{ key: 'hinhThucDaoTao', label: 'Hình thức đào tạo' },
+		{ key: 'nganhDaoTao', label: 'Ngành đào tạo' },
+		!settingVbcc?.require_IPFS && {
+			key: 'urlIpfs',
+			label: 'Tập tin văn bằng (file scan)',
+		},
+	].filter(Boolean) as { key: keyof PhuLucVanBang.IRecord; label: string }[];
 
 	const isChanged = (k: keyof PhuLucVanBang.IRecord): boolean => {
 		return String(original[k] ?? '') !== String(updated[k] ?? '');
@@ -89,7 +106,7 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 		const upd = updated.templateData?.find((i) => i.headerName === headerName && i.type === type);
 
 		const renderTemplateItemValue = (value: any, itemType: string) => {
-			if (itemType === 'Date') return dayjs(value).format('DD/MM/YYYY');
+			if (itemType === 'Date') return value && dayjs(value).format('DD/MM/YYYY');
 			if (itemType === 'Number') return value ?? '—';
 			if (typeof value === 'object') return JSON.stringify(value);
 			return value || '—';
@@ -254,11 +271,43 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord }) => {
 			</Row>
 			{!data?._id ? (
 				<div className='form-footer'>
+					<Button
+						disabled={record?.trangThai !== ETrangThaiYeuCauVanBang.CHO_XAC_NHAN}
+						onClick={() => {
+							setTrangThai({ title: 'Chấp nhận đề xuất', trangThai: ETrangThaiYeuCauVanBang.DA_DUYET });
+							setVisibleXuLy(true);
+						}}
+						type='primary'
+						className='btn-success'
+						icon={<CheckOutlined />}
+					>
+						Chấp nhận
+					</Button>
+					<Button
+						disabled={record?.trangThai !== ETrangThaiYeuCauVanBang.CHO_XAC_NHAN}
+						onClick={() => {
+							setTrangThai({ title: 'Từ chối đề xuất', trangThai: ETrangThaiYeuCauVanBang.KHONG_DUYET });
+							setVisibleXuLy(true);
+						}}
+						type='primary'
+						className='btn-error'
+						icon={<CloseOutlined />}
+					>
+						Từ chối
+					</Button>
 					<Button onClick={() => setVisibleForm(false)} type='default'>
 						Đóng
 					</Button>
 				</div>
 			) : null}
+
+			<ModalXuLyPhuLuc
+				visible={visibleXuLy}
+				setVisible={setVisibleXuLy}
+				title={trangThai?.title ?? ''}
+				trangThai={trangThai?.trangThai ?? ETrangThaiYeuCauVanBang.CHO_XAC_NHAN}
+				getData={getData}
+			/>
 		</>
 	);
 };

@@ -3,6 +3,9 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import UploadFile from '@/components/Upload/UploadFile';
+import SelectHinhThucDaoTao from '@/pages/DanhMuc/HinhThucDaoTao/components/Select';
+import SelectNganhDaoTao from '@/pages/DanhMuc/NganhDaoTao/components/Select';
+import SelectTrinhDoDaoTao from '@/pages/DanhMuc/TrinhDoTaoTao/components/Select';
 import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { ELoaiDuLieuBieuMau } from '@/services/VanBang/constant';
@@ -24,7 +27,8 @@ const FormPhuLucVanBang = (props: {
 }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { getData, vbccSettings, trangThaiYeuCau } = props;
+	const { getData, trangThaiYeuCau } = props;
+	const { settings } = useModel('tienich.caidat');
 	const {
 		record,
 		edit,
@@ -43,6 +47,7 @@ const FormPhuLucVanBang = (props: {
 	const [openedTableKey, setOpenedTableKey] = useState<string | null>(null);
 	const [editFormTable, setEditFormTable] = useState<boolean>(false);
 	const [recordTable, setRecordTable] = useState<any>({});
+	const { INFO_TENANT: settingVbcc } = settings;
 
 	const onCancelFormTable = () => {
 		setOpenedTableKey(null);
@@ -301,12 +306,8 @@ const FormPhuLucVanBang = (props: {
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item
-						label='Họ tên sinh viên'
-						name='hoTen'
-						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-					>
-						<Input placeholder='Nhập họ tên sinh viên' />
+					<Form.Item label='Họ tên' name='hoTen' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
+						<Input placeholder='Nhập họ tên' />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
@@ -316,14 +317,39 @@ const FormPhuLucVanBang = (props: {
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item
-						label='Mã sinh viên'
+						label='Mã người học'
 						name='maSinhVien'
 						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
 					>
-						<Input placeholder='Nhập mã sinh viên' />
+						<Input placeholder='Nhập mã người học' />
 					</Form.Item>
 				</Col>
-				{!vbccSettings?.require_IPFS && (
+
+				<Col span={24} md={12}>
+					<Form.Item label='Số CMND/CCCD' name='cmtCccd'>
+						<Input placeholder='Nhập căn cước công dân' />
+					</Form.Item>
+				</Col>
+
+				<Col span={24} md={12}>
+					<Form.Item label='Trình độ đào tạo' name='trinhDoDaoTao'>
+						<SelectTrinhDoDaoTao selectMa />
+					</Form.Item>
+				</Col>
+
+				<Col span={24} md={12}>
+					<Form.Item label='Hình thức đào tạo' name='hinhThucDaoTao'>
+						<SelectHinhThucDaoTao selectMa />
+					</Form.Item>
+				</Col>
+
+				<Col span={24} md={12}>
+					<Form.Item label='Ngành đào tạo' name='nganhDaoTao'>
+						<SelectNganhDaoTao selectMa />
+					</Form.Item>
+				</Col>
+
+				{!settingVbcc?.require_IPFS && (
 					<Col span={24} md={12}>
 						<Form.Item label='Tập tin văn bằng (file scan)' name='urlIpfs'>
 							<UploadFile maxCount={1} otherProps={{ accept: '.pdf' }} />
@@ -358,12 +384,12 @@ const FormPhuLucVanBang = (props: {
 				</Button> */}
 				{trangThaiYeuCau === 'Chỉnh sửa' && (
 					<Button loading={formSubmiting} type='primary' onClick={() => handleYeuCau('Chỉnh sửa')}>
-						Yêu cầu chỉnh sửa
+						Đề xuất chỉnh sửa
 					</Button>
 				)}
 				{trangThaiYeuCau === 'Cấp lại' && (
 					<Button loading={formSubmiting} type='primary' onClick={() => handleYeuCau('Cấp lại')}>
-						Yêu cầu cấp lại
+						Đề xuất cấp lại
 					</Button>
 				)}
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

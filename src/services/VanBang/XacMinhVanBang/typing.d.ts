@@ -14,6 +14,7 @@ declare module XacMinhVanBang {
 		soCongVan: string;
 		phaseXuLy: EPhaseXacMinh;
 		ghiChu: string;
+		urlFilePhucDapChung: string[] | null;
 
 		danhSachVanBanXacMinh: ISinhVienXacMinh[];
 	}
@@ -23,9 +24,11 @@ declare module XacMinhVanBang {
 		coThongTin: boolean;
 		maSinhVien: string;
 		hoTen: string;
+		ngaySinh: string;
+		xepLoai: string;
 		soHieuVanBang: string;
 		soVaoSo: string;
-		phuLucId: string;
+		phuLucId: string | null;
 		urlYeuCau: string | null;
 		urlPhanHoi: string | null;
 		ghiChuKetQuaPhucDap: string;
@@ -43,5 +46,10 @@ declare module XacMinhVanBang {
 	export interface ISetting {
 		_id: string;
 		bieuMauId: any;
+	}
+
+	export interface IThongKeXacMinhVanBangNam {
+		phaseXuLy: EPhaseXacMinh;
+		soLuong: number;
 	}
 }

@@ -4,6 +4,7 @@ import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
+import ModalExport from '@/components/Table/Export';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import type { IColumn } from '@/components/Table/typing';
 import SelectBieuMauPhuLuc from '@/pages/DanhMuc/BieuMauPhuLuc/components/Select';
@@ -16,57 +17,92 @@ import {
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import {
-	CheckCircleOutlined,
+	CheckOutlined,
 	DeleteOutlined,
 	EditOutlined,
+	ExportOutlined,
 	InfoCircleOutlined,
 	MenuOutlined,
+	PlusCircleOutlined,
 	RollbackOutlined,
 	SaveOutlined,
 	SendOutlined,
 } from '@ant-design/icons';
 import { Button, Popconfirm, Popover, Space, Tag } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import SelectSoVanBang from '../SoVanBang/components/Select';
 import ModalQuyetDinhTotNghiep from './components/Modal';
+import StatQuyetDinhTotNghiep from './components/Stat';
 import ModalYeuCauChinhSua from './components/YeuCauChinhSua';
 
 const QuyetDinhTotNghiepPage = (props: {
-	title: 'Thông tin quyết định' | 'Dự thảo cần duyệt' | 'Quyết định đã duyệt';
+	title: 'Tất cả quyết định' | 'Dự thảo cần duyệt' | 'Quyết định đã duyệt' | 'Quyết định đã hoàn thành';
 }) => {
-	const { title = 'Thông tin quyết định' } = props;
+	const { title = 'Tất cả quyết định' } = props;
 
-	const { handleEdit, page, limit, deleteModel, setRecord, record, getModel, trinhLanhDaoModel, xuLyDuThaoModel } =
-		useModel('vbcc.quyetdinhtotnghiep');
+	const {
+		handleEdit,
+		page,
+		limit,
+		deleteModel,
+		setRecord,
+		record,
+		getModel,
+		trinhLanhDaoModel,
+		xuLyDuThaoModel,
+		setVisibleForm,
+		setEdit,
+		setIsView,
+		thongKeQuyetDinhModel,
+	} = useModel('vbcc.quyetdinhtotnghiep');
 
 	const [yearSelect, setYearSelect] = useState<any>(dayjs());
 	const [visibleFormFile, setVisibleFormFile] = useState(false);
 	const [visibleChinhSua, setVisibleChinhSua] = useState(false);
+	const [visibleExport, setVisibleExport] = useState<boolean>(false);
+	const [themMoiHoanThanh, setThemMoiHoanThanh] = useState<boolean>(false);
+
+	let filters: any = [];
+
+	if (title === 'Dự thảo cần duyệt') {
+		filters.push({
+			active: true,
+			field: 'trangThai',
+			values: [ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO, ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA],
+			operator: EOperatorType.INCLUDE,
+		});
+	}
+
+	if (title === 'Quyết định đã duyệt') {
+		filters.push({
+			active: true,
+			field: 'trangThai',
+			values: [ETrangThaiQuyetDinhTotNghiep.CHINH_THUC],
+			operator: EOperatorType.INCLUDE,
+		});
+	}
+
+	if (title === 'Quyết định đã hoàn thành') {
+		filters.push({
+			active: true,
+			field: 'trangThai',
+			values: [ETrangThaiQuyetDinhTotNghiep.HOAN_THANH],
+			operator: EOperatorType.INCLUDE,
+		});
+	}
 
 	const getData = () => {
-		let filters: any = [];
-
-		if (title === 'Dự thảo cần duyệt') {
-			filters.push({
-				active: true,
-				field: 'trangThai',
-				values: [ETrangThaiQuyetDinhTotNghiep.TRINH_DU_THAO, ETrangThaiQuyetDinhTotNghiep.YEU_CAU_CHINH_SUA],
-				operator: EOperatorType.INCLUDE,
-			});
-		}
-
-		if (title === 'Quyết định đã duyệt') {
-			filters.push({
-				active: true,
-				field: 'trangThai',
-				values: [ETrangThaiQuyetDinhTotNghiep.CHINH_THUC, ETrangThaiQuyetDinhTotNghiep.HOAN_THANH],
-				operator: EOperatorType.INCLUDE,
-			});
-		}
-
-		getModel({ nam: dayjs(yearSelect).format('YYYY') }, filters);
+		getModel(yearSelect ? { nam: dayjs(yearSelect).format('YYYY') } : undefined, filters);
 	};
+
+	const getThongKe = () => {
+		if (title === 'Tất cả quyết định')
+			thongKeQuyetDinhModel(yearSelect ? { nam: dayjs(yearSelect).format('YYYY') } : undefined);
+	};
+	useEffect(() => {
+		getThongKe();
+	}, [yearSelect, title]);
 
 	const onCell = (rec: QuyetDinhTotNghiep.IRecord) => ({
 		onClick: () => handleEdit(rec),
@@ -136,7 +172,38 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Biểu mẫu phụ lục',
+			title: 'Số vào sổ bắt đầu',
+			dataIndex: 'soVaoSoBatDau',
+			align: 'center',
+			width: 100,
+			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Số vào sổ kết thúc',
+			dataIndex: 'soVaoSoKetThuc',
+			align: 'center',
+			width: 100,
+			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Số lượng văn bằng',
+			dataIndex: 'soLuong',
+			align: 'center',
+			width: 100,
+			render: (val, rec) => (val !== 0 ? val : '--'),
+			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Trình độ',
+			width: 150,
+			render: (val, rec) => rec?.soVanBang?.trinhDoDaoTao?.ten,
+			onCell,
+		},
+		{
+			title: 'Biểu mẫu thông tin văn bằng',
 			dataIndex: 'maBieuMau',
 			width: 160,
 			render: (val, rec) => rec?.bieuMau?.ten ?? val,
@@ -145,7 +212,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Nội dung',
+			title: 'Nội dung trích yếu',
 			dataIndex: 'noiDung',
 			width: 180,
 			render: (val) => <ExpandText>{val}</ExpandText>,
@@ -177,7 +244,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			width: 150,
 			align: 'center',
 			fixed: 'right',
-			filterType: title === 'Thông tin quyết định' ? 'select' : undefined,
+			filterType: title === 'Tất cả quyết định' ? 'select' : undefined,
 			filterData: Object.values(ETrangThaiQuyetDinhTotNghiep).map((item) => ({
 				value: item,
 				label: nameTrangThaiQuyetDinhTotNghiep[item],
@@ -207,7 +274,7 @@ const QuyetDinhTotNghiepPage = (props: {
 				const { DU_THAO, YEU_CAU_CHINH_SUA, TRINH_DU_THAO, HOAN_THANH } = ETrangThaiQuyetDinhTotNghiep;
 
 				const canTrinhLanhDao = rec?.trangThai === DU_THAO || rec?.trangThai === YEU_CAU_CHINH_SUA;
-				const canXuLyQuyetDinh = rec?.trangThai === TRINH_DU_THAO || rec?.trangThai === YEU_CAU_CHINH_SUA;
+				const canXuLyQuyetDinh = rec?.trangThai === TRINH_DU_THAO;
 
 				const isHoanThanh = rec?.trangThai === HOAN_THANH;
 
@@ -227,9 +294,9 @@ const QuyetDinhTotNghiepPage = (props: {
 
 				return (
 					<>
-						{title === 'Thông tin quyết định' ? (
+						{title === 'Tất cả quyết định' ? (
 							<Popconfirm
-								title='Trình lãnh đạo quyết định?'
+								title='Bạn muốn trình lãnh đạo dự thảo quyết định tốt nghiệp này?'
 								placement='topRight'
 								onConfirm={() => trinhLanhDaoModel(rec?._id, getData)}
 							>
@@ -252,7 +319,7 @@ const QuyetDinhTotNghiepPage = (props: {
 									tooltip='Duyệt quyết định'
 									type='link'
 									className='btn-success'
-									icon={<CheckCircleOutlined />}
+									icon={<CheckOutlined />}
 									disabled={!canXuLyQuyetDinh}
 								/>
 							</Popconfirm>
@@ -263,7 +330,7 @@ const QuyetDinhTotNghiepPage = (props: {
 							trigger='hover'
 							content={
 								<Space direction='vertical' size={'small'}>
-									{title !== 'Thông tin quyết định' && (
+									{title !== 'Tất cả quyết định' && (
 										<ButtonExtend
 											type='link'
 											tooltip='Yêu cầu chỉnh sửa'
@@ -295,7 +362,7 @@ const QuyetDinhTotNghiepPage = (props: {
 											type='link'
 											danger
 											icon={<DeleteOutlined />}
-											disabled={!canTrinhLanhDao}
+											// disabled={!canTrinhLanhDao}
 										>
 											Xóa
 										</ButtonExtend>
@@ -303,11 +370,16 @@ const QuyetDinhTotNghiepPage = (props: {
 								</Space>
 							}
 						>
-							<ButtonExtend disabled={isHoanThanh} type='link' icon={<MenuOutlined />} />
+							<ButtonExtend
+								// disabled={isHoanThanh}
+								type='link'
+								icon={<MenuOutlined />}
+							/>
 						</Popover>
 					</>
 				);
 			},
+			hide: title === 'Quyết định đã duyệt',
 		},
 	];
 
@@ -320,11 +392,47 @@ const QuyetDinhTotNghiepPage = (props: {
 				modelName='vbcc.quyetdinhtotnghiep'
 				title={title}
 				widthDrawer={1200}
-				deleteMany
-				rowSelection
-				buttons={{ export: true }}
+				// deleteMany
+				// rowSelections
+				buttons={{ create: title === 'Tất cả quyết định' }}
 				Form={ModalQuyetDinhTotNghiep}
-				formProps={{ getData, yearSelect: dayjs(yearSelect).format('YYYY'), title }}
+				formProps={{
+					getData: () => {
+						getData();
+						getThongKe();
+					},
+					yearSelect: dayjs(yearSelect).format('YYYY'),
+					title,
+					themMoiHoanThanh,
+					setThemMoiHoanThanh,
+				}}
+				otherButtons={[
+					title === 'Quyết định đã hoàn thành' ? (
+						<ButtonExtend
+							key={'add'}
+							type='primary'
+							icon={<PlusCircleOutlined />}
+							onClick={() => {
+								setRecord({} as QuyetDinhTotNghiep.IRecord);
+								setEdit(false);
+								setIsView(false);
+								setVisibleForm(true);
+								setThemMoiHoanThanh(true);
+							}}
+						>
+							Thêm mới
+						</ButtonExtend>
+					) : (
+						<></>
+					),
+					<ButtonExtend key={'1'} icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
+						Xuất dữ liệu
+					</ButtonExtend>,
+				]}
+				onReload={() => {
+					getData();
+					getThongKe();
+				}}
 			>
 				<MyDatePicker
 					style={{ width: 160, marginBottom: 12 }}
@@ -335,6 +443,12 @@ const QuyetDinhTotNghiepPage = (props: {
 					allowClear
 					onChange={(val) => setYearSelect(val ? dayjs(val) : null)}
 				/>
+
+				{title === 'Tất cả quyết định' && (
+					<div style={{ marginBottom: 12 }}>
+						<StatQuyetDinhTotNghiep />
+					</div>
+				)}
 			</TableBase>
 
 			<ModalExpandable
@@ -348,6 +462,15 @@ const QuyetDinhTotNghiepPage = (props: {
 			</ModalExpandable>
 
 			<ModalYeuCauChinhSua visible={visibleChinhSua} setVisible={setVisibleChinhSua} getData={getData} />
+
+			<ModalExport
+				visible={visibleExport}
+				modelName='vbcc.quyetdinhtotnghiep'
+				onCancel={() => setVisibleExport(false)}
+				fileName='Danh sách quyết định.xlsx'
+				filters={filters}
+				condition={{ nam: dayjs(yearSelect).format('YYYY') }}
+			/>
 		</>
 	);
 };
