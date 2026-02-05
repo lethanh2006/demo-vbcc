@@ -276,12 +276,12 @@ const FormSinhVienQuyetDinh = (props: any) => {
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item label='Trình độ đào tạo' name='trinhDoDaoTao'>
-						<SelectTrinhDoDaoTao selectMa />
+						<SelectTrinhDoDaoTao selectTen />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item label='Hình thức đào tạo' name='hinhThucDaoTao'>
-						<SelectHinhThucDaoTao selectMa />
+						<SelectHinhThucDaoTao selectTen />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>

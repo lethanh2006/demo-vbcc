@@ -15,9 +15,10 @@ const SelectTrinhDoDaoTao = (props: {
 	condition?: Partial<TrinhDoDaoTao.IRecord>;
 	disabled?: boolean;
 	selectMa?: boolean;
+	selectTen?: boolean;
 }) => {
 	const intl = useIntl();
-	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled, selectMa } = props;
+	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled, selectMa, selectTen } = props;
 	const { danhSach, getAllModel } = useModel('danhmuc.trinhdodaotao');
 	useEffect(() => {
 		getAllModel(!!isSetRecord, undefined, condition);
@@ -32,7 +33,7 @@ const SelectTrinhDoDaoTao = (props: {
 			onChange={onChange}
 			options={danhSach.map((item) => ({
 				key: item._id,
-				value: selectMa ? item.ma : item._id,
+				value: selectMa ? item.ma : selectTen ? item.ten : item._id,
 				label: [item.ten, item.ma].filter(Boolean).join(' - '),
 			}))}
 			showSearch

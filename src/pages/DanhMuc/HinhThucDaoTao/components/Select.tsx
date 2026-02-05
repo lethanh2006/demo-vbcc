@@ -15,9 +15,10 @@ const SelectHinhThucDaoTao = (props: {
 	condition?: Partial<HinhThucDaoTao.IRecord>;
 	disabled?: boolean;
 	selectMa?: boolean;
+	selectTen?: boolean;
 }) => {
 	const intl = useIntl();
-	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled, selectMa } = props;
+	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled, selectMa, selectTen } = props;
 	const { danhSach, getAllModel } = useModel('danhmuc.hinhthucdaotao');
 	useEffect(() => {
 		getAllModel(!!isSetRecord, undefined, condition);
@@ -32,7 +33,7 @@ const SelectHinhThucDaoTao = (props: {
 			onChange={onChange}
 			options={danhSach.map((item) => ({
 				key: item._id,
-				value: selectMa ? item.ma : item._id,
+				value: selectMa ? item.ma : selectTen ? item.ten : item._id,
 				label: [item.ten, item.ma].filter(Boolean).join(' - '),
 			}))}
 			showSearch

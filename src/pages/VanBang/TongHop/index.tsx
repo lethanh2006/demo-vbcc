@@ -35,8 +35,8 @@ const TongHopVanBang = () => {
 		setLoading(true);
 		await getThongKeTong(dayjs(yearSelect).format('YYYY'), {
 			idSoVanBang: recSoVanBang?._id,
-			trinhDoDaoTao: recTrinhDo?.ma,
-			hinhThucDaoTao: recHinhThuc?.ma,
+			trinhDoDaoTao: recTrinhDo?.ten,
+			hinhThucDaoTao: recHinhThuc?.ten,
 			nganhDaoTao: recNganh?.ma,
 		})
 			.then((response) => {
