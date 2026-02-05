@@ -1,6 +1,6 @@
 import TableBase from '@/components/Table';
 import { type IColumn } from '@/components/Table/typing';
-import dayjs from '@/utils/dayjs';
+import { formatDateTime } from '@/utils/formatDate';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
@@ -32,7 +32,7 @@ const ChucVuPage = () => {
 			width: 120,
 			filterType: 'datetime',
 			sortable: true,
-			render: (val) => dayjs(val).format('HH:mm DD/MM/YYYY'),
+			render: (val) => formatDateTime(val),
 		},
 		{
 			title: 'Thao tác',
