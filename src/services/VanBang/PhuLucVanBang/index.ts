@@ -164,7 +164,7 @@ export async function thongKePhuLucTheoNam(condition?: any, filters?: any[]) {
 }
 
 export async function xuatVanBangQuyetDinh(idQuyetDinh: string, otherParams?: any) {
-	return axios.get(`${ip3}/phu-luc-van-bang/export/thong-tin-van-bang/quyet-dinh/${idQuyetDinh}`, {
+	return axios.get(`${ip3}/phu-luc-van-bang/export/danh-sach-van-bang/quyet-dinh/${idQuyetDinh}`, {
 		params: otherParams,
 		responseType: 'arraybuffer',
 	});

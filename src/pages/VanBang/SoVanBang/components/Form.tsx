@@ -12,7 +12,7 @@ const TRINH_DO_VIET_TAT: Record<string, string> = {
 	'Trung cấp': 'TC',
 	'Cao đẳng': 'CD',
 	'Đại học': 'DH',
-	'Thạc sĩ': 'ThS',
+	'Thạc sĩ': 'TH',
 	'Tiến sĩ': 'TS',
 };
 
