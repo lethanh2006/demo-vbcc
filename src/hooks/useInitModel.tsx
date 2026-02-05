@@ -314,7 +314,7 @@ const useInitModel = <T extends object>(
 	const deleteModel = async (
 		id: string | number,
 		getData?: () => void,
-		config?: { dataPartitionCode?: string | null | string },
+		config?: { dataPartitionCode?: string | null | string; messageText?: string },
 	): Promise<any> => {
 		setLoading(true);
 		try {
@@ -323,7 +323,7 @@ const useInitModel = <T extends object>(
 				undefined,
 				config?.dataPartitionCode ? { 'x-data-partition-code': config.dataPartitionCode } : undefined,
 			);
-			message.success('Xóa thành công');
+			message.success(config?.messageText ?? 'Xóa thành công');
 
 			const maxPage = Math.ceil((total - 1) / limit) || 1;
 			let newPage = page;

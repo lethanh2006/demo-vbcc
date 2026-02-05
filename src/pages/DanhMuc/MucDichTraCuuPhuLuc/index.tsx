@@ -5,10 +5,11 @@ import type { MucDichTraCuuPhuLuc } from '@/services/VanBang/MucDichTraCuuPhuLuc
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Switch } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import FormMucDichTraCuuPhuLuc from './components/Form';
 
 const MucDichTraCuuPhuLucPage = () => {
+	const intl = useIntl();
 	const {
 		getAllModel,
 		loading,
@@ -38,25 +39,25 @@ const MucDichTraCuuPhuLucPage = () => {
 
 	const columns: IColumn<MucDichTraCuuPhuLuc.IRecord>[] = [
 		{
-			title: 'Hiển thị',
+			title: intl.formatMessage({ id: 'mucdich.column.hienthi' }),
 			dataIndex: 'soThuTu',
 			width: 60,
 			filterType: 'number',
 		},
 		{
-			title: 'Mã mục đích',
+			title: intl.formatMessage({ id: 'mucdich.column.mucdich' }),
 			dataIndex: 'ma',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Mục đích Tra cứu',
+			title: intl.formatMessage({ id: 'mucdich.column.mucdichtracuu' }),
 			dataIndex: 'ten',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'mucdich.column.trangthai' }),
 			dataIndex: 'active',
 			align: 'center',
 			width: 80,
@@ -65,19 +66,31 @@ const MucDichTraCuuPhuLucPage = () => {
 			),
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'mucdich.column.thaotac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
-						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa mục đích tra cứu phụ lục này?'
+						onConfirm={() =>
+							deleteModel(rec._id, undefined, { messageText: intl.formatMessage({ id: 'global.button.xoathanhcong' }) })
+						}
+						title={intl.formatMessage({ id: 'mucdich.column.confirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -85,7 +98,7 @@ const MucDichTraCuuPhuLucPage = () => {
 	];
 
 	return (
-		<Card title='Danh sách mục đích tra cứu phụ lục'>
+		<Card title={intl.formatMessage({ id: 'mucdich.danhsach' })}>
 			<TableStaticData
 				loading={loading}
 				columns={columns}
@@ -93,7 +106,7 @@ const MucDichTraCuuPhuLucPage = () => {
 				hasTotal
 				onReload={getData}
 				Form={FormMucDichTraCuuPhuLuc}
-				formProps={{ getData, title: 'Mục đích tra cứu phụ lục' }}
+				formProps={{ getData, title: intl.formatMessage({ id: 'mucdich.title' }) }}
 				hasCreate
 				widthDrawer={600}
 				showEdit={visibleForm}

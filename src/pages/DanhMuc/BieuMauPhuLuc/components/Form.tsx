@@ -9,7 +9,7 @@ import { useIntl, useModel } from 'umi';
 import FormItemFileBieuMau from '../FileBieuMau/FormItem';
 import ElementBieuMauFormItem from './Element';
 
-const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
+const FormPhuluc = (props: { title?: string; [key: string]: any }) => {
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
 		useModel('vbcc.bieumauphuluc');
 	const intl = useIntl();
@@ -38,11 +38,18 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 		}
 
 		if (edit) {
-			putModel(record?._id ?? '', values)
+			putModel(
+				record?._id ?? '',
+				values,
+				undefined,
+				undefined,
+				undefined,
+				intl.formatMessage({ id: 'global.button.luuthanhcong' }),
+			)
 				.then()
 				.catch((er) => console.log(er));
 		} else {
-			postModel(values)
+			postModel(values, undefined, undefined, intl.formatMessage({ id: 'global.button.themmoithanhcong' }))
 				.then()
 				.catch((er) => console.log(er));
 		}
@@ -52,28 +59,36 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
 				<Col span={24} md={8}>
-					<Form.Item label='Mã biểu mẫu' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
+					<Form.Item
+						label={intl.formatMessage({ id: 'bieumau.form.ma' })}
+						name='ma'
+						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
+					>
 						<Input
-							placeholder='Nhập mã biểu mẫu'
+							placeholder={intl.formatMessage({ id: 'bieumau.form.ma.placeholder' })}
 							//  disabled={edit}
 						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={16}>
-					<Form.Item label='Tên biểu mẫu' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(250)]}>
-						<Input placeholder='Nhập tên biểu mẫu' />
+					<Form.Item
+						label={intl.formatMessage({ id: 'bieumau.form.ten' })}
+						name='ten'
+						rules={[...rules.required, ...rules.text, ...rules.length(250)]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'bieumau.form.ten.placeholder' })} />
 					</Form.Item>
 				</Col>
 
 				<Col span={24}>
-					<Form.Item label='Cấu hình biểu mẫu' name='elements'>
+					<Form.Item label={intl.formatMessage({ id: 'bieumau.form.cauhinh' })} name='elements'>
 						<ElementBieuMauFormItem />
 					</Form.Item>
 				</Col>
 
 				<Col span={24}>
 					<Form.Item
-						label='Danh sách file biểu mẫu xuất phụ lục (mặc định)'
+						label={intl.formatMessage({ id: 'bieumau.form.dsfile' })}
 						name='listIdFileBieuMau'
 						// rules={[...rules.required]}
 					>
@@ -94,4 +109,4 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 	);
 };
 
-export default FormNguoiKyVanBang;
+export default FormPhuluc;

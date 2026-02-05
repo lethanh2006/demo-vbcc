@@ -3,40 +3,53 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
 
 const NganhDaoTaoPage = () => {
+	const intl = useIntl();
 	const { page, limit, handleEdit, deleteModel } = useModel('danhmuc.nganhdaotao');
 
 	const columns: IColumn<NganhDaoTao.IRecord>[] = [
 		{
-			title: 'Mã ngành',
+			title: intl.formatMessage({ id: 'nganh.column.manganh' }),
 			dataIndex: 'ma',
 			width: 120,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên ngành',
+			title: intl.formatMessage({ id: 'nganh.column.tennganh' }),
 			dataIndex: 'ten',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'nganh.column.thaotac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
-						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa ngành đào tạo này?'
+						onConfirm={() =>
+							deleteModel(rec._id, undefined, { messageText: intl.formatMessage({ id: 'global.button.xoathanhcong' }) })
+						}
+						title={intl.formatMessage({ id: 'nganh.column.confirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -48,9 +61,8 @@ const NganhDaoTaoPage = () => {
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='danhmuc.nganhdaotao'
-			title='Ngành đào tạo'
+			title={intl.formatMessage({ id: 'nganh.title' })}
 			Form={Form}
-			widthDrawer={800}
 			buttons={{ import: true, export: true }}
 		/>
 	);

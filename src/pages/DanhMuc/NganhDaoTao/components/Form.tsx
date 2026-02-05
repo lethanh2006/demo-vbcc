@@ -16,27 +16,38 @@ const FormNganhDaoTao = () => {
 
 	const onFinish = async (values: NganhDaoTao.IRecord) => {
 		if (edit) {
-			putModel(record?._id ?? '', values)
+			putModel(
+				record?._id ?? '',
+				values,
+				undefined,
+				undefined,
+				undefined,
+				intl.formatMessage({ id: 'global.button.luuthanhcong' }),
+			)
 				.then()
 				.catch((er) => console.log(er));
 		} else
-			postModel(values)
+			postModel(values, undefined, undefined, intl.formatMessage({ id: 'global.button.themmoithanhcong' }))
 				.then()
 				.catch((er) => console.log(er));
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ngành đào tạo`}>
+		<Card
+			title={
+				edit ? intl.formatMessage({ id: 'nganh.form.chinhsua' }) : intl.formatMessage({ id: 'nganh.form.themmoi' })
+			}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
-					<Col span={24} md={12}>
-						<Form.Item name='ma' label='Mã ngành đào tạo' rules={[...rules.required]}>
-							<Input placeholder='Nhập mã ngành đào tạo' />
+					<Col span={24}>
+						<Form.Item name='ma' label={intl.formatMessage({ id: 'nganh.form.ma' })} rules={[...rules.required]}>
+							<Input placeholder={intl.formatMessage({ id: 'nganh.form.ma.place' })} />
 						</Form.Item>
 					</Col>
-					<Col span={24} md={12}>
-						<Form.Item name='ten' label='Tên ngành đào tạo' rules={[...rules.required]}>
-							<Input placeholder='Nhập tên ngành đào tạo' />
+					<Col span={24}>
+						<Form.Item name='ten' label={intl.formatMessage({ id: 'nganh.form.ten' })} rules={[...rules.required]}>
+							<Input placeholder={intl.formatMessage({ id: 'nganh.form.ten.place' })} />
 						</Form.Item>
 					</Col>
 				</Row>

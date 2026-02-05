@@ -5,9 +5,10 @@ import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const FormFileBieuMau = (props: { onOk: (val: BieuMauPhuLuc.TFileBieuMau) => void }) => {
+	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { onOk } = props;
 	const { setVisibleForm, visibleForm, record, edit, setFormSubmiting, formSubmiting, isView } =
@@ -34,13 +35,21 @@ const FormFileBieuMau = (props: { onOk: (val: BieuMauPhuLuc.TFileBieuMau) => voi
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col span={24}>
-					<Form.Item name='ten' label='Tên file' rules={[...rules.required, ...rules.text, ...rules.length(250)]}>
-						<Input placeholder='Nhập tên file' />
+					<Form.Item
+						name='ten'
+						label={intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.form.tenfile' })}
+						rules={[...rules.required, ...rules.text, ...rules.length(250)]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.form.tenfile.place' })} />
 					</Form.Item>
 				</Col>
 
 				<Col span={24}>
-					<Form.Item name='idFile' label='File biểu mẫu' rules={[...rules.fileRequired]}>
+					<Form.Item
+						name='idFile'
+						label={intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.form.file' })}
+						rules={[...rules.fileRequired]}
+					>
 						<UploadFile hasPreviewFile previewFileProps={{ isFileId: true }} />
 					</Form.Item>
 				</Col>
@@ -49,10 +58,12 @@ const FormFileBieuMau = (props: { onOk: (val: BieuMauPhuLuc.TFileBieuMau) => voi
 			<div className='form-footer'>
 				{!isView ? (
 					<Button htmlType='submit' type='primary' loading={formSubmiting}>
-						{!edit ? 'Thêm mới ' : 'Lưu lại'}
+						{!edit
+							? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
+							: `${intl.formatMessage({ id: 'global.button.luulai' })}`}{' '}
 					</Button>
 				) : null}
-				<Button onClick={() => setVisibleForm(false)}>Hủy</Button>
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Form>
 	);

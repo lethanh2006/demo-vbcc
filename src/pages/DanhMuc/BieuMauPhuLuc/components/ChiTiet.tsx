@@ -50,14 +50,14 @@ const ChiTietBieuMauPhuLuc = () => {
 				});
 
 				columns.push({
-					title: 'Thao tác',
+					title: intl.formatMessage({ id: 'bieumau.chitiet.thaotac' }),
 					align: 'center',
 					width: 80,
 					fixed: 'right',
 					render: (rec: any, agg, index) => (
 						<>
 							<ButtonExtend
-								tooltip='Chỉnh sửa'
+								tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
 								size='small'
 								onClick={() => {
 									setEditFormTable(true);
@@ -76,10 +76,16 @@ const ChiTietBieuMauPhuLuc = () => {
 										[element.headerName]: newData,
 									});
 								}}
-								title='Bạn có chắc chắn muốn xoá dòng này?'
+								title={intl.formatMessage({ id: 'bieumau.chitiet.confirm.xoa' })}
 								placement='topRight'
 							>
-								<ButtonExtend tooltip='Xoá' size='small' danger type='link' icon={<DeleteOutlined />} />
+								<ButtonExtend
+									tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+									size='small'
+									danger
+									type='link'
+									icon={<DeleteOutlined />}
+								/>
 							</Popconfirm>
 						</>
 					),
@@ -106,7 +112,7 @@ const ChiTietBieuMauPhuLuc = () => {
 										setOpenedTableKey(element.headerName);
 									}}
 								>
-									Thêm mới
+									{intl.formatMessage({ id: 'global.button.themmoi' })}
 								</Button>,
 							]}
 						/>
@@ -115,7 +121,7 @@ const ChiTietBieuMauPhuLuc = () => {
 							destroyOnClose
 							width={700}
 							footer={false}
-							title={`${editFormTable ? 'Chỉnh sửa' : 'Thêm mới'} ${element.headerName}`}
+							title={`${editFormTable ? intl.formatMessage({ id: 'global.button.chinhsua' }) : intl.formatMessage({ id: 'global.button.themmoi' })} ${element.headerName}`}
 							open={openedTableKey === element.headerName}
 							onCancel={onCancelFormTable}
 						>
@@ -131,32 +137,40 @@ const ChiTietBieuMauPhuLuc = () => {
 	return (
 		<>
 			<Descriptions column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }}>
-				<Descriptions.Item label='Mã biểu mẫu'>{record?.ma ?? '--'}</Descriptions.Item>
-				<Descriptions.Item label='Tên biểu mẫu'>{record?.ten ?? '--'}</Descriptions.Item>
+				<Descriptions.Item label={intl.formatMessage({ id: 'bieumau.chitiet.mabieumau' })}>
+					{record?.ma ?? '--'}
+				</Descriptions.Item>
+				<Descriptions.Item label={intl.formatMessage({ id: 'bieumau.chitiet.tenbieumau' })}>
+					{record?.ten ?? '--'}
+				</Descriptions.Item>
 			</Descriptions>
 
 			<div className='fw500' style={{ marginTop: 12 }}>
-				Cấu hình biểu mẫu
+				{intl.formatMessage({ id: 'bieumau.chitiet.cauhinhbieumau' })}
 			</div>
 			<Form layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={12}>
-						<Form.Item label='Họ tên' name='hoTen' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
-							<Input placeholder='Nhập họ tên' />
+						<Form.Item
+							label={intl.formatMessage({ id: 'bieumau.chitiet.hoten' })}
+							name='hoTen'
+							rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'bieumau.chitiet.hoten.place' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item label='Ngày sinh' name='ngaySinh'>
+						<Form.Item label={intl.formatMessage({ id: 'bieumau.chitiet.ngaysinh' })} name='ngaySinh'>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
 						<Form.Item
-							label='Mã người học'
+							label={intl.formatMessage({ id: 'bieumau.chitiet.manguoihoc' })}
 							name='maSinhVien'
 							rules={[...rules.required, ...rules.text, ...rules.length(20)]}
 						>
-							<Input placeholder='Nhập mã người học' />
+							<Input placeholder={intl.formatMessage({ id: 'bieumau.chitiet.manguoihoc.place' })} />
 						</Form.Item>
 					</Col>
 
@@ -179,7 +193,7 @@ const ChiTietBieuMauPhuLuc = () => {
 			</Form>
 
 			<div className='fw500' style={{ marginTop: 12 }}>
-				Danh sách file biểu mẫu xuất phụ lục
+				{intl.formatMessage({ id: 'bieumau.chitiet.file' })}
 			</div>
 			<FormItemFileBieuMau value={record?.listIdFileBieuMau ?? []} hide />
 

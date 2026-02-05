@@ -6,7 +6,7 @@ import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import ChiTietBieuMauPhuLuc from './components/ChiTiet';
-import Form from './components/Form';
+import FormPhuluc from './components/Form';
 
 const BieuMauPhuLucPage = () => {
 	const intl = useIntl();
@@ -19,7 +19,7 @@ const BieuMauPhuLucPage = () => {
 
 	const columns: IColumn<BieuMauPhuLuc.IRecord>[] = [
 		{
-			title: 'Mã biểu mẫu',
+			title: intl.formatMessage({ id: 'bieumau.column.ma' }),
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
@@ -27,7 +27,7 @@ const BieuMauPhuLucPage = () => {
 			onCell,
 		},
 		{
-			title: 'Tên biểu mẫu',
+			title: intl.formatMessage({ id: 'bieumau.column.ten' }),
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
@@ -44,20 +44,37 @@ const BieuMauPhuLucPage = () => {
 		// 	width: 100,
 		// },
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'bieumau.column.thaotac' }),
 			align: 'center',
 			width: 120,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chitiet' })}
+						onClick={() => handleView(rec)}
+						type='link'
+						icon={<EyeOutlined />}
+					/>
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
-						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa biểu mẫu này?'
+						onConfirm={() =>
+							deleteModel(rec._id, undefined, { messageText: intl.formatMessage({ id: 'global.button.xoathanhcong' }) })
+						}
+						title={intl.formatMessage({ id: 'bieumau.confirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -69,8 +86,8 @@ const BieuMauPhuLucPage = () => {
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='vbcc.bieumauphuluc'
-			title={intl.formatMessage({ id: 'vanbang.bieumauphuluc.title' })}
-			Form={isView ? ChiTietBieuMauPhuLuc : Form}
+			title={intl.formatMessage({ id: 'bieumau.title' })}
+			Form={isView ? ChiTietBieuMauPhuLuc : FormPhuluc}
 			widthDrawer={isView ? 1000 : 800}
 			showModalTitle
 		/>

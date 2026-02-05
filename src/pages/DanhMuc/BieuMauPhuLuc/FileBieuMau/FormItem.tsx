@@ -7,7 +7,7 @@ import type { BieuMauPhuLuc } from '@/services/VanBang/BieuMauPhuLuc/typing';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import Form from './Form';
 
 const FormItemFileBieuMau = (props: {
@@ -16,6 +16,7 @@ const FormItemFileBieuMau = (props: {
 	disabled?: boolean;
 	hide?: boolean;
 }) => {
+	const intl = useIntl();
 	const { handleEdit, setVisibleForm, visibleForm, setEdit, edit, record, setRecord, isView, setIsView, handleView } =
 		useModel('vbcc.filebieumau');
 	const { value = [], onChange, disabled, hide } = props;
@@ -47,14 +48,14 @@ const FormItemFileBieuMau = (props: {
 
 	const columns: IColumn<BieuMauPhuLuc.TFileBieuMau>[] = [
 		{
-			title: 'Tên file',
+			title: intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.tenfile' }),
 			dataIndex: 'ten',
 			width: 220,
 			onCell,
 		},
 
 		{
-			title: 'File biểu mẫu',
+			title: intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.file' }),
 			dataIndex: 'idFile',
 			width: 180,
 			render: (val, rec) =>
@@ -65,24 +66,34 @@ const FormItemFileBieuMau = (props: {
 							setPreviewOpen(true);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.chitiet' })}
 					</a>
 				),
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.thaotac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' type='link' onClick={() => handleEdit(rec)} icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						type='link'
+						onClick={() => handleEdit(rec)}
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => onDelete(rec.index - 1)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.confirm.xoa' })}
 						placement='topLeft'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -113,13 +124,19 @@ const FormItemFileBieuMau = (props: {
 						size='small'
 						type='primary'
 					>
-						Thêm mới
+						{intl.formatMessage({ id: 'global.button.themmoi' })}
 					</Button>
 				)}
 			</TableStaticData>
 
 			<Modal
-				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} file biểu mẫu`}
+				title={
+					edit
+						? intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.form.chinhsua' })
+						: isView
+							? intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.form.chitiet' })
+							: intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.form.themmoi' })
+				}
 				open={visibleForm}
 				width={600}
 				footer={null}
@@ -129,7 +146,7 @@ const FormItemFileBieuMau = (props: {
 			</Modal>
 
 			<ModalExpandable
-				title='Xem trước tập tin'
+				title={intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu.xemtruoc' })}
 				width={1000}
 				open={previewOpen}
 				footer={null}
@@ -138,7 +155,7 @@ const FormItemFileBieuMau = (props: {
 				<PreviewFile file={record?.idFile} isFileId />
 
 				<div className='form-footer'>
-					<Button onClick={() => setPreviewOpen(false)}>Đóng</Button>
+					<Button onClick={() => setPreviewOpen(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 				</div>
 			</ModalExpandable>
 		</>
