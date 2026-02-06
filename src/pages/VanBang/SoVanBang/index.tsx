@@ -7,10 +7,11 @@ import { ETrangThaiSoVanBang } from '@/services/VanBang/constant';
 import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ChiTietSoVanBang from './components/ChiTiet';
 import SoVanBangForm from './components/Form';
 const SoVanBangPage = () => {
+	const intl = useIntl();
 	const {
 		page,
 		limit,
@@ -31,7 +32,7 @@ const SoVanBangPage = () => {
 	});
 	const columns: IColumn<SoVanBang.IRecord>[] = [
 		{
-			title: 'Năm',
+			title: intl.formatMessage({ id: 'sovanbang.column.nam' }),
 			dataIndex: 'namHanhChinh',
 			width: 100,
 			sorter: true,
@@ -40,14 +41,14 @@ const SoVanBangPage = () => {
 			onCell,
 		},
 		{
-			title: 'Tên sổ',
+			title: intl.formatMessage({ id: 'sovanbang.column.ten' }),
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Số vào sổ hiện tại',
+			title: intl.formatMessage({ id: 'sovanbang.column.svshientai' }),
 			dataIndex: 'soVaoSoHienTai',
 			width: 100,
 			sorter: true,
@@ -56,7 +57,7 @@ const SoVanBangPage = () => {
 			onCell,
 		},
 		{
-			title: 'Trình độ',
+			title: intl.formatMessage({ id: 'sovanbang.column.trinhdo' }),
 			dataIndex: 'maTrinhDoDaoTao',
 			width: 120,
 			render: (val, rec) => rec?.trinhDoDaoTao?.ten ?? rec?.tenTrinhDoDaoTao ?? val,
@@ -65,7 +66,7 @@ const SoVanBangPage = () => {
 			onCell,
 		},
 		{
-			title: 'Mô tả',
+			title: intl.formatMessage({ id: 'sovanbang.column.mota' }),
 			dataIndex: 'moTa',
 			width: 180,
 			render: (val) => <ExpandText>{val}</ExpandText>,
@@ -95,7 +96,7 @@ const SoVanBangPage = () => {
 		// 	render: (val) => val?.hoTen ?? val?.username,
 		// },
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sovanbang.column.thaotac' }),
 			align: 'center',
 			width: 120,
 			fixed: 'right',
@@ -115,15 +116,20 @@ const SoVanBangPage = () => {
 						/>
 					</Popconfirm> */}
 
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'sovanbang.column.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa sổ văn bằng này?'
+						title={intl.formatMessage({ id: 'sovanbang.column.xoa.confirm' })}
 						placement='topRight'
 					>
 						<ButtonExtend
-							tooltip='Xóa'
+							tooltip={intl.formatMessage({ id: 'sovanbang.column.xoa' })}
 							danger
 							type='link'
 							icon={<DeleteOutlined />}
@@ -139,7 +145,7 @@ const SoVanBangPage = () => {
 		<TableBase
 			columns={columns}
 			modelName={'vbcc.sovanbang'}
-			title='Sổ văn bằng'
+			title={intl.formatMessage({ id: 'sovanbang.title' })}
 			Form={isView ? ChiTietSoVanBang : SoVanBangForm}
 			dependencies={[page, limit]}
 			widthDrawer={isView ? 1200 : 800}

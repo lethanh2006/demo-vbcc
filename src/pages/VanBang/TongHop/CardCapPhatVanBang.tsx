@@ -1,18 +1,25 @@
 import ColumnChart from '@/components/Chart/ColumnChart';
 import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { Card, Empty } from 'antd';
+import { useIntl } from 'umi';
 
 const CardThongKeCapPhatVanBang = (props: { data: PhuLucVanBang.TTongHopNam[] }) => {
 	const { data } = props;
+	const intl = useIntl();
 
-	const yLabel = ['Số VBCC được cấp phát', 'Số VBCC cấp mới'];
+	const yLabel = [
+		intl.formatMessage({ id: 'trangchu.tonghop.cardcapphat.sovbccduoccapphat' }),
+		intl.formatMessage({ id: 'trangchu.tonghop.cardcapphat.sovbcccapmoi' }),
+	];
 	const yAxis = [data.map((item) => item.soLuongDuocPhat ?? 0), data.map((item) => item.soLuongCapMoiVanBang ?? 0)];
 
 	return (
-		<Card title='Thống kê tình trạng cấp phát bằng' variant='borderless'>
+		<Card title={intl.formatMessage({ id: 'trangchu.tonghop.cardcapphat.thongketinhtrang' })} variant='borderless'>
 			{data.length ? (
 				<ColumnChart
-					xAxis={data.map((item) => `Tháng ${item.thang}`)}
+					xAxis={data.map((item) =>
+						intl.formatMessage({ id: 'trangchu.tonghop.cardcapphat.thang' }, { thang: item.thang }),
+					)}
 					yAxis={yAxis}
 					yLabel={yLabel}
 					type='bar'
@@ -43,7 +50,9 @@ const CardThongKeCapPhatVanBang = (props: { data: PhuLucVanBang.TTongHopNam[] })
 							enabled: false,
 						},
 						xaxis: {
-							categories: data.map((item) => `Tháng ${item.thang}`),
+							categories: data.map((item) =>
+								intl.formatMessage({ id: 'trangchu.tonghop.cardcapphat.thang' }, { thang: item.thang }),
+							),
 							labels: {
 								style: { fontSize: '14px', fontWeight: 500 },
 							},
@@ -65,7 +74,7 @@ const CardThongKeCapPhatVanBang = (props: { data: PhuLucVanBang.TTongHopNam[] })
 					height={450}
 				/>
 			) : (
-				<Empty description='Không có dữ liệu' />
+				<Empty description={intl.formatMessage({ id: 'trangchu.tonghop.cardcapphat.khongcodulieu' })} />
 			)}
 		</Card>
 	);

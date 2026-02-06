@@ -10,7 +10,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row, Tag, Typography, message } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const { Text } = Typography;
 
@@ -21,6 +21,7 @@ const ModalImportPhuLucVanBang = (props: {
 	params?: any;
 	isThongTin?: boolean;
 }) => {
+	const intl = useIntl();
 	const { visible, onCancel, onOk, params, isThongTin } = props;
 	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const { formSubmiting, importPhuLucVanBangModel } = useModel('vbcc.phulucvanbang');
@@ -44,11 +45,11 @@ const ModalImportPhuLucVanBang = (props: {
 				params,
 			).then((res) => {
 				if (res?.success === false) {
-					message.error('Nhập dữ liệu thất bại');
+					message.error(intl.formatMessage({ id: 'modalimport.error.importfailed' }));
 					setDataThatBai(res?.error ?? []);
 					setVisibleModal(true);
 				} else {
-					message.success('Nhập dữ liệu thành công');
+					message.success(intl.formatMessage({ id: 'modalimport.success.imported' }));
 					onOk();
 				}
 			});
@@ -63,26 +64,26 @@ const ModalImportPhuLucVanBang = (props: {
 
 	const columns: IColumn<PhuLucVanBang.IImportPhuLuc>[] = [
 		{
-			title: 'Trường dữ liệu',
+			title: intl.formatMessage({ id: 'modalimport.column.field' }),
 			dataIndex: 'field',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Dòng lỗi',
+			title: intl.formatMessage({ id: 'modalimport.column.errorline' }),
 			dataIndex: ['tableError', 'row'],
 			width: 100,
 			align: 'center',
 			filterType: 'string',
 		},
 		{
-			title: 'Cột lỗi',
+			title: intl.formatMessage({ id: 'modalimport.column.errorcolumn' }),
 			dataIndex: ['tableError', 'column'],
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Loại dữ liệu',
+			title: intl.formatMessage({ id: 'modalimport.column.datatype' }),
 			dataIndex: ['tableError', 'columnType'],
 			width: 120,
 			align: 'center',
@@ -90,14 +91,14 @@ const ModalImportPhuLucVanBang = (props: {
 			filterType: 'string',
 		},
 		{
-			title: 'Giá trị lỗi',
+			title: intl.formatMessage({ id: 'modalimport.column.errorvalue' }),
 			dataIndex: ['tableError', 'value'],
 			width: 120,
 			render: (val) => <Tag color='red'>{val}</Tag>,
 			filterType: 'string',
 		},
 		{
-			title: 'Thông báo lỗi',
+			title: intl.formatMessage({ id: 'modalimport.column.errormessage' }),
 			dataIndex: ['tableError', 'error'],
 			width: 180,
 			render: (val) => <Text type='danger'>{val}</Text>,
@@ -106,40 +107,50 @@ const ModalImportPhuLucVanBang = (props: {
 	];
 
 	return (
-		<Modal title='Nhập thông tin văn bằng' open={visible} onCancel={onCancel} footer={null} maskClosable={false}>
+		<Modal
+			title={intl.formatMessage({ id: 'modalimport.title' })}
+			open={visible}
+			onCancel={onCancel}
+			footer={null}
+			maskClosable={false}
+		>
 			<Form form={form} layout='vertical' onFinish={onFinish}>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24}>
-						<Form.Item label='Quyết định tốt nghiệp'>
+						<Form.Item label={intl.formatMessage({ id: 'modalimport.label.quyetdinh' })}>
 							<Input value={recQuyetDinh?.soQuyetDinh} disabled />
 						</Form.Item>
 					</Col>
 
 					<Col span={24}>
-						<Form.Item name='file' label='Tập tin thông tin văn bằng' rules={[...rules.fileRequired]}>
+						<Form.Item
+							name='file'
+							label={intl.formatMessage({ id: 'modalimport.label.file' })}
+							rules={[...rules.fileRequired]}
+						>
 							<UploadFile drag />
 						</Form.Item>
 					</Col>
 
 					<Col span={24} style={{ textAlign: 'center', margin: '8px auto 12px', maxWidth: 400 }}>
-						<i>Sử dụng tập dữ liệu mẫu để việc xử lý được thực hiện nhanh chóng và chính xác</i>
+						<i>{intl.formatMessage({ id: 'modalimport.note' })}</i>
 						<br />
 						<Button icon={<DownloadOutlined />} type='link' onClick={onDownloadTemplate}>
-							Tải tập tin mẫu
+							{intl.formatMessage({ id: 'modalimport.button.downloadtemplate' })}
 						</Button>
 					</Col>
 				</Row>
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Thực hiện
+						{intl.formatMessage({ id: 'modalimport.button.execute' })}
 					</Button>
-					<Button onClick={() => onCancel()}>Hủy</Button>
+					<Button onClick={() => onCancel()}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 
 			<Modal
-				title='Chi tiết thông tin lỗi'
+				title={intl.formatMessage({ id: 'modalimport.modal.errordetail' })}
 				open={visibleModal}
 				onCancel={() => setVisibleModal(false)}
 				footer={null}
@@ -148,7 +159,7 @@ const ModalImportPhuLucVanBang = (props: {
 				<TableStaticData columns={columns} data={dataThatBai} size='small' hasTotal addStt />
 
 				<div className='form-footer'>
-					<Button onClick={() => setVisibleModal(false)}>Hủy</Button>
+					<Button onClick={() => setVisibleModal(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Modal>
 		</Modal>

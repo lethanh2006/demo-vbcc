@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const SelectDotCapBangTotNghiep = (props: {
 	value?: string;
@@ -11,6 +11,7 @@ const SelectDotCapBangTotNghiep = (props: {
 	style?: React.CSSProperties;
 }) => {
 	const { value, onChange, multiple, allowClear, hasDefault, style } = props;
+	const intl = useIntl();
 	const { danhSach, getAllModel } = useModel('vbcc.dotcapbangtotnghiep');
 
 	useEffect(() => {
@@ -33,7 +34,7 @@ const SelectDotCapBangTotNghiep = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn đợt cấp bằng'
+			placeholder={intl.formatMessage({ id: 'dotcapbang.select.placeholder' })}
 			allowClear={allowClear ?? false}
 			style={{ width: '100%', ...style }}
 			showArrow

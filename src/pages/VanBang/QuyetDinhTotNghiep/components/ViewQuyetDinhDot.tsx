@@ -43,7 +43,7 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 		if (!recDotCapBang?._id) return;
 		loaiBoQuyetDinhKhoiDotCapBang(recDotCapBang._id, [rec._id])
 			.then(() => {
-				message.success('Loại bỏ quyết định khỏi đợt cấp bằng thành công');
+				message.success(intl.formatMessage({ id: 'qdtotnghiep.message.loaibo.success' }));
 				return getData();
 			})
 			.catch((err) => {
@@ -53,7 +53,7 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 
 	const columns: IColumn<QuyetDinhTotNghiep.IRecord>[] = [
 		{
-			title: 'Năm hành chính',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.nam' }),
 			dataIndex: 'nam',
 			align: 'center',
 			width: 120,
@@ -61,7 +61,7 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 			onCell,
 		},
 		{
-			title: 'Số quyết định',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.soqd' }),
 			dataIndex: 'soQuyetDinh',
 			width: 150,
 			filterType: 'string',
@@ -69,7 +69,7 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 			onCell,
 		},
 		{
-			title: 'Ngày ký',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.ngayky' }),
 			dataIndex: 'ngayBanHanh',
 			width: 100,
 			filterType: 'date',
@@ -79,7 +79,7 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 			onCell,
 		},
 		{
-			title: 'Sổ văn bằng',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.sovanbang' }),
 			dataIndex: 'idSoVanBang',
 			width: 180,
 			render: (val, rec) => rec?.soVanBang?.ten ?? val,
@@ -88,7 +88,7 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 			onCell,
 		},
 		{
-			title: 'Biểu mẫu thông tin văn bằng',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.bieumau' }),
 			dataIndex: 'maBieuMau',
 			width: 150,
 			render: (val, rec) => rec?.bieuMau?.ten ?? val,
@@ -97,13 +97,13 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 			onCell,
 		},
 		{
-			title: 'Nội dung',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.noidung.view' }),
 			dataIndex: 'noiDung',
 			width: 160,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Đính kèm',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.dinhkem' }),
 			dataIndex: 'url',
 			align: 'center',
 			width: 120,
@@ -116,12 +116,12 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 							setVisibleFormFile(true);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'qdtotnghiep.common.viewDetail' })}
 					</a>
 				),
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.thaotac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -129,10 +129,15 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 				<>
 					<Popconfirm
 						onConfirm={() => deleQuyetDinhDot(rec)}
-						title='Bạn có chắc chắn muốn loại bỏ quyết định tốt nghiệp này?'
+						title={intl.formatMessage({ id: 'qdtotnghiep.confirm.loaibo' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='loại bỏ quyết định' danger type='link' icon={<CloseOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'qdtotnghiep.button.loaibo' })}
+							danger
+							type='link'
+							icon={<CloseOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -156,9 +161,9 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 				otherButtons={
 					isdotCapBang
 						? [
-								<Tooltip title='Thêm quyết định hiện có vào đợt cấp bằng này' key='apply-tooltip'>
+								<Tooltip title={intl.formatMessage({ id: 'qdtotnghiep.tooltip.themquyetdinh' })} key='apply-tooltip'>
 									<Button type='primary' icon={<PlusCircleOutlined />} onClick={handleApply}>
-										Thêm quyết định
+										{intl.formatMessage({ id: 'qdtotnghiep.button.themquyetdinh' })}
 									</Button>
 								</Tooltip>,
 							]
@@ -169,12 +174,14 @@ const ViewQuyetDinhTheoDot = (props: { isDotCapBang?: boolean }) => {
 			/>
 
 			<ModalExpandable
-				title='Chi tiết minh chứng'
+				title={intl.formatMessage({ id: 'qdtotnghiep.modal.evidence.title' })}
 				width={1000}
 				open={visibleFormFile}
 				footer={
 					<div className='form-footer'>
-						<Button onClick={() => setVisibleFormFile(false)}>Đóng</Button>
+						<Button onClick={() => setVisibleFormFile(false)}>
+							{intl.formatMessage({ id: 'global.button.dong' })}
+						</Button>
 					</div>
 				}
 				onCancel={() => setVisibleFormFile(false)}

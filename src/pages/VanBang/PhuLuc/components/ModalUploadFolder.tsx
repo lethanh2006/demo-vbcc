@@ -6,9 +6,10 @@ import { CloudUploadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Popconfirm, Popover, Upload } from 'antd';
 import { create as createIPFS } from 'ipfs-http-client';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean) => void; getData?: () => void }) => {
+	const intl = useIntl();
 	const { visible, setVisible, getData } = props;
 	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const { uploadFolderModel, setFormSubmiting, formSubmiting } = useModel('vbcc.phulucvanbang');
@@ -29,12 +30,12 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 
 	const columns: IColumn<PhuLucVanBang.TUploadFolder>[] = [
 		{
-			title: 'Tệp tin',
+			title: intl.formatMessage({ id: 'modaluploadfolder.column.file' }),
 			dataIndex: 'key',
 			width: 250,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'modaluploadfolder.column.status' }),
 			dataIndex: 'message',
 			width: 150,
 		},
@@ -48,7 +49,7 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 				setFormSubmiting(false);
 				uploadFolderModel(recQuyetDinh._id, mangId).then((folder: any) => {
 					Modal.info({
-						title: 'Kết quả',
+						title: intl.formatMessage({ id: 'modaluploadfolder.modal.result' }),
 						width: 800,
 						icon: null,
 						content: <TableStaticData data={folder} size='small' columns={columns} addStt />,
@@ -58,7 +59,7 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 				});
 			})
 			.catch((er) => {
-				message.error('Tải lên không thành công');
+				message.error(intl.formatMessage({ id: 'modaluploadfolder.error.uploadfailed' }));
 				console.log(er);
 			})
 			.finally(() => setFormSubmiting(false));
@@ -69,14 +70,14 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 			open={visible}
 			title={
 				<>
-					Tải lên thông tin văn bằng{' '}
+					{intl.formatMessage({ id: 'modaluploadfolder.title' })}{' '}
 					<Popover
 						content={
-							<>
-								Upload danh sách Thông tin Văn bằng chứng chỉ dưới dạng file scan PDF lên hệ thống.
-								<br />
-								Lưu ý: Tên file scan phải có định dạng <b>[Số vào sổ]_[Số hiệu văn bằng].pdf</b> tương ứng của VBCC.
-							</>
+							<span
+								dangerouslySetInnerHTML={{
+									__html: intl.formatMessage({ id: 'modaluploadfolder.popover.content' }),
+								}}
+							/>
 						}
 					>
 						<QuestionCircleOutlined />
@@ -87,10 +88,10 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 			onCancel={onCancel}
 			footer={[
 				<Button onClick={onCancel} key='cancel'>
-					Hủy
+					{intl.formatMessage({ id: 'modaluploadfolder.button.cancel' })}
 				</Button>,
 				<Popconfirm
-					title='Tải các file đã chọn lên?'
+					title={intl.formatMessage({ id: 'modaluploadfolder.popconfirm.upload' })}
 					key='upload'
 					disabled={!fileList || fileList.length === 0}
 					onConfirm={onUpload}
@@ -102,12 +103,12 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 						style={{ marginLeft: 8 }}
 						loading={formSubmiting}
 					>
-						Tải lên ({fileList?.length ?? 0})
+						{intl.formatMessage({ id: 'modaluploadfolder.button.upload' })} ({fileList?.length ?? 0})
 					</Button>
 				</Popconfirm>,
 			]}
 		>
-			<span>Chọn thư mục cần tải lên: </span>
+			<span>{intl.formatMessage({ id: 'modaluploadfolder.select.folder' })} </span>
 			<Upload
 				customRequest={({ onSuccess }) => setTimeout(() => onSuccess && onSuccess('ok'), 0)}
 				directory
@@ -122,7 +123,7 @@ const ModalUploadFolder = (props: { visible: boolean; setVisible: (val: boolean)
 					disabled={fileList && fileList?.length > 0}
 					style={{ margin: '0 0 16px 12px' }}
 				>
-					Upload thư mục
+					{intl.formatMessage({ id: 'modaluploadfolder.button.uploadfolder' })}
 				</Button>
 			</Upload>
 		</Modal>

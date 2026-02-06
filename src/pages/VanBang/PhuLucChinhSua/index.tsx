@@ -15,11 +15,12 @@ import dayjs from '@/utils/dayjs';
 import { CheckOutlined, CloseOutlined, FileTextOutlined, ProfileOutlined } from '@ant-design/icons';
 import { Tabs, Tag } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
 import ModalXuLyPhuLuc from './components/XuLy';
 
-const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đề xuất cấp lại' | 'Đề xuất thu hồi' }) => {
+const PhuLucChinhSuaPage = (props: { title: string }) => {
+	const intl = useIntl();
 	const { title } = props;
 	const { getModel, page, limit, setRecord, handleView } = useModel('vbcc.lichsuvanbang');
 	const [visibleXuLy, setVisibleXuLy] = useState<boolean>(false);
@@ -86,7 +87,7 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 
 	const columns: IColumn<LichSuVanBang.IRecord>[] = [
 		{
-			title: 'Phụ lục gốc',
+			title: intl.formatMessage({ id: 'xulydexuat.column.phulucgoc' }),
 			dataIndex: 'phuLucVanBangId',
 			width: 250,
 			render: (val, rec) =>
@@ -99,47 +100,47 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 				]
 					.filter(Boolean)
 					.join(' | '),
-			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
+			onCell: title !== intl.formatMessage({ id: 'xulydexuat.title.thuhoi' }) ? onCell : undefined,
 		},
 		{
-			title: 'Thời gian yêu cầu',
+			title: intl.formatMessage({ id: 'xulydexuat.column.thoigianyeucau' }),
 			dataIndex: 'thoiGianYeuCau',
 			align: 'center',
 			width: 120,
 			render: (val, rec) => val && dayjs(val).format('HH:mm DD/MM/YYYY'),
 			filterType: 'datetime',
 			sortable: true,
-			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
+			onCell: title !== intl.formatMessage({ id: 'xulydexuat.title.thuhoi' }) ? onCell : undefined,
 		},
 		{
-			title: 'Thời gian xử lý',
+			title: intl.formatMessage({ id: 'xulydexuat.column.thoigianxuly' }),
 			dataIndex: 'thoiGianXacNhan',
 			align: 'center',
 			width: 120,
 			render: (val, rec) => val && dayjs(val).format('HH:mm DD/MM/YYYY'),
 			filterType: 'datetime',
 			sortable: true,
-			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
+			onCell: title !== intl.formatMessage({ id: 'xulydexuat.title.thuhoi' }) ? onCell : undefined,
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'xulydexuat.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 200,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
-			title: 'Đề xuất',
+			title: intl.formatMessage({ id: 'xulydexuat.column.dexuat' }),
 			dataIndex: 'loai',
 			align: 'center',
 			width: 120,
 			render: (val, rec) => <Tag color={colorLoaiYeuCauVangBang[val as ELoaiYeuCauVangBang]}>{val}</Tag>,
 			filterType: 'select',
 			filterData: Object.values(ELoaiYeuCauVangBang),
-			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
+			onCell: title !== intl.formatMessage({ id: 'xulydexuat.title.thuhoi' }) ? onCell : undefined,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'xulydexuat.column.trangthai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
@@ -156,11 +157,11 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 				}),
 			),
 			fixed: 'right',
-			onCell: title !== 'Đề xuất thu hồi' ? onCell : undefined,
+			onCell: title !== intl.formatMessage({ id: 'xulydexuat.title.thuhoi' }) ? onCell : undefined,
 			hide: activeKey === '1',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'xulydexuat.column.thaotac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
@@ -173,10 +174,13 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 							disabled={!isChoXacNhan}
 							onClick={() => {
 								setRecord(rec);
-								setTrangThai({ title: 'Chấp nhận đề xuất', trangThai: ETrangThaiYeuCauVanBang.DA_DUYET });
+								setTrangThai({
+									title: intl.formatMessage({ id: 'xulydexuat.modal.title.chapnhandexuat' }),
+									trangThai: ETrangThaiYeuCauVanBang.DA_DUYET,
+								});
 								setVisibleXuLy(true);
 							}}
-							tooltip='Chấp nhận'
+							tooltip={intl.formatMessage({ id: 'xulydexuat.action.chapnhan' })}
 							className='btn-success'
 							type='link'
 							icon={<CheckOutlined />}
@@ -186,10 +190,13 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 							disabled={!isChoXacNhan}
 							onClick={() => {
 								setRecord(rec);
-								setTrangThai({ title: 'Từ chối đề xuất', trangThai: ETrangThaiYeuCauVanBang.KHONG_DUYET });
+								setTrangThai({
+									title: intl.formatMessage({ id: 'xulydexuat.modal.title.tuchoidexuat' }),
+									trangThai: ETrangThaiYeuCauVanBang.KHONG_DUYET,
+								});
 								setVisibleXuLy(true);
 							}}
-							tooltip='Từ chối'
+							tooltip={intl.formatMessage({ id: 'xulydexuat.action.tuchoi' })}
 							danger
 							type='link'
 							icon={<CloseOutlined />}
@@ -214,12 +221,20 @@ const PhuLucChinhSuaPage = (props: { title: 'Đề xuất chỉnh sửa' | 'Đ�
 				Form={Form}
 				formProps={{ getData }}
 				widthDrawer={1200}
-				modalTitle='Chi tiết thông tin thay đổi'
+				modalTitle={intl.formatMessage({ id: 'xulydexuat.modal.chitiet' })}
 				showModalTitle
 			>
 				<Tabs accessKey={activeKey} onChange={(tab) => setActiveKey(tab)}>
-					<Tabs.TabPane key={'1'} tab={'Chưa xử lý'} icon={<FileTextOutlined />} />
-					<Tabs.TabPane key={'2'} tab={'Lịch sử xử lý'} icon={<ProfileOutlined />} />
+					<Tabs.TabPane
+						key={'1'}
+						tab={intl.formatMessage({ id: 'xulydexuat.tab.chuaxuly' })}
+						icon={<FileTextOutlined />}
+					/>
+					<Tabs.TabPane
+						key={'2'}
+						tab={intl.formatMessage({ id: 'xulydexuat.tab.lichsuxuly' })}
+						icon={<ProfileOutlined />}
+					/>
 				</Tabs>
 			</TableBase>
 

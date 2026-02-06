@@ -7,7 +7,7 @@ import { resetFieldsForm } from '@/utils/utils';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ModalXuLyCapBang = (props: {
 	visible: boolean;
@@ -16,6 +16,7 @@ const ModalXuLyCapBang = (props: {
 	trangThai?: ETrangThaiCapBang;
 	getData?: () => void;
 }) => {
+	const intl = useIntl();
 	const { visible, setVisible, title, trangThai, getData } = props;
 	const [form] = Form.useForm();
 	const { record, formSubmiting, setVisibleForm, capPhatVanBangModel } = useModel('vbcc.phulucvanbang');
@@ -66,8 +67,8 @@ const ModalXuLyCapBang = (props: {
 				</div>
 				<div>
 					{trangThai === ETrangThaiCapBang.DA_CAP_BANG
-						? `Xác nhận đã cấp phát văn bằng !`
-						: `Xác nhận chưa cấp phát văn bằng !`}
+						? intl.formatMessage({ id: 'capphatvanbang.xuly.message.confirmed' })
+						: intl.formatMessage({ id: 'capphatvanbang.xuly.message.notconfirmed' })}
 				</div>
 			</div>
 
@@ -75,23 +76,27 @@ const ModalXuLyCapBang = (props: {
 				<Row gutter={[12, 0]}>
 					{trangThai === ETrangThaiCapBang.DA_CAP_BANG ? (
 						<Col span={24}>
-							<Form.Item name='ngayCapPhuLuc' label='Thời gian cấp phát bằng' rules={[...rules.required]}>
+							<Form.Item
+								name='ngayCapPhuLuc'
+								label={intl.formatMessage({ id: 'capphatvanbang.xuly.label.thoigiancapphat' })}
+								rules={[...rules.required]}
+							>
 								<MyDatePicker />
 							</Form.Item>
 						</Col>
 					) : null}
 					<Col span={24}>
-						<Form.Item name='ghiChuCapBang' label='Ghi chú'>
-							<Input placeholder='Nhập ghi chú' />
+						<Form.Item name='ghiChuCapBang' label={intl.formatMessage({ id: 'capphatvanbang.xuly.label.ghichu' })}>
+							<Input placeholder={intl.formatMessage({ id: 'capphatvanbang.xuly.placeholder.ghichu' })} />
 						</Form.Item>
 					</Col>
 				</Row>
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Xác nhận
+						{intl.formatMessage({ id: 'capphatvanbang.xuly.button.xacnhan' })}
 					</Button>
-					<Button onClick={() => setVisible(false)}>Hủy</Button>
+					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 		</Modal>

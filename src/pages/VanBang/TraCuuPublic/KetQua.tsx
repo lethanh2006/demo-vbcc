@@ -4,35 +4,36 @@ import type { IColumn } from '@/components/Table/typing';
 import type { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const KetQuaVanBang = () => {
+	const intl = useIntl();
 	const { formSubmiting, thongTinTraCuu } = useModel('vbcc.phulucvanbang');
 
 	const columns: IColumn<PhuLucVanBang.IThongTinTraCuu>[] = [
 		{
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'tracuupublic.ketqua.column.sovaoso' }),
 			width: 120,
 			render: (val, rec) => rec?.DuLieu?.soVaoSoBang,
 		},
 		{
-			title: 'Số hiệu văn bằng',
+			title: intl.formatMessage({ id: 'tracuupublic.ketqua.column.sohieuvanbang' }),
 			width: 150,
 			render: (val, rec) => rec?.DuLieu?.soHieuVanBang,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'tracuupublic.ketqua.column.hoten' }),
 			width: 160,
 			render: (val, rec) => rec?.DuLieu?.hoTen,
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'tracuupublic.ketqua.column.ngaysinh' }),
 			align: 'center',
 			width: 100,
 			render: (val, rec) => rec?.DuLieu?.ngaySinh && moment(rec?.DuLieu?.ngaySinh).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Mã người học',
+			title: intl.formatMessage({ id: 'tracuupublic.ketqua.column.manguoihoc' }),
 			width: 120,
 			render: (val, rec) => rec?.DuLieu?.maSinhVien,
 		},
@@ -50,14 +51,18 @@ const KetQuaVanBang = () => {
 		// 		),
 		// },
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'tracuupublic.ketqua.column.thaotac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
 			render: (val, rec) => (
 				<ButtonExtend
 					disabled={!rec?.DuLieu?.idVanBang}
-					tooltip={!rec?.DuLieu?.idVanBang ? 'Chưa có thông tin văn bằng' : 'Chi tiết'}
+					tooltip={
+						!rec?.DuLieu?.idVanBang
+							? intl.formatMessage({ id: 'tracuupublic.ketqua.tooltip.chuacothongtin' })
+							: intl.formatMessage({ id: 'tracuupublic.ketqua.tooltip.chitiet' })
+					}
 					type='link'
 					icon={<EyeOutlined />}
 					onClick={() => window.open(`/tra-cuu-van-bang/chi-tiet/${rec?.DuLieu?._id}`, '_blank')}
@@ -70,7 +75,7 @@ const KetQuaVanBang = () => {
 		<div style={{ padding: 12 }}>
 			{!!thongTinTraCuu?.Error ? (
 				<div style={{ margin: 'auto' }}>
-					<i style={{ color: 'red' }}>Không tồn tại thông tin văn bằng!</i>
+					<i style={{ color: 'red' }}>{intl.formatMessage({ id: 'tracuupublic.ketqua.error' })}</i>
 				</div>
 			) : (
 				<TableStaticData

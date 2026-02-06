@@ -1,8 +1,9 @@
 import dayjs from '@/utils/dayjs';
 import { Descriptions } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ChiTietSinhVienXacMinh = () => {
+	const intl = useIntl();
 	const { record } = useModel('vbcc.sinhvienxacminh');
 
 	return (
@@ -12,14 +13,24 @@ const ChiTietSinhVienXacMinh = () => {
 			layout='vertical'
 			colon={false}
 		>
-			<Descriptions.Item label='Mã người học'>{record?.maSinhVien ?? '--'}</Descriptions.Item>
-			<Descriptions.Item label='Họ tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
-			<Descriptions.Item label='Ngày sinh'>
+			<Descriptions.Item label={intl.formatMessage({ id: 'xacminhvanbang.chitiet.label.manguoihoc' })}>
+				{record?.maSinhVien ?? '--'}
+			</Descriptions.Item>
+			<Descriptions.Item label={intl.formatMessage({ id: 'xacminhvanbang.chitiet.label.hoten' })}>
+				{record?.hoTen ?? '--'}
+			</Descriptions.Item>
+			<Descriptions.Item label={intl.formatMessage({ id: 'xacminhvanbang.chitiet.label.ngaysinh' })}>
 				{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
 			</Descriptions.Item>
-			<Descriptions.Item label='Xếp loại'>{record?.xepLoai ?? '--'}</Descriptions.Item>
-			<Descriptions.Item label='Số hiệu văn bằng'>{record?.soHieuVanBang ?? '--'}</Descriptions.Item>
-			<Descriptions.Item label='Số vào sổ'>{record?.soVaoSo ?? '--'}</Descriptions.Item>
+			<Descriptions.Item label={intl.formatMessage({ id: 'xacminhvanbang.chitiet.label.xeploai' })}>
+				{record?.xepLoai ?? '--'}
+			</Descriptions.Item>
+			<Descriptions.Item label={intl.formatMessage({ id: 'xacminhvanbang.chitiet.label.sohieuvanbang' })}>
+				{record?.soHieuVanBang ?? '--'}
+			</Descriptions.Item>
+			<Descriptions.Item label={intl.formatMessage({ id: 'xacminhvanbang.chitiet.label.sovaoso' })}>
+				{record?.soVaoSo ?? '--'}
+			</Descriptions.Item>
 		</Descriptions>
 	);
 };

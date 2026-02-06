@@ -30,7 +30,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Popconfirm, Popover, Space, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import SelectSoVanBang from '../SoVanBang/components/Select';
 import ModalQuyetDinhTotNghiep from './components/Modal';
 import StatQuyetDinhTotNghiep from './components/Stat';
@@ -40,6 +40,7 @@ const QuyetDinhTotNghiepPage = (props: {
 	title: 'Tất cả quyết định' | 'Dự thảo cần duyệt' | 'Quyết định đã duyệt' | 'Quyết định đã hoàn thành';
 }) => {
 	const { title = 'Tất cả quyết định' } = props;
+	const intl = useIntl();
 
 	const {
 		handleEdit,
@@ -65,7 +66,7 @@ const QuyetDinhTotNghiepPage = (props: {
 
 	let filters: any = [];
 
-	if (title === 'Dự thảo cần duyệt') {
+	if (title === intl.formatMessage({ id: 'qdtotnghiep.title.duthaocanduyet' })) {
 		filters.push({
 			active: true,
 			field: 'trangThai',
@@ -74,7 +75,7 @@ const QuyetDinhTotNghiepPage = (props: {
 		});
 	}
 
-	if (title === 'Quyết định đã duyệt') {
+	if (title === intl.formatMessage({ id: 'qdtotnghiep.title.daduyet' })) {
 		filters.push({
 			active: true,
 			field: 'trangThai',
@@ -83,7 +84,7 @@ const QuyetDinhTotNghiepPage = (props: {
 		});
 	}
 
-	if (title === 'Quyết định đã hoàn thành') {
+	if (title === intl.formatMessage({ id: 'qdtotnghiep.title.hoanthanh' })) {
 		filters.push({
 			active: true,
 			field: 'trangThai',
@@ -97,7 +98,7 @@ const QuyetDinhTotNghiepPage = (props: {
 	};
 
 	const getThongKe = () => {
-		if (title === 'Tất cả quyết định')
+		if (title === intl.formatMessage({ id: 'qdtotnghiep.title.tatca' }))
 			thongKeQuyetDinhModel(yearSelect ? { nam: dayjs(yearSelect).format('YYYY') } : undefined);
 	};
 	useEffect(() => {
@@ -112,7 +113,7 @@ const QuyetDinhTotNghiepPage = (props: {
 	const renderTrangThaiInfo = (rec: QuyetDinhTotNghiep.IRecord) => (
 		<div style={{ fontSize: 12, maxWidth: 300, lineHeight: 1.45 }}>
 			<div>
-				<b>Người tạo:</b> {rec?.nguoiTao?.hoTen ?? '—'}
+				<b>{intl.formatMessage({ id: 'qdtotnghiep.status.creator' })}</b> {rec?.nguoiTao?.hoTen ?? '—'}
 				<br />
 				{rec?.nguoiTao?.thoiGian && <em>{dayjs(rec?.nguoiTao?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
 			</div>
@@ -120,7 +121,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			<br />
 
 			<div>
-				<b>Người xử lý:</b> {rec?.nguoiXuLy?.hoTen ?? '—'}
+				<b>{intl.formatMessage({ id: 'qdtotnghiep.status.handler' })}</b> {rec?.nguoiXuLy?.hoTen ?? '—'}
 				<br />
 				{rec?.nguoiXuLy?.thoiGian && <em>{dayjs(rec?.nguoiXuLy?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
 			</div>
@@ -128,7 +129,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			<br />
 
 			<div>
-				<b>Ghi chú chỉnh sửa:</b>
+				<b>{intl.formatMessage({ id: 'qdtotnghiep.status.note' })}</b>
 				<div style={{ whiteSpace: 'pre-wrap' }}>{rec?.ghiChuChinhSua || '—'}</div>
 			</div>
 		</div>
@@ -136,7 +137,7 @@ const QuyetDinhTotNghiepPage = (props: {
 
 	const columns: IColumn<QuyetDinhTotNghiep.IRecord>[] = [
 		{
-			title: 'Năm hành chính',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.nam' }),
 			dataIndex: 'nam',
 			width: 120,
 			align: 'center',
@@ -145,7 +146,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			hide: !!yearSelect,
 		},
 		{
-			title: 'Số quyết định',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.soqd' }),
 			dataIndex: 'soQuyetDinh',
 			width: 150,
 			filterType: 'string',
@@ -153,7 +154,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Ngày ký',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.ngayky' }),
 			dataIndex: 'ngayBanHanh',
 			width: 110,
 			filterType: 'date',
@@ -163,7 +164,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Sổ văn bằng',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.sovanbang' }),
 			dataIndex: 'idSoVanBang',
 			width: 180,
 			render: (val, rec) => rec?.soVanBang?.ten ?? val,
@@ -172,7 +173,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Số vào sổ bắt đầu',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.svsbd' }),
 			dataIndex: 'soVaoSoBatDau',
 			align: 'center',
 			width: 100,
@@ -180,7 +181,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Số vào sổ kết thúc',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.svskt' }),
 			dataIndex: 'soVaoSoKetThuc',
 			align: 'center',
 			width: 100,
@@ -188,7 +189,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Số lượng văn bằng',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.slvb' }),
 			dataIndex: 'soLuong',
 			align: 'center',
 			width: 100,
@@ -197,13 +198,13 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Trình độ',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.trinhdo' }),
 			width: 150,
 			render: (val, rec) => rec?.soVanBang?.trinhDoDaoTao?.ten,
 			onCell,
 		},
 		{
-			title: 'Biểu mẫu thông tin văn bằng',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.bieumau' }),
 			dataIndex: 'maBieuMau',
 			width: 160,
 			render: (val, rec) => rec?.bieuMau?.ten ?? val,
@@ -212,14 +213,14 @@ const QuyetDinhTotNghiepPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Nội dung trích yếu',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.noidung' }),
 			dataIndex: 'noiDung',
 			width: 180,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
-			title: 'Đính kèm',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.dinhkem' }),
 			dataIndex: 'url',
 			align: 'center',
 			width: 120,
@@ -232,14 +233,14 @@ const QuyetDinhTotNghiepPage = (props: {
 							setVisibleFormFile(true);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'qdtotnghiep.common.viewDetail' })}
 					</a>
 				) : (
 					'—'
 				),
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.trangthai' }),
 			dataIndex: 'trangThai',
 			width: 150,
 			align: 'center',
@@ -266,7 +267,7 @@ const QuyetDinhTotNghiepPage = (props: {
 		},
 
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'qdtotnghiep.column.thaotac' }),
 			align: 'center',
 			width: title === 'Quyết định đã duyệt' ? 60 : 90,
 			fixed: 'right',
@@ -281,13 +282,18 @@ const QuyetDinhTotNghiepPage = (props: {
 				if (title === 'Quyết định đã duyệt') {
 					return (
 						<Popconfirm
-							title='Xác nhận hoàn thành quyết định tốt nghiệp?'
+							title={intl.formatMessage({ id: 'qdtotnghiep.confirm.complete' })}
 							placement='topRight'
 							onConfirm={() =>
 								xuLyDuThaoModel(rec?._id, { trangThai: ETrangThaiQuyetDinhTotNghiep.HOAN_THANH }, getData)
 							}
 						>
-							<ButtonExtend disabled={isHoanThanh} tooltip='Hoàn thành' type='link' icon={<SaveOutlined />} />
+							<ButtonExtend
+								disabled={isHoanThanh}
+								tooltip={intl.formatMessage({ id: 'qdtotnghiep.action.complete' })}
+								type='link'
+								icon={<SaveOutlined />}
+							/>
 						</Popconfirm>
 					);
 				}
@@ -296,12 +302,12 @@ const QuyetDinhTotNghiepPage = (props: {
 					<>
 						{title === 'Tất cả quyết định' ? (
 							<Popconfirm
-								title='Bạn muốn trình lãnh đạo dự thảo quyết định tốt nghiệp này?'
+								title={intl.formatMessage({ id: 'qdtotnghiep.confirm.submitLeader' })}
 								placement='topRight'
 								onConfirm={() => trinhLanhDaoModel(rec?._id, getData)}
 							>
 								<ButtonExtend
-									tooltip='Trình lãnh đạo'
+									tooltip={intl.formatMessage({ id: 'qdtotnghiep.action.submitLeader' })}
 									type='link'
 									icon={<SendOutlined />}
 									disabled={!canTrinhLanhDao}
@@ -309,14 +315,14 @@ const QuyetDinhTotNghiepPage = (props: {
 							</Popconfirm>
 						) : (
 							<Popconfirm
-								title='Duyệt quyết định?'
+								title={intl.formatMessage({ id: 'qdtotnghiep.action.approve' })}
 								placement='topRight'
 								onConfirm={() =>
 									xuLyDuThaoModel(rec?._id, { trangThai: ETrangThaiQuyetDinhTotNghiep.CHINH_THUC }, getData)
 								}
 							>
 								<ButtonExtend
-									tooltip='Duyệt quyết định'
+									tooltip={intl.formatMessage({ id: 'qdtotnghiep.confirm.approve' })}
 									type='link'
 									className='btn-success'
 									icon={<CheckOutlined />}
@@ -333,7 +339,7 @@ const QuyetDinhTotNghiepPage = (props: {
 									{title !== 'Tất cả quyết định' && (
 										<ButtonExtend
 											type='link'
-											tooltip='Yêu cầu chỉnh sửa'
+											tooltip={intl.formatMessage({ id: 'qdtotnghiep.action.requestEdit' })}
 											icon={<RollbackOutlined />}
 											className='btn-warning'
 											disabled={!canXuLyQuyetDinh}
@@ -342,29 +348,33 @@ const QuyetDinhTotNghiepPage = (props: {
 												setVisibleChinhSua(true);
 											}}
 										>
-											Yêu cầu chỉnh sửa
+											{intl.formatMessage({ id: 'qdtotnghiep.action.requestEdit' })}
 										</ButtonExtend>
 									)}
 
 									<ButtonExtend
 										type='link'
-										tooltip='Chỉnh sửa'
+										tooltip={intl.formatMessage({ id: 'qdtotnghiep.action.edit' })}
 										icon={<EditOutlined />}
 										disabled={!canTrinhLanhDao}
 										onClick={() => handleEdit(rec)}
 									>
-										Chỉnh sửa
+										{intl.formatMessage({ id: 'qdtotnghiep.action.edit' })}
 									</ButtonExtend>
 
-									<Popconfirm title='Xóa quyết định?' placement='topRight' onConfirm={() => deleteModel(rec._id)}>
+									<Popconfirm
+										title={intl.formatMessage({ id: 'qdtotnghiep.confirm.delete' })}
+										placement='topRight'
+										onConfirm={() => deleteModel(rec._id)}
+									>
 										<ButtonExtend
-											tooltip='Xóa'
+											tooltip={intl.formatMessage({ id: 'qdtotnghiep.button.xoa' })}
 											type='link'
 											danger
 											icon={<DeleteOutlined />}
 											// disabled={!canTrinhLanhDao}
 										>
-											Xóa
+											{intl.formatMessage({ id: 'qdtotnghiep.button.xoa' })}
 										</ButtonExtend>
 									</Popconfirm>
 								</Space>
@@ -420,13 +430,13 @@ const QuyetDinhTotNghiepPage = (props: {
 								setThemMoiHoanThanh(true);
 							}}
 						>
-							Thêm mới
+							{intl.formatMessage({ id: 'global.button.themmoi' })}
 						</ButtonExtend>
 					) : (
 						<></>
 					),
 					<ButtonExtend key={'1'} icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
-						Xuất dữ liệu
+						{intl.formatMessage({ id: 'qdtotnghiep.common.export' })}
 					</ButtonExtend>,
 				]}
 				onReload={() => {
@@ -437,7 +447,7 @@ const QuyetDinhTotNghiepPage = (props: {
 				<MyDatePicker
 					style={{ width: 160, marginBottom: 12 }}
 					pickerStyle='year'
-					placeholder='Chọn năm hành chính'
+					placeholder={intl.formatMessage({ id: 'qdtotnghiep.filter.chooseYear' })}
 					value={yearSelect ? dayjs(yearSelect) : null}
 					format='YYYY'
 					allowClear
@@ -452,7 +462,7 @@ const QuyetDinhTotNghiepPage = (props: {
 			</TableBase>
 
 			<ModalExpandable
-				title='Chi tiết minh chứng'
+				title={intl.formatMessage({ id: 'qdtotnghiep.modal.evidence.title' })}
 				width={950}
 				open={visibleFormFile}
 				onCancel={() => setVisibleFormFile(false)}
@@ -467,7 +477,7 @@ const QuyetDinhTotNghiepPage = (props: {
 				visible={visibleExport}
 				modelName='vbcc.quyetdinhtotnghiep'
 				onCancel={() => setVisibleExport(false)}
-				fileName='Danh sách quyết định.xlsx'
+				fileName={intl.formatMessage({ id: 'qdtotnghiep.export.filename' })}
 				filters={filters}
 				condition={{ nam: dayjs(yearSelect).format('YYYY') }}
 			/>

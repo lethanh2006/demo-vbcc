@@ -219,7 +219,7 @@ const ViewPhuLucQuyetDinh = (props: { getData?: any; isDotCapBang?: boolean }) =
 				params={{ idQuyetDinh: recQuyetDinh?._id }}
 				dependencies={[page, limit, recQuyetDinh?._id]}
 				modelName='vbcc.phulucvanbang'
-				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
+				title={intl.formatMessage({ id: 'thongtinvb.title' })}
 				hideCard
 				rowSelection
 				detailRow={{

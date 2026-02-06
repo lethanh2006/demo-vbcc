@@ -1,7 +1,7 @@
 import type { SoVanBang } from '@/services/VanBang/SoVanBang/typing';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -16,6 +16,7 @@ const SelectSoVanBang = (props: {
 	condition?: Partial<SoVanBang.IRecord>;
 	disabled?: boolean;
 }) => {
+	const intl = useIntl();
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled } = props;
 	const { danhSach, getAllModel } = useModel('vbcc.sovanbang');
 
@@ -37,7 +38,7 @@ const SelectSoVanBang = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn sổ văn bằng'
+			placeholder={intl.formatMessage({ id: 'sovanbang.select.chonsvb' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

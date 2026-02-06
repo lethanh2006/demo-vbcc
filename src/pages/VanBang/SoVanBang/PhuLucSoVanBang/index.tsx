@@ -73,7 +73,7 @@ const PhuLucSoVanBangPage = () => {
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.svs' }),
 			dataIndex: type === '1' ? 'soVaoSoBang' : 'soVaoSoTamThoi',
 			filterType: 'string',
 			width: 120,
@@ -81,7 +81,7 @@ const PhuLucSoVanBangPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Số hiệu VB',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.shvb' }),
 			dataIndex: 'soHieuVanBang',
 			filterType: 'string',
 			width: 120,
@@ -89,14 +89,14 @@ const PhuLucSoVanBangPage = () => {
 			onCell,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.hoten' }),
 			dataIndex: 'hoTen',
 			width: 160,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.ngaysinh' }),
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 100,
@@ -106,7 +106,7 @@ const PhuLucSoVanBangPage = () => {
 			onCell,
 		},
 		{
-			title: 'Mã người học',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.mangh' }),
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			width: 120,
@@ -115,7 +115,7 @@ const PhuLucSoVanBangPage = () => {
 			onCell,
 		},
 		{
-			title: 'Quyết định',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.quyetdinh' }),
 			dataIndex: 'idQuyetDinh',
 			width: 140,
 			render: (val, rec) => (
@@ -129,7 +129,7 @@ const PhuLucSoVanBangPage = () => {
 			filterCustomSelect: <SelectQuyetDinhTotNghiep />,
 		},
 		{
-			title: 'Tập tin',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.taptin' }),
 			dataIndex: 'urlIpfs',
 			align: 'center',
 			width: 120,
@@ -142,25 +142,25 @@ const PhuLucSoVanBangPage = () => {
 							setVisibleModal(true);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'sovanbang.phuluc.xemct' })}
 					</a>
 				) : (
-					<i>(Chưa upload)</i>
+					<i>({intl.formatMessage({ id: 'sovanbang.phuluc.chuaupload' })})</i>
 				),
 			hide: !settingVbcc?.require_IPFS,
 		},
 		{
-			title: 'Văn bằng',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.vanbang' }),
 			width: 120,
 			children: [
 				{
-					title: 'Tập tin',
+					title: intl.formatMessage({ id: 'sovanbang.phuluc.col.taptin' }),
 					dataIndex: 'fileVanBang',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						!val ? (
-							<Tag color='red'>Chưa trình ký</Tag>
+							<Tag color='red'>{intl.formatMessage({ id: 'sovanbang.phuluc.chuatrinhky' })}</Tag>
 						) : (
 							<a
 								onClick={(e) => {
@@ -169,25 +169,27 @@ const PhuLucSoVanBangPage = () => {
 									setVisibleFormFile(true);
 								}}
 							>
-								Xem chi tiết
+								{intl.formatMessage({ id: 'sovanbang.phuluc.xemct' })}
 							</a>
 						),
 				},
 				{
-					title: 'Ký số',
+					title: intl.formatMessage({ id: 'sovanbang.phuluc.col.kyso' }),
 					dataIndex: 'daKy',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						val ? (
 							<Space>
-								<Tag color='green'>Đã ký</Tag>
+								<Tag color='green'>{intl.formatMessage({ id: 'sovanbang.phuluc.daky' })}</Tag>
 								<Popover
 									content={
 										<div style={{ maxWidth: 300 }}>
 											<Descriptions column={1} size='small'>
-												<Descriptions.Item label='Người ký'>{rec?.nguoiKy?.hoTen ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Thời gian ký'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'sovanbang.phuluc.nguoiky' })}>
+													{rec?.nguoiKy?.hoTen ?? '--'}
+												</Descriptions.Item>
+												<Descriptions.Item label={intl.formatMessage({ id: 'sovanbang.phuluc.tgky' })}>
 													{rec?.thoiGianKy ? dayjs(rec?.thoiGianKy).format('HH:mm DD/MM/YYYY') : '--'}
 												</Descriptions.Item>
 											</Descriptions>
@@ -198,26 +200,26 @@ const PhuLucSoVanBangPage = () => {
 								</Popover>
 							</Space>
 						) : (
-							<Tag color='orange'>Chưa ký</Tag>
+							<Tag color='orange'>{intl.formatMessage({ id: 'sovanbang.phuluc.chuaky' })}</Tag>
 						),
 				},
 				{
-					title: 'Đóng dấu',
+					title: intl.formatMessage({ id: 'sovanbang.phuluc.col.dongdau' }),
 					dataIndex: 'daDongDau',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						val ? (
 							<Space>
-								<Tag color='green'>Đã đóng dấu</Tag>
+								<Tag color='green'>{intl.formatMessage({ id: 'sovanbang.phuluc.dadongdau' })}</Tag>
 								<Popover
 									content={
 										<div style={{ maxWidth: 300 }}>
 											<Descriptions column={1} size='small'>
-												<Descriptions.Item label='Người đóng dấu'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'sovanbang.phuluc.nguoidongdau' })}>
 													{rec?.nguoiDongGiau?.hoTen ?? '--'}
 												</Descriptions.Item>
-												<Descriptions.Item label='Thời gian đóng dấu'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'sovanbang.phuluc.tgdongdau' })}>
 													{rec?.thoiGianDongGiau ? dayjs(rec?.thoiGianDongGiau).format('HH:mm DD/MM/YYYY') : '--'}
 												</Descriptions.Item>
 											</Descriptions>
@@ -228,14 +230,14 @@ const PhuLucSoVanBangPage = () => {
 								</Popover>
 							</Space>
 						) : (
-							<Tag color='orange'>Chưa đóng dấu</Tag>
+							<Tag color='orange'>{intl.formatMessage({ id: 'sovanbang.phuluc.chuadongdau' })}</Tag>
 						),
 				},
 			],
 			hide: !settingVbcc?.require_diploma_signature,
 		},
 		{
-			title: 'Trạng thái phát bằng',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.ttphatbang' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
@@ -264,16 +266,22 @@ const PhuLucSoVanBangPage = () => {
 			onCell,
 		},
 		{
-			title: 'Ký số thông tin',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.kysott' }),
 			dataIndex: 'signature',
 			align: 'center',
 			width: 80,
-			render: (val) => <Tag color={!!val ? ETagColor.GREEN : ETagColor.RED}>{!!val ? 'Đã ký' : 'Chưa ký'}</Tag>,
+			render: (val) => (
+				<Tag color={!!val ? ETagColor.GREEN : ETagColor.RED}>
+					{!!val
+						? intl.formatMessage({ id: 'sovanbang.phuluc.daky' })
+						: intl.formatMessage({ id: 'sovanbang.phuluc.chuaky' })}
+				</Tag>
+			),
 			hide: !settingVbcc?.require_signature,
 			onCell,
 		},
 		{
-			title: 'Blockchain',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.blockchain' }),
 			dataIndex: 'createdBlockchain',
 			align: 'center',
 			width: 180,
@@ -300,7 +308,7 @@ const PhuLucSoVanBangPage = () => {
 
 	const columns3: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.svs' }),
 			dataIndex: 'soVaoSoBang',
 			filterType: 'string',
 			width: 120,
@@ -309,36 +317,36 @@ const PhuLucSoVanBangPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Số hiệu VB',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.shvb' }),
 			width: 120,
-			render: (val, rec) => <i>Không có thông tin</i>,
+			render: (val, rec) => <i>{intl.formatMessage({ id: 'sovanbang.phuluc.khongcott' })}</i>,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.hoten' }),
 			width: 160,
-			render: (val, rec) => <i>Không có thông tin</i>,
+			render: (val, rec) => <i>{intl.formatMessage({ id: 'sovanbang.phuluc.khongcott' })}</i>,
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.ngaysinh' }),
 			width: 100,
-			render: (val, rec) => <i>Không có thông tin</i>,
+			render: (val, rec) => <i>{intl.formatMessage({ id: 'sovanbang.phuluc.khongcott' })}</i>,
 		},
 		{
-			title: 'Mã người học',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.mangh' }),
 			width: 120,
-			render: (val, rec) => <i>Không có thông tin</i>,
+			render: (val, rec) => <i>{intl.formatMessage({ id: 'sovanbang.phuluc.khongcott' })}</i>,
 		},
 		{
-			title: 'Quyết định',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.quyetdinh' }),
 			width: 140,
-			render: (val, rec) => <i>Không có thông tin</i>,
+			render: (val, rec) => <i>{intl.formatMessage({ id: 'sovanbang.phuluc.khongcott' })}</i>,
 		},
 		{
-			title: 'Trạng thái phát bằng',
+			title: intl.formatMessage({ id: 'sovanbang.phuluc.col.ttphatbang' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => <Tag color='blue'>Chưa phát bằng</Tag>,
+			render: (val, rec) => <Tag color='blue'>{intl.formatMessage({ id: 'sovanbang.phuluc.chuaphatbang' })}</Tag>,
 		},
 	];
 
@@ -356,9 +364,9 @@ const PhuLucSoVanBangPage = () => {
 						value={type}
 						onChange={(key) => setType(key)}
 						options={[
-							{ value: '1', label: 'Chính thức' },
-							{ value: '2', label: 'Dự thảo' },
-							{ value: '3', label: 'Giữ số' },
+							{ value: '1', label: intl.formatMessage({ id: 'sovanbang.phuluc.chinhthuc' }) },
+							{ value: '2', label: intl.formatMessage({ id: 'sovanbang.phuluc.duthao' }) },
+							{ value: '3', label: intl.formatMessage({ id: 'sovanbang.phuluc.giuso' }) },
 						]}
 					/>,
 				]}
@@ -372,14 +380,14 @@ const PhuLucSoVanBangPage = () => {
 				columns={columns}
 				dependencies={[page, limit, recSoVanBang?._id, type]}
 				modelName='vbcc.phulucvanbang'
-				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
+				title={intl.formatMessage({ id: 'thongtinvb.title' })}
 				widthDrawer={1000}
 				modalTitle={
 					isView
-						? 'Xem chi tiết thông tin văn bằng'
+						? intl.formatMessage({ id: 'sovanbang.phuluc.modal.xem' })
 						: edit
-							? 'Cập nhật thông tin văn bằng'
-							: 'Thêm mới thông tin văn bằng'
+							? intl.formatMessage({ id: 'sovanbang.phuluc.modal.capnhat' })
+							: intl.formatMessage({ id: 'sovanbang.phuluc.modal.themmoi' })
 				}
 				Form={ViewPhuLucVanBang}
 				buttons={{
@@ -392,9 +400,9 @@ const PhuLucSoVanBangPage = () => {
 						value={type}
 						onChange={(key) => setType(key)}
 						options={[
-							{ value: '1', label: 'Chính thức' },
-							{ value: '2', label: 'Dự thảo' },
-							{ value: '3', label: 'Giữ số' },
+							{ value: '1', label: intl.formatMessage({ id: 'sovanbang.phuluc.chinhthuc' }) },
+							{ value: '2', label: intl.formatMessage({ id: 'sovanbang.phuluc.duthao' }) },
+							{ value: '3', label: intl.formatMessage({ id: 'sovanbang.phuluc.giuso' }) },
 						]}
 					/>,
 				]}
@@ -403,11 +411,11 @@ const PhuLucSoVanBangPage = () => {
 			{settingVbcc?.require_IPFS && <PreviewIPFS visible={visibleModal} setVisible={setVisibleModal} />}
 
 			<ModalExpandable
-				title='Chi tiết tệp tin'
+				title={intl.formatMessage({ id: 'sovanbang.phuluc.modal.chitiet' })}
 				width={1000}
 				open={visibleFormFile}
 				okButtonProps={{ hidden: true }}
-				cancelText='Đóng'
+				cancelText={intl.formatMessage({ id: 'global.button.dong' })}
 				onCancel={() => setVisibleFormFile(false)}
 			>
 				<PreviewFile file={record?.fileVanBang ?? ''} />

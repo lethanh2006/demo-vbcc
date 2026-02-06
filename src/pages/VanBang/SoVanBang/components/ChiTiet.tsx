@@ -1,10 +1,11 @@
 import { Steps } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import PhuLucSoVanBangPage from '../PhuLucSoVanBang';
 import SoVanBangForm from './Form';
 
 const ChiTietSoVanBang = () => {
+	const intl = useIntl();
 	const { visibleForm } = useModel('vbcc.sovanbang');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
@@ -24,8 +25,8 @@ const ChiTietSoVanBang = () => {
 				style={{ marginBottom: 18, paddingTop: 0 }}
 				onChange={onChangeStep}
 			>
-				<Steps.Step title='Sổ văn bằng' />
-				<Steps.Step title='Thông tin văn bằng' />
+				<Steps.Step title={intl.formatMessage({ id: 'sovanbang.chitiet.svb' })} />
+				<Steps.Step title={intl.formatMessage({ id: 'sovanbang.chitiet.thongtinvb' })} />
 			</Steps>
 
 			{currentStep === 0 ? <SoVanBangForm /> : <PhuLucSoVanBangPage />}

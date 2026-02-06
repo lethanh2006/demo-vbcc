@@ -1,7 +1,9 @@
+import { useIntl } from 'umi';
 import PhuLucChinhSuaPage from '.';
 
 const YeuCauThuHoi = () => {
-	return <PhuLucChinhSuaPage title='Đề xuất thu hồi' />;
+	const intl = useIntl();
+	return <PhuLucChinhSuaPage title={intl.formatMessage({ id: 'xulydexuat.title.thuhoi' })} />;
 };
 
 export default YeuCauThuHoi;

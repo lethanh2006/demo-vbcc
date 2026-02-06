@@ -8,12 +8,13 @@ import { CheckCircleOutlined, CheckOutlined, CloseOutlined, EditOutlined } from 
 import { Button, Col, Descriptions, Row, Space, Typography, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ModalXuLyPhuLuc from './XuLy';
 
 const { Title, Text } = Typography;
 
 const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () => void }) => {
+	const intl = useIntl();
 	const { data, getData } = props;
 	const { token } = theme.useToken();
 
@@ -36,19 +37,19 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () 
 	const updated = recLichSu?.thongTinCapNhatCapLai || ({} as PhuLucVanBang.IRecord);
 
 	const fields = [
-		{ key: 'hoTen', label: 'Họ và tên' },
-		{ key: 'maSinhVien', label: 'Mã người học' },
-		{ key: 'ngaySinh', label: 'Ngày sinh' },
-		{ key: 'cmtCccd', label: 'Số CMND/CCCD' },
-		{ key: 'soVaoSoBang', label: 'Số vào sổ cấp bằng' },
-		{ key: 'bookEntryNumberFormat', label: 'Số vào sổ (Tiếng Anh)' },
-		{ key: 'soHieuVanBang', label: 'Số hiệu văn bằng' },
-		{ key: 'trinhDoDaoTao', label: 'Trình độ đào tạo' },
-		{ key: 'hinhThucDaoTao', label: 'Hình thức đào tạo' },
-		{ key: 'nganhDaoTao', label: 'Ngành đào tạo' },
+		{ key: 'hoTen', label: intl.formatMessage({ id: 'xulydexuat.form.label.hoten' }) },
+		{ key: 'maSinhVien', label: intl.formatMessage({ id: 'xulydexuat.form.label.manguoihoc' }) },
+		{ key: 'ngaySinh', label: intl.formatMessage({ id: 'xulydexuat.form.label.ngaysinh' }) },
+		{ key: 'cmtCccd', label: intl.formatMessage({ id: 'xulydexuat.form.label.cmndcccd' }) },
+		{ key: 'soVaoSoBang', label: intl.formatMessage({ id: 'xulydexuat.form.label.sovaoso' }) },
+		{ key: 'bookEntryNumberFormat', label: intl.formatMessage({ id: 'xulydexuat.form.label.sovaosoen' }) },
+		{ key: 'soHieuVanBang', label: intl.formatMessage({ id: 'xulydexuat.form.label.sohieuvanbang' }) },
+		{ key: 'trinhDoDaoTao', label: intl.formatMessage({ id: 'xulydexuat.form.label.trinhdodaotao' }) },
+		{ key: 'hinhThucDaoTao', label: intl.formatMessage({ id: 'xulydexuat.form.label.hinhthucdaotao' }) },
+		{ key: 'nganhDaoTao', label: intl.formatMessage({ id: 'xulydexuat.form.label.nganhdaotao' }) },
 		!settingVbcc?.require_IPFS && {
 			key: 'urlIpfs',
-			label: 'Tập tin văn bằng (file scan)',
+			label: intl.formatMessage({ id: 'xulydexuat.form.label.taptinvanbang' }),
 		},
 	].filter(Boolean) as { key: keyof PhuLucVanBang.IRecord; label: string }[];
 
@@ -190,7 +191,7 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () 
 								hasTotal={true}
 								otherButtons={[
 									<Text strong type='danger' style={{ marginBottom: 8, display: 'block' }}>
-										<EditOutlined /> Dữ liệu Gốc
+										<EditOutlined /> {intl.formatMessage({ id: 'xulydexuat.form.table.dulieugoc' })}
 									</Text>,
 								]}
 							/>
@@ -204,7 +205,7 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () 
 								hasTotal={true}
 								otherButtons={[
 									<Text strong type='success' style={{ marginBottom: 8, display: 'block' }}>
-										<CheckCircleOutlined /> Dữ liệu Cập Nhật
+										<CheckCircleOutlined /> {intl.formatMessage({ id: 'xulydexuat.form.table.dulieucapnhat' })}
 									</Text>,
 								]}
 							/>
@@ -215,7 +216,7 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () 
 				{!changed && (
 					<>
 						<Text strong style={{ marginBottom: 8, display: 'block' }}>
-							<CheckCircleOutlined /> Dữ liệu Hiện Tại (Không đổi)
+							<CheckCircleOutlined /> {intl.formatMessage({ id: 'xulydexuat.form.table.dulieukhongdoi' })}
 						</Text>
 						<TableStaticData addStt size='small' columns={columns} data={(upd?.value as any) ?? []} hasTotal={true} />
 					</>
@@ -231,7 +232,7 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () 
 		<>
 			<Row gutter={[12, 12]}>
 				<Col span={24}>
-					<Title level={5}>Thông tin cơ bản</Title>
+					<Title level={5}>{intl.formatMessage({ id: 'xulydexuat.form.thongtincoban' })}</Title>
 					<Descriptions column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }} bordered size='small'>
 						{fields.map((f) => (
 							<Descriptions.Item key={f.key} label={f.label}>
@@ -242,7 +243,7 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () 
 				</Col>
 
 				<Col span={24}>
-					<Title level={5}>Thông tin phụ lục</Title>
+					<Title level={5}>{intl.formatMessage({ id: 'xulydexuat.form.thongtinphuluc' })}</Title>
 
 					{textTemplateItems?.length ? (
 						<>
@@ -274,29 +275,35 @@ const FormPhuLucChinhSua = (props: { data?: LichSuVanBang.IRecord; getData?: () 
 					<Button
 						disabled={record?.trangThai !== ETrangThaiYeuCauVanBang.CHO_XAC_NHAN}
 						onClick={() => {
-							setTrangThai({ title: 'Chấp nhận đề xuất', trangThai: ETrangThaiYeuCauVanBang.DA_DUYET });
+							setTrangThai({
+								title: intl.formatMessage({ id: 'xulydexuat.modal.title.chapnhandexuat' }),
+								trangThai: ETrangThaiYeuCauVanBang.DA_DUYET,
+							});
 							setVisibleXuLy(true);
 						}}
 						type='primary'
 						className='btn-success'
 						icon={<CheckOutlined />}
 					>
-						Chấp nhận
+						{intl.formatMessage({ id: 'xulydexuat.action.chapnhan' })}
 					</Button>
 					<Button
 						disabled={record?.trangThai !== ETrangThaiYeuCauVanBang.CHO_XAC_NHAN}
 						onClick={() => {
-							setTrangThai({ title: 'Từ chối đề xuất', trangThai: ETrangThaiYeuCauVanBang.KHONG_DUYET });
+							setTrangThai({
+								title: intl.formatMessage({ id: 'xulydexuat.modal.title.tuchoidexuat' }),
+								trangThai: ETrangThaiYeuCauVanBang.KHONG_DUYET,
+							});
 							setVisibleXuLy(true);
 						}}
 						type='primary'
 						className='btn-error'
 						icon={<CloseOutlined />}
 					>
-						Từ chối
+						{intl.formatMessage({ id: 'xulydexuat.action.tuchoi' })}
 					</Button>
 					<Button onClick={() => setVisibleForm(false)} type='default'>
-						Đóng
+						{intl.formatMessage({ id: 'global.button.dong' })}
 					</Button>
 				</div>
 			) : null}

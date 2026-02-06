@@ -30,13 +30,16 @@ const ChiTietTraCuuVanBang = () => {
 			<Spin spinning={loading}>
 				<div style={{ maxWidth: 1200, margin: 'auto', paddingTop: 30, paddingBottom: 30 }}>
 					<div style={{ textAlign: 'center', fontSize: 22, marginBottom: 36 }}>
-						<b>Chi tiết thông tin văn bằng</b>
+						<b>{intl.formatMessage({ id: 'tracuupublic.chitiet.title' })}</b>
 					</div>
 
 					{record?._id ? (
 						<PhuLucDetailView isPublic />
 					) : (
-						<Empty description='Không tìm thấy thông tin phụ lục' style={{ marginBottom: 32, marginTop: 32 }} />
+						<Empty
+							description={intl.formatMessage({ id: 'tracuupublic.chitiet.empty' })}
+							style={{ marginBottom: 32, marginTop: 32 }}
+						/>
 					)}
 				</div>
 			</Spin>

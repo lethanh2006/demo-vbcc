@@ -10,7 +10,7 @@ import dayjs from '@/utils/dayjs';
 import { Card, Col, Image, Row, Space, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import SelectSoVanBang from '../SoVanBang/components/Select';
 import CardThongKeCapPhatVanBang from './CardCapPhatVanBang';
 import CardTrinhDoDaoTao from './CardTrinhDoDaoTao';
@@ -18,6 +18,7 @@ import CardThongKeXacMinhVanBang from './CardXacMinh';
 import './style.less';
 
 const TongHopVanBang = () => {
+	const intl = useIntl();
 	const { record: recSoVanBang, danhSach: danhSachSo, setRecord: setSoVanBang } = useModel('vbcc.sovanbang');
 	const { record: recHinhThuc, danhSach: dsHinhThuc, setRecord: setRecHinhThuc } = useModel('danhmuc.hinhthucdaotao');
 	const { record: recTrinhDo, danhSach: dsTrinhDo, setRecord: setRecTrinhDo } = useModel('danhmuc.trinhdodaotao');
@@ -102,7 +103,7 @@ const TongHopVanBang = () => {
 							style={{ width: 150 }}
 							value={yearSelect}
 							pickerStyle='year'
-							placeholder='Chọn năm hành chính'
+							placeholder={intl.formatMessage({ id: 'trangchu.tonghop.chonnamhanhchinh' })}
 							format='YYYY'
 							onChange={(val) => {
 								if (val) {
@@ -149,7 +150,7 @@ const TongHopVanBang = () => {
 								<div className='big-number'>
 									<Image src={'/images/thongKe/icon_quyetdinh.png'} />
 								</div>
-								<div className='title'>Quyết định</div>
+								<div className='title'>{intl.formatMessage({ id: 'trangchu.tonghop.quyetdinh' })}</div>
 							</Col>
 							<Col span={24} md={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
 								<div className='right number-count' style={{ color: '#FFAF0B' }}>
@@ -174,7 +175,7 @@ const TongHopVanBang = () => {
 								<div className='big-number'>
 									<Image src={'/images/thongKe/icon_phuluc.png'} />
 								</div>
-								<div className='title'>Văn bằng</div>
+								<div className='title'>{intl.formatMessage({ id: 'trangchu.tonghop.vanbang' })}</div>
 							</Col>
 							<Col span={24} md={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
 								<div className='right number-count' style={{ color: '#15AEB4' }}>
@@ -199,7 +200,7 @@ const TongHopVanBang = () => {
 								<div className='big-number'>
 									<Image src={'/images/thongKe/icon_tracuu.png'} />
 								</div>
-								<div className='title'>Tổng lượt tra cứu</div>
+								<div className='title'>{intl.formatMessage({ id: 'trangchu.tonghop.tongluottracuu' })}</div>
 							</Col>
 							<Col span={24} md={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
 								<div className='right number-count' style={{ color: '#DA2128' }}>
@@ -224,7 +225,7 @@ const TongHopVanBang = () => {
 								<div className='big-number'>
 									<Image src={'/images/thongKe/icon_phatbang.png'} />
 								</div>
-								<div className='title'>Số văn bằng đã phát</div>
+								<div className='title'>{intl.formatMessage({ id: 'trangchu.tonghop.sovanbangdaphat' })}</div>
 							</Col>
 							<Col span={24} md={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
 								<div className='right number-count' style={{ color: '#9B29FF' }}>
@@ -249,7 +250,7 @@ const TongHopVanBang = () => {
 								<div className='big-number'>
 									<Image src={'/images/thongKe/icon_xacminh.png'} />
 								</div>
-								<div className='title'>Yêu cầu xác minh</div>
+								<div className='title'>{intl.formatMessage({ id: 'trangchu.tonghop.yeucauxacminh' })}</div>
 							</Col>
 							<Col span={24} md={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
 								<div className='right number-count' style={{ color: '#FFAF0B' }}>
@@ -274,7 +275,7 @@ const TongHopVanBang = () => {
 								<div className='big-number'>
 									<Image src={'/images/thongKe/icon_thuhoi.png'} />
 								</div>
-								<div className='title'>Đề xuất thu hồi</div>
+								<div className='title'>{intl.formatMessage({ id: 'trangchu.tonghop.dexuatthuhoi' })}</div>
 							</Col>
 							<Col span={24} md={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
 								<div className='right number-count' style={{ color: '#DA2128' }}>
@@ -299,7 +300,7 @@ const TongHopVanBang = () => {
 								<div className='big-number'>
 									<Image src={'/images/thongKe/icon_chinhsua.png'} />
 								</div>
-								<div className='title'>Đề xuất chỉnh sửa</div>
+								<div className='title'>{intl.formatMessage({ id: 'trangchu.tonghop.dexuatchinhsua' })}</div>
 							</Col>
 							<Col span={24} md={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
 								<div className='right number-count' style={{ color: '#0047FF' }}>
@@ -324,7 +325,7 @@ const TongHopVanBang = () => {
 								<div className='big-number'>
 									<Image src={'/images/thongKe/icon_caplai.png'} />
 								</div>
-								<div className='title'>Đề xuất cấp lại</div>
+								<div className='title'>{intl.formatMessage({ id: 'trangchu.tonghop.dexuatcaplai' })}</div>
 							</Col>
 							<Col span={24} md={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
 								<div className='right number-count' style={{ color: '#343C61' }}>

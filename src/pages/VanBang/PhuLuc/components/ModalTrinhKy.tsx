@@ -5,9 +5,10 @@ import dayjs from '@/utils/dayjs';
 import { FilePdfOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Descriptions, message, Modal, Radio, Space, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ModalTrinhKyVanBang = (props: { visible: boolean; setVisible: (val: boolean) => void; getData: () => void }) => {
+	const intl = useIntl();
 	const { visible, setVisible, getData } = props;
 
 	const { selectedIds, dataToSignOrPush, postTrinhKyVanBangModel } = useModel('vbcc.phulucvanbang');
@@ -30,7 +31,7 @@ const ModalTrinhKyVanBang = (props: { visible: boolean; setVisible: (val: boolea
 		if (exporting) return;
 
 		if (!selectedMau) {
-			return message.error('Vui lòng chọn một mẫu trình ký');
+			return message.error(intl.formatMessage({ id: 'modaltrinhky.error.selecttemplate' }));
 		}
 
 		setExporting(true);
@@ -57,21 +58,33 @@ const ModalTrinhKyVanBang = (props: { visible: boolean; setVisible: (val: boolea
 	};
 
 	return (
-		<Modal title='Trình ký văn bằng' open={visible} onCancel={() => setVisible(false)} footer={null}>
+		<Modal
+			title={intl.formatMessage({ id: 'modaltrinhky.title' })}
+			open={visible}
+			onCancel={() => setVisible(false)}
+			footer={null}
+		>
 			<div style={{ marginBottom: 12 }}>
 				<i>
-					Sau khi xác nhận trình ký, hệ thống sẽ <strong>sinh file</strong> dựa trên mẫu trình ký đã chọn.
+					<span
+						dangerouslySetInnerHTML={{
+							__html: intl.formatMessage({ id: 'modaltrinhky.description' }),
+						}}
+					/>
 				</i>
 			</div>
 			<Descriptions column={1}>
-				<Descriptions.Item label='Quyết định'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'modaltrinhky.label.quyetdinh' })}>
 					{recQuyetDinh?.soQuyetDinh ?? dataToSignOrPush[0]?.quyetDinh?.soQuyetDinh}
 				</Descriptions.Item>
-				<Descriptions.Item label='Mô tả'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'modaltrinhky.label.mota' })}>
 					{recQuyetDinh?.noiDung ?? dataToSignOrPush[0]?.quyetDinh?.noiDung}
 				</Descriptions.Item>
-				<Descriptions.Item label='Số phụ lục'>{dataToSignOrPush?.length || 'Tất cả'} phụ lục</Descriptions.Item>
-				<Descriptions.Item label='Mẫu trình ký'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'modaltrinhky.label.sophuluc' })}>
+					{dataToSignOrPush?.length || intl.formatMessage({ id: 'modaltrinhky.label.all' })}{' '}
+					{intl.formatMessage({ id: 'modaltrinhky.label.phuluc' })}
+				</Descriptions.Item>
+				<Descriptions.Item label={intl.formatMessage({ id: 'modaltrinhky.label.mautrinhky' })}>
 					<Radio.Group value={selectedMau} onChange={(e) => setSelectedMau(e.target.value)}>
 						<Space direction='vertical'>
 							{recQuyetDinh?.bieuMau?.listIdFileBieuMau?.map((item, idx: number) => (
@@ -83,21 +96,21 @@ const ModalTrinhKyVanBang = (props: { visible: boolean; setVisible: (val: boolea
 											setPreviewOpen(true);
 										}}
 									>
-										{item?.ten ?? `Tệp tin ${idx + 1}`}
+										{item?.ten ?? `${intl.formatMessage({ id: 'modaltrinhky.file.default' })} ${idx + 1}`}
 									</a>
 								</Radio>
 							))}
 						</Space>
 					</Radio.Group>
 				</Descriptions.Item>
-				<Descriptions.Item label='Ngày trình ký'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'modaltrinhky.label.ngaytrinhky' })}>
 					<MyDatePicker value={ngayThang} onChange={(val) => setngayThang(dayjs(val))} />
 				</Descriptions.Item>
-				<Descriptions.Item label='Tùy chọn'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'modaltrinhky.label.tuychon' })}>
 					<Checkbox checked={trinhKyLai} onChange={(e) => setTrinhKyLai(e.target.checked)}>
-						Trình ký lại
+						{intl.formatMessage({ id: 'modaltrinhky.checkbox.trinhkylai' })}
 					</Checkbox>
-					<Tooltip title='Chọn nếu muốn trình ký lại văn bằng đã từng được trình ký trước đó (ví dụ: chỉnh sửa thông tin, thay đổi mẫu).'>
+					<Tooltip title={intl.formatMessage({ id: 'modaltrinhky.tooltip.trinhkylai' })}>
 						<InfoCircleOutlined type='text' />
 					</Tooltip>
 				</Descriptions.Item>
@@ -105,13 +118,13 @@ const ModalTrinhKyVanBang = (props: { visible: boolean; setVisible: (val: boolea
 
 			<div className='form-footer' style={{ marginTop: 16 }}>
 				<Button type='primary' loading={exporting} onClick={onExport} icon={<FilePdfOutlined />}>
-					Xác nhận trình ký
+					{intl.formatMessage({ id: 'modaltrinhky.button.confirm' })}
 				</Button>
-				<Button onClick={() => setVisible(false)}>Hủy</Button>
+				<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 
 			<ModalExpandable
-				title='Xem trước tập tin'
+				title={intl.formatMessage({ id: 'modaltrinhky.modal.preview' })}
 				width={1000}
 				open={previewOpen}
 				footer={null}
@@ -119,7 +132,7 @@ const ModalTrinhKyVanBang = (props: { visible: boolean; setVisible: (val: boolea
 			>
 				<PreviewFile file={previewImage} isFileId />
 				<div className='form-footer' style={{ marginTop: 16, textAlign: 'right' }}>
-					<Button onClick={() => setPreviewOpen(false)}>Đóng</Button>
+					<Button onClick={() => setPreviewOpen(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 				</div>
 			</ModalExpandable>
 		</Modal>

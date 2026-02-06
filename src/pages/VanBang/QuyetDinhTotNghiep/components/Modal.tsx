@@ -17,37 +17,37 @@ import DanhSachSinhVienQuyetDinh from '../DanhSachSinhVien';
 import DuThaoSoVaoSoQuyetDinh from '../DuThaoSoVaoSo';
 import Form from './Form';
 
-const renderTrangThaiInfo = (rec: QuyetDinhTotNghiep.IRecord) => (
-	<div style={{ fontSize: 12, maxWidth: 300, lineHeight: 1.45 }}>
-		<div>
-			<b>Người tạo:</b> {rec?.nguoiTao?.hoTen ?? '—'}
-			<br />
-			{rec?.nguoiTao?.thoiGian && <em>{dayjs(rec?.nguoiTao?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
-		</div>
-
-		<br />
-
-		<div>
-			<b>Người xử lý:</b> {rec?.nguoiXuLy?.hoTen ?? '—'}
-			<br />
-			{rec?.nguoiXuLy?.thoiGian && <em>{dayjs(rec?.nguoiXuLy?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
-		</div>
-
-		<br />
-
-		<div>
-			<b>Ghi chú chỉnh sửa:</b>
-			<div style={{ whiteSpace: 'pre-wrap' }}>{rec?.ghiChuChinhSua || '—'}</div>
-		</div>
-	</div>
-);
-
 const ModalQuyetDinhTotNghiep = (props: any) => {
 	const intl = useIntl();
 	const { getData, yearSelect, title, themMoiHoanThanh, setThemMoiHoanThanh } = props;
 	const { record, edit, visibleForm } = useModel('vbcc.quyetdinhtotnghiep');
 
 	const [currentStep, setCurrentStep] = useState<EQuyetDinhStep>(EQuyetDinhStep.THONG_TIN);
+
+	const renderTrangThaiInfo = (rec: QuyetDinhTotNghiep.IRecord) => (
+		<div style={{ fontSize: 12, maxWidth: 300, lineHeight: 1.45 }}>
+			<div>
+				<b>{intl.formatMessage({ id: 'qdtotnghiep.info.nguoitao' })}</b> {rec?.nguoiTao?.hoTen ?? '—'}
+				<br />
+				{rec?.nguoiTao?.thoiGian && <em>{dayjs(rec?.nguoiTao?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
+			</div>
+
+			<br />
+
+			<div>
+				<b>{intl.formatMessage({ id: 'qdtotnghiep.info.nguoixuly' })}</b> {rec?.nguoiXuLy?.hoTen ?? '—'}
+				<br />
+				{rec?.nguoiXuLy?.thoiGian && <em>{dayjs(rec?.nguoiXuLy?.thoiGian).format('HH:mm DD/MM/YYYY')}</em>}
+			</div>
+
+			<br />
+
+			<div>
+				<b>{intl.formatMessage({ id: 'qdtotnghiep.info.ghichuchinhsua' })}</b>
+				<div style={{ whiteSpace: 'pre-wrap' }}>{rec?.ghiChuChinhSua || '—'}</div>
+			</div>
+		</div>
+	);
 
 	const visibleSteps = useMemo<EQuyetDinhStep[]>(() => {
 		return [
@@ -106,8 +106,8 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 				<Space>
 					{record?.trangThai === ETrangThaiQuyetDinhTotNghiep.CHINH_THUC ||
 					record?.trangThai === ETrangThaiQuyetDinhTotNghiep.HOAN_THANH
-						? 'Thông tin quyết định'
-						: (edit ? 'Chỉnh sửa ' : 'Thêm mới ') + 'quyết định'}
+						? intl.formatMessage({ id: 'qdtotnghiep.modal.title.thongtin' })
+						: intl.formatMessage({ id: edit ? 'qdtotnghiep.modal.title.chinhsua' : 'qdtotnghiep.modal.title.themoi' })}
 
 					{record?._id && (
 						<Space wrap>
@@ -144,10 +144,22 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 									);
 
 								case EQuyetDinhStep.DANH_SACH_SV:
-									return <Steps.Step key={step} title='Danh sách sinh viên' disabled={!record?._id} />;
+									return (
+										<Steps.Step
+											key={step}
+											title={intl.formatMessage({ id: 'qdtotnghiep.step.danhsachsinhvien' })}
+											disabled={!record?._id}
+										/>
+									);
 
 								case EQuyetDinhStep.DU_THAO_SO:
-									return <Steps.Step key={step} title='Dự thảo số vào sổ' disabled={!record?._id} />;
+									return (
+										<Steps.Step
+											key={step}
+											title={intl.formatMessage({ id: 'qdtotnghiep.step.duthaoso' })}
+											disabled={!record?._id}
+										/>
+									);
 
 								case EQuyetDinhStep.PHU_LUC:
 									return (
@@ -181,15 +193,19 @@ const ModalQuyetDinhTotNghiep = (props: any) => {
 									colon={false}
 									style={{ marginBottom: 12 }}
 								>
-									<Descriptions.Item label='Người tạo'>{record?.nguoiTao?.hoTen ?? '--'}</Descriptions.Item>
-									<Descriptions.Item label='Thời gian tạo'>
+									<Descriptions.Item label={intl.formatMessage({ id: 'qdtotnghiep.label.nguoitao' })}>
+										{record?.nguoiTao?.hoTen ?? '--'}
+									</Descriptions.Item>
+									<Descriptions.Item label={intl.formatMessage({ id: 'qdtotnghiep.label.thoigiantao' })}>
 										{record?.nguoiTao?.thoiGian ? dayjs(record?.nguoiTao?.thoiGian).format('HH:mm DD/MM/YYYY') : '--'}
 									</Descriptions.Item>
-									<Descriptions.Item label='Người xử lý'>{record?.nguoiXuLy?.hoTen ?? '--'}</Descriptions.Item>
-									<Descriptions.Item label='Thời gian xử lý'>
+									<Descriptions.Item label={intl.formatMessage({ id: 'qdtotnghiep.label.nguoixuly' })}>
+										{record?.nguoiXuLy?.hoTen ?? '--'}
+									</Descriptions.Item>
+									<Descriptions.Item label={intl.formatMessage({ id: 'qdtotnghiep.label.thoigianxuly' })}>
 										{record?.nguoiXuLy?.thoiGian ? dayjs(record?.nguoiXuLy?.thoiGian).format('HH:mm DD/MM/YYYY') : '--'}
 									</Descriptions.Item>
-									<Descriptions.Item label='Ghi chú chỉnh sửa' span={2}>
+									<Descriptions.Item label={intl.formatMessage({ id: 'qdtotnghiep.label.ghichuchinhsua' })} span={2}>
 										{record?.ghiChuChinhSua ?? '--'}
 									</Descriptions.Item>
 								</Descriptions>

@@ -199,7 +199,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
-			title: 'Số vào sổ (dự kiến)',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phuluc.cot.sovao' }),
 			dataIndex: 'soVaoSoTamThoi',
 			width: 110,
 			onCell: disable
@@ -221,28 +221,28 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 			filterType: 'string',
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phuluc.cot.hoten' }),
 			dataIndex: 'hoTen',
 			width: 200,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Mã người học',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phuluc.cot.manguoihoc' }),
 			dataIndex: 'maSinhVien',
 			width: 120,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Cccd',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phuluc.cot.cccd' }),
 			dataIndex: 'cmtCccd',
 			width: 120,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Trình độ đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phuluc.cot.trinhdo' }),
 			dataIndex: 'trinhDoDaoTao',
 			width: 140,
 			render: (val, rec) => rec?.thongTinTrinhDoDaoTao?.ten ?? val,
@@ -251,7 +251,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 			onCell,
 		},
 		{
-			title: 'Hình thức đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phuluc.cot.hinhthuc' }),
 			dataIndex: 'hinhThucDaoTao',
 			width: 150,
 			render: (val, rec) => rec?.thongTinHinhThucDaoTao?.ten ?? val,
@@ -260,7 +260,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 			onCell,
 		},
 		{
-			title: 'Ngành đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phuluc.cot.nganh' }),
 			dataIndex: 'nganhDaoTao',
 			width: 140,
 			render: (val, rec) => rec?.thongTinNganhDaoTao?.ten ?? val,
@@ -269,7 +269,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phuluc.cot.thaotac' }),
 			align: 'center',
 			width: 120,
 			fixed: 'right',
@@ -277,7 +277,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 				<>
 					<ButtonExtend
 						disabled={disable}
-						tooltip='Chỉnh sửa'
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
 						type='link'
 						icon={<EditOutlined />}
 						onClick={() => handleEdit(rec)}
@@ -285,10 +285,16 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id, getData)}
-						title='Bạn có chắc chắn muốn xóa phụ lục này?'
+						title={intl.formatMessage({ id: 'qdtotnghiep.phuluc.xacnhan.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend disabled={disable} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							disabled={disable}
+							tooltip={intl.formatMessage({ id: 'qdtotnghiep.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -305,64 +311,64 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 
 	const columnsPrint: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
-			title: 'Họ',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.ho' }),
 			width: 120,
 			render: (_, rec) => splitHoTen(rec?.hoTen).ho,
 		},
 		{
-			title: 'Tên',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.ten' }),
 			align: 'right',
 			width: 90,
 			render: (_, rec) => splitHoTen(rec?.hoTen).ten,
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.ngaysinh' }),
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 120,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Giới tính',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.gioitinh' }),
 			dataIndex: 'gioiTinh',
 			align: 'center',
 			width: 60,
 		},
 		{
-			title: 'Xếp loại TN',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.xeploai' }),
 			align: 'center',
 			width: 100,
 			render: (val, rec) => rec?.templateData?.find((item) => item?.headerName === 'Xếp loại TN')?.value,
 		},
 		{
-			title: 'Trình độ đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.trinhdo' }),
 			align: 'center',
 			dataIndex: 'trinhDoDaoTao',
 			width: 100,
 			render: (val, rec) => rec?.thongTinTrinhDoDaoTao?.ten ?? val,
 		},
 		{
-			title: 'Hình thức đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.hinhthuc' }),
 			align: 'center',
 			dataIndex: 'hinhThucDaoTao',
 			width: 100,
 			render: (val, rec) => rec?.thongTinHinhThucDaoTao?.ten ?? val,
 		},
 		{
-			title: 'Ngành đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.nganh' }),
 			align: 'center',
 			dataIndex: 'nganhDaoTao',
 			width: 180,
 			render: (val, rec) => rec?.thongTinNganhDaoTao?.ten ?? val,
 		},
 		{
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.sovao' }),
 			align: 'center',
 			dataIndex: 'soVaoSoTamThoi',
 			width: 150,
 		},
 		{
-			title: 'Ngày cấp bằng',
+			title: intl.formatMessage({ id: 'qdtotnghiep.in.cot.ngaycap' }),
 			align: 'center',
 			dataIndex: 'ngayCapPhuLuc',
 			width: 120,
@@ -376,29 +382,45 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 				<Form form={form} layout='vertical' onFinish={onFinish}>
 					<Row gutter={[12, 0]}>
 						<Col span={24} md={12}>
-							<Form.Item label='Sổ văn bằng'>
-								<Input value={recQuyetDinh?.soVanBang?.ten} placeholder='Nhập sổ văn bằng' disabled />
+							<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.sovao.form.title.sovanbang' })}>
+								<Input
+									value={recQuyetDinh?.soVanBang?.ten}
+									placeholder={intl.formatMessage({ id: 'qdtotnghiep.sovao.form.placeholder.sovanbang' })}
+									disabled
+								/>
 							</Form.Item>
 						</Col>
 						<Col span={24} md={12}>
-							<Form.Item label='Số vào sổ hiện tại' name='soVaoSoHienTai'>
-								<InputNumber style={{ width: '100%' }} placeholder='Nhập số vào sổ' disabled={disable} />
+							<Form.Item
+								label={intl.formatMessage({ id: 'qdtotnghiep.sovao.form.sovao.hientai' })}
+								name='soVaoSoHienTai'
+							>
+								<InputNumber
+									style={{ width: '100%' }}
+									placeholder={intl.formatMessage({ id: 'qdtotnghiep.sovao.form.placeholder.sovao' })}
+									disabled={disable}
+								/>
 							</Form.Item>
 						</Col>
 						<Col span={24} md={12}>
 							<Form.Item
 								name='sinhLaiToanBo'
 								valuePropName='checked'
-								extra='Nếu chọn, toàn bộ số vào sổ sẽ được sinh lại từ đầu, có thể thay đổi các số đã cấp trước đó.'
+								extra={intl.formatMessage({ id: 'qdtotnghiep.sovao.form.sinhlaiall.ghichu' })}
 							>
-								<Checkbox disabled={disable}>Sinh lại toàn bộ</Checkbox>
+								<Checkbox disabled={disable}>
+									{intl.formatMessage({ id: 'qdtotnghiep.sovao.form.sinhlaiall' })}
+								</Checkbox>
 							</Form.Item>
 						</Col>
 						<Col span={24} md={12}>
-							<Form.Item name='ruleSortPhuLuc' label='Quy tắc sắp xếp phụ lục'>
+							<Form.Item
+								name='ruleSortPhuLuc'
+								label={intl.formatMessage({ id: 'qdtotnghiep.sovao.form.quytac.sapxep' })}
+							>
 								<Select
 									mode='multiple'
-									placeholder='Chọn phần tử'
+									placeholder={intl.formatMessage({ id: 'qdtotnghiep.sovao.form.quytac.sapxep.placeholder' })}
 									options={[
 										...defaultElementBieuMau.map((item) => ({
 											value: toCamel(item.headerName),
@@ -421,7 +443,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 
 					<div className='form-footer'>
 						<Button loading={formSubmiting} type='primary' htmlType='submit' disabled={disable}>
-							Sinh số
+							{intl.formatMessage({ id: 'qdtotnghiep.sovao.form.nut.sinhso' })}
 						</Button>
 					</div>
 				</Form>
@@ -440,18 +462,20 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 							overlay={
 								<Menu>
 									<Menu.Item key='thongtin' onClick={() => handlePrint()}>
-										PDF - Thông tin in trên phôi văn bằng đại học{' '}
+										{intl.formatMessage({ id: 'qdtotnghiep.xuat.pdf.thongtin' })}{' '}
 									</Menu.Item>
 									<Menu.Item
 										key='vanbang'
 										onClick={() => genExcelFile(transformDataToExcelFormat(), 'Dự thảo số vào sổ.xlsx')}
 									>
-										Excel - Toàn bộ thông tin văn bằng{' '}
+										{intl.formatMessage({ id: 'qdtotnghiep.xuat.excel.tatca' })}
 									</Menu.Item>
 								</Menu>
 							}
 						>
-							<ButtonExtend icon={<ExportOutlined />}>Xuất dự thảo</ButtonExtend>
+							<ButtonExtend icon={<ExportOutlined />}>
+								{intl.formatMessage({ id: 'qdtotnghiep.xuat.duthao' })}
+							</ButtonExtend>
 						</Dropdown>,
 					]}
 				/>
@@ -464,18 +488,18 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 					}}
 					icon={<ArrowLeftOutlined />}
 				>
-					Quay lại
+					{intl.formatMessage({ id: 'qdtotnghiep.thaotac.quaylai' })}
 				</Button>
 				{title === 'Tất cả quyết định' ? (
 					<Popconfirm
 						onConfirm={() =>
 							trinhLanhDaoModel(recQuyetDinh?._id ?? '', getQuyetDinh).then(() => setVisibleQuyetDinh(false))
 						}
-						title='Bạn muốn trình lãnh đạo dự thảo quyết định tốt nghiệp này?'
+						title={intl.formatMessage({ id: 'qdtotnghiep.confirm.submitLeader' })}
 						placement='topRight'
 					>
 						<Button icon={<SendOutlined />} type='primary' disabled={!trinhLanhDao}>
-							Trình lãnh đạo
+							{intl.formatMessage({ id: 'qdtotnghiep.action.submitLeader' })}
 						</Button>
 					</Popconfirm>
 				) : (
@@ -490,11 +514,11 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 									if (afterAddNew) afterAddNew(EQuyetDinhStep.PHU_LUC);
 								})
 							}
-							title='Bạn có chắc chắn muốn duyệt quyết định tốt nghiệp này?'
+							title={intl.formatMessage({ id: 'qdtotnghiep.xacnhan.duyet' })}
 							placement='topRight'
 						>
 							<Button icon={<CheckOutlined />} className='btn-success' type='primary' disabled={!canXuLyQuyetDinh}>
-								Duyệt quyết định
+								{intl.formatMessage({ id: 'qdtotnghiep.action.approve' })}
 							</Button>
 						</Popconfirm>
 
@@ -505,7 +529,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 							onClick={() => setVisibleChinhSua(true)}
 							icon={<EditOutlined />}
 						>
-							Yêu cầu chỉnh sửa
+							{intl.formatMessage({ id: 'qdtotnghiep.action.requestEdit' })}
 						</Button>
 					</>
 				)}
@@ -519,7 +543,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 						recQuyetDinh?.trangThai !== ETrangThaiQuyetDinhTotNghiep.HOAN_THANH
 					}
 				>
-					Tiếp theo
+					{intl.formatMessage({ id: 'qdtotnghiep.thaotac.tieptheo' })}
 				</Button>
 				<Button onClick={() => setVisibleQuyetDinh(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 			</div>
@@ -527,7 +551,9 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 			<ModalYeuCauChinhSua visible={visibleChinhSua} setVisible={setVisibleChinhSua} getData={getQuyetDinh} />
 
 			<Modal
-				title={isView ? 'Xem chi tiết thông tin văn bằng' : 'Chỉnh sửa thông tin sinh viên'}
+				title={intl.formatMessage({
+					id: isView ? 'qdtotnghiep.modal.xemchitiet.tieude' : 'qdtotnghiep.modal.chinhsua.tieude',
+				})}
 				open={visibleForm}
 				onCancel={() => setVisibleForm(false)}
 				footer={null}

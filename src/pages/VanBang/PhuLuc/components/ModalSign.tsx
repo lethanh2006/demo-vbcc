@@ -6,10 +6,11 @@ import dayjs from '@/utils/dayjs';
 import { QuestionCircleOutlined, SaveOutlined, SignatureOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Progress, Typography, message } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import { sign_service, type TSignData } from './SignService';
 
 const ModalSign = (props: { getData?: () => void }) => {
+	const intl = useIntl();
 	const { getData } = props;
 	const { updateSignatureModel, visibleSign, setVisibleSign, dataToSignOrPush, setDataToSignOrPush, formSubmiting } =
 		useModel('vbcc.phulucvanbang');
@@ -27,12 +28,12 @@ const ModalSign = (props: { getData?: () => void }) => {
 
 	const columnsSign: IColumn<PhuLucVanBang.TUpdateSignature>[] = [
 		{
-			title: 'ID Văn bằng',
+			title: intl.formatMessage({ id: 'modalsign.column.idvanbang' }),
 			dataIndex: 'key',
 			width: 250,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'modalsign.column.trangthai' }),
 			dataIndex: 'message',
 			width: 200,
 		},
@@ -44,14 +45,14 @@ const ModalSign = (props: { getData?: () => void }) => {
 			.map((item) => ({ key: item.idVanBang ?? '', signature: item.signature ?? '' }));
 
 		if (dataSignature.length === 0) {
-			message.error('Không có chữ ký để cập nhật');
+			message.error(intl.formatMessage({ id: 'modalsign.error.nosignature' }));
 			return;
 		}
 
 		await updateSignatureModel(dataSignature)
 			.then((data) => {
 				Modal.info({
-					title: 'Kết quả',
+					title: intl.formatMessage({ id: 'modalsign.modal.result' }),
 					width: 800,
 					icon: null,
 					content: <TableStaticData data={data} size='small' columns={columnsSign} />,
@@ -137,29 +138,36 @@ const ModalSign = (props: { getData?: () => void }) => {
 		// },
 		{
 			dataIndex: 'soVaoSoBang',
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'modalsign.column.sovaoso' }),
 			width: 120,
 		},
 		{
 			dataIndex: 'soHieuVanBang',
-			title: 'Số hiệu văn bằng',
+			title: intl.formatMessage({ id: 'modalsign.column.sohieuvanbang' }),
 			width: 120,
 		},
 		{
 			dataIndex: 'hoTen',
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'modalsign.column.hoten' }),
 			width: 150,
 		},
 		{
 			dataIndex: 'signature',
-			title: 'Chữ ký',
+			title: intl.formatMessage({ id: 'modalsign.column.chuky' }),
 			width: 120,
 			align: 'center',
-			render: (text) => (text ? <Typography.Paragraph copyable={{ text }}>(đã ký)</Typography.Paragraph> : ''),
+			render: (text) =>
+				text ? (
+					<Typography.Paragraph copyable={{ text }}>
+						{intl.formatMessage({ id: 'modalsign.signature.signed' })}
+					</Typography.Paragraph>
+				) : (
+					''
+				),
 		},
 		{
 			dataIndex: 'message' as any,
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'modalsign.column.trangthai' }),
 			width: 180,
 		},
 	];
@@ -169,14 +177,14 @@ const ModalSign = (props: { getData?: () => void }) => {
 			open={visibleSign}
 			title={
 				<>
-					Ký số thông tin văn bằng{' '}
+					{intl.formatMessage({ id: 'modalsign.title' })}{' '}
 					<Popover
 						content={
-							<>
-								Ký số các thông tin của từng phụ lục, đảm bảo tính toàn vẹn dữ liệu trong mỗi phụ lục.
-								<br />
-								Mỗi khi thông tin phụ lục thay đổi, chữ ký số sẽ bị loại bỏ.
-							</>
+							<span
+								dangerouslySetInnerHTML={{
+									__html: intl.formatMessage({ id: 'modalsign.popover.content' }),
+								}}
+							/>
 						}
 					>
 						<QuestionCircleOutlined />
@@ -199,8 +207,16 @@ const ModalSign = (props: { getData?: () => void }) => {
 					</div>
 
 					<div className='form-footer' style={{ marginBottom: 24 }}>
-						<span>({`${signProgress}/${dataToSignOrPush?.length ?? 0} bản`}). </span>
-						{signStatus !== 'active' ? <>Vui lòng đợi trong ít phút....</> : <>Quá trình đã hoàn tất</>}
+						<span>
+							(
+							{`${signProgress}/${dataToSignOrPush?.length ?? 0} ${intl.formatMessage({ id: 'modalsign.progress.records' })}`}
+							).{' '}
+						</span>
+						{signStatus !== 'active' ? (
+							<>{intl.formatMessage({ id: 'modalsign.progress.wait' })}</>
+						) : (
+							<>{intl.formatMessage({ id: 'modalsign.progress.complete' })}</>
+						)}
 					</div>
 				</>
 			)}
@@ -214,10 +230,10 @@ const ModalSign = (props: { getData?: () => void }) => {
 					loading={signing}
 					className='btn-success'
 				>
-					Ký số bằng tool tự động
+					{intl.formatMessage({ id: 'modalsign.button.signwithtool' })}
 				</Button>
 				<Popconfirm
-					title='Xác nhận lưu chữ ký số?'
+					title={intl.formatMessage({ id: 'modalsign.popconfirm.save' })}
 					onConfirm={onOk}
 					disabled={!dataToSignOrPush?.length || signing || formSubmiting}
 				>
@@ -227,10 +243,10 @@ const ModalSign = (props: { getData?: () => void }) => {
 						loading={formSubmiting}
 						disabled={!dataToSignOrPush?.length || signing || formSubmiting}
 					>
-						Lưu lại
+						{intl.formatMessage({ id: 'global.button.luulai' })}
 					</Button>
 				</Popconfirm>
-				<Button onClick={onCancel}>Hủy</Button>
+				<Button onClick={onCancel}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Modal>
 	);

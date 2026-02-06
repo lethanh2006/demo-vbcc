@@ -2,11 +2,12 @@ import StatisticsCard from '@/components/StatisticsCard';
 import { StatisticsItem } from '@/components/StatisticsCard/typing';
 import { inputFormat } from '@/utils/utils';
 import { Col, Row, Spin, Typography } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const { Title } = Typography;
 
 const StatQuyetDinhTotNghiep = () => {
+	const intl = useIntl();
 	const { loadingThongKe, dataThongKe } = useModel('vbcc.quyetdinhtotnghiep');
 
 	const mapColor: Record<string, string> = {
@@ -44,11 +45,11 @@ const StatQuyetDinhTotNghiep = () => {
 		<Spin spinning={loadingThongKe}>
 			<Row gutter={[12, 12]}>
 				<Col span={24} md={12}>
-					<Title level={5}>Thống kê quyết định</Title>
+					<Title level={5}>{intl.formatMessage({ id: 'qdtotnghiep.stat.quyetdinh' })}</Title>
 					<StatisticsCard data={statisticsData} colSpan={{ xs: 24, sm: 12, md: 12 }} rowGutter={8} hideCard title='' />
 				</Col>
 				<Col span={24} md={12}>
-					<Title level={5}>Thống kê số lượng văn bằng</Title>
+					<Title level={5}>{intl.formatMessage({ id: 'qdtotnghiep.stat.soluongvanbang' })}</Title>
 					<StatisticsCard
 						data={statisticsDataSLVB}
 						colSpan={{ xs: 24, sm: 12, md: 12 }}

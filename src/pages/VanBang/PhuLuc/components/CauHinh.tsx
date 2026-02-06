@@ -23,28 +23,33 @@ const CauHinhPhuLucVanBang = (props: { visible: boolean; setVisible: (val: boole
 	};
 
 	return (
-		<Modal title='Cấu hình thông tin văn bằng' open={visible} onCancel={() => setVisible(false)} footer={null}>
+		<Modal
+			title={intl.formatMessage({ id: 'cauhinh.title' })}
+			open={visible}
+			onCancel={() => setVisible(false)}
+			footer={null}
+		>
 			<Spin spinning={loading}>
 				<Form form={form} layout='vertical' onFinish={onFinish}>
 					<Row gutter={[12, 0]}>
 						<Col span={24}>
 							<Form.Item name='require_diploma_signature' valuePropName='checked' initialValue={false}>
-								<Checkbox>Cho phép ký số văn bằng?</Checkbox>
+								<Checkbox>{intl.formatMessage({ id: 'cauhinh.checkbox.allowsignfile' })}</Checkbox>
 							</Form.Item>
 						</Col>
 						<Col span={24}>
 							<Form.Item name='require_signature' valuePropName='checked' initialValue={false}>
-								<Checkbox>Cho phép chữ ký số thông tin?</Checkbox>
+								<Checkbox>{intl.formatMessage({ id: 'cauhinh.checkbox.allowsigninfo' })}</Checkbox>
 							</Form.Item>
 						</Col>
 						<Col span={24}>
 							<Form.Item name='require_IPFS' valuePropName='checked' initialValue={false}>
-								<Checkbox>Cho phép upload lên IPFS?</Checkbox>
+								<Checkbox>{intl.formatMessage({ id: 'cauhinh.checkbox.allowipfs' })}</Checkbox>
 							</Form.Item>
 						</Col>
 						<Col span={24}>
 							<Form.Item name='blockChain' valuePropName='checked' initialValue={false}>
-								<Checkbox>Cho phép đẩy lên Blockchain?</Checkbox>
+								<Checkbox>{intl.formatMessage({ id: 'cauhinh.checkbox.allowblockchain' })}</Checkbox>
 							</Form.Item>
 						</Col>
 					</Row>

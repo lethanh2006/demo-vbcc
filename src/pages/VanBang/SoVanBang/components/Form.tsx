@@ -43,7 +43,13 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 
 			form.setFieldsValue({
 				namHanhChinh: dayjs(),
-				ten: `Sổ văn bằng ${trinhDo?.ten ?? ''} năm ${year}`,
+				ten: intl.formatMessage(
+					{ id: 'sovanbang.form.setvalue.ten' },
+					{
+						trinhdo: trinhDo?.ten ?? '',
+						namhc: year,
+					},
+				),
 				soVaoSoHienTai: 0,
 				soChuSoVaoSo: 4,
 				soVaoSoFormat: `{soVaoSo}/${year}/${vietTat}`,
@@ -102,10 +108,16 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		const vietTat = trinhDo ? TRINH_DO_VIET_TAT[trinhDo.ten] || '' : '';
 
 		if (year && trinhDo?.ten) {
-			const tenSo = `Sổ văn bằng ${trinhDo.ten} năm ${year}`;
+			const tenSo = intl.formatMessage(
+				{ id: 'sovanbang.form.setvalue.ten' },
+				{
+					trinhdo: trinhDo.ten,
+					namhc: year,
+				},
+			);
 			const currentTen = form.getFieldValue('ten') || '';
 
-			if (!currentTen || currentTen.startsWith('Sổ văn bằng')) {
+			if (!currentTen || currentTen.startsWith(intl.formatMessage({ id: 'sovanbang.form.title' }))) {
 				form.setFieldsValue({ ten: tenSo });
 			}
 		}
@@ -134,33 +146,64 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 		<Form onFinish={onFinish} form={form} layout='vertical' onValuesChange={handleValuesChange}>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col span={24} md={12}>
-					<Form.Item name='namHanhChinh' label='Năm hành chính' rules={[...rules.required]}>
-						<MyDatePicker pickerStyle='year' placeholder='Năm' format='YYYY' disabled={isView} />
+					<Form.Item
+						name='namHanhChinh'
+						label={intl.formatMessage({ id: 'sovanbang.form.namhc' })}
+						rules={[...rules.required]}
+					>
+						<MyDatePicker
+							pickerStyle='year'
+							placeholder={intl.formatMessage({ id: 'sovanbang.form.nam' })}
+							format='YYYY'
+							disabled={isView}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item name='maTrinhDoDaoTao' label='Trình độ đào tạo' rules={[...rules.required]}>
+					<Form.Item
+						name='maTrinhDoDaoTao'
+						label={intl.formatMessage({ id: 'sovanbang.form.trinhdo' })}
+						rules={[...rules.required]}
+					>
 						<SelectTrinhDoDaoTao selectMa disabled={isView} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item
 						name='ten'
-						label='Tên sổ văn bằng'
+						label={intl.formatMessage({ id: 'sovanbang.form.tenso' })}
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
-						<Input placeholder='Nhập tên sổ' disabled={isView} />
+						<Input placeholder={intl.formatMessage({ id: 'sovanbang.form.placeholder.nhapten' })} disabled={isView} />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item name='soVaoSoHienTai' label='Số vào sổ hiện tại' rules={[...rules.required]}>
-						<InputNumber min={1} style={{ width: '100%' }} placeholder='Nhập số vào sổ hiện tại' disabled={isView} />
+					<Form.Item
+						name='soVaoSoHienTai'
+						label={intl.formatMessage({ id: 'sovanbang.form.svshientai' })}
+						rules={[...rules.required]}
+					>
+						<InputNumber
+							min={1}
+							style={{ width: '100%' }}
+							placeholder={intl.formatMessage({ id: 'sovanbang.form.placeholder.nhapsvs' })}
+							disabled={isView}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item name='soChuSoVaoSo' label='Số chữ số vào sổ' rules={[...rules.required]}>
-						<InputNumber min={1} style={{ width: '100%' }} placeholder='Nhập số chữ số vào sổ' disabled={isView} />
+					<Form.Item
+						name='soChuSoVaoSo'
+						label={intl.formatMessage({ id: 'sovanbang.form.sochuso' })}
+						rules={[...rules.required]}
+					>
+						<InputNumber
+							min={1}
+							style={{ width: '100%' }}
+							placeholder={intl.formatMessage({ id: 'sovanbang.form.placeholder.nhapscs' })}
+							disabled={isView}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24}>
@@ -168,11 +211,11 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						<Col span={24} md={12}>
 							<Form.Item
 								name='soVaoSoFormat'
-								label='Định dạng số vào sổ'
+								label={intl.formatMessage({ id: 'sovanbang.form.dinhdangsvs' })}
 								extra={
 									soVaoSoFormat && (
 										<div style={{ color: '#888' }}>
-											Số vào sổ tiếp theo: <b>{appendFormat(soVaoSoFormat)}</b>
+											{intl.formatMessage({ id: 'sovanbang.form.svstieptheo' })} <b>{appendFormat(soVaoSoFormat)}</b>
 										</div>
 									)
 								}
@@ -184,11 +227,12 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						<Col span={24} md={12}>
 							<Form.Item
 								name='bookEntryNumberFormat'
-								label='Định dạng số vào sổ (Tiếng Anh)'
+								label={intl.formatMessage({ id: 'sovanbang.form.dinhdangsvsen' })}
 								extra={
 									bookEntryNumberFormat && (
 										<div style={{ color: '#888' }}>
-											Số vào sổ tiếp theo: <b>{appendFormat(bookEntryNumberFormat)}</b>
+											{intl.formatMessage({ id: 'sovanbang.form.svstieptheo' })}{' '}
+											<b>{appendFormat(bookEntryNumberFormat)}</b>
 										</div>
 									)
 								}
@@ -205,8 +249,16 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 				</Col> */}
 
 				<Col span={24}>
-					<Form.Item name='moTa' label='Mô tả' rules={[...rules.text, ...rules.length(200)]}>
-						<Input.TextArea placeholder='Nhập mô tả' style={{ width: '100%' }} disabled={isView} />
+					<Form.Item
+						name='moTa'
+						label={intl.formatMessage({ id: 'sovanbang.form.mota' })}
+						rules={[...rules.text, ...rules.length(200)]}
+					>
+						<Input.TextArea
+							placeholder={intl.formatMessage({ id: 'sovanbang.form.placeholder.nhapmota' })}
+							style={{ width: '100%' }}
+							disabled={isView}
+						/>
 					</Form.Item>
 				</Col>
 			</Row>

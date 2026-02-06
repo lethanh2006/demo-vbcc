@@ -42,8 +42,11 @@ const CongVanPhucDapPage = (props: { afterAddNew?: (val: number) => void; getDat
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Ghi chú' name='ghiChu'>
-							<Input.TextArea disabled={isHoanThanh} placeholder='Nhập ghi chú' />
+						<Form.Item label={intl.formatMessage({ id: 'xacminhvanbang.congvan.label.ghichu' })} name='ghiChu'>
+							<Input.TextArea
+								disabled={isHoanThanh}
+								placeholder={intl.formatMessage({ id: 'xacminhvanbang.congvan.placeholder.ghichu' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>
@@ -55,7 +58,7 @@ const CongVanPhucDapPage = (props: { afterAddNew?: (val: number) => void; getDat
 						}}
 						icon={<ArrowLeftOutlined />}
 					>
-						Quay lại
+						{intl.formatMessage({ id: 'xacminhvanbang.congvan.button.quaylai' })}
 					</Button>
 					<Button
 						disabled={!record?._id || ![EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(record?.phaseXuLy)}
@@ -64,7 +67,7 @@ const CongVanPhucDapPage = (props: { afterAddNew?: (val: number) => void; getDat
 						}}
 						icon={<ArrowRightOutlined />}
 					>
-						Tiếp theo
+						{intl.formatMessage({ id: 'xacminhvanbang.congvan.button.tieptuc' })}
 					</Button>
 					<Button
 						disabled={record?.phaseXuLy === EPhaseXacMinh.KET_QUA || isHoanThanh}
@@ -73,7 +76,7 @@ const CongVanPhucDapPage = (props: { afterAddNew?: (val: number) => void; getDat
 						type='primary'
 						icon={<FileDoneOutlined />}
 					>
-						Xử lý công văn
+						{intl.formatMessage({ id: 'xacminhvanbang.congvan.button.xulycongvan' })}
 					</Button>
 
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

@@ -9,9 +9,10 @@ import { FilePdfOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Descriptions, message, Modal, Progress, Radio, Row, Space, Tabs, Upload } from 'antd';
 import type { RcFile } from 'antd/lib/upload';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ModalExportData = () => {
+	const intl = useIntl();
 	const { visiblePrint, setVisiblePrint, dataToSignOrPush } = useModel('vbcc.phulucvanbang');
 	const { record: recQuyetDinh } = useModel('vbcc.quyetdinhtotnghiep');
 	const [exporting, setExporting] = useState(false);
@@ -55,7 +56,7 @@ const ModalExportData = () => {
 		if (exporting) return;
 
 		if (!selectedMaus.length && !fileList.length) {
-			return message.error('Không có mẫu in phụ lục. Vui lòng chọn hoặc upload mẫu mới');
+			return message.error(intl.formatMessage({ id: 'modalexport.error.notemplate' }));
 		}
 
 		setExporting(true);
@@ -86,7 +87,7 @@ const ModalExportData = () => {
 		})
 			.then(() => {
 				// message.success('Lưu thành công');
-				message.info('Đang xử lý dữ liệu. Vui lòng đợi trong ít phút...');
+				message.info(intl.formatMessage({ id: 'modalexport.info.processing' }));
 				// fileDownload(res.data, getFilenameHeader(res));
 
 				setVisiblePrint(false);
@@ -99,7 +100,7 @@ const ModalExportData = () => {
 	const beforeUpload = (file: RcFile) => {
 		const isLt5M = file.size / 1024 / 1024 < 2;
 		if (!isLt5M) {
-			message.error('Dung lượng file phải nhỏ hơn 2MB!');
+			message.error(intl.formatMessage({ id: 'modalexport.error.filesize' }));
 		}
 		return isLt5M;
 	};
@@ -113,19 +114,22 @@ const ModalExportData = () => {
 			closable={false}
 			maskClosable={false}
 			onCancel={() => setVisiblePrint(false)}
-			title='In thông tin văn bằng'
+			title={intl.formatMessage({ id: 'modalexport.title' })}
 			footer={null}
 		>
 			{recQuyetDinh?._id || dataToSignOrPush.length === 1 ? (
 				<Descriptions column={1}>
-					<Descriptions.Item label='Quyết định'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'modalexport.label.quyetdinh' })}>
 						{recQuyetDinh?.soQuyetDinh ?? dataToSignOrPush[0]?.quyetDinh?.soQuyetDinh}
 					</Descriptions.Item>
-					<Descriptions.Item label='Mô tả'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'modalexport.label.mota' })}>
 						{recQuyetDinh?.noiDung ?? dataToSignOrPush[0]?.quyetDinh?.noiDung}
 					</Descriptions.Item>
-					<Descriptions.Item label='Số mục thống kê'>{dataToSignOrPush?.length || 'Tất cả'} phụ lục</Descriptions.Item>
-					<Descriptions.Item label='Mẫu in phụ lục'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'modalexport.label.somucthongke' })}>
+						{dataToSignOrPush?.length || intl.formatMessage({ id: 'modalexport.label.all' })}{' '}
+						{intl.formatMessage({ id: 'modalexport.label.phuluc' })}
+					</Descriptions.Item>
+					<Descriptions.Item label={intl.formatMessage({ id: 'modalexport.label.mauinphuluc' })}>
 						<Tabs
 							style={{ marginTop: -10 }}
 							size='small'
@@ -133,7 +137,7 @@ const ModalExportData = () => {
 							items={[
 								{
 									key: 'select',
-									label: 'Chọn mẫu có sẵn',
+									label: intl.formatMessage({ id: 'modalexport.tab.selecttemplate' }),
 									children: mauOptions.length ? (
 										<Checkbox.Group
 											value={selectedMaus}
@@ -150,7 +154,7 @@ const ModalExportData = () => {
 																	setPreviewOpen(true);
 																}}
 															>
-																{item?.ten ?? `Tệp tin ${idx + 1}`}
+																{item?.ten ?? `${intl.formatMessage({ id: 'modalexport.file.default' })} ${idx + 1}`}
 															</a>
 														</Checkbox>
 													</div>
@@ -158,12 +162,12 @@ const ModalExportData = () => {
 											</Space>
 										</Checkbox.Group>
 									) : (
-										<i style={{ color: 'red' }}>(chưa có mẫu)</i>
+										<i style={{ color: 'red' }}>{intl.formatMessage({ id: 'modalexport.notemplate' })}</i>
 									),
 								},
 								{
 									key: 'upload',
-									label: 'Upload mẫu mới',
+									label: intl.formatMessage({ id: 'modalexport.tab.uploadtemplate' }),
 									children: (
 										<Upload
 											customRequest={({ onSuccess }) => setTimeout(() => onSuccess && onSuccess('ok'), 0)}
@@ -173,17 +177,19 @@ const ModalExportData = () => {
 											maxCount={1}
 											beforeUpload={beforeUpload}
 										>
-											<Button icon={<UploadOutlined />}>Chọn tệp mẫu mới</Button>
+											<Button icon={<UploadOutlined />}>
+												{intl.formatMessage({ id: 'modalexport.button.selectfile' })}
+											</Button>
 										</Upload>
 									),
 								},
 							]}
 						/>
 					</Descriptions.Item>
-					<Descriptions.Item label='Ngày in phụ lục'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'modalexport.label.ngayinphuluc' })}>
 						<MyDatePicker value={ngayThang} onChange={(val) => setngayThang(dayjs(val))} />
 					</Descriptions.Item>
-					<Descriptions.Item label='Định dạng xuất file'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'modalexport.label.dinhdangxuatfile' })}>
 						<Radio.Group value={mode} onChange={(e) => setMode(e.target.value)} size='small'>
 							<Radio.Button value='PDF'>PDF</Radio.Button>
 							<Radio.Button value='DOCX'>DOCX</Radio.Button>
@@ -193,10 +199,9 @@ const ModalExportData = () => {
 			) : null}
 
 			<div style={{ marginTop: 12, marginBottom: 12 }} className='text-error'>
-				Chú ý: Quá trình in phụ lục có thể mất một khoảng thời gian tùy thuộc vào số lượng phụ lục. Hệ thống sẽ gửi
-				thông báo đường dẫn tải về khi hoàn tất.
+				{intl.formatMessage({ id: 'modalexport.note.line1' })}
 				<br />
-				Vui lòng không lặp lại thao tác trong khi đang thực hiện.
+				{intl.formatMessage({ id: 'modalexport.note.line2' })}
 			</div>
 
 			{exporting && (
@@ -210,8 +215,16 @@ const ModalExportData = () => {
 
 					<Row justify='center'>
 						<Col>
-							<span>({`${exportDetail.current}/${exportDetail.total} bản`}). </span>
-							{exportStatus !== 'Done' ? <>Vui lòng đợi trong ít phút....</> : <>Quá trình đã hoàn tất</>}
+							<span>
+								(
+								{`${exportDetail.current}/${exportDetail.total} ${intl.formatMessage({ id: 'modalexport.progress.records' })}`}
+								).{' '}
+							</span>
+							{exportStatus !== 'Done' ? (
+								<>{intl.formatMessage({ id: 'modalexport.progress.wait' })}</>
+							) : (
+								<>{intl.formatMessage({ id: 'modalexport.progress.complete' })}</>
+							)}
 						</Col>
 					</Row>
 				</>
@@ -219,13 +232,13 @@ const ModalExportData = () => {
 
 			<div className='form-footer'>
 				<Button type='primary' loading={exporting} onClick={onExport} icon={<FilePdfOutlined />}>
-					In thông tin văn bằng
+					{intl.formatMessage({ id: 'modalexport.button.print' })}
 				</Button>
-				<Button onClick={() => setVisiblePrint(false)}>Hủy</Button>
+				<Button onClick={() => setVisiblePrint(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 
 			<ModalExpandable
-				title='Xem trước tập tin'
+				title={intl.formatMessage({ id: 'modalexport.modal.preview' })}
 				width={1000}
 				open={previewOpen}
 				footer={null}
@@ -234,7 +247,7 @@ const ModalExportData = () => {
 				<PreviewFile file={previewImage} isFileId />
 
 				<div className='form-footer'>
-					<Button onClick={() => setPreviewOpen(false)}>Đóng</Button>
+					<Button onClick={() => setPreviewOpen(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 				</div>
 			</ModalExpandable>
 		</Modal>

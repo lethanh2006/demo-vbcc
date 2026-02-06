@@ -26,7 +26,7 @@ const DotCapBangTotNghiepForm = (props: { afterAddNew?: (rec: DotCapBangTotNghie
 	const onFinish = async (values: DotCapBangTotNghiep.IRecord) => {
 		const diffMinutes = dayjs(values.ngayKetThuc).diff(dayjs(values.ngayBatDau), 'minutes');
 		if (diffMinutes <= 0) {
-			return message.info('Thời gian kết thúc phải sau thời gian bắt đầu!');
+			return message.info(intl.formatMessage({ id: 'dotcapbang.form.error.timerange' }));
 		}
 
 		const data = {
@@ -55,30 +55,38 @@ const DotCapBangTotNghiepForm = (props: { afterAddNew?: (rec: DotCapBangTotNghie
 				<Col span={24}>
 					<Form.Item
 						name='ten'
-						label='Tên đợt cấp bằng'
+						label={intl.formatMessage({ id: 'dotcapbang.form.label.tendotcapbang' })}
 						rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 					>
-						<Input placeholder='Nhập tên đợt cấp bằng' />
+						<Input placeholder={intl.formatMessage({ id: 'dotcapbang.form.placeholder.tendotcapbang' })} />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item name='ngayBatDau' label='Thời gian bắt đầu cấp bằng từ' rules={[...rules.required]}>
-						<MyDatePicker placeholder='Chọn thời gian bắt đầu' />
+					<Form.Item
+						name='ngayBatDau'
+						label={intl.formatMessage({ id: 'dotcapbang.form.label.ngaybatdau' })}
+						rules={[...rules.required]}
+					>
+						<MyDatePicker placeholder={intl.formatMessage({ id: 'dotcapbang.form.placeholder.ngaybatdau' })} />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item name='ngayKetThuc' label='Thời gian kết thúc' rules={[...rules.required]}>
+					<Form.Item
+						name='ngayKetThuc'
+						label={intl.formatMessage({ id: 'dotcapbang.form.label.ngayketthuc' })}
+						rules={[...rules.required]}
+					>
 						<MyDatePicker
-							placeholder='Chọn thời gian kết thúc'
+							placeholder={intl.formatMessage({ id: 'dotcapbang.form.placeholder.ngayketthuc' })}
 							disabledDate={(cur) => (ngayBatDau ? dayjs(cur).isBefore(ngayBatDau) : false)}
 						/>
 					</Form.Item>
 				</Col>
 				<Col span={24}>
-					<Form.Item name='ghiChu' label='Ghi chú'>
-						<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+					<Form.Item name='ghiChu' label={intl.formatMessage({ id: 'dotcapbang.form.label.ghichu' })}>
+						<Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'dotcapbang.form.placeholder.ghichu' })} />
 					</Form.Item>
 				</Col>
 			</Row>

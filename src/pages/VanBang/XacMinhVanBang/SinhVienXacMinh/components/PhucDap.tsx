@@ -5,7 +5,7 @@ import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Modal, Row } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ChiTietSinhVienXacMinh from './ChiTiet';
 
 const ModalPhucDap = (props: {
@@ -15,6 +15,7 @@ const ModalPhucDap = (props: {
 	isKetQua?: boolean;
 }) => {
 	const { visible, setVisible, getData, isKetQua } = props;
+	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record, putModel, formSubmiting, setFormSubmiting } = useModel('vbcc.sinhvienxacminh');
 
@@ -36,7 +37,13 @@ const ModalPhucDap = (props: {
 	};
 
 	return (
-		<Modal title='Nội dung phúc đáp' open={visible} onCancel={() => setVisible(false)} footer={null} width={800}>
+		<Modal
+			title={intl.formatMessage({ id: 'xacminhvanbang.phucdap.title' })}
+			open={visible}
+			onCancel={() => setVisible(false)}
+			footer={null}
+			width={800}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24}>
@@ -45,7 +52,11 @@ const ModalPhucDap = (props: {
 					{
 						isKetQua ? (
 							<Col span={24}>
-								<Form.Item name='urlPhanHoi' label='File phúc đáp' rules={[...rules.required]}>
+								<Form.Item
+									name='urlPhanHoi'
+									label={intl.formatMessage({ id: 'xacminhvanbang.phucdap.label.filephucdap' })}
+									rules={[...rules.required]}
+								>
 									<UploadFile />
 								</Form.Item>
 							</Col>
@@ -64,10 +75,10 @@ const ModalPhucDap = (props: {
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Lưu lại
+						{intl.formatMessage({ id: 'global.button.luulai' })}
 					</Button>
 
-					<Button onClick={() => setVisible(false)}>Hủy</Button>
+					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 		</Modal>

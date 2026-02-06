@@ -5,7 +5,7 @@ import { XacMinhVanBang } from '@/services/VanBang/XacMinhVanBang/typing';
 import rules from '@/utils/rules';
 import { Button, Col, Form, Modal, Row, Spin } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 interface Props {
 	visible: boolean;
@@ -14,6 +14,7 @@ interface Props {
 }
 
 const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
+	const intl = useIntl();
 	const { getByKeyModel, updateSettingModel, formSubmiting, loading, setFormSubmiting } = useModel('tienich.caidat');
 	const [form] = Form.useForm();
 
@@ -40,14 +41,20 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 	};
 
 	return (
-		<Modal title={title || 'Thêm biểu mẫu'} open={visible} onCancel={onClose} footer={null} destroyOnClose>
+		<Modal
+			title={title || intl.formatMessage({ id: 'xacminhvanbang.caidat.title.default' })}
+			open={visible}
+			onCancel={onClose}
+			footer={null}
+			destroyOnClose
+		>
 			<Spin spinning={loading}>
 				<Form form={form} layout='vertical' onFinish={onFinish}>
 					<Row gutter={[12, 0]}>
 						<Col span={24}>
 							<Form.Item
 								name='bieuMauId'
-								label='Tập tin biểu mẫu kết quả xác minh'
+								label={intl.formatMessage({ id: 'xacminhvanbang.caidat.label.bieumau' })}
 								rules={[...rules.required, ...rules.fileRequired]}
 							>
 								<UploadFile accept='.docx' drag hasPreviewFile previewFileProps={{ isFileId: true }} />
@@ -80,9 +87,9 @@ const ModalCaiDatXacMinh: React.FC<Props> = ({ visible, onClose, title }) => {
 
 					<div className='form-footer' style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
 						<Button type='primary' htmlType='submit' loading={formSubmiting}>
-							Lưu lại
+							{intl.formatMessage({ id: 'global.button.luulai' })}
 						</Button>
-						<Button onClick={onClose}>Hủy</Button>
+						<Button onClick={onClose}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 					</div>
 				</Form>
 			</Spin>

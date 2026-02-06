@@ -132,7 +132,10 @@ const FormPhuLucVanBang = (props: {
 		switch (element.type) {
 			case ELoaiDuLieuBieuMau.Number:
 				return (
-					<InputNumber style={{ width: '100%' }} placeholder={`Nhập ${element.headerName?.toLocaleLowerCase()}`} />
+					<InputNumber
+						style={{ width: '100%' }}
+						placeholder={`${intl.formatMessage({ id: 'formthongtin.placeholder.input' })} ${element.headerName?.toLocaleLowerCase()}`}
+					/>
 				);
 			case ELoaiDuLieuBieuMau.Date:
 				return <MyDatePicker />;
@@ -148,14 +151,14 @@ const FormPhuLucVanBang = (props: {
 				});
 
 				columns.push({
-					title: 'Thao tác',
+					title: intl.formatMessage({ id: 'formthongtin.action' }),
 					align: 'center',
 					width: 80,
 					fixed: 'right',
 					render: (rec: any, agg, index) => (
 						<>
 							<ButtonExtend
-								tooltip='Chỉnh sửa'
+								tooltip={intl.formatMessage({ id: 'formthongtin.action.edit' })}
 								size='small'
 								onClick={() => {
 									setEditFormTable(true);
@@ -174,10 +177,16 @@ const FormPhuLucVanBang = (props: {
 										[element.headerName]: newData,
 									});
 								}}
-								title='Bạn có chắc chắn muốn xoá dòng này?'
+								title={intl.formatMessage({ id: 'formthongtin.confirm.delete' })}
 								placement='topRight'
 							>
-								<ButtonExtend tooltip='Xoá' size='small' danger type='link' icon={<DeleteOutlined />} />
+								<ButtonExtend
+									tooltip={intl.formatMessage({ id: 'formthongtin.action.delete' })}
+									size='small'
+									danger
+									type='link'
+									icon={<DeleteOutlined />}
+								/>
 							</Popconfirm>
 						</>
 					),
@@ -204,7 +213,7 @@ const FormPhuLucVanBang = (props: {
 										setOpenedTableKey(element.headerName);
 									}}
 								>
-									Thêm mới
+									{intl.formatMessage({ id: 'global.button.themmoi' })}
 								</Button>,
 							]}
 						/>
@@ -213,7 +222,7 @@ const FormPhuLucVanBang = (props: {
 							destroyOnClose
 							width={700}
 							footer={false}
-							title={`${editFormTable ? 'Chỉnh sửa' : 'Thêm mới'} ${element.headerName}`}
+							title={`${editFormTable ? intl.formatMessage({ id: 'formthongtin.modal.title.edit' }) : intl.formatMessage({ id: 'formthongtin.modal.title.add' })} ${element.headerName}`}
 							open={openedTableKey === element.headerName}
 							onCancel={onCancelFormTable}
 						>
@@ -222,7 +231,11 @@ const FormPhuLucVanBang = (props: {
 					</>
 				);
 			default:
-				return <Input placeholder={`Nhập ${element.headerName?.toLocaleLowerCase()}`} />;
+				return (
+					<Input
+						placeholder={`${intl.formatMessage({ id: 'formthongtin.placeholder.input' })} ${element.headerName?.toLocaleLowerCase()}`}
+					/>
+				);
 		}
 	};
 
@@ -273,7 +286,7 @@ const FormPhuLucVanBang = (props: {
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
 				<Col span={24}>
-					<Form.Item label='Quyết định tốt nghiệp'>
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.quyetdinh' })}>
 						<Input
 							value={
 								recQuyetDinh?.soQuyetDinh ??
@@ -287,71 +300,75 @@ const FormPhuLucVanBang = (props: {
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item label='Số vào sổ' name='soVaoSoBang'>
-						<Input placeholder='Nhập số vào sổ' />
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.sovaoso' })} name='soVaoSoBang'>
+						<Input placeholder={intl.formatMessage({ id: 'formthongtin.placeholder.sovaoso' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item name='bookEntryNumberFormat' label='Số vào sổ (Tiếng Anh)'>
-						<Input placeholder='Nhập số vào sổ (Tiếng Anh)' />
+					<Form.Item name='bookEntryNumberFormat' label={intl.formatMessage({ id: 'formthongtin.label.sovaosoen' })}>
+						<Input placeholder={intl.formatMessage({ id: 'formthongtin.placeholder.sovaosoen' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item
-						label='Số hiệu văn bằng'
+						label={intl.formatMessage({ id: 'formthongtin.label.sohieuvanbang' })}
 						name='soHieuVanBang'
 						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
 					>
-						<Input placeholder='Nhập số hiệu văn bằng' />
+						<Input placeholder={intl.formatMessage({ id: 'formthongtin.placeholder.sohieuvanbang' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Họ tên' name='hoTen' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
-						<Input placeholder='Nhập họ tên' />
+					<Form.Item
+						label={intl.formatMessage({ id: 'formthongtin.label.hoten' })}
+						name='hoTen'
+						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'formthongtin.placeholder.hoten' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Ngày sinh' name='ngaySinh'>
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.ngaysinh' })} name='ngaySinh'>
 						<MyDatePicker />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item
-						label='Mã người học'
+						label={intl.formatMessage({ id: 'formthongtin.label.manguoihoc' })}
 						name='maSinhVien'
 						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
 					>
-						<Input placeholder='Nhập mã người học' />
+						<Input placeholder={intl.formatMessage({ id: 'formthongtin.placeholder.manguoihoc' })} />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item label='Số CMND/CCCD' name='cmtCccd'>
-						<Input placeholder='Nhập căn cước công dân' />
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.cmndcccd' })} name='cmtCccd'>
+						<Input placeholder={intl.formatMessage({ id: 'formthongtin.placeholder.cmndcccd' })} />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item label='Trình độ đào tạo' name='trinhDoDaoTao'>
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.trinhdodaotao' })} name='trinhDoDaoTao'>
 						<SelectTrinhDoDaoTao selectTen />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item label='Hình thức đào tạo' name='hinhThucDaoTao'>
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.hinhthucdaotao' })} name='hinhThucDaoTao'>
 						<SelectHinhThucDaoTao selectTen />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
-					<Form.Item label='Ngành đào tạo' name='nganhDaoTao'>
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.nganhdaotao' })} name='nganhDaoTao'>
 						<SelectNganhDaoTao selectMa />
 					</Form.Item>
 				</Col>
 
 				{!settingVbcc?.require_IPFS && (
 					<Col span={24} md={12}>
-						<Form.Item label='Tập tin văn bằng (file scan)' name='urlIpfs'>
+						<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.taptinvanbang' })} name='urlIpfs'>
 							<UploadFile maxCount={1} otherProps={{ accept: '.pdf' }} />
 						</Form.Item>
 					</Col>
@@ -359,7 +376,7 @@ const FormPhuLucVanBang = (props: {
 				{recBieuMau?._id && (
 					<>
 						<Col span={24}>
-							Theo biểu mẫu phụ lục: <b>{recBieuMau.ten}</b>
+							{intl.formatMessage({ id: 'formthongtin.label.theobieumauphu' })} <b>{recBieuMau.ten}</b>
 						</Col>
 						{recBieuMau.elements.map((element, index) => (
 							<Col span={24} md={element.type === ELoaiDuLieuBieuMau.Table ? 24 : 12} key={element.headerName}>
@@ -384,12 +401,12 @@ const FormPhuLucVanBang = (props: {
 				</Button> */}
 				{trangThaiYeuCau === 'Chỉnh sửa' && (
 					<Button loading={formSubmiting} type='primary' onClick={() => handleYeuCau('Chỉnh sửa')}>
-						Đề xuất chỉnh sửa
+						{intl.formatMessage({ id: 'formthongtin.button.dexuatchinhsua' })}
 					</Button>
 				)}
 				{trangThaiYeuCau === 'Cấp lại' && (
 					<Button loading={formSubmiting} type='primary' onClick={() => handleYeuCau('Cấp lại')}>
-						Đề xuất cấp lại
+						{intl.formatMessage({ id: 'formthongtin.button.dexuatcaplai' })}
 					</Button>
 				)}
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

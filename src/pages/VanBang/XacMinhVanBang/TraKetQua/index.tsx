@@ -45,13 +45,19 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Kết quả phúc đáp' name='urlFilePhucDapChung'>
+						<Form.Item
+							label={intl.formatMessage({ id: 'xacminhvanbang.traketqua.label.ketquaphucdap' })}
+							name='urlFilePhucDapChung'
+						>
 							<UploadFile maxCount={5} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Ghi chú' name='ghiChu'>
-							<Input.TextArea disabled={isHoanThanh} placeholder='Nhập ghi chú' />
+						<Form.Item label={intl.formatMessage({ id: 'xacminhvanbang.traketqua.label.ghichu' })} name='ghiChu'>
+							<Input.TextArea
+								disabled={isHoanThanh}
+								placeholder={intl.formatMessage({ id: 'xacminhvanbang.traketqua.placeholder.ghichu' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>
@@ -63,17 +69,17 @@ const TraKetQuaPage = (props: { afterAddNew?: (val: number) => void; getData?: (
 						}}
 						icon={<ArrowLeftOutlined />}
 					>
-						Quay lại
+						{intl.formatMessage({ id: 'xacminhvanbang.traketqua.button.quaylai' })}
 					</Button>
 
 					<Popconfirm
 						disabled={isHoanThanh}
 						onConfirm={() => form.submit()}
-						title='Xác nhận hoàn thành xác minh?'
+						title={intl.formatMessage({ id: 'xacminhvanbang.traketqua.confirm.hoanthanh' })}
 						placement='topRight'
 					>
 						<Button disabled={isHoanThanh} loading={formSubmiting} type='primary' icon={<SaveOutlined />}>
-							Hoàn thành
+							{intl.formatMessage({ id: 'xacminhvanbang.traketqua.button.hoanthanh' })}
 						</Button>
 					</Popconfirm>
 
