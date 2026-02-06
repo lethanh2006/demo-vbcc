@@ -26,13 +26,14 @@ import {
 } from '@ant-design/icons';
 import { Descriptions, Popover, Space, Tag } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import PreviewIPFS from '../PhuLuc/components/Preview';
 import ViewPhuLucVanBang from '../PhuLuc/components/ViewRender';
 import SelectQuyetDinhTotNghiep from '../QuyetDinhTotNghiep/components/Select';
 import ModalXuLyCapBang from './XuLy';
 
 const CapPhatPhuLucPage = () => {
+	const intl = useIntl();
 	const {
 		record: recQuyetDinh,
 		danhSach: danhsachQuyetDinh,
@@ -74,7 +75,7 @@ const CapPhatPhuLucPage = () => {
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.sovaoso' }),
 			dataIndex: 'soVaoSoBang',
 			filterType: 'string',
 			width: 120,
@@ -82,7 +83,7 @@ const CapPhatPhuLucPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Số hiệu VB',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.sohieuvb' }),
 			dataIndex: 'soHieuVanBang',
 			filterType: 'string',
 			width: 120,
@@ -90,14 +91,14 @@ const CapPhatPhuLucPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.hoten' }),
 			dataIndex: 'hoTen',
 			width: 160,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.ngaysinh' }),
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 100,
@@ -107,7 +108,7 @@ const CapPhatPhuLucPage = () => {
 			onCell,
 		},
 		{
-			title: 'Mã người học',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.manguoihoc' }),
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			width: 120,
@@ -116,7 +117,7 @@ const CapPhatPhuLucPage = () => {
 			onCell,
 		},
 		{
-			title: 'Quyết định',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.quyetdinh' }),
 			dataIndex: 'idQuyetDinh',
 			width: 140,
 			render: (val, rec) => (
@@ -129,7 +130,7 @@ const CapPhatPhuLucPage = () => {
 			onCell,
 		},
 		{
-			title: 'Tập tin',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.taptin' }),
 			dataIndex: 'urlIpfs',
 			align: 'center',
 			width: 120,
@@ -142,25 +143,25 @@ const CapPhatPhuLucPage = () => {
 							setVisibleModal(true);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'capphatvanbang.link.viewdetail' })}
 					</a>
 				) : (
-					<i>(Chưa upload)</i>
+					<i>({intl.formatMessage({ id: 'capphatvanbang.tag.chuaupload' })})</i>
 				),
 			hide: !settingVbcc?.require_IPFS,
 		},
 		{
-			title: 'Văn bằng',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.vanbang' }),
 			width: 120,
 			children: [
 				{
-					title: 'Tập tin',
+					title: intl.formatMessage({ id: 'capphatvanbang.column.vanbang.taptin' }),
 					dataIndex: 'fileVanBang',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						!val ? (
-							<Tag color='red'>Chưa trình ký</Tag>
+							<Tag color='red'>{intl.formatMessage({ id: 'capphatvanbang.tag.chuatrinhky' })}</Tag>
 						) : (
 							<a
 								onClick={(e) => {
@@ -169,25 +170,27 @@ const CapPhatPhuLucPage = () => {
 									setVisibleFormFile(true);
 								}}
 							>
-								Xem chi tiết
+								{intl.formatMessage({ id: 'capphatvanbang.link.viewdetail' })}
 							</a>
 						),
 				},
 				{
-					title: 'Ký số',
+					title: intl.formatMessage({ id: 'capphatvanbang.column.vanbang.kyso' }),
 					dataIndex: 'daKy',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						val ? (
 							<Space>
-								<Tag color='green'>Đã ký</Tag>
+								<Tag color='green'>{intl.formatMessage({ id: 'capphatvanbang.tag.daky' })}</Tag>
 								<Popover
 									content={
 										<div style={{ maxWidth: 300 }}>
 											<Descriptions column={1} size='small'>
-												<Descriptions.Item label='Người ký'>{rec?.nguoiKy?.hoTen ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Thời gian ký'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'capphatvanbang.popover.nguoiky' })}>
+													{rec?.nguoiKy?.hoTen ?? '--'}
+												</Descriptions.Item>
+												<Descriptions.Item label={intl.formatMessage({ id: 'capphatvanbang.popover.thoigianky' })}>
 													{rec?.thoiGianKy ? dayjs(rec?.thoiGianKy).format('HH:mm DD/MM/YYYY') : '--'}
 												</Descriptions.Item>
 											</Descriptions>
@@ -198,26 +201,26 @@ const CapPhatPhuLucPage = () => {
 								</Popover>
 							</Space>
 						) : (
-							<Tag color='orange'>Chưa ký</Tag>
+							<Tag color='orange'>{intl.formatMessage({ id: 'capphatvanbang.tag.chuaky' })}</Tag>
 						),
 				},
 				{
-					title: 'Đóng dấu',
+					title: intl.formatMessage({ id: 'capphatvanbang.column.vanbang.dongdau' }),
 					dataIndex: 'daDongDau',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						val ? (
 							<Space>
-								<Tag color='green'>Đã đóng dấu</Tag>
+								<Tag color='green'>{intl.formatMessage({ id: 'capphatvanbang.tag.dadongdau' })}</Tag>
 								<Popover
 									content={
 										<div style={{ maxWidth: 300 }}>
 											<Descriptions column={1} size='small'>
-												<Descriptions.Item label='Người đóng dấu'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'capphatvanbang.popover.nguoidongdau' })}>
 													{rec?.nguoiDongGiau?.hoTen ?? '--'}
 												</Descriptions.Item>
-												<Descriptions.Item label='Thời gian đóng dấu'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'capphatvanbang.popover.thoigiandongdau' })}>
 													{rec?.thoiGianDongGiau ? dayjs(rec?.thoiGianDongGiau).format('HH:mm DD/MM/YYYY') : '--'}
 												</Descriptions.Item>
 											</Descriptions>
@@ -228,14 +231,14 @@ const CapPhatPhuLucPage = () => {
 								</Popover>
 							</Space>
 						) : (
-							<Tag color='orange'>Chưa đóng dấu</Tag>
+							<Tag color='orange'>{intl.formatMessage({ id: 'capphatvanbang.tag.chuadongdau' })}</Tag>
 						),
 				},
 			],
 			hide: !settingVbcc?.require_diploma_signature,
 		},
 		{
-			title: 'Trạng thái phát bằng',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.trangthaiphatbang' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
@@ -252,7 +255,7 @@ const CapPhatPhuLucPage = () => {
 			onCell,
 		},
 		{
-			title: 'Ký số thông tin',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.kysothongtin' }),
 			dataIndex: 'signature',
 			align: 'center',
 			width: 80,
@@ -261,7 +264,7 @@ const CapPhatPhuLucPage = () => {
 			onCell,
 		},
 		{
-			title: 'Blockchain',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.blockchain' }),
 			dataIndex: 'createdBlockchain',
 			align: 'center',
 			width: 180,
@@ -285,7 +288,7 @@ const CapPhatPhuLucPage = () => {
 			onCell,
 		},
 		{
-			title: 'Thời gian cấp bằng',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.thoigiancapbang' }),
 			dataIndex: 'ngayCapPhuLuc',
 			align: 'center',
 			width: 100,
@@ -295,14 +298,14 @@ const CapPhatPhuLucPage = () => {
 			onCell,
 		},
 		{
-			title: 'Ghi chú cấp bằng',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.ghichucapbang' }),
 			dataIndex: 'ghiChuCapBang',
 			width: 200,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'capphatvanbang.column.thaotac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -313,10 +316,13 @@ const CapPhatPhuLucPage = () => {
 							disabled={rec?.trangThai === ETrangThaiCapBang.DA_CAP_BANG}
 							onClick={() => {
 								setRecord(rec);
-								setTrangThai({ title: 'Cấp phát văn bằng', trangThai: ETrangThaiCapBang.DA_CAP_BANG });
+								setTrangThai({
+									title: intl.formatMessage({ id: 'capphatvanbang.modal.title.capphatvanbang' }),
+									trangThai: ETrangThaiCapBang.DA_CAP_BANG,
+								});
 								setVisibleXuLy(true);
 							}}
-							tooltip='Đã phát bằng'
+							tooltip={intl.formatMessage({ id: 'capphatvanbang.action.daphatbang' })}
 							className='btn-success'
 							type='link'
 							icon={<CheckOutlined />}
@@ -348,9 +354,9 @@ const CapPhatPhuLucPage = () => {
 				params={{ idQuyetDinh: recQuyetDinh?._id }}
 				dependencies={[page, limit, recQuyetDinh?._id]}
 				modelName='vbcc.phulucvanbang'
-				title={'Cấp phát văn bằng'}
+				title={intl.formatMessage({ id: 'capphatvanbang.title' })}
 				widthDrawer={1000}
-				modalTitle={'Xem chi tiết thông tin văn bằng'}
+				modalTitle={intl.formatMessage({ id: 'capphatvanbang.modal.detail' })}
 				Form={ViewPhuLucVanBang}
 				buttons={{
 					create: false,
@@ -362,7 +368,7 @@ const CapPhatPhuLucPage = () => {
 						style={{ width: 150 }}
 						value={yearSelect}
 						pickerStyle='year'
-						placeholder='Chọn năm hành chính'
+						placeholder={intl.formatMessage({ id: 'capphatvanbang.placeholder.chonnamhanhchinh' })}
 						format='YYYY'
 						onChange={(val) => {
 							if (val) {
@@ -396,11 +402,11 @@ const CapPhatPhuLucPage = () => {
 			)}
 
 			<ModalExpandable
-				title='Chi tiết tệp tin'
+				title={intl.formatMessage({ id: 'capphatvanbang.modal.chitiet' })}
 				width={1000}
 				open={visibleFormFile}
 				okButtonProps={{ hidden: true }}
-				cancelText='Đóng'
+				cancelText={intl.formatMessage({ id: 'global.button.dong' })}
 				onCancel={() => setVisibleFormFile(false)}
 			>
 				<PreviewFile file={record?.fileVanBang ?? ''} />

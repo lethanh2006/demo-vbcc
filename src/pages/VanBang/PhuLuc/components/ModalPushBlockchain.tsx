@@ -9,9 +9,10 @@ import { BoldOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Progress, Tabs, Tag, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ModalPushBlockchain = (props: { getData?: () => void }) => {
+	const intl = useIntl();
 	const { getData } = props;
 	const { visiblePush, setVisiblePush, dataToSignOrPush, pushBlockchainModel } = useModel('vbcc.phulucvanbang');
 	const { initialState } = useModel('@@initialState');
@@ -62,12 +63,12 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 
 	const columnsResult: IColumn<PhuLucVanBang.TUpdateSignature>[] = [
 		{
-			title: 'ID Văn bằng',
+			title: intl.formatMessage({ id: 'modalpush.column.idvanbang' }),
 			dataIndex: 'key',
 			width: 250,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'modalpush.column.trangthai' }),
 			dataIndex: 'message',
 			width: 150,
 		},
@@ -80,7 +81,7 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 		pushBlockchainModel(dataHopLe)
 			.then((data: any) => {
 				Modal.info({
-					title: 'Kết quả',
+					title: intl.formatMessage({ id: 'modalpush.modal.result' }),
 					width: 800,
 					icon: null,
 					content: <TableStaticData data={data} size='small' columns={columnsResult} />,
@@ -95,30 +96,36 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
 			dataIndex: 'soVaoSoBang',
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'modalpush.column.sovaoso' }),
 			width: 120,
 		},
 		{
 			dataIndex: 'soHieuVanBang',
-			title: 'Số hiệu văn bằng',
+			title: intl.formatMessage({ id: 'modalpush.column.sohieuvanbang' }),
 			width: 120,
 		},
 		{
 			dataIndex: 'hoTen',
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'modalpush.column.hoten' }),
 			width: 160,
 		},
 		{
 			dataIndex: 'signature',
-			title: 'Chữ ký',
+			title: intl.formatMessage({ id: 'modalpush.column.chuky' }),
 			width: 100,
 			align: 'center',
 			render: (text) =>
-				text ? <Typography.Paragraph copyable={{ text }}>(đã ký)</Typography.Paragraph> : <i>Chưa có chữ ký</i>,
+				text ? (
+					<Typography.Paragraph copyable={{ text }}>
+						{intl.formatMessage({ id: 'modalpush.signature.signed' })}
+					</Typography.Paragraph>
+				) : (
+					<i>{intl.formatMessage({ id: 'modalpush.signature.nosignature' })}</i>
+				),
 			hide: !settingVbcc?.require_signature,
 		},
 		{
-			title: 'Blockchain',
+			title: intl.formatMessage({ id: 'modalpush.column.blockchain' }),
 			dataIndex: 'createdBlockchain',
 			align: 'center',
 			width: 150,
@@ -131,13 +138,14 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 			open={visiblePush}
 			title={
 				<>
-					Dữ liệu blockchain{' '}
+					{intl.formatMessage({ id: 'modalpush.title' })}{' '}
 					<Popover
 						content={
-							<>
-								Đẩy toàn bộ thông tin phụ lục (đã được ký số) lên blockchain, <br />
-								để đảm bảo tính toàn vẹn dữ liệu của phụ lục.
-							</>
+							<span
+								dangerouslySetInnerHTML={{
+									__html: intl.formatMessage({ id: 'modalpush.popover.content' }),
+								}}
+							/>
 						}
 					>
 						<QuestionCircleOutlined />
@@ -148,10 +156,10 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 			style={{ paddingTop: 0 }}
 			onCancel={onCancel}
 			okButtonProps={{ hidden: true }}
-			cancelText='Đóng'
+			cancelText={intl.formatMessage({ id: 'modalpush.button.close' })}
 		>
 			<Tabs defaultActiveKey='1'>
-				<Tabs.TabPane tab={`Dữ liệu hợp lệ (${dataHopLe?.length ?? 0})`} key='1'>
+				<Tabs.TabPane tab={`${intl.formatMessage({ id: 'modalpush.tab.valid' })} (${dataHopLe?.length ?? 0})`} key='1'>
 					<TableStaticData columns={columns} size='small' data={dataHopLe} addStt />
 
 					{pushing && (
@@ -164,32 +172,43 @@ const ModalPushBlockchain = (props: { getData?: () => void }) => {
 							</div>
 
 							<div className='form-footer' style={{ marginBottom: 24 }}>
-								<span>({`${pushProgress}/${dataToSignOrPush.length} bản`}). </span>
-								{pushStatus === 'active' ? <>Vui lòng đợi trong ít phút....</> : <>Quá trình đã hoàn tất</>}
+								<span>
+									(
+									{`${pushProgress}/${dataToSignOrPush.length} ${intl.formatMessage({ id: 'modalpush.progress.records' })}`}
+									).{' '}
+								</span>
+								{pushStatus === 'active' ? (
+									<>{intl.formatMessage({ id: 'modalpush.progress.wait' })}</>
+								) : (
+									<>{intl.formatMessage({ id: 'modalpush.progress.complete' })}</>
+								)}
 							</div>
 						</>
 					)}
 
 					<div className='form-footer'>
 						<Popconfirm
-							title='Xác nhận đẩy dữ liệu hợp lệ lên blockchain?'
+							title={intl.formatMessage({ id: 'modalpush.popconfirm.push' })}
 							onConfirm={onOk}
 							disabled={!dataHopLe?.length}
 						>
 							<Button type='primary' icon={<BoldOutlined />} disabled={!dataHopLe?.length} loading={pushing}>
-								Đẩy lên blockchain
+								{intl.formatMessage({ id: 'modalpush.button.push' })}
 							</Button>
 						</Popconfirm>
 					</div>
 				</Tabs.TabPane>
 
 				{settingVbcc?.require_signature && (
-					<Tabs.TabPane tab={`Dữ liệu không hợp lệ (${dataKhongHopLe?.length ?? 0})`} key='2'>
+					<Tabs.TabPane
+						tab={`${intl.formatMessage({ id: 'modalpush.tab.invalid' })} (${dataKhongHopLe?.length ?? 0})`}
+						key='2'
+					>
 						<TableStaticData columns={columns} addStt size='small' data={dataKhongHopLe ?? []} />
 					</Tabs.TabPane>
 				)}
 
-				<Tabs.TabPane tab={`Đã đẩy lên blockchain (${dataDaDay?.length ?? 0})`} key='3'>
+				<Tabs.TabPane tab={`${intl.formatMessage({ id: 'modalpush.tab.pushed' })} (${dataDaDay?.length ?? 0})`} key='3'>
 					<TableStaticData columns={columns} addStt size='small' data={dataDaDay} />
 				</Tabs.TabPane>
 			</Tabs>

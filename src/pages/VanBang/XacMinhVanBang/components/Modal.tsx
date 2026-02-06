@@ -1,7 +1,7 @@
 import { colorTrangThaiXacMinh, EPhaseXacMinh, nameTrangThaiXacMinh } from '@/services/VanBang/constant';
 import { Card, Col, Row, Space, Steps, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import CongVanPhucDapPage from '../CongVanPhucDap';
 import SinhVienXacMinhPage from '../SinhVienXacMinh';
 import TraKetQuaPage from '../TraKetQua';
@@ -9,6 +9,7 @@ import FormXacMinhVanBang from './FormXacMinh';
 
 const ModalXacMinhVanBang = (props: any) => {
 	const { getData } = props;
+	const intl = useIntl();
 	const { record, visibleForm, edit, getByIdModel } = useModel('vbcc.xacminhvanbang');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
@@ -53,7 +54,11 @@ const ModalXacMinhVanBang = (props: any) => {
 		<Card
 			title={
 				<Space>
-					{(edit ? 'Chỉnh sửa ' : 'Thêm mới ') + 'xác minh văn bằng '}
+					{(edit
+						? intl.formatMessage({ id: 'xacminhvanbang.modal.title.chinhsua' }) + ' '
+						: intl.formatMessage({ id: 'xacminhvanbang.modal.title.themmoi' }) + ' ') +
+						intl.formatMessage({ id: 'xacminhvanbang.modal.title.suffix' }) +
+						' '}
 					{record?._id ? (
 						<Tag color={colorTrangThaiXacMinh[record?.phaseXuLy as EPhaseXacMinh]}>
 							{nameTrangThaiXacMinh[record?.phaseXuLy]}
@@ -70,10 +75,13 @@ const ModalXacMinhVanBang = (props: any) => {
 						direction='vertical'
 						size='small'
 					>
-						<Steps.Step title='Yêu cầu xác minh' />
-						<Steps.Step title='Thông tin tra cứu' disabled={!record?._id} />
+						<Steps.Step title={intl.formatMessage({ id: 'xacminhvanbang.modal.step.yeucau' })} />
 						<Steps.Step
-							title='Xác minh văn bằng'
+							title={intl.formatMessage({ id: 'xacminhvanbang.modal.step.thongtin' })}
+							disabled={!record?._id}
+						/>
+						<Steps.Step
+							title={intl.formatMessage({ id: 'xacminhvanbang.modal.step.xacminh' })}
 							disabled={
 								!record?._id ||
 								![
@@ -85,14 +93,14 @@ const ModalXacMinhVanBang = (props: any) => {
 							}
 						/>
 						<Steps.Step
-							title='Công văn phúc đáp'
+							title={intl.formatMessage({ id: 'xacminhvanbang.modal.step.congvan' })}
 							disabled={
 								!record?._id ||
 								![EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(record?.phaseXuLy)
 							}
 						/>
 						<Steps.Step
-							title='Trả kết quả'
+							title={intl.formatMessage({ id: 'xacminhvanbang.modal.step.traketqua' })}
 							disabled={!record?._id || ![EPhaseXacMinh.KET_QUA, EPhaseXacMinh.HOAN_THANH].includes(record?.phaseXuLy)}
 						/>
 					</Steps>

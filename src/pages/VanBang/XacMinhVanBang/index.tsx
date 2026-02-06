@@ -11,12 +11,13 @@ import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons';
 import { Popconfirm, Spin, Tag } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ViewPhuLucVanBang from '../PhuLuc/components/ViewRender';
 import ModalXacMinhVanBang from './components/Modal';
 import ModalCaiDatXacMinh from './components/ModalCaiDat';
 
-const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu cầu chờ ký' | 'Yêu cầu hoàn thành' }) => {
+const XacMinhVanBangPage = (props: { title?: string }) => {
+	const intl = useIntl();
 	const { title } = props;
 	const { getModel, page, limit, deleteModel, handleEdit, record, setRecord } = useModel('vbcc.xacminhvanbang');
 	const { visibleForm, setVisibleForm, loading } = useModel('vbcc.phulucvanbang');
@@ -30,11 +31,11 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 	});
 
 	const trangThai =
-		title === 'Yêu cầu đang xử lý'
+		title === intl.formatMessage({ id: 'xacminhvanbang.title.yeucaudangxuly' })
 			? [EPhaseXacMinh.XAC_MINH, EPhaseXacMinh.PHUC_DAP, EPhaseXacMinh.KET_QUA]
-			: title === 'Yêu cầu chờ ký'
+			: title === intl.formatMessage({ id: 'xacminhvanbang.title.yeucauchoky' })
 				? [EPhaseXacMinh.KET_QUA]
-				: title === 'Yêu cầu hoàn thành'
+				: title === intl.formatMessage({ id: 'xacminhvanbang.title.yeucauhoanthanh' })
 					? [EPhaseXacMinh.HOAN_THANH]
 					: null;
 
@@ -56,14 +57,14 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 
 	const columns: IColumn<XacMinhVanBang.IRecord>[] = [
 		{
-			title: 'Người yêu cầu',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.nguoiyeucau' }),
 			dataIndex: 'nguoiYeuCau',
 			filterType: 'string',
 			width: 160,
 			onCell,
 		},
 		{
-			title: 'Loại phúc đáp',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.loaiphucdap' }),
 			dataIndex: 'loaiPhucDap',
 			width: 120,
 			align: 'center',
@@ -72,7 +73,7 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			onCell,
 		},
 		{
-			title: 'Đơn vị',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.donvi' }),
 			dataIndex: 'tenDonVi',
 			filterType: 'string',
 			width: 180,
@@ -80,7 +81,7 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			onCell,
 		},
 		{
-			title: 'SĐT',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.sdt' }),
 			dataIndex: 'soDienThoai',
 			filterType: 'string',
 			width: 120,
@@ -88,7 +89,7 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			onCell,
 		},
 		{
-			title: 'Email',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.email' }),
 			dataIndex: 'email',
 			filterType: 'string',
 			width: 180,
@@ -96,7 +97,7 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			onCell,
 		},
 		{
-			title: 'Ngày gửi',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.ngaygui' }),
 			dataIndex: 'ngayGuiYeuCau',
 			filterType: 'date',
 			render: (val: Date) => val && dayjs(val).format('DD/MM/YYYY'),
@@ -106,14 +107,14 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			onCell,
 		},
 		{
-			title: 'Mục đích xác minh',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.mucdichxacminh' }),
 			dataIndex: 'mucDichXacMinh',
 			filterType: 'string',
 			width: 200,
 			onCell,
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
@@ -121,7 +122,7 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			onCell,
 		},
 		{
-			title: 'Kết quả phúc đáp',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.ketquaphucdap' }),
 			dataIndex: 'urlFilePhucDapChung',
 			width: 120,
 			render: (val, rec) =>
@@ -132,13 +133,13 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 							setVisibleFormFile(true);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'xacminhvanbang.link.viewdetail' })}
 					</a>
 				),
 			onCell,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.trangthai' }),
 			dataIndex: 'phaseXuLy',
 			width: 150,
 			align: 'center',
@@ -152,7 +153,7 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			render: (val: EPhaseXacMinh) => <Tag color={colorTrangThaiXacMinh[val]}>{nameTrangThaiXacMinh[val]}</Tag>,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'xacminhvanbang.column.thaotac' }),
 			width: 90,
 			fixed: 'right',
 			align: 'center',
@@ -162,7 +163,7 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 					<>
 						<ButtonExtend
 							disabled={isHoanThanh}
-							tooltip='Chỉnh sửa'
+							tooltip={intl.formatMessage({ id: 'xacminhvanbang.action.chinhsua' })}
 							onClick={() => handleEdit(record)}
 							type='link'
 							icon={<EditOutlined />}
@@ -170,10 +171,16 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 
 						<Popconfirm
 							onConfirm={() => deleteModel(record._id)}
-							title='Bạn có chắc chắn muốn xóa?'
+							title={intl.formatMessage({ id: 'xacminhvanbang.confirm.delete' })}
 							placement='topRight'
 						>
-							<ButtonExtend disabled={isHoanThanh} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+							<ButtonExtend
+								disabled={isHoanThanh}
+								tooltip={intl.formatMessage({ id: 'xacminhvanbang.action.xoa' })}
+								danger
+								type='link'
+								icon={<DeleteOutlined />}
+							/>
 						</Popconfirm>
 					</>
 				);
@@ -191,14 +198,14 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 				formProps={{ getData }}
 				widthDrawer={1200}
 				dependencies={[page, limit]}
-				title={title ?? 'Tất cả yêu cầu'}
+				title={title ?? intl.formatMessage({ id: 'xacminhvanbang.title.tatcayeucau' })}
 				extra={[
 					<ButtonExtend
 						key='add'
 						type='link'
 						onClick={() => setIsFormBieuMauVisible(true)}
 						icon={<SettingOutlined />}
-						tooltip='Biểu mẫu'
+						tooltip={intl.formatMessage({ id: 'xacminhvanbang.action.bieumau' })}
 					/>,
 				]}
 			>
@@ -208,7 +215,7 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			<ModalExpandable
 				open={visibleForm}
 				onCancel={() => setVisibleForm(false)}
-				title='Xem chi tiết thông tin văn bằng'
+				title={intl.formatMessage({ id: 'xacminhvanbang.modal.chitietvanbang' })}
 				width={1000}
 				footer={null}
 			>
@@ -220,11 +227,11 @@ const XacMinhVanBangPage = (props: { title?: 'Yêu cầu đang xử lý' | 'Yêu
 			<ModalCaiDatXacMinh visible={isFormBieuMauVisible} onClose={() => setIsFormBieuMauVisible(false)} />
 
 			<ModalExpandable
-				title='Chi tiết tệp tin'
+				title={intl.formatMessage({ id: 'xacminhvanbang.modal.chitiettaptin' })}
 				width={1000}
 				open={visibleFormFile}
 				okButtonProps={{ hidden: true }}
-				cancelText='Đóng'
+				cancelText={intl.formatMessage({ id: 'global.button.dong' })}
 				onCancel={() => setVisibleFormFile(false)}
 			>
 				<PreviewFile file={record?.urlFilePhucDapChung ?? []} />

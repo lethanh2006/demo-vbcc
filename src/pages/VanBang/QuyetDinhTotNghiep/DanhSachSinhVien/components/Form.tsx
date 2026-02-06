@@ -134,14 +134,14 @@ const FormSinhVienQuyetDinh = (props: any) => {
 				});
 
 				columns.push({
-					title: 'Thao tác',
+					title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.thaotac' }),
 					align: 'center',
 					width: 80,
 					fixed: 'right',
 					render: (rec: any, agg, index) => (
 						<>
 							<ButtonExtend
-								tooltip='Chỉnh sửa'
+								tooltip={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.button.sua' })}
 								size='small'
 								onClick={() => {
 									setEditFormTable(true);
@@ -160,10 +160,16 @@ const FormSinhVienQuyetDinh = (props: any) => {
 										[element.headerName]: newData,
 									});
 								}}
-								title='Bạn có chắc chắn muốn xoá dòng này?'
+								title={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.confirm.xoadongnay' })}
 								placement='topRight'
 							>
-								<ButtonExtend tooltip='Xoá' size='small' danger type='link' icon={<DeleteOutlined />} />
+								<ButtonExtend
+									tooltip={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.button.xoa' })}
+									size='small'
+									danger
+									type='link'
+									icon={<DeleteOutlined />}
+								/>
 							</Popconfirm>
 						</>
 					),
@@ -190,7 +196,7 @@ const FormSinhVienQuyetDinh = (props: any) => {
 										setOpenedTableKey(element.headerName);
 									}}
 								>
-									Thêm mới
+									{intl.formatMessage({ id: 'global.button.themmoi' })}
 								</Button>,
 							]}
 						/>
@@ -199,7 +205,7 @@ const FormSinhVienQuyetDinh = (props: any) => {
 							destroyOnClose
 							width={700}
 							footer={false}
-							title={`${editFormTable ? 'Chỉnh sửa' : 'Thêm mới'} ${element.headerName}`}
+							title={`${intl.formatMessage({ id: editFormTable ? 'global.button.chinhsua' : 'global.button.themmoi' })} ${element.headerName}`}
 							open={openedTableKey === element.headerName}
 							onCancel={onCancelFormTable}
 						>
@@ -216,7 +222,7 @@ const FormSinhVienQuyetDinh = (props: any) => {
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
 				<Col span={24}>
-					<Form.Item label='Quyết định tốt nghiệp'>
+					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.quyetdinh' })}>
 						<Input
 							value={
 								recQuyetDinh?.soQuyetDinh ??
@@ -230,74 +236,86 @@ const FormSinhVienQuyetDinh = (props: any) => {
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item
-						label='Mã người học'
+						label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.manguoihoc' })}
 						name='maSinhVien'
 						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
 					>
-						<Input placeholder='Nhập mã người học' />
+						<Input placeholder={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.manguoihoc.placeholder' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Họ tên' name='hoTen' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
-						<Input placeholder='Nhập họ tên' />
+					<Form.Item
+						label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.hoten' })}
+						name='hoTen'
+						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.hoten.placeholder' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Ngày sinh' name='ngaySinh'>
+					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.ngaysinh' })} name='ngaySinh'>
 						<MyDatePicker />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Giới tính' name='gioiTinh'>
+					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.gioitinh' })} name='gioiTinh'>
 						<Select
-							placeholder='Chọn giới tính'
+							placeholder={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.gioitinh.placeholder' })}
 							options={[
-								{ label: 'Nam', value: 'Nam' },
-								{ label: 'Nữ', value: 'Nữ' },
-								{ label: 'Khác', value: 'Khác' },
+								{ label: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.gioitinh.nam' }), value: 'Nam' },
+								{ label: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.gioitinh.nu' }), value: 'Nữ' },
+								{ label: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.gioitinh.khac' }), value: 'Khác' },
 							]}
 						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Nơi sinh' name='noiSinh'>
-						<Input placeholder='Nhập nơi sinh' />
+					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.noisinh' })} name='noiSinh'>
+						<Input placeholder={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.noisinh.placeholder' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Quốc tịch' name='quocTich'>
-						<Input placeholder='Nhập quốc tịch' />
+					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.quoctich' })} name='quocTich'>
+						<Input placeholder={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.quoctich.placeholder' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Số CMND/CCCD' name='cmtCccd'>
-						<Input placeholder='Nhập số CMMD/CCCD' />
+					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.cccd' })} name='cmtCccd'>
+						<Input placeholder={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.cccd.placeholder' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Trình độ đào tạo' name='trinhDoDaoTao'>
+					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.trinhdo' })} name='trinhDoDaoTao'>
 						<SelectTrinhDoDaoTao selectMa />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Hình thức đào tạo' name='hinhThucDaoTao'>
+					<Form.Item
+						label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.hinhthuc' })}
+						name='hinhThucDaoTao'
+					>
 						<SelectHinhThucDaoTao selectMa />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Ngành đào tạo' name='nganhDaoTao'>
+					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.nganh' })} name='nganhDaoTao'>
 						<SelectNganhDaoTao selectMa />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Năm tốt nghiệp' name='namTotNghiep'>
-						<Input placeholder='Nhập năm tốt nghiệp' />
+					<Form.Item
+						label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.namtotnghiep' })}
+						name='namTotNghiep'
+					>
+						<Input
+							placeholder={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.namtotnghiep.placeholder' })}
+						/>
 					</Form.Item>
 				</Col>
 				{recBieuMau?._id && (
 					<>
 						<Col span={24}>
-							Theo biểu mẫu phụ lục: <b>{recBieuMau.ten}</b>
+							{intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.theobieumau' })} <b>{recBieuMau.ten}</b>
 						</Col>
 						{recBieuMau.elements.map((element, index) => (
 							<Col span={24} md={element.type === ELoaiDuLieuBieuMau.Table ? 24 : 12} key={element.headerName}>

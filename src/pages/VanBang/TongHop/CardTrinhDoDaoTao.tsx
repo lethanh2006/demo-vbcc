@@ -1,25 +1,27 @@
 import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { Card, Empty } from 'antd';
 import Chart from 'react-apexcharts';
+import { useIntl } from 'umi';
 
 const CardTrinhDoDaoTao = ({ chartData }: { chartData: PhuLucVanBang.TThongKeTrinhDoDaoTao[] }) => {
+	const intl = useIntl();
 	const categories = chartData.map((i) => i.ten);
 
 	const series: ApexCharts.ApexOptions['series'] = [
 		{
-			name: 'Văn bằng đã cấp',
+			name: intl.formatMessage({ id: 'trangchu.tonghop.cardttdaotao.vanbangdacap' }),
 			type: 'column',
 			stack: 'vanbang',
 			data: chartData.map((i) => i.soPhuLucDaCapBang ?? 0),
 		},
 		{
-			name: 'Văn bằng chờ cấp',
+			name: intl.formatMessage({ id: 'trangchu.tonghop.cardttdaotao.vanbangchocap' }),
 			type: 'column',
 			stack: 'vanbang',
 			data: chartData.map((i) => i.soPhuLucChoCapBang ?? 0),
 		},
 		{
-			name: 'Tra cứu theo quyết định',
+			name: intl.formatMessage({ id: 'trangchu.tonghop.cardttdaotao.tracuutheoquyetdinh' }),
 			type: 'line',
 			data: chartData.map((i) => i.soLuotTraCuu ?? 0),
 		},
@@ -144,11 +146,15 @@ const CardTrinhDoDaoTao = ({ chartData }: { chartData: PhuLucVanBang.TThongKeTri
 	};
 
 	return (
-		<Card title='Thống kê theo Trình độ đào tạo' variant='borderless' styles={{ body: { paddingTop: 12 } }}>
+		<Card
+			title={intl.formatMessage({ id: 'trangchu.tonghop.cardttdaotao.thongketheotrinhdodaotao' })}
+			variant='borderless'
+			styles={{ body: { paddingTop: 12 } }}
+		>
 			{chartData.length ? (
 				<Chart options={options} series={series} type='line' height={420} />
 			) : (
-				<Empty description='Không có dữ liệu' />
+				<Empty description={intl.formatMessage({ id: 'trangchu.tonghop.cardttdaotao.khongcodulieu' })} />
 			)}
 		</Card>
 	);

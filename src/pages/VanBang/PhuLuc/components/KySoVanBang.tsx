@@ -9,10 +9,11 @@ import { SignatureOutlined } from '@ant-design/icons';
 import { Button, Descriptions, message, Modal, Progress, Tag } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import { sign_service, type TSignData } from './SignService';
 
 const ModalSignVanBang = (props: { getData?: () => void }) => {
+	const intl = useIntl();
 	const { getData } = props;
 	const auth = useAuth();
 	const { visibleSignVanBang, setVisibleSignVanBang, dataToSignOrPush, setDataToSignOrPush, setSelectedIds } =
@@ -109,22 +110,22 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
 			dataIndex: 'soVaoSoBang',
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'kysovanbang.column.sovaoso' }),
 			width: 120,
 		},
 		{
 			dataIndex: 'soHieuVanBang',
-			title: 'Số hiệu văn bằng',
+			title: intl.formatMessage({ id: 'kysovanbang.column.sohieuvanbang' }),
 			width: 120,
 		},
 		{
 			dataIndex: 'hoTen',
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'kysovanbang.column.hoten' }),
 			width: 150,
 		},
 		{
 			dataIndex: 'fileVanBang',
-			title: 'Tập tin văn bằng',
+			title: intl.formatMessage({ id: 'kysovanbang.column.taptinvanbang' }),
 			align: 'center',
 			width: 120,
 			render: (val) =>
@@ -135,22 +136,28 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 							setVisibleFormFile(true);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'kysovanbang.link.viewdetail' })}
 					</a>
 				),
 		},
 		{
 			dataIndex: 'message',
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'kysovanbang.column.trangthai' }),
 			width: 200,
 			render: (val, rec) => <span style={{ color: rec?.status === 'success' ? 'green' : 'red' }}>{val}</span>,
 		},
 	];
 
 	return (
-		<Modal open={visibleSignVanBang} title='Ký số tệp tin văn bằng' width={1000} onCancel={onCancel} footer={null}>
+		<Modal
+			open={visibleSignVanBang}
+			title={intl.formatMessage({ id: 'kysovanbang.modaltitle' })}
+			width={1000}
+			onCancel={onCancel}
+			footer={null}
+		>
 			<Descriptions column={1} style={{ marginBottom: 8 }}>
-				<Descriptions.Item label='Vai trò ký số'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'kysovanbang.label.vaitrokyso' })}>
 					{recNguoiKy?.loaiChuKy ? (
 						<Tag color={colorLoaiChuKy[recNguoiKy?.loaiChuKy as ELoaiChuKy]}>{recNguoiKy?.loaiChuKy}</Tag>
 					) : (
@@ -160,15 +167,15 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 			</Descriptions>
 
 			{recNguoiKy?.loaiChuKy === ELoaiChuKy.KY_SO ? (
-				<i style={{ color: 'red' }}>
-					Hệ thống tự động lọc dữ liệu tương ứng với vai trò ký số, chỉ các phụ lục <b>đã được trình ký</b> và{' '}
-					<b>chưa được ký số</b> mới hiển thị trong bảng dưới đây
-				</i>
+				<i
+					style={{ color: 'red' }}
+					dangerouslySetInnerHTML={{ __html: intl.formatMessage({ id: 'kysovanbang.note.kyso' }) }}
+				/>
 			) : recNguoiKy?.loaiChuKy === ELoaiChuKy.DONG_DAU_VAN_THU ? (
-				<i style={{ color: 'red' }}>
-					Hệ thống tự động lọc dữ liệu tương ứng với vai trò ký số, chỉ các phụ lục <b>đã được ký số</b> và{' '}
-					<b>chưa đóng dấu</b> mới hiển thị trong bảng dưới đây
-				</i>
+				<i
+					style={{ color: 'red' }}
+					dangerouslySetInnerHTML={{ __html: intl.formatMessage({ id: 'kysovanbang.note.dongdau' }) }}
+				/>
 			) : null}
 
 			<TableStaticData
@@ -187,18 +194,26 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 					</div>
 
 					<div className='form-footer' style={{ marginBottom: 24 }}>
-						<span>({`${signProgress}/${filteredData?.length ?? 0} bản`}). </span>
-						{signStatus !== 'active' ? <>Vui lòng đợi trong ít phút....</> : <>Quá trình đã hoàn tất</>}
+						<span>
+							(
+							{`${signProgress}/${filteredData?.length ?? 0} ${intl.formatMessage({ id: 'kysovanbang.progress.records' })}`}
+							).{' '}
+						</span>
+						{signStatus !== 'active' ? (
+							<>{intl.formatMessage({ id: 'kysovanbang.progress.wait' })}</>
+						) : (
+							<>{intl.formatMessage({ id: 'kysovanbang.progress.complete' })}</>
+						)}
 					</div>
 				</>
 			)}
 
 			<ModalExpandable
-				title='Chi tiết tệp tin'
+				title={intl.formatMessage({ id: 'kysovanbang.modal.chitiet' })}
 				width={1000}
 				open={visibleFormFile}
 				okButtonProps={{ hidden: true }}
-				cancelText='Đóng'
+				cancelText={intl.formatMessage({ id: 'global.button.dong' })}
 				onCancel={() => setVisibleFormFile(false)}
 			>
 				<PreviewFile file={url ?? ''} />
@@ -215,10 +230,10 @@ const ModalSignVanBang = (props: { getData?: () => void }) => {
 					loading={signing}
 					className='btn-success'
 				>
-					Ký số bằng tool tự động
+					{intl.formatMessage({ id: 'kysovanbang.button.signwithtool' })}
 				</Button>
 
-				<Button onClick={onCancel}>Hủy</Button>
+				<Button onClick={onCancel}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Modal>
 	);

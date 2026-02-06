@@ -89,10 +89,14 @@ const FormQuyetDinhTotNghiep = (props: {
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col xs={24} md={12}>
-					<Form.Item name='nam' label='Năm hành chính' rules={[...rules.required]}>
+					<Form.Item
+						name='nam'
+						label={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.namhanhchinh' })}
+						rules={[...rules.required]}
+					>
 						<MyDatePicker
 							pickerStyle='year'
-							placeholder='Năm'
+							placeholder={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.placeholder.nam' })}
 							format='YYYY'
 							disabled={disable}
 							onChange={() => {
@@ -104,38 +108,61 @@ const FormQuyetDinhTotNghiep = (props: {
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='idSoVanBang' label='Sổ văn bằng' rules={[...rules.required]}>
+					<Form.Item
+						name='idSoVanBang'
+						label={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.sovanbang' })}
+						rules={[...rules.required]}
+					>
 						<SelectSoVanBang condition={{ namHanhChinh: String(dayjs(nam).format('YYYY')) }} disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='soQuyetDinh' label='Số quyết định' rules={[...rules.required]}>
-						<Input placeholder='Nhập số quyết định' disabled={disable} />
+					<Form.Item
+						name='soQuyetDinh'
+						label={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.soquyetdinh' })}
+						rules={[...rules.required]}
+					>
+						<Input
+							placeholder={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.placeholder.soquyetdinh' })}
+							disabled={disable}
+						/>
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='ngayBanHanh' label='Ngày ký quyết định' rules={[...rules.required]}>
+					<Form.Item
+						name='ngayBanHanh'
+						label={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.ngaykyquyetdinh' })}
+						rules={[...rules.required]}
+					>
 						<MyDatePicker disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item
 						name='maBieuMau'
-						label='Biểu mẫu thông tin văn bằng'
+						label={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.bieumaubanbang' })}
 						rules={[...rules.required]}
-						extra={edit ? 'Nếu đổi biểu mẫu, thông tin mẫu trong phụ lục sẽ bị xóa bỏ' : undefined}
+						extra={edit ? intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.warning.doibieumau' }) : undefined}
 					>
 						<SelectBieuMauPhuLuc selectMa disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='url' label='Tập tin đính kèm'>
+					<Form.Item name='url' label={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.filedinhkem' })}>
 						<UploadFile disabled={disable} />
 					</Form.Item>
 				</Col>
 				<Col xs={24}>
-					<Form.Item name='noiDung' label='Nội dung trích yếu' rules={[...rules.text]}>
-						<Input.TextArea rows={3} placeholder='Nhập nội dung' disabled={disable} />
+					<Form.Item
+						name='noiDung'
+						label={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.noidungtrichyeu' })}
+						rules={[...rules.text]}
+					>
+						<Input.TextArea
+							rows={3}
+							placeholder={intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.placeholder.noidung' })}
+							disabled={disable}
+						/>
 					</Form.Item>
 				</Col>
 			</Row>
@@ -148,7 +175,11 @@ const FormQuyetDinhTotNghiep = (props: {
 					disabled={disable}
 					icon={!edit ? <PlusCircleOutlined /> : <SaveOutlined />}
 				>
-					{!edit ? 'Thêm mới & Tiếp tục' : 'Lưu lại & Tiếp tục'}
+					{intl.formatMessage({
+						id: !edit
+							? 'vanbang.quyetdinhtotnghiep.button.themmaovatieptuc'
+							: 'vanbang.quyetdinhtotnghiep.button.luuvatieptuc',
+					})}
 				</Button>
 				{record?._id && (
 					<Button
@@ -157,7 +188,7 @@ const FormQuyetDinhTotNghiep = (props: {
 						}}
 						icon={<ArrowRightOutlined />}
 					>
-						Tiếp theo
+						{intl.formatMessage({ id: 'vanbang.quyetdinhtotnghiep.button.tieptuc' })}
 					</Button>
 				)}
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

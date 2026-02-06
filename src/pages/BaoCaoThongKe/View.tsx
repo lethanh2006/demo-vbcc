@@ -2,6 +2,7 @@ import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import { Empty } from 'antd';
 import { useMemo } from 'react';
 import Chart from 'react-apexcharts';
+import { useIntl } from 'umi';
 
 interface Props {
 	dataThongKe?: {
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const ViewThongKePhuLuc = ({ dataThongKe = [] }: Props) => {
+	const intl = useIntl();
 	const safeData = dataThongKe ?? [];
 
 	const categories = useMemo(() => safeData.map((item) => item?.nam?.toString() ?? ''), [safeData]);
@@ -50,10 +52,10 @@ const ViewThongKePhuLuc = ({ dataThongKe = [] }: Props) => {
 		dataLabels: { enabled: false },
 		xaxis: {
 			categories,
-			title: { text: 'Năm' },
+			title: { text: intl.formatMessage({ id: 'thongke.chart.xaxis.nam' }) },
 		},
 		yaxis: {
-			title: { text: 'Số lượng' },
+			title: { text: intl.formatMessage({ id: 'thongke.chart.yaxis.soluong' }) },
 		},
 		legend: { position: 'top' },
 		tooltip: {
@@ -65,7 +67,10 @@ const ViewThongKePhuLuc = ({ dataThongKe = [] }: Props) => {
 		},
 	};
 
-	if (!safeData.length) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='Không có dữ liệu' />;
+	if (!safeData.length)
+		return (
+			<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={intl.formatMessage({ id: 'thongke.chart.empty' })} />
+		);
 
 	return <Chart options={options} series={series} type='bar' height={400} />;
 };

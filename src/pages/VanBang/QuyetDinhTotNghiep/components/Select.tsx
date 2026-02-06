@@ -1,7 +1,7 @@
 import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -19,6 +19,7 @@ const SelectQuyetDinhTotNghiep = (props: {
 	isSetRecord?: boolean;
 	condition?: Partial<QuyetDinhTotNghiep.IRecord>;
 }) => {
+	const intl = useIntl();
 	const { value, onChange, multiple, allowClear, placeholder, disabled, hasDefault, style, isSetRecord, condition } =
 		props;
 	const { danhSach, getAllModel } = useModel('vbcc.quyetdinhtotnghiep');
@@ -45,7 +46,7 @@ const SelectQuyetDinhTotNghiep = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder={placeholder ?? 'Chọn quyết định tốt nghiệp'}
+			placeholder={placeholder ?? intl.formatMessage({ id: 'qdtotnghiep.select.quyetdinh' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

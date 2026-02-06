@@ -32,19 +32,31 @@ const ModalYeuCauChinhSua = (props: { visible: boolean; setVisible: (val: boolea
 	};
 
 	return (
-		<Modal title='Xác nhận yêu cầu chỉnh sửa' open={visible} onCancel={() => setVisible(false)} footer={null}>
+		<Modal
+			title={intl.formatMessage({ id: 'qdtotnghiep.ycchinhsua.xacnhanyc.title' })}
+			open={visible}
+			onCancel={() => setVisible(false)}
+			footer={null}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item name='ghiChuChinhSua' label='Ghi chú' rules={[...rules.required, ...rules.text]}>
-							<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+						<Form.Item
+							name='ghiChuChinhSua'
+							label={intl.formatMessage({ id: 'qdtotnghiep.ycchinhsua.xacnhanyc.ghichu' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input.TextArea
+								rows={3}
+								placeholder={intl.formatMessage({ id: 'qdtotnghiep.ycchinhsua.xacnhanyc.ghichu.placeholder' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Lưu lại
+						{intl.formatMessage({ id: 'global.button.luulai' })}
 					</Button>
 					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>

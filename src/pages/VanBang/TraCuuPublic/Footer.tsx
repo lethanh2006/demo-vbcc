@@ -1,9 +1,11 @@
 import { primaryColor, unitName } from '@/services/base/constant';
 import { EnvironmentOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
+import { useIntl } from 'umi';
 import './style.less';
 
 const Footer = () => {
+	const intl = useIntl();
 	return (
 		<footer
 			style={{
@@ -68,7 +70,7 @@ const Footer = () => {
 											flexShrink: 0,
 										}}
 									/>
-									<span>182 Lê Duẩn - Thành phố Vinh - Tỉnh Nghệ An</span>
+									<span>{intl.formatMessage({ id: 'tracuupublic.footer.address.main' })}</span>
 								</div>
 
 								<div style={{ display: 'flex', alignItems: 'center' }}>
@@ -79,7 +81,7 @@ const Footer = () => {
 											flexShrink: 0,
 										}}
 									/>
-									<span>Điện thoại: (0238) 3855 452</span>
+									<span>{intl.formatMessage({ id: 'tracuupublic.footer.phone.main' })}</span>
 								</div>
 
 								<div style={{ display: 'flex', alignItems: 'center' }}>
@@ -90,7 +92,7 @@ const Footer = () => {
 											flexShrink: 0,
 										}}
 									/>
-									<span>Email: dhvinh@vinhuni.edu.vn</span>
+									<span>{intl.formatMessage({ id: 'tracuupublic.footer.email' })}</span>
 								</div>
 							</div>
 						</div>
@@ -111,15 +113,15 @@ const Footer = () => {
 									color: '#fff',
 								}}
 							>
-								Phòng Đào tạo
+								{intl.formatMessage({ id: 'tracuupublic.footer.phongdaotao' })}
 							</h4>
 							<p style={{ marginBottom: '8px' }}>
 								<EnvironmentOutlined style={{ marginRight: '8px' }} />
-								Tầng 1 Nhà A1, 182 Lê Duẩn, TP. Vinh
+								{intl.formatMessage({ id: 'tracuupublic.footer.address.phongdaotao' })}
 							</p>
 							<p style={{ marginBottom: '0' }}>
 								<PhoneOutlined style={{ marginRight: '8px' }} />
-								Điện thoại: (0238) 3855 452 (máy lẻ 203)
+								{intl.formatMessage({ id: 'tracuupublic.footer.phone.phongdaotao' })}
 							</p>
 						</div>
 					</Col>
@@ -155,7 +157,8 @@ const Footer = () => {
 							}}
 						>
 							<p style={{ marginBottom: '4px', fontSize: '14px' }}>
-								<strong>Giờ làm việc:</strong> Thứ 2 - Thứ 6 (7h30 - 11h30, 13h30 - 17h00)
+								<strong>{intl.formatMessage({ id: 'tracuupublic.footer.workinghours' })}</strong>{' '}
+								{intl.formatMessage({ id: 'tracuupublic.footer.workinghours.detail' })}
 							</p>
 						</div>
 					</Col>
@@ -172,11 +175,12 @@ const Footer = () => {
 				>
 					<p style={{ marginBottom: '8px' }}>
 						<strong>
-							© {new Date().getFullYear()} Bản quyền thuộc về {unitName.toUpperCase()}
+							© {new Date().getFullYear()} {intl.formatMessage({ id: 'tracuupublic.footer.copyright' })}{' '}
+							{unitName.toUpperCase()}
 						</strong>
 					</p>
 					<p style={{ marginBottom: 0, opacity: 0.8 }}>
-						Phát triển bởi Phòng Công nghệ Thông tin - {unitName.toUpperCase()}
+						{intl.formatMessage({ id: 'tracuupublic.footer.developedby' })} {unitName.toUpperCase()}
 					</p>
 				</div>
 			</div>

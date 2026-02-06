@@ -241,7 +241,7 @@ const PhuLucVanBangPage = (props: {
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'thongtinvb.column.sovaoso' }),
 			dataIndex: 'soVaoSoBang',
 			filterType: 'string',
 			width: 120,
@@ -249,7 +249,7 @@ const PhuLucVanBangPage = (props: {
 			sortable: true,
 		},
 		{
-			title: 'Số hiệu VB',
+			title: intl.formatMessage({ id: 'thongtinvb.column.sohieuvb' }),
 			dataIndex: 'soHieuVanBang',
 			filterType: 'string',
 			width: 120,
@@ -273,14 +273,14 @@ const PhuLucVanBangPage = (props: {
 			sortable: true,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'thongtinvb.column.hoten' }),
 			dataIndex: 'hoTen',
 			width: 160,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'thongtinvb.column.ngaysinh' }),
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 100,
@@ -290,7 +290,7 @@ const PhuLucVanBangPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Mã người học',
+			title: intl.formatMessage({ id: 'thongtinvb.column.manguoihoc' }),
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			width: 120,
@@ -299,7 +299,7 @@ const PhuLucVanBangPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Quyết định',
+			title: intl.formatMessage({ id: 'thongtinvb.column.quyetdinh' }),
 			dataIndex: 'idQuyetDinh',
 			width: 140,
 			render: (val, rec) => (
@@ -312,7 +312,7 @@ const PhuLucVanBangPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Tập tin',
+			title: intl.formatMessage({ id: 'thongtinvb.column.taptin' }),
 			dataIndex: 'urlIpfs',
 			align: 'center',
 			width: 120,
@@ -325,25 +325,25 @@ const PhuLucVanBangPage = (props: {
 							setVisibleModal(true);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'thongtinvb.text.xemchitiet' })}
 					</a>
 				) : (
-					<i>(Chưa upload)</i>
+					<i>{intl.formatMessage({ id: 'thongtinvb.text.chuaupload' })}</i>
 				),
 			hide: !settingVbcc?.require_IPFS,
 		},
 		{
-			title: 'Văn bằng',
+			title: intl.formatMessage({ id: 'thongtinvb.column.vanbang' }),
 			width: 120,
 			children: [
 				{
-					title: 'Tập tin',
+					title: intl.formatMessage({ id: 'thongtinvb.column.taptin' }),
 					dataIndex: 'fileVanBang',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						!val ? (
-							<Tag color='red'>Chưa trình ký</Tag>
+							<Tag color='red'>{intl.formatMessage({ id: 'thongtinvb.text.chuatrinhky' })}</Tag>
 						) : (
 							<a
 								onClick={(e) => {
@@ -352,25 +352,27 @@ const PhuLucVanBangPage = (props: {
 									setVisibleFormFile(true);
 								}}
 							>
-								Xem chi tiết
+								{intl.formatMessage({ id: 'thongtinvb.text.xemchitiet' })}
 							</a>
 						),
 				},
 				{
-					title: 'Ký số',
+					title: intl.formatMessage({ id: 'thongtinvb.column.kysovanbang' }),
 					dataIndex: 'daKy',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						val ? (
 							<Space>
-								<Tag color='green'>Đã ký</Tag>
+								<Tag color='green'>{intl.formatMessage({ id: 'thongtinvb.text.daky' })}]</Tag>
 								<Popover
 									content={
 										<div style={{ maxWidth: 300 }}>
 											<Descriptions column={1} size='small'>
-												<Descriptions.Item label='Người ký'>{rec?.nguoiKy?.hoTen ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Thời gian ký'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'thongtinvb.desc.nguoiky' })}>
+													{rec?.nguoiKy?.hoTen ?? '--'}
+												</Descriptions.Item>
+												<Descriptions.Item label={intl.formatMessage({ id: 'thongtinvb.desc.thoigianky' })}>
 													{rec?.thoiGianKy ? dayjs(rec?.thoiGianKy).format('HH:mm DD/MM/YYYY') : '--'}
 												</Descriptions.Item>
 											</Descriptions>
@@ -381,26 +383,26 @@ const PhuLucVanBangPage = (props: {
 								</Popover>
 							</Space>
 						) : (
-							<Tag color='orange'>Chưa ký</Tag>
+							<Tag color='orange'>{intl.formatMessage({ id: 'thongtinvb.text.chuaky' })}</Tag>
 						),
 				},
 				{
-					title: 'Đóng dấu',
+					title: intl.formatMessage({ id: 'thongtinvb.column.dongdau' }),
 					dataIndex: 'daDongDau',
 					align: 'center',
 					width: 120,
 					render: (val, rec) =>
 						val ? (
 							<Space>
-								<Tag color='green'>Đã đóng dấu</Tag>
+								<Tag color='green'>{intl.formatMessage({ id: 'thongtinvb.text.dadongdau' })}</Tag>
 								<Popover
 									content={
 										<div style={{ maxWidth: 300 }}>
 											<Descriptions column={1} size='small'>
-												<Descriptions.Item label='Người đóng dấu'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'thongtinvb.desc.nguoidongdau' })}>
 													{rec?.nguoiDongGiau?.hoTen ?? '--'}
 												</Descriptions.Item>
-												<Descriptions.Item label='Thời gian đóng dấu'>
+												<Descriptions.Item label={intl.formatMessage({ id: 'thongtinvb.desc.thoigiandongdau' })}>
 													{rec?.thoiGianDongGiau ? dayjs(rec?.thoiGianDongGiau).format('HH:mm DD/MM/YYYY') : '--'}
 												</Descriptions.Item>
 											</Descriptions>
@@ -411,14 +413,14 @@ const PhuLucVanBangPage = (props: {
 								</Popover>
 							</Space>
 						) : (
-							<Tag color='orange'>Chưa đóng dấu</Tag>
+							<Tag color='orange'>{intl.formatMessage({ id: 'thongtinvb.text.chuadongdau' })}</Tag>
 						),
 				},
 			],
 			hide: !settingVbcc?.require_diploma_signature,
 		},
 		{
-			title: 'Trạng thái phát bằng',
+			title: intl.formatMessage({ id: 'thongtinvb.column.trangthaiphatbang' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
@@ -448,7 +450,7 @@ const PhuLucVanBangPage = (props: {
 			hide: isQuyetDinh,
 		},
 		{
-			title: 'Ký số thông tin',
+			title: intl.formatMessage({ id: 'thongtinvb.column.kysothongtin' }),
 			dataIndex: 'signature',
 			align: 'center',
 			width: 80,
@@ -481,7 +483,7 @@ const PhuLucVanBangPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Ghi chú đề xuất',
+			title: intl.formatMessage({ id: 'thongtinvb.column.ghichudeXuat' }),
 			dataIndex: 'ghiChuYeuCau',
 			width: 200,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
@@ -489,13 +491,13 @@ const PhuLucVanBangPage = (props: {
 			hide: isQuyetDinh,
 		},
 		{
-			title: 'Trạng thái xử lý văn bằng',
+			title: intl.formatMessage({ id: 'thongtinvb.column.trangthaixuly' }),
 			dataIndex: 'loaiYeuCauChinhSua',
 			align: 'center',
 			width: 120,
 			render: (val, rec) =>
 				rec?.isThuHoi ? (
-					<Tag color='red'>Đã thu hồi</Tag>
+					<Tag color='red'>{intl.formatMessage({ id: 'thongtinvb.text.dathuhoi' })}</Tag>
 				) : (
 					<Tag color={colorLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}>
 						{nameLoaiYeuCauChinhSuaVanBang[val as ELoaiYeuCauChinhSuaVanBang]}
@@ -511,7 +513,7 @@ const PhuLucVanBangPage = (props: {
 			hide: isQuyetDinh,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'thongtinvb.column.thaotac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -524,7 +526,7 @@ const PhuLucVanBangPage = (props: {
 							<Space direction='vertical' size={'small'}>
 								<ButtonExtend
 									disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.CAP_NHAT}
-									tooltip='Đề xuất chỉnh sửa'
+									tooltip={intl.formatMessage({ id: 'thongtinvb.tooltip.dexuatchinhsua' })}
 									type='link'
 									icon={<EditOutlined />}
 									onClick={() => {
@@ -533,11 +535,11 @@ const PhuLucVanBangPage = (props: {
 									}}
 									size='small'
 								>
-									Đề xuất chỉnh sửa
+									{intl.formatMessage({ id: 'thongtinvb.tooltip.dexuatchinhsua' })}
 								</ButtonExtend>
 								<ButtonExtend
 									disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.CAP_LAI}
-									tooltip='Đề xuất cấp lại'
+									tooltip={intl.formatMessage({ id: 'thongtinvb.tooltip.dexuatcaplai' })}
 									type='link'
 									icon={<RollbackOutlined />}
 									onClick={() => {
@@ -546,10 +548,10 @@ const PhuLucVanBangPage = (props: {
 									}}
 									size='small'
 								>
-									Đề xuất cấp lại
+									{intl.formatMessage({ id: 'thongtinvb.tooltip.dexuatcaplai' })}
 								</ButtonExtend>
 								<Popconfirm
-									title='Xác nhận đề xuất thu hồi thông tin văn bằng?'
+									title={intl.formatMessage({ id: 'thongtinvb.confirm.thuhoi' })}
 									placement='topRight'
 									onConfirm={() =>
 										yeuCauCapNhatVanBangModel(rec?._id, { loai: 'Thu hồi', thoiGianYeuCau: dayjs() }, getData)
@@ -558,12 +560,12 @@ const PhuLucVanBangPage = (props: {
 									<ButtonExtend
 										disabled={rec?.loaiYeuCauChinhSua === ELoaiYeuCauChinhSuaVanBang.THU_HOI || !!rec?.isThuHoi}
 										size='small'
-										tooltip='Đề xuất Thu hồi'
+										tooltip={intl.formatMessage({ id: 'thongtinvb.tooltip.dexuatthuhoi' })}
 										type='link'
 										icon={<UndoOutlined />}
 										danger
 									>
-										Đề xuất thu hồi
+										{intl.formatMessage({ id: 'thongtinvb.tooltip.dexuatthuhoi' })}
 									</ButtonExtend>
 								</Popconfirm>
 							</Space>
@@ -584,7 +586,7 @@ const PhuLucVanBangPage = (props: {
 			key='import'
 			disabled={!recQuyetDinh?._id}
 		>
-			Nhập dữ liệu
+			{intl.formatMessage({ id: 'thongtinvb.button.nhapdulieu' })}
 		</ButtonExtend>,
 		<ButtonExtend
 			icon={<ExportOutlined />}
@@ -593,7 +595,7 @@ const PhuLucVanBangPage = (props: {
 			disabled={!recQuyetDinh?._id}
 			loading={loadingExport}
 		>
-			Xuất văn bằng theo biểu mẫu
+			{intl.formatMessage({ id: 'thongtinvb.button.xuatvanbang' })}
 		</ButtonExtend>,
 	];
 
@@ -602,11 +604,11 @@ const PhuLucVanBangPage = (props: {
 			<ButtonExtend
 				icon={<CloudUploadOutlined />}
 				onClick={() => setShowUpload(true)}
-				tooltip='Upload thư mục bản scan văn bằng chứng chỉ'
+				tooltip={intl.formatMessage({ id: 'thongtinvb.tooltip.uploadfolder' })}
 				disabled={!recQuyetDinh?._id}
 				key='upload'
 			>
-				Upload văn bằng
+				{intl.formatMessage({ id: 'thongtinvb.button.uploadvanbang' })}
 			</ButtonExtend>,
 		);
 	if (settings?.INFO_TENANT?.require_diploma_signature) {
@@ -617,13 +619,13 @@ const PhuLucVanBangPage = (props: {
 				key='trinhky'
 				disabled={!total || !recQuyetDinh?._id}
 			>
-				Trình ký ({selectedIds?.length || 'Tất cả'})
+				{intl.formatMessage({ id: 'thongtinvb.button.trinhky' })} ({selectedIds?.length || 'Tất cả'})
 			</ButtonExtend>,
 		);
 	}
 	otherButtons.push(
 		<ButtonExtend key='Export' icon={<FilePdfOutlined />} onClick={handlePrint} disabled={!total || !recQuyetDinh?._id}>
-			In thông tin văn bằng ({selectedIds?.length || 'Tất cả'})
+			{intl.formatMessage({ id: 'thongtinvb.button.inthongtin' })} ({selectedIds?.length || 'Tất cả'})
 		</ButtonExtend>,
 	);
 	if (recNguoiKy?._id)
@@ -633,18 +635,18 @@ const PhuLucVanBangPage = (props: {
 					<Menu>
 						{settingVbcc?.require_signature && (
 							<Menu.Item key='thongtin' onClick={handleSign}>
-								Thông tin
+								{intl.formatMessage({ id: 'thongtinvb.button.thongtin' })}
 							</Menu.Item>
 						)}
 						<Menu.Item key='vanbang' onClick={handlePrintVanBang}>
-							Văn bằng
+							{intl.formatMessage({ id: 'thongtinvb.button.vanbang' })}
 						</Menu.Item>
 					</Menu>
 				}
 				disabled={!selectedIds?.length}
 			>
 				<ButtonExtend disabled={!selectedIds?.length} className='btn-success' icon={<SignatureOutlined />} key='sign'>
-					Ký số ({selectedIds?.length ?? 0})
+					{intl.formatMessage({ id: 'thongtinvb.button.kysovanbang' })} ({selectedIds?.length ?? 0})
 				</ButtonExtend>
 			</Dropdown>,
 		);
@@ -657,7 +659,7 @@ const PhuLucVanBangPage = (props: {
 				onClick={handlePush}
 				key='push'
 			>
-				Đẩy lên Blockchain ({selectedIds?.length ?? 0})
+				{intl.formatMessage({ id: 'thongtinvb.button.dayblockchain' })} ({selectedIds?.length ?? 0})
 			</ButtonExtend>,
 		);
 
@@ -668,7 +670,7 @@ const PhuLucVanBangPage = (props: {
 					style={{ marginBottom: 12 }}
 					type='warning'
 					showIcon
-					message='Vui lòng nhập đầy đủ thông tin số hiệu văn bằng'
+					message={intl.formatMessage({ id: 'thongtinvb.alert.thieuSoHieu' })}
 				/>
 			) : null}
 
@@ -677,15 +679,15 @@ const PhuLucVanBangPage = (props: {
 				columns={columns}
 				dependencies={[page, limit, recQuyetDinh?._id, yearSelect]}
 				modelName='vbcc.phulucvanbang'
-				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
+				title={intl.formatMessage({ id: 'thongtinvb.title' })}
 				widthDrawer={1000}
-				modalTitle={
-					isView
-						? 'Xem chi tiết thông tin văn bằng'
+				modalTitle={intl.formatMessage({
+					id: isView
+						? 'thongtinvb.modal.view.title'
 						: edit
-							? 'Cập nhật thông tin văn bằng'
-							: 'Thêm mới thông tin văn bằng'
-				}
+							? 'thongtinvb.modal.edit.title'
+							: 'thongtinvb.modal.create.title',
+				})}
 				Form={isView ? ViewPhuLucVanBang : FormPhuLucVanBang}
 				formProps={{ getData, trangThaiYeuCau }}
 				buttons={{
@@ -699,11 +701,11 @@ const PhuLucVanBangPage = (props: {
 						<ButtonExtend
 							icon={<SearchOutlined />}
 							onClick={() => window.open('/tra-cuu-van-bang', '_blank')}
-							tooltip='Tra cứu'
+							tooltip={intl.formatMessage({ id: 'thongtinvb.button.tracuu' })}
 							type='link'
 						/>
 						<ButtonExtend
-							tooltip='Cấu hình'
+							tooltip={intl.formatMessage({ id: 'thongtinvb.button.cauhinh' })}
 							onClick={() => setVisibleCauHinh(true)}
 							icon={<SettingOutlined />}
 							type='link'
@@ -719,7 +721,7 @@ const PhuLucVanBangPage = (props: {
 							style={{ width: 150 }}
 							value={yearSelect}
 							pickerStyle='year'
-							placeholder='Chọn năm hành chính'
+							placeholder={intl.formatMessage({ id: 'thongtinvb.filter.namhanhchinh' })}
 							format='YYYY'
 							onChange={(val) => {
 								if (val) {
@@ -754,7 +756,7 @@ const PhuLucVanBangPage = (props: {
 						}}
 						icon={<ArrowLeftOutlined />}
 					>
-						Quay lại
+						{intl.formatMessage({ id: 'thongtinvb.button.quaylai' })}
 					</Button>
 
 					{(title === 'Quyết định đã duyệt' || themMoiHoanThanh) && (
@@ -768,7 +770,7 @@ const PhuLucVanBangPage = (props: {
 										getQuyetDinh,
 									)
 								}
-								title='Xác nhận hoàn thành quyết định tốt nghiệp?'
+								title={intl.formatMessage({ id: 'thongtinvb.confirm.hoanthanhqd' })}
 								placement='topRight'
 							>
 								<Button
@@ -777,11 +779,11 @@ const PhuLucVanBangPage = (props: {
 									type='primary'
 									icon={<SaveOutlined />}
 								>
-									Hoàn thành
+									{intl.formatMessage({ id: 'thongtinvb.button.hoanthanh' })}
 								</Button>
 							</Popconfirm>
 							<Button disabled={loadingValidate} loading={loadingValidate} icon={<ReloadOutlined />}>
-								Làm mới số hiệu VB
+								{intl.formatMessage({ id: 'thongtinvb.button.lammoiso' })}
 							</Button>
 						</>
 					)}
@@ -841,11 +843,11 @@ const PhuLucVanBangPage = (props: {
 			<ModalSignVanBang getData={() => getData()} />
 
 			<ModalExpandable
-				title='Chi tiết tệp tin'
+				title={intl.formatMessage({ id: 'thongtinvb.modal.previewfile.title' })}
 				width={1000}
 				open={visibleFormFile}
 				okButtonProps={{ hidden: true }}
-				cancelText='Đóng'
+				cancelText={intl.formatMessage({ id: 'global.button.dong' })}
 				onCancel={() => setVisibleFormFile(false)}
 			>
 				<PreviewFile file={record?.fileVanBang ?? ''} />

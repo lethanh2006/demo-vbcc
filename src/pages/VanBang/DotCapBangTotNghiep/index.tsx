@@ -6,21 +6,22 @@ import type { DotCapBangTotNghiep } from '@/services/VanBang/DotCapBangTotNghiep
 import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import Modal from './components/Modal';
 
 const DotCapBangTotNghiepPage = () => {
+	const intl = useIntl();
 	const { page, limit, handleEdit, deleteModel } = useModel('vbcc.dotcapbangtotnghiep');
 
 	const columns: IColumn<DotCapBangTotNghiep.IRecord>[] = [
 		{
-			title: 'Đợt cấp bằng',
+			title: intl.formatMessage({ id: 'dotcapbang.column.dotcapbang' }),
 			dataIndex: 'ten',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Thời gian bắt đầu',
+			title: intl.formatMessage({ id: 'dotcapbang.column.ngaybatdau' }),
 			dataIndex: 'ngayBatDau',
 			width: 100,
 			sorter: true,
@@ -29,7 +30,7 @@ const DotCapBangTotNghiepPage = () => {
 			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Thời gian kết thúc',
+			title: intl.formatMessage({ id: 'dotcapbang.column.ngayketthuc' }),
 			dataIndex: 'ngayKetThuc',
 			width: 100,
 			sorter: true,
@@ -38,26 +39,36 @@ const DotCapBangTotNghiepPage = () => {
 			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'dotcapbang.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 140,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'dotcapbang.column.thaotac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'dotcapbang.action.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa đợt cấp bằng này?'
+						title={intl.formatMessage({ id: 'dotcapbang.confirm.delete' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'dotcapbang.action.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -68,7 +79,7 @@ const DotCapBangTotNghiepPage = () => {
 		<TableBase
 			columns={columns}
 			modelName={'vbcc.dotcapbangtotnghiep'}
-			title='Đợt cấp bằng, chứng chỉ, chứng nhận'
+			title={intl.formatMessage({ id: 'dotcapbang.title' })}
 			Form={Modal}
 			dependencies={[page, limit]}
 			widthDrawer={1200}

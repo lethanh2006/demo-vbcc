@@ -61,7 +61,9 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) 
 				key: item._id,
 				label: (
 					<b>
-						Lịch sử <Tag color={colorLoaiYeuCauVangBang[loai]}>{loai}</Tag> lần {lan}
+						{intl.formatMessage({ id: 'thongtinvb.viewrender.lichsu' })}{' '}
+						<Tag color={colorLoaiYeuCauVangBang[loai]}>{loai}</Tag>{' '}
+						{intl.formatMessage({ id: 'thongtinvb.viewrender.lan' })} {lan}
 					</b>
 				),
 				children:
@@ -83,7 +85,7 @@ const ViewPhuLucVanBang = (props: { hasPrint?: boolean; hideFooter?: boolean }) 
 						) : null}
 					</>
 				) : (
-					<Empty description='Thông tin văn bằng không tồn tại' />
+					<Empty description={intl.formatMessage({ id: 'thongtinvb.viewrender.empty' })} />
 				)}
 			</Spin>
 

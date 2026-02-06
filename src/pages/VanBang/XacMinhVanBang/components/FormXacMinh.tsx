@@ -54,52 +54,88 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 			<Row gutter={[12, 0]}>
 				<Col span={24}>
 					<Divider style={{ fontSize: 15 }} orientation='left'>
-						Thông tin yêu cầu xác minh
+						{intl.formatMessage({ id: 'xacminhvanbang.formxacminh.divider.thongtin' })}
 					</Divider>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item
-						label='Họ tên người yêu cầu'
+						label={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.label.nguoiyeucau' })}
 						name='nguoiYeuCau'
 						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
 					>
-						<Input placeholder='Nhập họ tên người yêu cầu' disabled={isHoanThanh} />
+						<Input
+							placeholder={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.placeholder.nguoiyeucau' })}
+							disabled={isHoanThanh}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Tên đơn vị' name='tenDonVi'>
-						<Input placeholder='Nhập tên đơn vị' disabled={isHoanThanh} />
+					<Form.Item label={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.label.donvi' })} name='tenDonVi'>
+						<Input
+							placeholder={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.placeholder.donvi' })}
+							disabled={isHoanThanh}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Số điện thoại' name='soDienThoai' rules={[...rules.text, ...rules.length(20)]}>
-						<Input placeholder='Nhập số điện thoại' disabled={isHoanThanh} />
+					<Form.Item
+						label={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.label.sodienthoai' })}
+						name='soDienThoai'
+						rules={[...rules.text, ...rules.length(20)]}
+					>
+						<Input
+							placeholder={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.placeholder.sodienthoai' })}
+							disabled={isHoanThanh}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Email' name='email'>
-						<Input placeholder='Nhập email' disabled={isHoanThanh} />
+					<Form.Item label={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.label.email' })} name='email'>
+						<Input
+							placeholder={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.placeholder.email' })}
+							disabled={isHoanThanh}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Ngày gửi yêu cầu' name='ngayGuiYeuCau'>
+					<Form.Item
+						label={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.label.ngayguiyeucau' })}
+						name='ngayGuiYeuCau'
+					>
 						<MyDatePicker disabled={isHoanThanh} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label='Mục đích xác minh' name='mucDichXacMinh'>
-						<Input placeholder='Nhập mục đích xác minh' disabled={isHoanThanh} />
+					<Form.Item
+						label={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.label.mucdich' })}
+						name='mucDichXacMinh'
+					>
+						<Input
+							placeholder={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.placeholder.mucdich' })}
+							disabled={isHoanThanh}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item name='soCongVan' label='Số công văn' rules={[...rules.required]}>
-						<Input placeholder='Nhập số công văn' disabled={isHoanThanh} />
+					<Form.Item
+						name='soCongVan'
+						label={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.label.socongvan' })}
+						rules={[...rules.required]}
+					>
+						<Input
+							placeholder={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.placeholder.socongvan' })}
+							disabled={isHoanThanh}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item name='loaiPhucDap' label='Loại phúc đáp' rules={[...rules.required]}>
+					<Form.Item
+						name='loaiPhucDap'
+						label={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.label.loaiphucdap' })}
+						rules={[...rules.required]}
+					>
 						<Select
-							placeholder='Chọn loại phúc đáp'
+							placeholder={intl.formatMessage({ id: 'xacminhvanbang.formxacminh.placeholder.loaiphucdap' })}
 							options={Object.values(ELoaiPhucDap).map((item) => ({
 								key: item,
 								value: item,
@@ -120,7 +156,9 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 					icon={!edit ? <PlusCircleOutlined /> : <SaveOutlined />}
 					disabled={isHoanThanh}
 				>
-					{!edit ? 'Thêm mới yêu cầu' : 'Lưu lại yêu cầu'}
+					{!edit
+						? intl.formatMessage({ id: 'xacminhvanbang.formxacminh.button.themmoi' })
+						: intl.formatMessage({ id: 'xacminhvanbang.formxacminh.button.luulai' })}
 				</Button>
 
 				<Button
@@ -130,7 +168,7 @@ const FormXacMinhVanBang = (props: { afterAddNew?: (val: number) => void }) => {
 					}}
 					icon={<ArrowRightOutlined />}
 				>
-					Tiếp theo
+					{intl.formatMessage({ id: 'xacminhvanbang.formxacminh.button.tieptuc' })}
 				</Button>
 
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

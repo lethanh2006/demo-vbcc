@@ -1,11 +1,12 @@
 import { Steps } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ViewPhuLucQuyetDinh from '../../PhuLuc/components/ViewPhuLucQuyetDinh';
 import ViewQuyetDinhTheoDot from '../../QuyetDinhTotNghiep/components/ViewQuyetDinhDot';
 import Form from './Form';
 
 const ModalDotCapBang = (props: any) => {
+	const intl = useIntl();
 	const { record } = useModel('vbcc.dotcapbangtotnghiep');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
@@ -25,9 +26,15 @@ const ModalDotCapBang = (props: any) => {
 				style={{ marginBottom: 18, paddingTop: 0 }}
 				onChange={record?._id ? onChangeStep : undefined}
 			>
-				<Steps.Step title='Thông tin chung' />
-				<Steps.Step title='Quyết định tốt nghiệp' disabled={!record?._id} />
-				<Steps.Step title='Thông tin văn bằng' disabled={!record?._id} />
+				<Steps.Step title={intl.formatMessage({ id: 'dotcapbang.modal.step.thongtinchung' })} />
+				<Steps.Step
+					title={intl.formatMessage({ id: 'dotcapbang.modal.step.quyetdinhtotnghiep' })}
+					disabled={!record?._id}
+				/>
+				<Steps.Step
+					title={intl.formatMessage({ id: 'dotcapbang.modal.step.thongtinvanbang' })}
+					disabled={!record?._id}
+				/>
 			</Steps>
 
 			{currentStep === 0 ? (

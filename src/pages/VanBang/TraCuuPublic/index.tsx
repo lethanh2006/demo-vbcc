@@ -23,7 +23,7 @@ const TraCuuVanBangPublic = () => {
 	const onFinish = async (values: any) => {
 		const filledFields = Object.values(values).filter((value) => value).length;
 		if (filledFields < 2) {
-			message.error('Vui lòng nhập ít nhất 2 thông tin để tra cứu');
+			message.error(intl.formatMessage({ id: 'tracuupublic.index.error.minfields' }));
 			return;
 		}
 
@@ -65,7 +65,7 @@ const TraCuuVanBangPublic = () => {
 									letterSpacing: 1,
 								}}
 							>
-								TRA CỨU THÔNG TIN VĂN BẰNG
+								{intl.formatMessage({ id: 'tracuupublic.index.title.main' })}
 							</Title>
 						}
 						bordered={false}
@@ -81,34 +81,61 @@ const TraCuuVanBangPublic = () => {
 								<Col xs={24} md={8}>
 									<Form.Item
 										name='mucDichTraCuuId'
-										label={<strong>Mục đích tra cứu</strong>}
+										label={<strong>{intl.formatMessage({ id: 'tracuupublic.index.label.mucdichtracuu' })}</strong>}
 										rules={[...rules.required]}
 									>
 										<SelectMucDichTraCuuPublic hasDefault size='large' />
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='soVaoSoBang' label={<strong>Số vào sổ</strong>}>
-										<Input placeholder='Nhập số vào sổ' size='large' />
+									<Form.Item
+										name='soVaoSoBang'
+										label={<strong>{intl.formatMessage({ id: 'tracuupublic.index.label.sovaoso' })}</strong>}
+									>
+										<Input
+											placeholder={intl.formatMessage({ id: 'tracuupublic.index.placeholder.sovaoso' })}
+											size='large'
+										/>
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='soHieuVanBang' label={<strong>Số hiệu văn bằng</strong>}>
-										<Input placeholder='Nhập số hiệu văn bằng' size='large' />
+									<Form.Item
+										name='soHieuVanBang'
+										label={<strong>{intl.formatMessage({ id: 'tracuupublic.index.label.sohieuvanbang' })}</strong>}
+									>
+										<Input
+											placeholder={intl.formatMessage({ id: 'tracuupublic.index.placeholder.sohieuvanbang' })}
+											size='large'
+										/>
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='maSinhVien' label={<strong>Mã người học</strong>}>
-										<Input placeholder='Nhập mã người học' size='large' />
+									<Form.Item
+										name='maSinhVien'
+										label={<strong>{intl.formatMessage({ id: 'tracuupublic.index.label.manguoihoc' })}</strong>}
+									>
+										<Input
+											placeholder={intl.formatMessage({ id: 'tracuupublic.index.placeholder.manguoihoc' })}
+											size='large'
+										/>
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='hoTen' label={<strong>Họ tên</strong>}>
-										<Input placeholder='Nhập họ tên' size='large' />
+									<Form.Item
+										name='hoTen'
+										label={<strong>{intl.formatMessage({ id: 'tracuupublic.index.label.hoten' })}</strong>}
+									>
+										<Input
+											placeholder={intl.formatMessage({ id: 'tracuupublic.index.placeholder.hoten' })}
+											size='large'
+										/>
 									</Form.Item>
 								</Col>
 								<Col xs={24} md={8}>
-									<Form.Item name='ngaySinh' label={<strong>Ngày sinh</strong>}>
+									<Form.Item
+										name='ngaySinh'
+										label={<strong>{intl.formatMessage({ id: 'tracuupublic.index.label.ngaysinh' })}</strong>}
+									>
 										<MyDatePicker style={{ width: '100%' }} size='large' />
 									</Form.Item>
 								</Col>
@@ -132,7 +159,7 @@ const TraCuuVanBangPublic = () => {
 										onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-2px)')}
 										onMouseOut={(e) => (e.currentTarget.style.transform = 'none')}
 									>
-										TRA CỨU THÔNG TIN
+										{intl.formatMessage({ id: 'tracuupublic.index.button.tracuu' })}
 									</Button>
 								</Col>
 							</Row>
@@ -164,7 +191,7 @@ const TraCuuVanBangPublic = () => {
 									fontWeight: 600,
 								}}
 							>
-								KẾT QUẢ TRA CỨU
+								{intl.formatMessage({ id: 'tracuupublic.index.title.ketqua' })}
 							</Title>
 						</div>
 						<KetQuaVanBang />

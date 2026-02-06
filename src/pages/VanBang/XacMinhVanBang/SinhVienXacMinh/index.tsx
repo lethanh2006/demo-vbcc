@@ -142,20 +142,20 @@ const SinhVienXacMinhPage = (props: {
 
 	const columns: IColumn<XacMinhVanBang.ISinhVienXacMinh>[] = [
 		{
-			title: 'Mã người học',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.manguoihoc' }),
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			width: 130,
 			filterType: 'string',
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.hoten' }),
 			dataIndex: 'hoTen',
 			width: 160,
 			filterType: 'string',
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.ngaysinh' }),
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 120,
@@ -163,25 +163,25 @@ const SinhVienXacMinhPage = (props: {
 			sortable: true,
 		},
 		{
-			title: 'Xếp loại',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.xeploai' }),
 			dataIndex: 'xepLoai',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Số hiệu VB',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.sohieuvb' }),
 			dataIndex: 'soHieuVanBang',
 			width: 130,
 			filterType: 'string',
 		},
 		{
-			title: 'Số vào sổ',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.sovaoso' }),
 			dataIndex: 'soVaoSo',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Thông tin VB tương ứng',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.thongtinvb' }),
 			dataIndex: 'phuLucId',
 			align: 'center',
 			width: 120,
@@ -192,10 +192,10 @@ const SinhVienXacMinhPage = (props: {
 							showPhuLucDetail(val);
 						}}
 					>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.link.viewdetail' })}
 					</a>
 				) : (
-					<i>Không có</i>
+					<i>{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.link.khongco' })}</i>
 				),
 			hide: isYeuCau,
 		},
@@ -212,29 +212,34 @@ const SinhVienXacMinhPage = (props: {
 		// 	hide: isYeuCau || isXacMinh,
 		// },
 		{
-			title: 'File phúc đáp',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.filephucdap' }),
 			dataIndex: 'urlPhanHoi',
 			align: 'center',
 			width: 120,
 			render: (val, rec) =>
 				val ? (
 					<a href={val} target='_blank' rel='noreferrer'>
-						Xem chi tiết
+						{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.link.viewdetail' })}
 					</a>
 				) : null,
 			hide: !isKetQua,
 		},
 		{
-			title: 'Kết quả',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.ketqua' }),
 			dataIndex: 'coThongTin',
 			align: 'center',
 			width: 140,
-			render: (val, rec) => (val ? <Tag color='green'>Có kết quả</Tag> : <Tag color='red'>Không có kết quả</Tag>),
+			render: (val, rec) =>
+				val ? (
+					<Tag color='green'>{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.tag.coketqua' })}</Tag>
+				) : (
+					<Tag color='red'>{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.tag.khongcoketqua' })}</Tag>
+				),
 			fixed: 'right',
 			hide: isYeuCau,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.column.thaotac' }),
 			align: 'center',
 			width: isKetQua || isCongVan ? 60 : 90,
 			fixed: 'right',
@@ -244,7 +249,7 @@ const SinhVienXacMinhPage = (props: {
 						<>
 							<ButtonExtend
 								disabled={isHoanThanh}
-								tooltip='Tra cứu thủ công'
+								tooltip={intl.formatMessage({ id: 'xacminhvanbang.sinhvien.action.tracuuthucong' })}
 								type='link'
 								icon={<SearchOutlined />}
 								onClick={() => {
@@ -255,12 +260,12 @@ const SinhVienXacMinhPage = (props: {
 
 							<Popconfirm
 								onConfirm={() => putModel(rec._id, { ...rec, coThongTin: false, phuLucId: null }, getData)}
-								title='Xác nhận không có kết quả?'
+								title={intl.formatMessage({ id: 'xacminhvanbang.sinhvien.confirm.khongcoketqua' })}
 								placement='topRight'
 							>
 								<ButtonExtend
 									disabled={isHoanThanh}
-									tooltip='Không có kết quả'
+									tooltip={intl.formatMessage({ id: 'xacminhvanbang.sinhvien.action.khongcoketqua' })}
 									type='link'
 									icon={<CloseOutlined />}
 									danger
@@ -328,7 +333,7 @@ const SinhVienXacMinhPage = (props: {
 								loading={loadingExport}
 								onClick={() => handleExportPhieuPhucDap(rec)}
 								disabled={isHoanThanh}
-								tooltip='Tải biểu mẫu'
+								tooltip={intl.formatMessage({ id: 'xacminhvanbang.sinhvien.action.taibieumau' })}
 								type='link'
 								icon={<DownloadOutlined />}
 							/>
@@ -349,7 +354,7 @@ const SinhVienXacMinhPage = (props: {
 					return (
 						<ButtonExtend
 							disabled={isHoanThanh}
-							tooltip='Trả kết quả'
+							tooltip={intl.formatMessage({ id: 'xacminhvanbang.sinhvien.action.traketqua' })}
 							type='link'
 							icon={<EditOutlined />}
 							onClick={() => {
@@ -363,17 +368,23 @@ const SinhVienXacMinhPage = (props: {
 					<>
 						<ButtonExtend
 							disabled={isHoanThanh}
-							tooltip='Chỉnh sửa'
+							tooltip={intl.formatMessage({ id: 'xacminhvanbang.action.chinhsua' })}
 							onClick={() => handleEdit(rec)}
 							type='link'
 							icon={<EditOutlined />}
 						/>
 						<Popconfirm
 							onConfirm={() => deleteModel(rec._id, getData)}
-							title='Bạn có chắc chắn muốn xóa thông tin này?'
+							title={intl.formatMessage({ id: 'xacminhvanbang.sinhvien.confirm.delete' })}
 							placement='topRight'
 						>
-							<ButtonExtend disabled={isHoanThanh} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+							<ButtonExtend
+								disabled={isHoanThanh}
+								tooltip={intl.formatMessage({ id: 'xacminhvanbang.action.xoa' })}
+								danger
+								type='link'
+								icon={<DeleteOutlined />}
+							/>
 						</Popconfirm>
 					</>
 				);
@@ -395,7 +406,11 @@ const SinhVienXacMinhPage = (props: {
 					<>
 						{!hideAdd ? (
 							<ButtonExtend
-								tooltip={!recXacMinh?._id ? 'Chưa thêm mới yêu cầu xác minh' : 'Thêm mới'}
+								tooltip={
+									!recXacMinh?._id
+										? intl.formatMessage({ id: 'xacminhvanbang.sinhvien.tooltip.chuathemmoi' })
+										: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.themmoi' })
+								}
 								disabled={!recXacMinh?._id || isHoanThanh}
 								icon={<PlusCircleOutlined />}
 								onClick={() => {
@@ -407,18 +422,22 @@ const SinhVienXacMinhPage = (props: {
 								type='primary'
 								size={size}
 							>
-								Thêm mới
+								{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.themmoi' })}
 							</ButtonExtend>
 						) : null}
 						{!hideImport ? (
 							<ButtonExtend
-								tooltip={!recXacMinh?._id ? 'Chưa thêm mới yêu cầu xác minh' : 'Nhập dữ liệu'}
+								tooltip={
+									!recXacMinh?._id
+										? intl.formatMessage({ id: 'xacminhvanbang.sinhvien.tooltip.chuathemmoi' })
+										: intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.nhapdulieu' })
+								}
 								disabled={!recXacMinh?._id || isHoanThanh}
 								icon={<ImportOutlined />}
 								size={size}
 								onClick={() => setVisibleImport(true)}
 							>
-								Nhập dữ liệu
+								{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.nhapdulieu' })}
 							</ButtonExtend>
 						) : null}
 						{/* {!hideExport ? (
@@ -441,7 +460,8 @@ const SinhVienXacMinhPage = (props: {
 									onClick={() => handleExportPhieuPhucDap()}
 									loading={loadingExport}
 								>
-									Xuất biểu mẫu cá nhân {selectedIds?.length ? `(${selectedIds?.length})` : null}
+									{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.xuatbieumaucanhan' })}{' '}
+									{selectedIds?.length ? `(${selectedIds?.length})` : null}
 								</ButtonExtend>
 								<ButtonExtend
 									disabled={isHoanThanh}
@@ -453,7 +473,7 @@ const SinhVienXacMinhPage = (props: {
 									}}
 									loading={loadingExport}
 								>
-									Xuất biểu mẫu chung
+									{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.xuatbieumauchung' })}
 								</ButtonExtend>
 							</>
 						) : null}
@@ -505,7 +525,7 @@ const SinhVienXacMinhPage = (props: {
 						}}
 						icon={<ArrowLeftOutlined />}
 					>
-						Quay lại
+						{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.quaylai' })}
 					</Button>
 					<Button
 						disabled={
@@ -521,7 +541,7 @@ const SinhVienXacMinhPage = (props: {
 						}}
 						icon={<ArrowRightOutlined />}
 					>
-						Tiếp theo
+						{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.tieptuc' })}
 					</Button>
 					{isYeuCau ? (
 						<Button
@@ -531,7 +551,7 @@ const SinhVienXacMinhPage = (props: {
 							icon={<SafetyOutlined />}
 							type='primary'
 						>
-							Tiến hành xác minh
+							{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.tienhanh' })}
 						</Button>
 					) : (
 						<Button
@@ -544,7 +564,7 @@ const SinhVienXacMinhPage = (props: {
 							icon={<FileTextOutlined />}
 							type='primary'
 						>
-							Chuẩn bị công văn
+							{intl.formatMessage({ id: 'xacminhvanbang.sinhvien.button.chuanbicongvan' })}
 						</Button>
 					)}
 
@@ -553,7 +573,7 @@ const SinhVienXacMinhPage = (props: {
 			) : null}
 
 			<Modal
-				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} văn bằng cần xác minh`}
+				title={`${edit ? intl.formatMessage({ id: 'xacminhvanbang.sinhvien.modal.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'xacminhvanbang.sinhvien.modal.title.chitiet' }) : intl.formatMessage({ id: 'xacminhvanbang.sinhvien.modal.title.themmoi' })}`}
 				open={visibleForm}
 				width={600}
 				footer={null}
@@ -565,7 +585,7 @@ const SinhVienXacMinhPage = (props: {
 			<ModalExpandable
 				open={vsPhuLuc}
 				onCancel={() => setVsPhuLuc(false)}
-				title='Chi tiết thông tin văn bằng'
+				title={intl.formatMessage({ id: 'xacminhvanbang.sinhvien.modal.chitietvanbang' })}
 				width={1000}
 				footer={
 					<div className='form-footer'>

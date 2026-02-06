@@ -10,7 +10,7 @@ import type { QuyetDinhTotNghiep } from '@/services/VanBang/QuyetDinh/typing';
 import dayjs from '@/utils/dayjs';
 import { Button, message, Modal, Space } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 type TProps = {
 	visible: boolean;
@@ -19,6 +19,7 @@ type TProps = {
 };
 
 const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getDataExternal }) => {
+	const intl = useIntl();
 	const { record: recDot } = useModel('vbcc.dotcapbangtotnghiep');
 	const { formSubmiting, loading, selectedIds = [], setSelectedIds } = useModel('vbcc.quyetdinhtotnghiep');
 	const [danhSach, setDanhSach] = useState<QuyetDinhTotNghiep.IRecord[]>([]);
@@ -49,7 +50,7 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 
 	const handleSubmit = async () => {
 		if (!selectedIds?.length) {
-			message.warning('Vui lòng chọn ít nhất một quyết định');
+			message.warning(intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.warning.chonquyetdinh' }));
 			return;
 		}
 		if (!recDot?._id) return;
@@ -58,35 +59,35 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 			await getDataExternal();
 			setSelectedIds([]);
 			onCancel();
-			message.success('Thêm quyết định vào đợt cấp bằng thành công');
+			message.success(intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.success' }));
 		} catch {
-			message.error('Có lỗi xảy ra khi thêm quyết định');
+			message.error(intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.error' }));
 		}
 	};
 
 	const columns: IColumn<QuyetDinhTotNghiep.IRecord>[] = [
 		{
-			title: 'Năm hành chính',
+			title: intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.column.namhanhchinh' }),
 			dataIndex: 'nam',
 			align: 'center',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Số quyết định',
+			title: intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.column.soquyetdinh' }),
 			dataIndex: 'soQuyetDinh',
 			align: 'center',
 			width: 150,
 		},
 		{
-			title: 'Ngày ký',
+			title: intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.column.ngayky' }),
 			dataIndex: 'ngayBanHanh',
 			align: 'center',
 			width: 120,
 			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Nội dung',
+			title: intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.column.noidung' }),
 			dataIndex: 'noiDung',
 			width: 300,
 			render: (val) => <ExpandText>{val}</ExpandText>,
@@ -94,8 +95,16 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 	];
 
 	return (
-		<Modal title='Chọn quyết định tốt nghiệp' open={visible} width={800} onCancel={onCancel} footer={null}>
-			<p style={{ margin: '0 0 16px', fontSize: 14 }}>Chọn quyết định tốt nghiệp thêm vào đợt cấp bằng này!</p>
+		<Modal
+			title={intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.title' })}
+			open={visible}
+			width={800}
+			onCancel={onCancel}
+			footer={null}
+		>
+			<p style={{ margin: '0 0 16px', fontSize: 14 }}>
+				{intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.description' })}
+			</p>
 			<TableStaticData
 				columns={columns}
 				data={danhSach}
@@ -120,7 +129,7 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 							style={{ width: 150 }}
 							value={yearSelect}
 							pickerStyle='year'
-							placeholder='Chọn năm quyết định'
+							placeholder={intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.placeholder.chonnam' })}
 							format='YYYY'
 							onChange={(val) => {
 								setYearSelect(val);
@@ -133,9 +142,10 @@ const ModalChonQuyetDinh: React.FC<TProps> = ({ visible, onCancel, getData: getD
 			/>
 			<div className='form-footer'>
 				<Button type='primary' loading={formSubmiting} onClick={handleSubmit} disabled={!selectedIds?.length}>
-					Thêm vào đợt cấp bằng {selectedIds?.length > 0 ? `(${selectedIds.length})` : ''}
+					{intl.formatMessage({ id: 'dotcapbang.chonquyetdinh.button.themvaodot' })}{' '}
+					{selectedIds?.length > 0 ? `(${selectedIds.length})` : ''}
 				</Button>
-				<Button onClick={onCancel}>Hủy</Button>
+				<Button onClick={onCancel}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Modal>
 	);

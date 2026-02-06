@@ -7,7 +7,7 @@ import dayjs from '@/utils/dayjs';
 import { ApartmentOutlined, DeploymentUnitOutlined, ReadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Card, Space } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ViewThongKePhuLuc from './View';
 
 const mapThongKeTheoNam = (
@@ -23,6 +23,7 @@ const mapThongKeTheoNam = (
 };
 
 const BaoCaoThongKePage = () => {
+	const intl = useIntl();
 	const { thongKePhuLucTheoNamModel, dataThongKe } = useModel('vbcc.phulucvanbang');
 
 	const [dateRange, setDateRange] = useState<string[]>([
@@ -54,21 +55,33 @@ const BaoCaoThongKePage = () => {
 	const thongKeNganh = useMemo(() => mapThongKeTheoNam(dataThongKe, 'thongKeNganhDaoTao'), [dataThongKe]);
 
 	return (
-		<Card title='Thống kê cấp phát văn bằng'>
+		<Card title={intl.formatMessage({ id: 'thongke.title' })}>
 			<Space wrap style={{ marginBottom: 12 }}>
 				<MyDateRangePicker
 					value={dateRange?.length ? [dayjs(dateRange[0]), dayjs(dateRange[1])] : null}
 					onChange={(val: any) => setDateRange(val ?? [])}
 					ranges={{
-						'3 năm gần nhất': [dayjs().subtract(3, 'year').startOf('date'), dayjs().endOf('date')],
-						'5 năm gần nhất': [dayjs().subtract(5, 'year').startOf('date'), dayjs().endOf('date')],
-						'7 năm gần nhất': [dayjs().subtract(7, 'year').startOf('date'), dayjs().endOf('date')],
-						'10 năm gần nhất': [dayjs().subtract(10, 'year').startOf('date'), dayjs().endOf('date')],
+						[intl.formatMessage({ id: 'thongke.range.3namgannhat' })]: [
+							dayjs().subtract(3, 'year').startOf('date'),
+							dayjs().endOf('date'),
+						],
+						[intl.formatMessage({ id: 'thongke.range.5namgannhat' })]: [
+							dayjs().subtract(5, 'year').startOf('date'),
+							dayjs().endOf('date'),
+						],
+						[intl.formatMessage({ id: 'thongke.range.7namgannhat' })]: [
+							dayjs().subtract(7, 'year').startOf('date'),
+							dayjs().endOf('date'),
+						],
+						[intl.formatMessage({ id: 'thongke.range.10namgannhat' })]: [
+							dayjs().subtract(10, 'year').startOf('date'),
+							dayjs().endOf('date'),
+						],
 					}}
 				/>
 
 				<ButtonExtend icon={<ReloadOutlined />} onClick={getData}>
-					Tải lại
+					{intl.formatMessage({ id: 'thongke.button.tailai' })}
 				</ButtonExtend>
 			</Space>
 
@@ -76,19 +89,19 @@ const BaoCaoThongKePage = () => {
 				hideCard
 				menu={[
 					{
-						title: 'Trình độ đào tạo',
+						title: intl.formatMessage({ id: 'thongke.tab.trinhdodaotao' }),
 						menuKey: 'trinh-do-dao-tao',
 						icon: <ReadOutlined />,
 						content: <ViewThongKePhuLuc dataThongKe={thongKeTrinhDo} />,
 					},
 					{
-						title: 'Hình thức đào tạo',
+						title: intl.formatMessage({ id: 'thongke.tab.hinhthucdaotao' }),
 						menuKey: 'hinh-thuc-dao-tao',
 						icon: <ApartmentOutlined />,
 						content: <ViewThongKePhuLuc dataThongKe={thongKeHinhThuc} />,
 					},
 					{
-						title: 'Ngành đào tạo',
+						title: intl.formatMessage({ id: 'thongke.tab.nganhdaotao' }),
 						menuKey: 'nganh-dao-tao',
 						icon: <DeploymentUnitOutlined />,
 						content: <ViewThongKePhuLuc dataThongKe={thongKeNganh} />,

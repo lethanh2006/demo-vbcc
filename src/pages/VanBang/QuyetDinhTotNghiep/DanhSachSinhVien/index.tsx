@@ -42,7 +42,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
-			title: 'Mã người học',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.manguoihoc' }),
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			width: 120,
@@ -51,14 +51,14 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 			onCell,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.hoten' }),
 			dataIndex: 'hoTen',
 			width: 160,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.ngaysinh' }),
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 100,
@@ -68,14 +68,14 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 			onCell,
 		},
 		{
-			title: 'Cccd',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.cccd' }),
 			dataIndex: 'cmtCccd',
 			width: 120,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Trình độ đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.trinhdo' }),
 			dataIndex: 'trinhDoDaoTao',
 			width: 140,
 			render: (val, rec) => rec?.thongTinTrinhDoDaoTao?.ten ?? val,
@@ -84,7 +84,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 			onCell,
 		},
 		{
-			title: 'Hình thức đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.hinhthuc' }),
 			dataIndex: 'hinhThucDaoTao',
 			width: 150,
 			render: (val, rec) => rec?.thongTinHinhThucDaoTao?.ten ?? val,
@@ -93,7 +93,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 			onCell,
 		},
 		{
-			title: 'Ngành đào tạo',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.nganh' }),
 			dataIndex: 'nganhDaoTao',
 			width: 140,
 			render: (val, rec) => rec?.thongTinNganhDaoTao?.ten ?? val,
@@ -102,7 +102,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.column.thaotac' }),
 			align: 'center',
 			width: 120,
 			fixed: 'right',
@@ -110,7 +110,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 				<>
 					<ButtonExtend
 						disabled={disable}
-						tooltip='Chỉnh sửa'
+						tooltip={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.button.sua' })}
 						type='link'
 						icon={<EditOutlined />}
 						onClick={() => handleEdit(rec)}
@@ -118,10 +118,16 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id, getData)}
-						title='Bạn có chắc chắn muốn xóa phụ lục này?'
+						title={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.confirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend disabled={disable} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							disabled={disable}
+							tooltip={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -136,7 +142,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 				params={{ idQuyetDinh: recQuyetDinh?._id }}
 				dependencies={[page, limit, recQuyetDinh?._id]}
 				modelName='vbcc.phulucvanbang'
-				title={intl.formatMessage({ id: 'vanbang.phulucvanbang.title' })}
+				title={intl.formatMessage({ id: 'thongtinvb.title' })}
 				widthDrawer={800}
 				Form={isView ? ViewPhuLucVanBang : Form}
 				formProps={{ getData }}
@@ -150,7 +156,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 						key='import'
 						disabled={!recQuyetDinh?._id || disable}
 					>
-						Nhập dữ liệu
+						{intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.button.nhapdulieu' })}
 					</ButtonExtend>,
 				]}
 				showModalTitle
@@ -163,7 +169,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 					}}
 					icon={<ArrowLeftOutlined />}
 				>
-					Quay lại
+					{intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.button.quaylai' })}
 				</Button>
 				<Button
 					onClick={() => {
@@ -171,7 +177,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 					}}
 					icon={<ArrowRightOutlined />}
 				>
-					Tiếp theo
+					{intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.button.tieptheo' })}
 				</Button>
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
