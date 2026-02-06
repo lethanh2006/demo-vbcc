@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -13,6 +13,7 @@ const SelectNguoiKyVanBang = (props: {
 	hasDefault?: boolean;
 	style?: React.CSSProperties;
 }) => {
+	const intl = useIntl();
 	const { value, onChange, multiple, allowClear, hasDefault, style } = props;
 	const { danhSach, getAllModel } = useModel('vbcc.nguoiky');
 
@@ -36,7 +37,7 @@ const SelectNguoiKyVanBang = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn người ký văn bằng'
+			placeholder={intl.formatMessage({ id: 'nguoiky.select' })}
 			allowClear={allowClear ?? false}
 			style={{ width: '100%', ...style }}
 			showArrow

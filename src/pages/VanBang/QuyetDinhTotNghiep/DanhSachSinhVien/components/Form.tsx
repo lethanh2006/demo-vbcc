@@ -285,16 +285,13 @@ const FormSinhVienQuyetDinh = (props: any) => {
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.trinhdo' })} name='trinhDoDaoTao'>
-						<SelectTrinhDoDaoTao selectMa />
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.trinhdodaotao' })} name='trinhDoDaoTao'>
+						<SelectTrinhDoDaoTao selectTen />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
-					<Form.Item
-						label={intl.formatMessage({ id: 'qdtotnghiep.phulucvanbang.form.hinhthuc' })}
-						name='hinhThucDaoTao'
-					>
-						<SelectHinhThucDaoTao selectMa />
+					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.hinhthucdaotao' })} name='hinhThucDaoTao'>
+						<SelectHinhThucDaoTao selectTen />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>

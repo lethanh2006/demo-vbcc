@@ -3,40 +3,53 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
 
 const TrinhDoDaoTao = () => {
+	const intl = useIntl();
 	const { page, limit, handleEdit, deleteModel } = useModel('danhmuc.trinhdodaotao');
 
 	const columns: IColumn<TrinhDoDaoTao.IRecord>[] = [
 		{
-			title: 'Mã trình độ',
+			title: intl.formatMessage({ id: 'trinhdo.column.matrinhdo' }),
 			dataIndex: 'ma',
 			width: 120,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên trình độ',
+			title: intl.formatMessage({ id: 'trinhdo.column.tentrinhdo' }),
 			dataIndex: 'ten',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'trinhdo.column.thaotac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
-						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa trình độ này?'
+						onConfirm={() =>
+							deleteModel(rec._id, undefined, { messageText: intl.formatMessage({ id: 'global.button.xoathanhcong' }) })
+						}
+						title={intl.formatMessage({ id: 'trinhdo.column.confirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -48,9 +61,8 @@ const TrinhDoDaoTao = () => {
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='danhmuc.trinhdodaotao'
-			title='Trình độ đào tạo'
+			title={intl.formatMessage({ id: 'trinhdo.title' })}
 			Form={Form}
-			widthDrawer={800}
 			buttons={{ import: true, export: true }}
 		/>
 	);

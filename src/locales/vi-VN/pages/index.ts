@@ -1,4 +1,5 @@
 import capphatvanbang from './capphatvanbang';
+import danhmuc from './danhmuc';
 import dotcapbang from './dotcapbang';
 import login from './login';
 import quyetdinhtotnghiep from './quyetdinhtotnghiep';
@@ -22,6 +23,7 @@ export default {
 	...thongke,
 	...tracuupublic,
 	...dotcapbang,
+	...danhmuc,
 
 	'pages.trangchu.title': 'PHÂN HỆ VĂN VẰNG CHỨNG CHỈ',
 	'pages.trangchu.subtitle': 'HỆ THỐNG PHẦN MỀM CHỈ ĐẠO, ĐIỀU HÀNH',

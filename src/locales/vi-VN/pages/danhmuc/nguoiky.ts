@@ -1,0 +1,35 @@
+export default {
+	'nguoiky.title': 'Người ký văn bằng',
+	'nguoiky.info': 'Khai báo thông tin người ký hợp lệ cho toàn hệ thống.',
+	'nguoiky.info1': 'Chỉ chấp nhận những thông tin được ký số từ người có trong danh sách.',
+
+	'nguoiky.column.hoten': 'Họ và tên',
+	'nguoiky.column.chucvu': 'Chức vụ',
+	'nguoiky.column.loai': 'Loại chữ ký',
+	'nguoiky.column.email': 'Email',
+	'nguoiky.column.sdt': 'SĐT',
+	'nguoiky.column.thaotac': 'Thao tác',
+
+	'nguoiky.confirm.xoa': 'Bạn có chắc chắn muốn xóa người ký này?',
+
+	'nguoiky.select': 'Chọn người ký văn bằng',
+
+	'nguoiky.form.themmoi': 'Thêm mới người ký văn bằng',
+	'nguoiky.form.chinhsua': 'Chỉnh sửa người ký văn bằng',
+	'nguoiky.form.nguoiky': 'Người ký số',
+	'nguoiky.form.nguoiky.extra': 'Nếu người hướng đẫn ngoài hệ thống người dùng có thể bỏ trống',
+	'nguoiky.form.hoten': 'Họ tên',
+	'nguoiky.form.hoten.place': 'Nhập họ tên người ký',
+	'nguoiky.form.chucvu': 'Chức vụ',
+	'nguoiky.form.chucvu.place': 'Nhập chức vụ',
+	'nguoiky.form.email': 'Email',
+	'nguoiky.form.email.place': 'Nhập email',
+	'nguoiky.form.sdt': 'SĐT',
+	'nguoiky.form.sdt.place': 'Nhập số điện thoại',
+	'nguoiky.form.loai': 'Loại chữ ký',
+	'nguoiky.form.loai.place': 'Chọn loại chữ ký',
+	'nguoiky.form.certIpfs': 'Chữ ký số',
+	'nguoiky.form.certIpfs.xem': 'Xem chữ ký số',
+	'nguoiky.form.certIpfs.extra': 'Chữ ký số dưới dạng .crt, dùng để xác thực định danh cá nhân.',
+	'nguoiky.form.certIpfs.extra1': 'Mỗi người sẽ có 1 file chữ ký số riêng biệt, được cơ quan có thẩm quyền cấp.',
+};

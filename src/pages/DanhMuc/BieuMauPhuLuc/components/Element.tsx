@@ -13,6 +13,7 @@ import { DeleteOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { AutoComplete, Col, Form, Row, Select } from 'antd';
 import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable, type DropResult } from 'react-beautiful-dnd';
+import { useIntl } from 'umi';
 import CauHinhDinhDangBang from './CauHinhBang';
 import './ElementBieuMauFormItem.less';
 
@@ -20,6 +21,7 @@ const ElementBieuMauFormItem = (props: {
 	value?: BieuMauPhuLuc.TElement[];
 	onChange?: (val: BieuMauPhuLuc.TElement[]) => void;
 }) => {
+	const intl = useIntl();
 	const { onChange } = props;
 	const elements = props.value ?? [];
 	const [searchoptions, setSearchOptions] = useState<{ value: string }[]>(
@@ -124,15 +126,15 @@ const ElementBieuMauFormItem = (props: {
 				<Col span={14}>
 					<Form.Item
 						label={
-							`Phần tử ${index + (!isDefault ? defaultElementBieuMau.length : 0) + 1}` +
-							(isDefault ? ' (mặc định)' : '')
+							`${intl.formatMessage({ id: 'bieumau.form.cauhinh.phantu' })} ${index + (!isDefault ? defaultElementBieuMau.length : 0) + 1}` +
+							(isDefault ? ` ${intl.formatMessage({ id: 'bieumau.form.cauhinh.macdich' })}` : '')
 						}
 						name={isDefault ? undefined : ['elements', index, 'headerName']}
 						rules={[...rules.required, ...rules.text, ...rules.length(100)]}
 					>
 						<AutoComplete
 							disabled={isDefault}
-							placeholder='Nhập tên phần tử'
+							placeholder={intl.formatMessage({ id: 'bieumau.form.cauhinh.macdich.place' })}
 							defaultValue={isDefault ? defaultElementBieuMau[index].headerName : undefined}
 							options={searchoptions}
 							onSearch={onSearchHeader}
@@ -142,7 +144,7 @@ const ElementBieuMauFormItem = (props: {
 				</Col>
 				<Col span={8}>
 					<Form.Item
-						label='Kiểu dữ liệu'
+						label={intl.formatMessage({ id: 'bieumau.form.cauhinh.kieudulieu' })}
 						name={isDefault ? undefined : ['elements', index, 'type']}
 						rules={[...rules.required]}
 					>
@@ -179,7 +181,7 @@ const ElementBieuMauFormItem = (props: {
 						<Row>
 							<Col span={22} push={1}>
 								<Form.Item
-									label='Cấu hình bảng'
+									label={intl.formatMessage({ id: 'bieumau.form.cauhinh.cauhinhbang' })}
 									className='table-config-container'
 									name={['elements', index, 'cot']}
 									rules={[{ required: true, message: 'Vui lòng cấu hình các cột của bảng' }]}
@@ -235,7 +237,7 @@ const ElementBieuMauFormItem = (props: {
 			<Row>
 				<Col span={22} push={1}>
 					<ButtonExtend notHideText type='dashed' onClick={addElement} icon={<PlusOutlined />} block>
-						Thêm phần tử
+						{intl.formatMessage({ id: 'bieumau.form.cauhinh.them' })}
 					</ButtonExtend>
 				</Col>
 			</Row>

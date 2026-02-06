@@ -350,13 +350,13 @@ const FormPhuLucVanBang = (props: {
 
 				<Col span={24} md={12}>
 					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.trinhdodaotao' })} name='trinhDoDaoTao'>
-						<SelectTrinhDoDaoTao selectMa />
+						<SelectTrinhDoDaoTao selectTen />
 					</Form.Item>
 				</Col>
 
 				<Col span={24} md={12}>
 					<Form.Item label={intl.formatMessage({ id: 'formthongtin.label.hinhthucdaotao' })} name='hinhThucDaoTao'>
-						<SelectHinhThucDaoTao selectMa />
+						<SelectHinhThucDaoTao selectTen />
 					</Form.Item>
 				</Col>
 

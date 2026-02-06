@@ -5,7 +5,8 @@ import { Button, Card, Col, Form, Input, InputNumber, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormMucDichTraCuuPhuLuc = (props: { title?: string; [key: string]: any }) => {
+const FormMucDichTraCuuPhuLuc = (props: any) => {
+	const { getData } = props;
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
 		useModel('vbcc.mucdichtracuuphuluc');
 	const intl = useIntl();
@@ -18,37 +19,61 @@ const FormMucDichTraCuuPhuLuc = (props: { title?: string; [key: string]: any }) 
 
 	const onFinish = async (values: MucDichTraCuuPhuLuc.IRecord) => {
 		if (edit) {
-			putModel(record?._id ?? '', values)
+			putModel(
+				record?._id ?? '',
+				values,
+				getData,
+				undefined,
+				undefined,
+				intl.formatMessage({ id: 'global.button.luuthanhcong' }),
+			)
 				.then()
 				.catch((er) => console.log(er));
 		} else {
-			postModel(values)
+			postModel(values, getData, undefined, intl.formatMessage({ id: 'global.button.themmoithanhcong' }))
 				.then()
 				.catch((er) => console.log(er));
 		}
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} mục đích tra cứu phụ lục`}>
+		<Card
+			title={
+				edit
+					? intl.formatMessage({ id: 'mucdich.column.form.chinhsua' })
+					: intl.formatMessage({ id: 'mucdich.column.form.themmoi' })
+			}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item name='ma' label='Mã mục đích' rules={[...rules.required]}>
-							<Input placeholder='Nhập mã mục đích' />
+						<Form.Item
+							name='ma'
+							label={intl.formatMessage({ id: 'mucdich.column.form.mamucdich' })}
+							rules={[...rules.required]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'mucdich.column.form.mamucdich.place' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
 						<Form.Item
 							name='ten'
-							label='Mục đích tra cứu'
+							label={intl.formatMessage({ id: 'mucdich.column.form.mucdichtracuu' })}
 							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						>
-							<Input placeholder='Nhập tên mục đích tra cứu phụ lục' />
+							<Input placeholder={intl.formatMessage({ id: 'mucdich.column.form.mucdichtracuu.place' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item name='soThuTu' label='Thứ tự hiển thị' rules={[...rules.required, ...rules.number()]}>
-							<InputNumber placeholder='Nhập thứ tự hiển thị' style={{ width: '100%' }} />
+						<Form.Item
+							name='soThuTu'
+							label={intl.formatMessage({ id: 'mucdich.column.form.tthienthi' })}
+							rules={[...rules.required]}
+						>
+							<InputNumber
+								placeholder={intl.formatMessage({ id: 'mucdich.column.form.tthienthi.place' })}
+								style={{ width: '100%' }}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

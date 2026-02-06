@@ -29,7 +29,14 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 
 	const onFinish = async (values: NguoiKyVanBang.IRecord) => {
 		if (edit) {
-			putModel(record?._id ?? '', values)
+			putModel(
+				record?._id ?? '',
+				values,
+				undefined,
+				undefined,
+				undefined,
+				intl.formatMessage({ id: 'global.button.luuthanhcong' }),
+			)
 				.then()
 				.catch((er) => console.log(er));
 		} else if (settingVbcc?.require_IPFS) {
@@ -45,24 +52,33 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 			}
 
 			if (certIpfs)
-				postModel({ ...values, certIpfs })
+				postModel(
+					{ ...values, certIpfs },
+					undefined,
+					undefined,
+					intl.formatMessage({ id: 'global.button.themmoithanhcong' }),
+				)
 					.then()
 					.catch((er) => console.log(er));
 		} else
-			postModel(values)
+			postModel(values, undefined, undefined, intl.formatMessage({ id: 'global.button.themmoithanhcong' }))
 				.then()
 				.catch((er) => console.log(er));
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} người ký văn bằng`}>
+		<Card
+			title={
+				edit ? intl.formatMessage({ id: 'nguoiky.form.chinhsua' }) : intl.formatMessage({ id: 'nguoiky.form.themmoi' })
+			}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24}>
 						<Form.Item
 							name='ssoId'
-							label='Người ký số'
-							extra='Nếu người hướng đẫn ngoài hệ thống người dùng có thể bỏ trống'
+							label={intl.formatMessage({ id: 'nguoiky.form.nguoiky' })}
+							extra={intl.formatMessage({ id: 'nguoiky.form.nguoiky.extra' })}
 						>
 							<SelectNhanSuDebounce
 								allowClear
@@ -79,8 +95,12 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='hoTen' label='Họ tên' rules={[...rules.required, ...rules.text, ...rules.length(150)]}>
-							<Input placeholder='Nhập họ tên người ký' />
+						<Form.Item
+							name='hoTen'
+							label={intl.formatMessage({ id: 'nguoiky.form.hoten' })}
+							rules={[...rules.required, ...rules.text, ...rules.length(150)]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'nguoiky.form.hoten.place' })} />
 						</Form.Item>
 					</Col>
 					{/* <Col span={24} md={12}>
@@ -96,24 +116,40 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 						</Form.Item>
 					</Col> */}
 					<Col span={24} md={12}>
-						<Form.Item name='chucVu' label='Chức vụ' rules={[...rules.text, ...rules.length(200)]}>
-							<Input placeholder='Nhập chức vụ' />
+						<Form.Item
+							name='chucVu'
+							label={intl.formatMessage({ id: 'nguoiky.form.chucvu' })}
+							rules={[...rules.text, ...rules.length(200)]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'nguoiky.form.chucvu.place' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='email' label='Email' rules={[...rules.text, ...rules.email, ...rules.length(50)]}>
-							<Input placeholder='Nhập email' />
+						<Form.Item
+							name='email'
+							label={intl.formatMessage({ id: 'nguoiky.form.email' })}
+							rules={[...rules.text, ...rules.email, ...rules.length(50)]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'nguoiky.form.email.place' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='soDienThoai' label='SĐT' rules={[...rules.soDienThoai]}>
-							<Input placeholder='Nhập số điện thoại' />
+						<Form.Item
+							name='soDienThoai'
+							label={intl.formatMessage({ id: 'nguoiky.form.sdt' })}
+							rules={[...rules.soDienThoai]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'nguoiky.form.sdt.place' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='loaiChuKy' label='Loại chữ ký' rules={[...rules.required]}>
+						<Form.Item
+							name='loaiChuKy'
+							label={intl.formatMessage({ id: 'nguoiky.form.loai' })}
+							rules={[...rules.required]}
+						>
 							<Select
-								placeholder='Chọn loại chữ ký'
+								placeholder={intl.formatMessage({ id: 'nguoiky.form.loai.place' })}
 								options={Object.values(ELoaiChuKy).map((item) => ({
 									label: item,
 									value: item,
@@ -127,7 +163,7 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 							{edit ? (
 								<div style={{ marginBottom: 24 }}>
 									<a href={record?.certIpfs} target='_blank' rel='noreferrer'>
-										<AuditOutlined /> Xem chữ ký số
+										<AuditOutlined /> {intl.formatMessage({ id: 'nguoiky.form.certIpfs.xem' })}
 									</a>
 								</div>
 							) : (
@@ -135,13 +171,13 @@ const FormNguoiKyVanBang = (props: { title?: string; [key: string]: any }) => {
 									name='certIpfs'
 									label={
 										<>
-											Chữ ký số
+											{intl.formatMessage({ id: 'nguoiky.form.certIpfs' })}
 											<Popover
 												content={
 													<>
-														File chữ ký số dưới dạng .crt, dùng để xác thực định danh cá nhân.
+														{intl.formatMessage({ id: 'nguoiky.form.certIpfs.extra' })}
 														<br />
-														Mỗi người sẽ có 1 file chữ ký số riêng biệt, được cơ quan có thẩm quyền cấp.
+														{intl.formatMessage({ id: 'nguoiky.form.certIpfs.extra1' })}
 													</>
 												}
 											>

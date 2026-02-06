@@ -15,20 +15,20 @@ const NguoiKyVanBangPage = () => {
 
 	const columns: IColumn<NguoiKyVanBang.IRecord>[] = [
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'nguoiky.column.hoten' }),
 			dataIndex: 'hoTen',
 			width: 160,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Chức vụ',
+			title: intl.formatMessage({ id: 'nguoiky.column.chucvu' }),
 			dataIndex: 'chucVu',
 			width: 160,
 			filterType: 'string',
 		},
 		{
-			title: 'Loại chữ ký',
+			title: intl.formatMessage({ id: 'nguoiky.column.loai' }),
 			dataIndex: 'loaiChuKy',
 			align: 'center',
 			width: 140,
@@ -37,30 +37,42 @@ const NguoiKyVanBangPage = () => {
 			render: (val: ELoaiChuKy) => val && <Tag color={colorLoaiChuKy[val]}>{val}</Tag>,
 		},
 		{
-			title: 'Email',
+			title: intl.formatMessage({ id: 'nguoiky.column.email' }),
 			dataIndex: 'email',
 			width: 140,
 		},
 		{
-			title: 'SĐT',
+			title: intl.formatMessage({ id: 'nguoiky.column.sdt' }),
 			dataIndex: 'soDienThoai',
 			width: 120,
 			render: (val) => val && formatPhoneNumber(val),
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'nguoiky.column.thaotac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
-						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa người ký này?'
+						onConfirm={() =>
+							deleteModel(rec._id, undefined, { messageText: intl.formatMessage({ id: 'global.button.xoathanhcong' }) })
+						}
+						title={intl.formatMessage({ id: 'nguoiky.confirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -74,13 +86,13 @@ const NguoiKyVanBangPage = () => {
 			modelName='vbcc.nguoiky'
 			title={
 				<>
-					{intl.formatMessage({ id: 'vanbang.nguoiky.title' })}{' '}
+					{intl.formatMessage({ id: 'nguoiky.title' })}{' '}
 					<Popover
 						content={
 							<>
-								Khai báo thông tin người ký hợp lệ cho toàn hệ thống.
+								{intl.formatMessage({ id: 'nguoiky.info' })}
 								<br />
-								Chỉ chấp nhận những thông tin được ký số từ người có trong danh sách.
+								{intl.formatMessage({ id: 'nguoiky.info1' })}
 							</>
 						}
 					>

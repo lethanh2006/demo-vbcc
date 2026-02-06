@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -15,8 +15,10 @@ const SelectHinhThucDaoTao = (props: {
 	condition?: Partial<HinhThucDaoTao.IRecord>;
 	disabled?: boolean;
 	selectMa?: boolean;
+	selectTen?: boolean;
 }) => {
-	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled, selectMa } = props;
+	const intl = useIntl();
+	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled, selectMa, selectTen } = props;
 	const { danhSach, getAllModel } = useModel('danhmuc.hinhthucdaotao');
 	useEffect(() => {
 		getAllModel(!!isSetRecord, undefined, condition);
@@ -31,12 +33,12 @@ const SelectHinhThucDaoTao = (props: {
 			onChange={onChange}
 			options={danhSach.map((item) => ({
 				key: item._id,
-				value: selectMa ? item.ma : item._id,
+				value: selectMa ? item.ma : selectTen ? item.ten : item._id,
 				label: [item.ten, item.ma].filter(Boolean).join(' - '),
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn hình thức đào tạo'
+			placeholder={intl.formatMessage({ id: 'hinhthuc.select' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

@@ -1,6 +1,7 @@
 import { ELoaiDuLieuBieuMau, loaiDuLieuBieuMau } from '@/services/VanBang/constant';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Input, Row, Select, Space } from 'antd';
+import { useIntl } from 'umi';
 
 type CotBang = { headerName: string; type: ELoaiDuLieuBieuMau };
 
@@ -13,6 +14,7 @@ const CauHinhDinhDangBang = ({
 	onChange?: (val: CotBang[]) => void;
 	defaultColumns?: CotBang[];
 }) => {
+	const intl = useIntl();
 	const handleChange = (index: number, field: keyof CotBang, val: any) => {
 		const updated = [...value];
 		updated[index][field] = val;
@@ -40,7 +42,7 @@ const CauHinhDinhDangBang = ({
 					<Row gutter={12} key={`custom-${index}`}>
 						<Col span={12}>
 							<Input
-								placeholder='Tên hiển thị'
+								placeholder={intl.formatMessage({ id: 'bieumau.form.cauhinh.cauhinhbang.tenhienthi' })}
 								value={cot.headerName}
 								disabled={isDefault}
 								onChange={(e) => handleChange(index, 'headerName', e.target.value)}
@@ -67,7 +69,7 @@ const CauHinhDinhDangBang = ({
 			})}
 
 			<Button icon={<PlusOutlined />} className='add-column-button' onClick={addCot} type='dashed' block>
-				Thêm cột
+				{intl.formatMessage({ id: 'bieumau.form.cauhinh.cauhinhbang.themcot' })}
 			</Button>
 		</Space>
 	);
