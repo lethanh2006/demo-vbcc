@@ -1,0 +1,18 @@
+export default {
+	'mucdich.danhsach': 'List of Appendix Lookup Purposes',
+	'mucdich.title': 'Appendix Lookup Purpose',
+	'mucdich.column.hienthi': 'Display',
+	'mucdich.column.mucdich': 'Purpose Code',
+	'mucdich.column.mucdichtracuu': 'Lookup Purpose',
+	'mucdich.column.trangthai': 'Status',
+	'mucdich.column.thaotac': 'Action',
+	'mucdich.column.confirm.xoa': 'Are you sure you want to delete this appendix lookup purpose?',
+	'mucdich.column.form.themmoi': 'Add New Appendix Lookup Purpose',
+	'mucdich.column.form.chinhsua': 'Edit Appendix Lookup Purpose',
+	'mucdich.column.form.mamucdich': 'Purpose Code',
+	'mucdich.column.form.mamucdich.place': 'Enter purpose code',
+	'mucdich.column.form.mucdichtracuu': 'Lookup Purpose',
+	'mucdich.column.form.mucdichtracuu.place': 'Enter lookup purpose',
+	'mucdich.column.form.tthienthi': 'Display Order',
+	'mucdich.column.form.tthienthi.place': 'Enter display order',
+};
