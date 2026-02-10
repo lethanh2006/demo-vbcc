@@ -165,7 +165,7 @@ const SoVanBangForm = (props: { title?: string; [key: string]: any }) => {
 						label={intl.formatMessage({ id: 'sovanbang.form.trinhdo' })}
 						rules={[...rules.required]}
 					>
-						<SelectTrinhDoDaoTao selectMa disabled={isView} />
+						<SelectTrinhDoDaoTao selectTen disabled={isView} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>

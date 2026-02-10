@@ -247,7 +247,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 			width: 140,
 			render: (val, rec) => rec?.thongTinTrinhDoDaoTao?.ten ?? val,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectTrinhDoDaoTao multiple selectMa />,
+			filterCustomSelect: <SelectTrinhDoDaoTao multiple selectTen />,
 			onCell,
 		},
 		{
@@ -256,7 +256,7 @@ const DuThaoSoVaoSoQuyetDinh = (props: {
 			width: 150,
 			render: (val, rec) => rec?.thongTinHinhThucDaoTao?.ten ?? val,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectHinhThucDaoTao multiple selectMa />,
+			filterCustomSelect: <SelectHinhThucDaoTao multiple selectTen />,
 			onCell,
 		},
 		{

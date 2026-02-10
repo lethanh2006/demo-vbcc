@@ -62,7 +62,7 @@ const SoVanBangPage = () => {
 			width: 120,
 			render: (val, rec) => rec?.trinhDoDaoTao?.ten ?? rec?.tenTrinhDoDaoTao ?? val,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectTrinhDoDaoTao selectMa multiple />,
+			filterCustomSelect: <SelectTrinhDoDaoTao selectTen multiple />,
 			onCell,
 		},
 		{

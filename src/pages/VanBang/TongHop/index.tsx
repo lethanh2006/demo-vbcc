@@ -124,14 +124,14 @@ const TongHopVanBang = () => {
 							allowClear
 							value={recTrinhDo?.ma}
 							onChange={(val) => setRecTrinhDo(dsTrinhDo.find((item) => item?.ma === val))}
-							selectMa
+							selectTen
 						/>
 						<SelectHinhThucDaoTao
 							style={{ width: 200 }}
 							allowClear
 							value={recHinhThuc?.ma}
 							onChange={(val) => setRecHinhThuc(dsHinhThuc.find((item) => item?.ma === val))}
-							selectMa
+							selectTen
 						/>
 						<SelectNganhDaoTao
 							style={{ width: 200 }}

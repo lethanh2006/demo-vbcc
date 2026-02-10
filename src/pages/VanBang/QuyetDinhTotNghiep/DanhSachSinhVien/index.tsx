@@ -80,7 +80,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 			width: 140,
 			render: (val, rec) => rec?.thongTinTrinhDoDaoTao?.ten ?? val,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectTrinhDoDaoTao selectMa multiple />,
+			filterCustomSelect: <SelectTrinhDoDaoTao selectTen multiple />,
 			onCell,
 		},
 		{
@@ -89,7 +89,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 			width: 150,
 			render: (val, rec) => rec?.thongTinHinhThucDaoTao?.ten ?? val,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectHinhThucDaoTao selectMa multiple />,
+			filterCustomSelect: <SelectHinhThucDaoTao selectTen multiple />,
 			onCell,
 		},
 		{
