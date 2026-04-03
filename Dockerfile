@@ -4,11 +4,11 @@ FROM node:22-alpine AS development
 
 # Set environment variables
 ENV APP_CONFIG_IP_ROOT=https://api.hvpnvn.edu.vn/
-ENV APP_CONFIG_ONE_SIGNAL_ID=f3857a81-2891-49be-87a7-903a4a1a54be
-ENV APP_CONFIG_SENTRY_DSN=https://ed934e521d476c44a89a42aaa8a6993a@sentry.aisoftech.vn/3
+ENV APP_CONFIG_ONE_SIGNAL_ID=
+ENV APP_CONFIG_SENTRY_DSN=
 ENV APP_CONFIG_KEYCLOAK_AUTHORITY=https://sso.hvpnvn.edu.vn/realms/vwa
 ENV APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID=vwa-
-ENV APP_CONFIG_APP_VERSION=241218.1100
+ENV APP_CONFIG_APP_VERSION=250115.1130
 
 ENV APP_CONFIG_TEN_TRUONG='Học viện Phụ nữ Việt Nam'
 ENV APP_CONFIG_TIEN_TO_TRUONG='Học viện'
@@ -32,6 +32,7 @@ ENV APP_CONFIG_URL_QLVB=https://sso.hvpnvn.edu.vn/realms/vwa/protocol/openid-con
 ENV APP_CONFIG_URL_VBCC=https://vbcc.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_QLND=https://iam.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_TAP_CHI_KH=https://tapchikhoahoc.hvpnvn.edu.vn/
+ENV APP_CONFIG_URL_KY_SO=
 
 ENV APP_CONFIG_INIT_TRINH_DO=7
 ENV APP_CONFIG_INIT_HINH_THUC=1

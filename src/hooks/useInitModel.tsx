@@ -443,7 +443,7 @@ const useInitModel = <T extends object>(
 	 */
 	const postValidateModel = async (
 		payload: any[],
-		config?: { dataPartitionCode?: string | null | undefined },
+		config?: { dataPartitionCode?: string | null | undefined; messageText?: string },
 	): Promise<TImportResponse> => {
 		if (formSubmiting) return Promise.reject('Form submiting');
 		setFormSubmiting(true);
@@ -452,7 +452,7 @@ const useInitModel = <T extends object>(
 				{ rows: payload },
 				config?.dataPartitionCode ? { 'x-data-partition-code': config.dataPartitionCode } : undefined,
 			);
-			message.success('Đã kiểm tra dữ liệu');
+			message.success(config?.messageText ?? 'Đã kiểm tra dữ liệu');
 			return res.data?.data ?? [];
 		} catch (err) {
 			return Promise.reject(err);
@@ -467,7 +467,7 @@ const useInitModel = <T extends object>(
 	 */
 	const postExecuteImpotModel = async (
 		payload: any[],
-		config?: { dataPartitionCode?: string | null | undefined },
+		config?: { dataPartitionCode?: string | null | undefined; messageText?: string },
 	): Promise<TImportResponse> => {
 		if (formSubmiting) return Promise.reject('Form submiting');
 		setFormSubmiting(true);
@@ -476,7 +476,7 @@ const useInitModel = <T extends object>(
 				{ rows: payload },
 				config?.dataPartitionCode ? { 'x-data-partition-code': config.dataPartitionCode } : undefined,
 			);
-			message.success('Đã nhập dữ liệu');
+			message.success(config?.messageText ?? 'Đã nhập dữ liệu');
 			return res.data?.data ?? [];
 		} catch (err) {
 			return Promise.reject(err);
