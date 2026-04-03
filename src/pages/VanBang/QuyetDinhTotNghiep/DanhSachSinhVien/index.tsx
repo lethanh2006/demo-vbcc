@@ -193,6 +193,7 @@ const DanhSachSinhVienQuyetDinh = (props: { afterAddNew?: (val: EQuyetDinhStep) 
 					importSinhVien: '1',
 					sort: { soThuTuImport: 1 },
 				}}
+				isThongTin
 			/>
 		</>
 	);

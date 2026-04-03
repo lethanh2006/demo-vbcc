@@ -24,10 +24,10 @@ const ModalXuLyCapBang = (props: {
 	useEffect(() => {
 		if (!visible) {
 			resetFieldsForm(form);
-		} else if (record?._id) {
+		} else {
 			form.setFieldsValue({
 				...record,
-				ngayCapPhuLuc: record?.ngayCapPhuLuc ? dayjs(record.ngayCapPhuLuc) : dayjs(),
+				ngayCapPhuLuc: dayjs(),
 			});
 		}
 	}, [record?._id, visible]);

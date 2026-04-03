@@ -803,7 +803,6 @@ const PhuLucVanBangPage = (props: {
 				params={{
 					sort: { soVaoSoBang: 1 },
 				}}
-				isThongTin
 			/>
 
 			<ModalExportData />

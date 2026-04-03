@@ -41,7 +41,7 @@ const ModalImportPhuLucVanBang = (props: {
 			importPhuLucVanBangModel(
 				isThongTin
 					? { quyetDinhId: recQuyetDinh?._id, file, loaiThongTin: ELoaiThongTinUpdate.THONG_TIN_VAN_BANG }
-					: { quyetDinhId: recQuyetDinh?._id, file },
+					: { quyetDinhId: recQuyetDinh?._id, file, loaiThongTin: ELoaiThongTinUpdate.SO_HIEU_VAN_BANG },
 				params,
 			).then((res) => {
 				if (res?.success === false) {

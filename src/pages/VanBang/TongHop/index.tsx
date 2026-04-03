@@ -122,15 +122,15 @@ const TongHopVanBang = () => {
 						<SelectTrinhDoDaoTao
 							style={{ width: 200 }}
 							allowClear
-							value={recTrinhDo?.ma}
-							onChange={(val) => setRecTrinhDo(dsTrinhDo.find((item) => item?.ma === val))}
+							value={recTrinhDo?.ten}
+							onChange={(val) => setRecTrinhDo(dsTrinhDo.find((item) => item?.ten === val))}
 							selectTen
 						/>
 						<SelectHinhThucDaoTao
 							style={{ width: 200 }}
 							allowClear
-							value={recHinhThuc?.ma}
-							onChange={(val) => setRecHinhThuc(dsHinhThuc.find((item) => item?.ma === val))}
+							value={recHinhThuc?.ten}
+							onChange={(val) => setRecHinhThuc(dsHinhThuc.find((item) => item?.ten === val))}
 							selectTen
 						/>
 						<SelectNganhDaoTao
