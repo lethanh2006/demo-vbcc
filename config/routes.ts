@@ -156,15 +156,14 @@
 			},
 		],
 	},
-
 	{
-		name: 'TraCuuVanBangPublic',
-		path: '/tra-cuu-van-bang',
-		component: 'VanBang/TraCuuPublic',
-		layout: false,
-		hideInMenu: true,
+		name: 'QuanLyPhoiBang',
+		path: '/quan-ly-phoi-bang',
+		component: 'QuanLyPhoiBang',
+		icon: 'FileTextOutlined',
+		access: 'accessFilter',
+		maChucNang: 'van-bang-chung-chi|quan-ly-phoi-bang',
 	},
-
 	{
 		name: 'ChiTietVanBangPublic',
 		path: '/tra-cuu-van-bang/chi-tiet/:id',

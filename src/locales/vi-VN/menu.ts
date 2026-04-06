@@ -27,6 +27,7 @@ export default {
 	'menu.SoVanBang': 'Sổ văn bằng',
 	'menu.TraCuuVanBangPublic': 'Tra cứu văn bằng',
 	'menu.ChiTietVanBangPublic': 'Chi tiết văn bằng',
+	'menu.QuanLyPhoiBang': 'Quản lý phôi bằng',
 
 	'menu.ThongKe': 'Thống kê',
 
