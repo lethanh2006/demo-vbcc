@@ -92,17 +92,18 @@ const TabBieuMauPhoiBang = () => {
 
 	const handleModalSubmit = async (values: any) => {
 		const mainValues = form.getFieldsValue();
-		const prefixStr = mainValues.prefix ?? '';
-		const suffixStr = mainValues.suffix ?? '';
+		const prefixStr = mainValues?.prefix ?? '';
+		const suffixStr = mainValues?.suffix ?? '';
 		const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
 
 		const payload = {
 			id: record?._id,
 			dinhDangSoHieu: dinhDangSoHieuFormat,
-			soBatDau: values.startNumber,
-			soKetThuc: values.endNumber,
-			ngayNhap: values.ngayNhap,
-			ghiChu: mainValues.ghiChu,
+			soBatDau: values?.startNumber,
+			soKetThuc: values?.endNumber,
+			ngayNhap: values?.ngayNhap,
+			ghiChu: mainValues?.ghiChu,
+			ten: mainValues?.ten,
 		};
 
 		try {
@@ -126,17 +127,17 @@ const TabBieuMauPhoiBang = () => {
 	};
 
 	const onFinish = async (values: SettingFormatPayload) => {
-		const prefixStr = values.prefix ?? '';
-		const suffixStr = values.suffix ?? '';
+		const prefixStr = values?.prefix ?? '';
+		const suffixStr = values?.suffix ?? '';
 		const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
 
 		const payload = {
-			ten: values.ten,
+			ten: values?.ten,
 			dinhDangSoHieu: dinhDangSoHieuFormat,
-			soBatDau: values.startNumber,
-			soKetThuc: values.endNumber,
-			ghiChu: values.ghiChu,
-			ngayNhap: values.ngayNhap,
+			soBatDau: values?.startNumber,
+			soKetThuc: values?.endNumber,
+			ghiChu: values?.ghiChu,
+			ngayNhap: values?.ngayNhap,
 		};
 
 		postYeuCauCapMoiModel(payload, getModel)

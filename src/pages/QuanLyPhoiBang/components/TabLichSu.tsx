@@ -38,6 +38,18 @@ const TabLichSu = () => {
 			width: 150,
 		},
 		{
+			title: 'Số bắt đầu',
+			dataIndex: 'soBatDau',
+			align: 'center',
+			width: 80,
+		},
+		{
+			title: 'Số kết thúc',
+			dataIndex: 'soKetThuc',
+			align: 'center',
+			width: 80,
+		},
+		{
 			title: 'Ngày nhập',
 			dataIndex: 'ngayNhap',
 			align: 'center',
