@@ -33,7 +33,8 @@ const TabLichSu = () => {
 	const columns: IColumn<PhoiBang.ILichSuPhoiBang>[] = [
 		{
 			title: 'Số hiệu phôi',
-			dataIndex: 'bieuMauPhoiBangId',
+			dataIndex: ['bieuMauPhoiBang', 'dinhDangSoHieu'],
+			align: 'center',
 			width: 150,
 		},
 		{

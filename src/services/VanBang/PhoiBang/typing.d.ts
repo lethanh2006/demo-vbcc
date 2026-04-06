@@ -20,6 +20,7 @@ declare module PhoiBang {
   }
 
   export interface ILichSuPhoiBang extends IBieuMauPhoiBang {
+    bieuMauPhoiBang?: IRecord;
     bieuMauPhoiBangId: string
     loai: ELoaiLichSuPhoiBang;
   }
