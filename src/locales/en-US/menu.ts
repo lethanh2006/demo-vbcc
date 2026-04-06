@@ -29,6 +29,7 @@ export default {
 	'menu.SoVanBang': 'Diploma Registry',
 	'menu.TraCuuVanBangPublic': 'Public Diploma Search',
 	'menu.ChiTietVanBangPublic': 'Diploma Details',
+	'menu.QuanLyPhoiBang': 'Diploma Management',
 
 	'menu.ThongKe': 'Statistics',
 

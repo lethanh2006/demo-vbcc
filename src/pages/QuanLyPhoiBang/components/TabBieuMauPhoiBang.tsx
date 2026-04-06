@@ -1,0 +1,281 @@
+import MyDatePicker from '@/components/MyDatePicker';
+import { resetFieldsForm } from '@/utils/utils';
+import type { FormInstance } from 'antd';
+import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
+import { useEffect, useState } from 'react';
+import { useIntl, useModel } from 'umi';
+import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
+
+export interface SettingFormatPayload {
+	ten?: string;
+	prefix?: string;
+	suffix?: string;
+	startNumber: number;
+	endNumber: number;
+	ghiChu?: string;
+	ngayNhap: Date;
+}
+
+const SO_HIEU_TOKEN = '{soHieu}';
+
+const parseDinhDangSoHieu = (raw?: string): { prefix?: string; suffix?: string } => {
+	if (!raw) return {};
+	const idx = raw.indexOf(SO_HIEU_TOKEN);
+	if (idx === -1) return {};
+	const pre = raw.slice(0, idx) || undefined;
+	const suf = raw.slice(idx + SO_HIEU_TOKEN.length) || undefined;
+	return { prefix: pre, suffix: suf };
+};
+
+const TabBieuMauPhoiBang = () => {
+	const {
+		record,
+		setVisibleForm,
+		edit,
+		isView,
+		getModel,
+		formSubmiting,
+		visibleForm,
+		setIsView,
+		postYeuCauCapMoiModel,
+		postYeuCauHuyBieuMauModel,
+	} = useModel('vbcc.bieumauphoibang');
+	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
+	const { getModel: getPhoiBang } = useModel('vbcc.phoibang');
+
+	const intl = useIntl();
+	const [form] = Form.useForm<SettingFormatPayload>();
+
+	useEffect(() => {
+		if (!visibleForm) resetFieldsForm(form);
+		else if (record?._id) {
+			let prefix = undefined;
+			let suffix = undefined;
+
+			if (record?.dinhDangSoHieu) {
+				const parsed = parseDinhDangSoHieu(record.dinhDangSoHieu as string);
+				prefix = parsed.prefix;
+				suffix = parsed.suffix;
+			}
+
+			form.setFieldsValue({
+				...(record as any),
+				prefix,
+				suffix,
+				startNumber: record?.soBatDau,
+				endNumber: record?.soKetThuc,
+			});
+		}
+	}, [record?._id, visibleForm, form]);
+
+	const prefix = Form.useWatch('prefix', form);
+	const suffix = Form.useWatch('suffix', form);
+
+	const renderPreview = () => {
+		const pre = prefix ?? '...';
+		const suf = suffix ?? '...';
+
+		return `Mẫu xem trước: ${pre}{số hiệu}${suf}`;
+	};
+
+	const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
+		visible: false,
+	});
+
+	const handleCapMoi = () => {
+		setModalConfig({ visible: true, type: 'CAP_MOI' });
+	};
+
+	const handleHuy = () => {
+		setModalConfig({ visible: true, type: 'HUY' });
+	};
+
+	const handleModalSubmit = async (values: any) => {
+		const mainValues = form.getFieldsValue();
+		const prefixStr = mainValues.prefix ?? '';
+		const suffixStr = mainValues.suffix ?? '';
+		const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
+
+		const payload = {
+			id: record?._id,
+			dinhDangSoHieu: dinhDangSoHieuFormat,
+			soBatDau: values.startNumber,
+			soKetThuc: values.endNumber,
+			ngayNhap: values.ngayNhap,
+			ghiChu: mainValues.ghiChu,
+		};
+
+		try {
+			if (modalConfig.type === 'CAP_MOI') {
+				await postYeuCauCapMoiModel(payload, getModel).then(() => {
+					getLichSu();
+					getPhoiBang();
+					setVisibleForm(false);
+					setIsView(false);
+				});
+			} else if (modalConfig.type === 'HUY') {
+				await postYeuCauHuyBieuMauModel(payload, getModel).then(() => {
+					getLichSu();
+					getPhoiBang();
+					setVisibleForm(false);
+					setIsView(false);
+				});
+			}
+			setModalConfig({ visible: false, type: undefined });
+		} catch (_) {}
+	};
+
+	const onFinish = async (values: SettingFormatPayload) => {
+		const prefixStr = values.prefix ?? '';
+		const suffixStr = values.suffix ?? '';
+		const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
+
+		const payload = {
+			ten: values.ten,
+			dinhDangSoHieu: dinhDangSoHieuFormat,
+			soBatDau: values.startNumber,
+			soKetThuc: values.endNumber,
+			ghiChu: values.ghiChu,
+			ngayNhap: values.ngayNhap,
+		};
+
+		postYeuCauCapMoiModel(payload, getModel)
+			.then(() => {
+				getLichSu();
+				getPhoiBang();
+				setVisibleForm(false);
+				setIsView(false);
+			})
+			.catch((er) => console.log(er));
+	};
+
+	return (
+		<Form onFinish={onFinish} form={form} layout='vertical'>
+			<Row gutter={[12, 0]}>
+				<Col span={24}>
+					<Form.Item label='Tên biểu mẫu' name='ten'>
+						<Input placeholder='Nhập tên biểu mẫu phôi bằng' />
+					</Form.Item>
+				</Col>
+				<Col span={24}>
+					<Form.Item label='Định dạng số hiệu'>
+						<div
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								border: '1px solid #d9d9d9',
+								borderRadius: 6,
+								overflow: 'hidden',
+							}}
+						>
+							<Form.Item name='prefix' noStyle>
+								<Input placeholder='Phần đầu (VD: BGD-)' bordered={false} style={{ flex: 1, minWidth: 0 }} />
+							</Form.Item>
+							<span
+								style={{
+									whiteSpace: 'nowrap',
+									padding: '0 8px',
+									background: '#f5f5f5',
+									borderLeft: '1px solid #d9d9d9',
+									borderRight: '1px solid #d9d9d9',
+									color: '#595959',
+									fontWeight: 500,
+									lineHeight: '30px',
+									userSelect: 'none',
+								}}
+							>
+								{'{số hiệu}'}
+							</span>
+							<Form.Item name='suffix' noStyle>
+								<Input placeholder='Phần đuôi (VD: -HN)' bordered={false} style={{ flex: 1, minWidth: 0 }} />
+							</Form.Item>
+						</div>
+					</Form.Item>
+				</Col>
+				<Col span={24} style={{ marginBottom: 12 }}>
+					<Alert message={renderPreview()} type='info' showIcon />
+				</Col>
+				{!isView && (
+					<>
+						<Col span={12}>
+							<Form.Item
+								label='Số bắt đầu'
+								name='startNumber'
+								rules={[{ required: true, message: 'Vui lòng nhập số bắt đầu' }]}
+							>
+								<InputNumber style={{ width: '100%' }} placeholder='VD: 1' min={0} />
+							</Form.Item>
+						</Col>
+						<Col span={12}>
+							<Form.Item
+								label='Số kết thúc'
+								name='endNumber'
+								dependencies={['startNumber']}
+								rules={[
+									{ required: true, message: 'Vui lòng nhập số kết thúc' },
+									({ getFieldValue }: { getFieldValue: FormInstance['getFieldValue'] }) => ({
+										validator(_: any, value: any) {
+											const startNum = getFieldValue('startNumber');
+											if (
+												value === undefined ||
+												value === null ||
+												startNum === undefined ||
+												startNum === null ||
+												value >= startNum
+											) {
+												return Promise.resolve();
+											}
+											return Promise.reject(new Error('Số kết thúc phải lớn hơn hoặc bằng số bắt đầu'));
+										},
+									}),
+								]}
+							>
+								<InputNumber style={{ width: '100%' }} placeholder='VD: 100' min={0} />
+							</Form.Item>
+						</Col>
+
+						<Col span={24}>
+							<Form.Item label='Ngày nhập' rules={[{ required: true }]} name='ngayNhap'>
+								<MyDatePicker />
+							</Form.Item>
+						</Col>
+					</>
+				)}
+
+				<Col span={24}>
+					<Form.Item label='Ghi chú' name='ghiChu'>
+						<Input.TextArea rows={2} placeholder='Nhập ghi chú' />
+					</Form.Item>
+				</Col>
+			</Row>
+			<div className='form-footer' style={{ marginTop: 24 }}>
+				<Button loading={formSubmiting} htmlType='submit' hidden={isView} type='primary'>
+					{!edit
+						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
+						: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+				</Button>
+				{isView && (
+					<>
+						<Button loading={formSubmiting} onClick={handleCapMoi} type='primary'>
+							Cấp mới biểu mẫu phôi bằng
+						</Button>
+						<Button loading={formSubmiting} onClick={handleHuy} type='primary'>
+							Hủy biểu mẫu phôi bằng
+						</Button>
+					</>
+				)}
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+			</div>
+
+			<ModalNhapThongTinPhoiBang
+				visible={modalConfig.visible}
+				onCancel={() => setModalConfig({ visible: false })}
+				onOk={handleModalSubmit}
+				title={modalConfig.type === 'CAP_MOI' ? 'Cấp mới biểu mẫu phôi bằng' : 'Hủy biểu mẫu phôi bằng'}
+				submiting={formSubmiting}
+			/>
+		</Form>
+	);
+};
+
+export default TabBieuMauPhoiBang;
