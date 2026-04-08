@@ -1,4 +1,5 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
 import { Col, Form, InputNumber, Modal, Row } from 'antd';
@@ -30,7 +31,12 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 			confirmLoading={props.submiting}
 			destroyOnClose
 		>
-			<Form form={form} layout='vertical' onFinish={props.onOk}>
+			<Form	
+				form={form}
+				layout='vertical'
+				onFinish={props.onOk}
+				initialValues={{ ngayNhap: dayjs() }}
+			>
 				<Row gutter={[12, 0]}>
 					<Col span={12}>
 						<Form.Item
@@ -70,7 +76,7 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 					</Col>
 					<Col span={24}>
 						<Form.Item label='Ngày nhập' rules={[{ required: true }]} name='ngayNhap'>
-							<MyDatePicker />
+							<MyDatePicker defaultValue={dayjs()} />
 						</Form.Item>
 					</Col>
 				</Row>
