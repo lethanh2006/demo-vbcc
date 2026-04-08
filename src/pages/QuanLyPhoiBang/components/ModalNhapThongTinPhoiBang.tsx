@@ -4,6 +4,7 @@ import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
 import { Button, Col, Form, InputNumber, Modal, Row } from 'antd';
 import { useEffect } from 'react';
+import { useIntl, useModel } from 'umi';
 
 interface ModalNhapThongTinPhoiBangProps {
 	visible: boolean;
@@ -15,38 +16,25 @@ interface ModalNhapThongTinPhoiBangProps {
 }
 
 const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
+	const { record } = useModel('vbcc.bieumauphoibang');
+	const intl = useIntl();
 	const [form] = Form.useForm();
 
 	const renderFooter = () => {
-		if (props.type === 'HUY') {
-			return [
-				<Button key="submit" type="primary" loading={props.submiting} onClick={() => form.submit()}>
-					Đồng ý
-				</Button>,
-				<Button key="back" onClick={props.onCancel}>
-					Hủy
-				</Button>,
-			];
-		}
 		return [
-			<Button key="back" onClick={props.onCancel}>
-				Hủy
-			</Button>,
 			<Button key="submit" type="primary" loading={props.submiting} onClick={() => form.submit()}>
-				Đồng ý
+				{intl.formatMessage({ id: 'global.button.xacnhan' })}
+			</Button>,
+			<Button key="back" onClick={props.onCancel}>
+				{intl.formatMessage({ id: 'global.button.huy' })}
 			</Button>,
 		];
 	};
 
 	useEffect(() => {
-		if (props.visible) {
-			form.setFieldsValue({
-				ngayNhap: dayjs()
-			});
-		} else {
-			resetFieldsForm(form);
-		}
-	}, [props.visible, form]);
+		if (!props.visible) resetFieldsForm(form);
+		else if (record?._id) form.setFieldsValue(record);
+	}, [record?._id, props.visible, form]);
 
 	return (
 		<Modal
