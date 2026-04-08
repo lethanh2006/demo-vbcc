@@ -6,10 +6,12 @@ import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import { CloseCircleOutlined, DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Dropdown } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ModalNhapThongTinPhoiBang from './components/ModalNhapThongTinPhoiBang';
 
-const QuanLyPhoiBangPage = () => {
+
+const QuanLyPhoiBangPage = ()	 => {
+	const intl = useIntl();
 	const { page, limit, handleView, formSubmiting, postYeuCauCapMoiModel, postYeuCauHuyBieuMauModel, getModel, deleteModel, handleEdit } =
 		useModel('vbcc.bieumauphoibang');
 	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
@@ -68,9 +70,8 @@ const QuanLyPhoiBangPage = () => {
 
 	const columns: IColumn<PhoiBang.IBieuMauPhoiBang>[] = [
 		{
-			title: 'Tên biểu mẫu',
+			title: intl.formatMessage({ id: 'pages.quanLyPhoiBang.tenBieuMau', defaultMessage: 'Tên biểu mẫu' }),
 			dataIndex: 'ten',
-			// align: 'center',
 			width: 150,
 			filterType: 'string',
 			sortable: true,
@@ -81,7 +82,6 @@ const QuanLyPhoiBangPage = () => {
 		{
 			title: 'Định dạng số hiệu',
 			dataIndex: 'dinhDangSoHieu',
-			// align: 'center',
 			width: 150,
 			filterType: 'string',
 			sortable: true,
