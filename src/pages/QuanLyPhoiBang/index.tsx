@@ -28,6 +28,7 @@ const QuanLyPhoiBangPage = () => {
 			onClick: () => {
 				handleView(record);
 			},
+			style: { cursor: 'pointer' },
 		};
 	};
 
@@ -148,9 +149,9 @@ const QuanLyPhoiBangPage = () => {
 
 				return (
 					<>
-						<Dropdown 
-							menu={{ items: menuItems }} 
-							trigger={['hover']} 
+						<Dropdown
+							menu={{ items: menuItems }}
+							trigger={['hover']}
 							placement="bottomLeft"
 						>
 							<ButtonExtend type='link' icon={<MenuOutlined />} />
@@ -165,16 +166,14 @@ const QuanLyPhoiBangPage = () => {
 	return (
 		<>
 			<Card title='Quản lý biểu mẫu phôi bằng'>
-				<div className="custom-table-wrapper">
-					<TableBase
-						columns={columns}
-						Form={FormQuanLyPhoiBang}
-						hideCard
-						widthDrawer={800}
-						dependencies={[page, limit]}
-						modelName='vbcc.bieumauphoibang'
-					/>
-				</div>
+				<TableBase
+					columns={columns}
+					Form={FormQuanLyPhoiBang}
+					hideCard
+					widthDrawer={800}
+					dependencies={[page, limit]}
+					modelName='vbcc.bieumauphoibang'
+				/>
 			</Card>
 			<ModalNhapThongTinPhoiBang
 				visible={modalConfig.visible}

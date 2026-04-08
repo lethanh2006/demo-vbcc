@@ -1,10 +1,11 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
 import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
+
 
 export interface SettingFormatPayload {
 	ten?: string;
@@ -38,7 +39,6 @@ const TabBieuMauPhoiBang = () => {
 		visibleForm,
 		setIsView,
 		postYeuCauCapMoiModel,
-		postYeuCauHuyBieuMauModel,
 	} = useModel('vbcc.bieumauphoibang');
 	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
 	const { getModel: getPhoiBang } = useModel('vbcc.phoibang');
@@ -64,6 +64,7 @@ const TabBieuMauPhoiBang = () => {
 				suffix,
 				startNumber: record?.soBatDau,
 				endNumber: record?.soKetThuc,
+				ngayNhap: record?.ngayNhap ? dayjs(record.ngayNhap) : dayjs(),
 			});
 		}
 	}, [record?._id, visibleForm, form]);
@@ -75,56 +76,56 @@ const TabBieuMauPhoiBang = () => {
 		const pre = prefix ?? '...';
 		const suf = suffix ?? '...';
 
-		return `Mẫu xem trước: ${pre}{số hiệu}${suf}`;
+		return `Mẫu xem trước: ${pre}{số thứ tự phôi}${suf}`;
 	};
 
-	const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
-		visible: false,
-	});
+	// const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
+	// 	visible: false,
+	// });
 
-	const handleCapMoi = () => {
-		setModalConfig({ visible: true, type: 'CAP_MOI' });
-	};
+	// const handleCapMoi = () => {
+	// 	setModalConfig({ visible: true, type: 'CAP_MOI' });
+	// };
 
-	const handleHuy = () => {
-		setModalConfig({ visible: true, type: 'HUY' });
-	};
+	// const handleHuy = () => {
+	// 	setModalConfig({ visible: true, type: 'HUY' });
+	// };
 
-	const handleModalSubmit = async (values: any) => {
-		const mainValues = form.getFieldsValue();
-		const prefixStr = mainValues?.prefix ?? '';
-		const suffixStr = mainValues?.suffix ?? '';
-		const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
+	// const handleModalSubmit = async (values: any) => {
+	// 	const mainValues = form.getFieldsValue();
+	// 	const prefixStr = mainValues?.prefix ?? '';
+	// 	const suffixStr = mainValues?.suffix ?? '';
+	// 	const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
 
-		const payload = {
-			id: record?._id,
-			dinhDangSoHieu: dinhDangSoHieuFormat,
-			soBatDau: values?.startNumber,
-			soKetThuc: values?.endNumber,
-			ngayNhap: values?.ngayNhap,
-			ghiChu: mainValues?.ghiChu,
-			ten: mainValues?.ten,
-		};
+	// 	const payload = {
+	// 		id: record?._id,
+	// 		dinhDangSoHieu: dinhDangSoHieuFormat,
+	// 		soBatDau: values?.startNumber,
+	// 		soKetThuc: values?.endNumber,
+	// 		ngayNhap: values?.ngayNhap,
+	// 		ghiChu: mainValues?.ghiChu,
+	// 		ten: mainValues?.ten,
+	// 	};
 
-		try {
-			if (modalConfig.type === 'CAP_MOI') {
-				await postYeuCauCapMoiModel(payload, getModel).then(() => {
-					getLichSu();
-					getPhoiBang();
-					setVisibleForm(false);
-					setIsView(false);
-				});
-			} else if (modalConfig.type === 'HUY') {
-				await postYeuCauHuyBieuMauModel(payload, getModel).then(() => {
-					getLichSu();
-					getPhoiBang();
-					setVisibleForm(false);
-					setIsView(false);
-				});
-			}
-			setModalConfig({ visible: false, type: undefined });
-		} catch (_) {}
-	};
+	// 	try {
+	// 		if (modalConfig.type === 'CAP_MOI') {
+	// 			await postYeuCauCapMoiModel(payload, getModel).then(() => {
+	// 				getLichSu();
+	// 				getPhoiBang();
+	// 				setVisibleForm(false);
+	// 				setIsView(false);
+	// 			});
+	// 		} else if (modalConfig.type === 'HUY') {
+	// 			await postYeuCauHuyBieuMauModel(payload, getModel).then(() => {
+	// 				getLichSu();
+	// 				getPhoiBang();
+	// 				setVisibleForm(false);
+	// 				setIsView(false);
+	// 			});
+	// 		}
+	// 		setModalConfig({ visible: false, type: undefined });
+	// 	} catch (_) {}
+	// };
 
 	const onFinish = async (values: SettingFormatPayload) => {
 		const prefixStr = values?.prefix ?? '';
@@ -185,7 +186,7 @@ const TabBieuMauPhoiBang = () => {
 									userSelect: 'none',
 								}}
 							>
-								{'{số hiệu}'}
+								{'{số thứ tự phôi}'}
 							</span>
 							<Form.Item name='suffix' noStyle>
 								<Input placeholder='Phần đuôi (VD: -HN)' bordered={false} style={{ flex: 1, minWidth: 0 }} />
@@ -250,31 +251,14 @@ const TabBieuMauPhoiBang = () => {
 				</Col>
 			</Row>
 			<div className='form-footer' style={{ marginTop: 24 }}>
-				<Button loading={formSubmiting} htmlType='submit' hidden={isView} type='primary'>
+				<Button loading={formSubmiting} htmlType='submit' type='primary'>
 					{!edit
 						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
 						: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
 				</Button>
-				{isView && (
-					<>
-						<Button loading={formSubmiting} onClick={handleCapMoi} type='primary'>
-							Cấp mới biểu mẫu phôi bằng
-						</Button>
-						<Button loading={formSubmiting} onClick={handleHuy} type='primary'>
-							Hủy biểu mẫu phôi bằng
-						</Button>
-					</>
-				)}
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 
-			<ModalNhapThongTinPhoiBang
-				visible={modalConfig.visible}
-				onCancel={() => setModalConfig({ visible: false })}
-				onOk={handleModalSubmit}
-				title={modalConfig.type === 'CAP_MOI' ? 'Cấp mới biểu mẫu phôi bằng' : 'Hủy biểu mẫu phôi bằng'}
-				submiting={formSubmiting}
-			/>
 		</Form>
 	);
 };
