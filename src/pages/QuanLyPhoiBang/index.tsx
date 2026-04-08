@@ -182,6 +182,7 @@ const QuanLyPhoiBangPage = () => {
 				onOk={handleModalSubmit}
 				title={modalConfig.type === 'CAP_MOI' ? 'Cấp mới biểu mẫu phôi bằng' : 'Hủy biểu mẫu phôi bằng'}
 				submiting={formSubmiting}
+				type={modalConfig.type}
 			/>
 		</>
 	);

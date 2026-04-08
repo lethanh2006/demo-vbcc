@@ -2,7 +2,7 @@ import MyDatePicker from '@/components/MyDatePicker';
 import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
-import { Col, Form, InputNumber, Modal, Row } from 'antd';
+import { Button, Col, Form, InputNumber, Modal, Row } from 'antd';
 import { useEffect } from 'react';
 
 interface ModalNhapThongTinPhoiBangProps {
@@ -11,13 +11,39 @@ interface ModalNhapThongTinPhoiBangProps {
 	onOk: (values: any) => void;
 	title: string;
 	submiting?: boolean;
+	type?: 'CAP_MOI' | 'HUY';
 }
 
 const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 	const [form] = Form.useForm();
 
+	const renderFooter = () => {
+		if (props.type === 'HUY') {
+			return [
+				<Button key="submit" type="primary" loading={props.submiting} onClick={() => form.submit()}>
+					Đồng ý
+				</Button>,
+				<Button key="back" onClick={props.onCancel}>
+					Hủy
+				</Button>,
+			];
+		}
+		return [
+			<Button key="back" onClick={props.onCancel}>
+				Hủy
+			</Button>,
+			<Button key="submit" type="primary" loading={props.submiting} onClick={() => form.submit()}>
+				Đồng ý
+			</Button>,
+		];
+	};
+
 	useEffect(() => {
-		if (!props.visible) {
+		if (props.visible) {
+			form.setFieldsValue({
+				ngayNhap: dayjs()
+			});
+		} else {
 			resetFieldsForm(form);
 		}
 	}, [props.visible, form]);
@@ -30,6 +56,7 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 			onOk={() => form.submit()}
 			confirmLoading={props.submiting}
 			destroyOnClose
+			footer={renderFooter()}
 		>
 			<Form	
 				form={form}
