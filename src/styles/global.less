@@ -321,6 +321,27 @@ canvas {
 	}
 }
 
+th.ant-table-cell.force-left-align,
+td.ant-table-cell.force-left-align,
+.force-left-align {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  
+  .ant-table-column-sorters,
+  .ant-table-filter-column-title,
+  .ant-table-column-title, 
+  .ttCellWrapper {
+    display: flex !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    width: 100% !important;
+  }
+}
+
+.custom-table-wrapper .ant-table-row {
+    cursor: pointer !important;
+}
+
 // Hiệu ứng chuyển đổi cho mmodal và drawer khi nhấn Expand Button
 .ant-modal {
 	transition:
