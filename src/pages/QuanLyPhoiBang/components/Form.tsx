@@ -28,14 +28,14 @@ const FormQuanLyPhoiBang = () => {
 
     return (
         <Card
-            title={`${edit ? intl.formatMessage({ id: 'global.title.chinhsua' }) : isView ? 'Chi tiết' : intl.formatMessage({ id: 'global.title.themmoi' })} phôi bằng `}
+            title={`${edit ? intl.formatMessage({ id: 'global.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'global.title.chitiet' }) : intl.formatMessage({ id: 'global.title.themmoi' })} phôi bằng `}
         >
             {isView ? (
                 <>
                     <Steps 
                         current={current} 
 						onChange={setCurrent}
-                        items={steps.map(item => ({ title: item.title }))} 
+                        items={steps.map((item, index) => ({ key: index, title: item.title }))} 
                         style={{ marginBottom: 24 }}
                     />
 
