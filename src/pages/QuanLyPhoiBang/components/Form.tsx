@@ -28,7 +28,7 @@ const FormQuanLyPhoiBang = () => {
 
     return (
         <Card
-            title={`${edit ? intl.formatMessage({ id: 'global.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'global.title.chitiet' }) : intl.formatMessage({ id: 'global.title.themmoi' })} phôi bằng `}
+            title={`${edit ? intl.formatMessage({ id: 'global.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'global.button.chitiet' }) : intl.formatMessage({ id: 'global.title.themmoi' })} phôi bằng `}
         >
             {isView ? (
                 <>
