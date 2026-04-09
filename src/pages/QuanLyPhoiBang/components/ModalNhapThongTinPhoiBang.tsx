@@ -56,7 +56,7 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 				<Row gutter={[12, 0]}>
 					<Col span={12}>
 						<Form.Item
-							label='Số bắt đầu'
+							label={intl.formatMessage({ id: 'phoibang.form.sobatdau' })}
 							name='startNumber'
 							rules={[{ required: true, message: 'Vui lòng nhập số bắt đầu' }]}
 						>
@@ -65,7 +65,7 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 					</Col>
 					<Col span={12}>
 						<Form.Item
-							label='Số kết thúc'
+							label={intl.formatMessage({ id: 'phoibang.form.soketthuc' })}
 							name='endNumber'
 							dependencies={['startNumber']}
 							rules={[
@@ -91,7 +91,7 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Ngày nhập' rules={[{ required: true }]} name='ngayNhap'>
+						<Form.Item label={intl.formatMessage({ id: 'phoibang.form.ngaynhap' })} rules={[{ required: true }]} name='ngayNhap'>
 							<MyDatePicker defaultValue={dayjs()} />
 						</Form.Item>
 					</Col>
