@@ -76,7 +76,7 @@ const QuanLyPhoiBangPage = () => {
 
 	const columns: IColumn<PhoiBang.IBieuMauPhoiBang>[] = [
 		{
-			title: intl.formatMessage({ id: 'bieumau.chitiet.tenbieumau' }),
+			title: intl.formatMessage({ id: 'phoibang.column.ten' }),
 			dataIndex: 'ten',
 			width: 150,
 			filterType: 'string',
@@ -86,7 +86,7 @@ const QuanLyPhoiBangPage = () => {
 			render: (text) => text || '-',
 		},
 		{
-			title: 'Định dạng số hiệu',
+			title: intl.formatMessage({ id: 'phoibang.column.dinhdangsohieu' }),
 			dataIndex: 'dinhDangSoHieu',
 			width: 150,
 			filterType: 'string',
@@ -101,7 +101,7 @@ const QuanLyPhoiBangPage = () => {
 		// 	render: (text) => dayjs(text).format('DD/MM/YYYY'),
 		// },
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'phoibang.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 200,
 			filterType: 'string',
@@ -110,7 +110,7 @@ const QuanLyPhoiBangPage = () => {
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'phoibang.column.thaotac' }),
 			align: 'center',
 			width: 80,
 			render: (text, record) => {
@@ -171,7 +171,7 @@ const QuanLyPhoiBangPage = () => {
 
 	return (
 		<>
-			<Card title='Quản lý biểu mẫu phôi bằng'>
+			<Card title={intl.formatMessage({ id: 'phoibang.title' })}>
 				<TableBase
 					columns={columns}
 					Form={FormQuanLyPhoiBang}
@@ -185,7 +185,7 @@ const QuanLyPhoiBangPage = () => {
 				visible={modalConfig.visible}
 				onCancel={() => setModalConfig({ visible: false })}
 				onOk={handleModalSubmit}
-				title={modalConfig.type === 'CAP_MOI' ? 'Cấp mới biểu mẫu phôi bằng' : 'Hủy biểu mẫu phôi bằng'}
+				title={modalConfig.type === 'CAP_MOI' ? intl.formatMessage({ id: 'phoibang.modal.capmoi.title' }) : intl.formatMessage({ id: 'phoibang.modal.huy.title' })}
 				submiting={formSubmiting}
 				type={modalConfig.type}
 			/>

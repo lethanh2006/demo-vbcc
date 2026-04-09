@@ -19,22 +19,22 @@ const FormQuanLyPhoiBang = () => {
 
     const steps = [
         {
-            title: 'Biểu mẫu phôi bằng',
+            title: intl.formatMessage({ id: 'phoibang.form.bieumau' }),
             content: <TabBieuMauPhoiBang />,
         },
         {
-            title: 'Danh sách phôi bằng',
+            title: intl.formatMessage({ id: 'phoibang.form.danhsach' }),
             content: <TabDanhSachPhoiBang />,
         },
         {
-            title: 'Lịch sử',
+            title: intl.formatMessage({ id: 'phoibang.form.lichsu' }),
             content: <TabLichSu />,
         },
     ];
 
     return (
         <Card
-            title={`${edit ? intl.formatMessage({ id: 'global.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'global.button.chitiet' }) : intl.formatMessage({ id: 'global.title.themmoi' })} phôi bằng `}
+            title={`${edit ? intl.formatMessage({ id: 'global.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'global.button.chitiet' }) : intl.formatMessage({ id: 'global.title.themmoi' })} ${intl.formatMessage({ id: 'phoibang.text.phoibang' })}`}
         >
             {isView ? (
                 <>

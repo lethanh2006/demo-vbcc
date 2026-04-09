@@ -10,6 +10,7 @@ import tracuupublic from './tracuupublic';
 import trangchu from './trangchu';
 import xacminhvanbang from './xacminhvanbang';
 import xulydexuat from './xulydexuat';
+import quanlyphoivanbang from './quanlyphoivanbang';
 
 export default {
 	...login,
@@ -24,6 +25,7 @@ export default {
 	...tracuupublic,
 	...dotcapbang,
 	...danhmuc,
+	...quanlyphoivanbang,
 
 	'pages.trangchu.title': 'PHÂN HỆ VĂN VẰNG CHỨNG CHỈ',
 	'pages.trangchu.subtitle': 'HỆ THỐNG PHẦN MỀM CHỈ ĐẠO, ĐIỀU HÀNH',
