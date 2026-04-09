@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Steps } from 'antd';
 import { useIntl, useModel } from 'umi';
 import TabBieuMauPhoiBang from './TabBieuMauPhoiBang';
@@ -6,10 +6,16 @@ import TabDanhSachPhoiBang from './TabDanhSachPhoiBang';
 import TabLichSu from './TabLichSu';
 
 const FormQuanLyPhoiBang = () => {
-    const { edit, isView } = useModel('vbcc.bieumauphoibang');
+    const { edit, isView, visibleForm } = useModel('vbcc.bieumauphoibang');
     const intl = useIntl();
     
     const [current, setCurrent] = useState(0);
+
+    useEffect(() => {
+        if (visibleForm) {
+            setCurrent(0);
+        }
+    }, [visibleForm]);
 
     const steps = [
         {

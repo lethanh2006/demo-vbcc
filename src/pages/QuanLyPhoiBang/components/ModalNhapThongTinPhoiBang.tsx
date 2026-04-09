@@ -16,7 +16,7 @@ interface ModalNhapThongTinPhoiBangProps {
 }
 
 const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
-	const { record } = useModel('vbcc.bieumauphoibang');
+	const { record, visibleForm } = useModel('vbcc.bieumauphoibang');
 	const intl = useIntl();
 	const [form] = Form.useForm();
 
@@ -32,9 +32,10 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 	};
 
 	useEffect(() => {
-		if (!props.visible) resetFieldsForm(form);
+		if (!visibleForm) resetFieldsForm(form);
 		else if (record?._id) form.setFieldsValue(record);
-	}, [record?._id, props.visible, form]);
+		else form.setFieldsValue({ ngayNhap: dayjs() });
+	}, [record?._id, visibleForm, form]);
 
 	return (
 		<Modal

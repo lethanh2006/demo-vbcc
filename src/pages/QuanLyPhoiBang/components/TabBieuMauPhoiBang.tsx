@@ -39,6 +39,7 @@ const TabBieuMauPhoiBang = () => {
 		visibleForm,
 		setIsView,
 		postYeuCauCapMoiModel,
+		putModel,
 	} = useModel('vbcc.bieumauphoibang');
 	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
 	const { getModel: getPhoiBang } = useModel('vbcc.phoibang');
@@ -132,23 +133,34 @@ const TabBieuMauPhoiBang = () => {
 		const suffixStr = values?.suffix ?? '';
 		const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
 
-		const payload = {
-			ten: values?.ten,
-			dinhDangSoHieu: dinhDangSoHieuFormat,
-			soBatDau: values?.startNumber,
-			soKetThuc: values?.endNumber,
-			ghiChu: values?.ghiChu,
-			ngayNhap: values?.ngayNhap,
-		};
-
-		postYeuCauCapMoiModel(payload, getModel)
-			.then(() => {
-				getLichSu();
-				getPhoiBang();
-				setVisibleForm(false);
-				setIsView(false);
-			})
-			.catch((er) => console.log(er));
+		if (edit) {
+			const payload = {
+				ten: values?.ten,
+				dinhDangSoHieu: dinhDangSoHieuFormat,
+				ghiChu: values?.ghiChu,
+			};
+			putModel(record?._id!, payload, getModel)
+				.then(() => {
+				})
+				.catch((er) => console.log(er));
+		} else {
+			const payload = {
+				ten: values?.ten,
+				dinhDangSoHieu: dinhDangSoHieuFormat,
+				soBatDau: values?.startNumber,
+				soKetThuc: values?.endNumber,
+				ghiChu: values?.ghiChu,
+				ngayNhap: values?.ngayNhap,
+			};
+			postYeuCauCapMoiModel(payload, getModel)
+				.then(() => {
+					getLichSu();
+					getPhoiBang();
+					setVisibleForm(false);
+					setIsView(false);
+				})
+				.catch((er) => console.log(er));
+		}
 	};
 
 	return (

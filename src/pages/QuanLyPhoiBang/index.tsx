@@ -9,10 +9,9 @@ import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalNhapThongTinPhoiBang from './components/ModalNhapThongTinPhoiBang';
 
-
-const QuanLyPhoiBangPage = ()	 => {
+const QuanLyPhoiBangPage = () => {
 	const intl = useIntl();
-	const { page, limit, handleView, formSubmiting, postYeuCauCapMoiModel, postYeuCauHuyBieuMauModel, getModel, deleteModel, handleEdit } =
+	const { page, limit, formSubmiting, postYeuCauCapMoiModel, postYeuCauHuyBieuMauModel, getModel, deleteModel, handleEdit, setEdit, setIsView, setRecord, setVisibleForm } =
 		useModel('vbcc.bieumauphoibang');
 	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
 	const { getModel: getPhoiBang } = useModel('vbcc.phoibang');
@@ -25,10 +24,17 @@ const QuanLyPhoiBangPage = ()	 => {
 		visible: false,
 	});
 
+	const handleRowClick = (rec: PhoiBang.IBieuMauPhoiBang) => {
+		setRecord(rec);
+		setEdit(true);
+		setIsView(true);
+		setVisibleForm(true);
+	};
+
 	const onCell = (record: PhoiBang.IBieuMauPhoiBang) => {
 		return {
 			onClick: () => {
-				handleView(record);
+				handleRowClick(record);
 			},
 			style: { cursor: 'pointer' },
 		};
@@ -70,7 +76,7 @@ const QuanLyPhoiBangPage = ()	 => {
 
 	const columns: IColumn<PhoiBang.IBieuMauPhoiBang>[] = [
 		{
-			title: intl.formatMessage({ id: 'pages.quanLyPhoiBang.tenBieuMau', defaultMessage: 'Tên biểu mẫu' }),
+			title: intl.formatMessage({ id: 'bieumau.chitiet.tenbieumau' }),
 			dataIndex: 'ten',
 			width: 150,
 			filterType: 'string',
