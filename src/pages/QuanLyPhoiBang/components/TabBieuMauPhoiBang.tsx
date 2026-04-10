@@ -1,10 +1,11 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
 import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
+
 
 export interface SettingFormatPayload {
 	ten?: string;
@@ -38,7 +39,7 @@ const TabBieuMauPhoiBang = () => {
 		visibleForm,
 		setIsView,
 		postYeuCauCapMoiModel,
-		postYeuCauHuyBieuMauModel,
+		putModel,
 	} = useModel('vbcc.bieumauphoibang');
 	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
 	const { getModel: getPhoiBang } = useModel('vbcc.phoibang');
@@ -64,6 +65,7 @@ const TabBieuMauPhoiBang = () => {
 				suffix,
 				startNumber: record?.soBatDau,
 				endNumber: record?.soKetThuc,
+				ngayNhap: record?.ngayNhap ? dayjs(record.ngayNhap) : dayjs(),
 			});
 		}
 	}, [record?._id, visibleForm, form]);
@@ -75,91 +77,102 @@ const TabBieuMauPhoiBang = () => {
 		const pre = prefix ?? '...';
 		const suf = suffix ?? '...';
 
-		return `Mẫu xem trước: ${pre}{số hiệu}${suf}`;
+		return `${intl.formatMessage({ id: 'phoibang.text.maudemo' })} ${pre}${intl.formatMessage({ id: 'phoibang.text.sothutuphoi' })}${suf}`;
 	};
 
-	const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
-		visible: false,
-	});
+	// const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
+	// 	visible: false,
+	// });
 
-	const handleCapMoi = () => {
-		setModalConfig({ visible: true, type: 'CAP_MOI' });
-	};
+	// const handleCapMoi = () => {
+	// 	setModalConfig({ visible: true, type: 'CAP_MOI' });
+	// };
 
-	const handleHuy = () => {
-		setModalConfig({ visible: true, type: 'HUY' });
-	};
+	// const handleHuy = () => {
+	// 	setModalConfig({ visible: true, type: 'HUY' });
+	// };
 
-	const handleModalSubmit = async (values: any) => {
-		const mainValues = form.getFieldsValue();
-		const prefixStr = mainValues?.prefix ?? '';
-		const suffixStr = mainValues?.suffix ?? '';
-		const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
+	// const handleModalSubmit = async (values: any) => {
+	// 	const mainValues = form.getFieldsValue();
+	// 	const prefixStr = mainValues?.prefix ?? '';
+	// 	const suffixStr = mainValues?.suffix ?? '';
+	// 	const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
 
-		const payload = {
-			id: record?._id,
-			dinhDangSoHieu: dinhDangSoHieuFormat,
-			soBatDau: values?.startNumber,
-			soKetThuc: values?.endNumber,
-			ngayNhap: values?.ngayNhap,
-			ghiChu: mainValues?.ghiChu,
-			ten: mainValues?.ten,
-		};
+	// 	const payload = {
+	// 		id: record?._id,
+	// 		dinhDangSoHieu: dinhDangSoHieuFormat,
+	// 		soBatDau: values?.startNumber,
+	// 		soKetThuc: values?.endNumber,
+	// 		ngayNhap: values?.ngayNhap,
+	// 		ghiChu: mainValues?.ghiChu,
+	// 		ten: mainValues?.ten,
+	// 	};
 
-		try {
-			if (modalConfig.type === 'CAP_MOI') {
-				await postYeuCauCapMoiModel(payload, getModel).then(() => {
-					getLichSu();
-					getPhoiBang();
-					setVisibleForm(false);
-					setIsView(false);
-				});
-			} else if (modalConfig.type === 'HUY') {
-				await postYeuCauHuyBieuMauModel(payload, getModel).then(() => {
-					getLichSu();
-					getPhoiBang();
-					setVisibleForm(false);
-					setIsView(false);
-				});
-			}
-			setModalConfig({ visible: false, type: undefined });
-		} catch (_) {}
-	};
+	// 	try {
+	// 		if (modalConfig.type === 'CAP_MOI') {
+	// 			await postYeuCauCapMoiModel(payload, getModel).then(() => {
+	// 				getLichSu();
+	// 				getPhoiBang();
+	// 				setVisibleForm(false);
+	// 				setIsView(false);
+	// 			});
+	// 		} else if (modalConfig.type === 'HUY') {
+	// 			await postYeuCauHuyBieuMauModel(payload, getModel).then(() => {
+	// 				getLichSu();
+	// 				getPhoiBang();
+	// 				setVisibleForm(false);
+	// 				setIsView(false);
+	// 			});
+	// 		}
+	// 		setModalConfig({ visible: false, type: undefined });
+	// 	} catch (_) {}
+	// };
 
 	const onFinish = async (values: SettingFormatPayload) => {
 		const prefixStr = values?.prefix ?? '';
 		const suffixStr = values?.suffix ?? '';
 		const dinhDangSoHieuFormat = `${prefixStr}${SO_HIEU_TOKEN}${suffixStr}`;
 
-		const payload = {
-			ten: values?.ten,
-			dinhDangSoHieu: dinhDangSoHieuFormat,
-			soBatDau: values?.startNumber,
-			soKetThuc: values?.endNumber,
-			ghiChu: values?.ghiChu,
-			ngayNhap: values?.ngayNhap,
-		};
-
-		postYeuCauCapMoiModel(payload, getModel)
-			.then(() => {
-				getLichSu();
-				getPhoiBang();
-				setVisibleForm(false);
-				setIsView(false);
-			})
-			.catch((er) => console.log(er));
+		if (edit) {
+			const payload = {
+				ten: values?.ten,
+				dinhDangSoHieu: dinhDangSoHieuFormat,
+				ghiChu: values?.ghiChu,
+			};
+			putModel(record?._id!, payload, getModel)
+				.then(() => {
+				})
+				.catch((er) => console.log(er));
+		} else {
+			const payload = {
+				ten: values?.ten,
+				dinhDangSoHieu: dinhDangSoHieuFormat,
+				soBatDau: values?.startNumber,
+				soKetThuc: values?.endNumber,
+				ghiChu: values?.ghiChu,
+				ngayNhap: values?.ngayNhap,
+			};
+			postYeuCauCapMoiModel(payload, getModel)
+				.then(() => {
+					getLichSu();
+					getPhoiBang();
+					setVisibleForm(false);
+					setIsView(false);
+				})
+				.catch((er) => console.log(er));
+		}
 	};
 
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
 				<Col span={24}>
-					<Form.Item label='Tên biểu mẫu' name='ten'>
-						<Input placeholder='Nhập tên biểu mẫu phôi bằng' />
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.text.tenbieumau' })} name='ten'>
+						<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.tenbieumau' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24}>
-					<Form.Item label='Định dạng số hiệu'>
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.column.dinhdangsohieu' })}>
 						<div
 							style={{
 								display: 'flex',
@@ -170,7 +183,7 @@ const TabBieuMauPhoiBang = () => {
 							}}
 						>
 							<Form.Item name='prefix' noStyle>
-								<Input placeholder='Phần đầu (VD: BGD-)' bordered={false} style={{ flex: 1, minWidth: 0 }} />
+								<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.phandau' })} bordered={false} style={{ flex: 1, minWidth: 0 }} />
 							</Form.Item>
 							<span
 								style={{
@@ -185,10 +198,10 @@ const TabBieuMauPhoiBang = () => {
 									userSelect: 'none',
 								}}
 							>
-								{'{số hiệu}'}
+								{intl.formatMessage({ id: 'phoibang.text.sothutuphoi' })}
 							</span>
 							<Form.Item name='suffix' noStyle>
-								<Input placeholder='Phần đuôi (VD: -HN)' bordered={false} style={{ flex: 1, minWidth: 0 }} />
+								<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.phanduoi' })} bordered={false} style={{ flex: 1, minWidth: 0 }} />
 							</Form.Item>
 						</div>
 					</Form.Item>
@@ -200,20 +213,20 @@ const TabBieuMauPhoiBang = () => {
 					<>
 						<Col span={12}>
 							<Form.Item
-								label='Số bắt đầu'
+								label={intl.formatMessage({ id: 'phoibang.form.sobatdau' })}
 								name='startNumber'
-								rules={[{ required: true, message: 'Vui lòng nhập số bắt đầu' }]}
+								rules={[{ required: true, message: intl.formatMessage({ id: 'phoibang.validate.sobatdau' }) }]}
 							>
-								<InputNumber style={{ width: '100%' }} placeholder='VD: 1' min={0} />
+								<InputNumber style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.vd1' })} min={0} />
 							</Form.Item>
 						</Col>
 						<Col span={12}>
 							<Form.Item
-								label='Số kết thúc'
+								label={intl.formatMessage({ id: 'phoibang.form.soketthuc' })}
 								name='endNumber'
 								dependencies={['startNumber']}
 								rules={[
-									{ required: true, message: 'Vui lòng nhập số kết thúc' },
+									{ required: true, message: intl.formatMessage({ id: 'phoibang.validate.soketthuc' }) },
 									({ getFieldValue }: { getFieldValue: FormInstance['getFieldValue'] }) => ({
 										validator(_: any, value: any) {
 											const startNum = getFieldValue('startNumber');
@@ -226,17 +239,17 @@ const TabBieuMauPhoiBang = () => {
 											) {
 												return Promise.resolve();
 											}
-											return Promise.reject(new Error('Số kết thúc phải lớn hơn hoặc bằng số bắt đầu'));
+											return Promise.reject(new Error(intl.formatMessage({ id: 'phoibang.validate.soketthuclonhon' })));
 										},
 									}),
 								]}
 							>
-								<InputNumber style={{ width: '100%' }} placeholder='VD: 100' min={0} />
+								<InputNumber style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.vd100' })} min={0} />
 							</Form.Item>
 						</Col>
 
 						<Col span={24}>
-							<Form.Item label='Ngày nhập' rules={[{ required: true }]} name='ngayNhap'>
+							<Form.Item label={intl.formatMessage({ id: 'phoibang.form.ngaynhap' })} rules={[{ required: true }]} name='ngayNhap'>
 								<MyDatePicker />
 							</Form.Item>
 						</Col>
@@ -244,37 +257,20 @@ const TabBieuMauPhoiBang = () => {
 				)}
 
 				<Col span={24}>
-					<Form.Item label='Ghi chú' name='ghiChu'>
-						<Input.TextArea rows={2} placeholder='Nhập ghi chú' />
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.column.ghichu' })} name='ghiChu'>
+						<Input.TextArea rows={2} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.ghichu' })} />
 					</Form.Item>
 				</Col>
 			</Row>
 			<div className='form-footer' style={{ marginTop: 24 }}>
-				<Button loading={formSubmiting} htmlType='submit' hidden={isView} type='primary'>
+				<Button loading={formSubmiting} htmlType='submit' type='primary'>
 					{!edit
 						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
 						: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
 				</Button>
-				{isView && (
-					<>
-						<Button loading={formSubmiting} onClick={handleCapMoi} type='primary'>
-							Cấp mới biểu mẫu phôi bằng
-						</Button>
-						<Button loading={formSubmiting} onClick={handleHuy} type='primary'>
-							Hủy biểu mẫu phôi bằng
-						</Button>
-					</>
-				)}
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 
-			<ModalNhapThongTinPhoiBang
-				visible={modalConfig.visible}
-				onCancel={() => setModalConfig({ visible: false })}
-				onOk={handleModalSubmit}
-				title={modalConfig.type === 'CAP_MOI' ? 'Cấp mới biểu mẫu phôi bằng' : 'Hủy biểu mẫu phôi bằng'}
-				submiting={formSubmiting}
-			/>
 		</Form>
 	);
 };

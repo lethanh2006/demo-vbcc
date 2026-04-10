@@ -1,43 +1,60 @@
-import { Card, Tabs } from 'antd';
+import { useEffect, useState } from 'react';
+import { Card, Steps } from 'antd';
 import { useIntl, useModel } from 'umi';
 import TabBieuMauPhoiBang from './TabBieuMauPhoiBang';
 import TabDanhSachPhoiBang from './TabDanhSachPhoiBang';
 import TabLichSu from './TabLichSu';
 
 const FormQuanLyPhoiBang = () => {
-	const { edit, isView } = useModel('vbcc.bieumauphoibang');
-	const intl = useIntl();
+    const { edit, isView, visibleForm } = useModel('vbcc.bieumauphoibang');
+    const intl = useIntl();
+    
+    const [current, setCurrent] = useState(0);
 
-	return (
-		<Card
-			title={`${edit ? intl.formatMessage({ id: 'global.title.chinhsua' }) : isView ? 'Chi tiết' : intl.formatMessage({ id: 'global.title.themmoi' })} phôi bằng `}
-		>
-			{isView ? (
-				<Tabs
-					defaultActiveKey='1'
-					items={[
-						{
-							key: '1',
-							label: 'Biểu mẫu phôi bằng',
-							children: <TabBieuMauPhoiBang />,
-						},
-						{
-							key: '2',
-							label: 'Danh sách phôi bằng',
-							children: <TabDanhSachPhoiBang />,
-						},
-						{
-							key: '3',
-							label: 'Lịch sử',
-							children: <TabLichSu />,
-						},
-					]}
-				/>
-			) : (
-				<TabBieuMauPhoiBang />
-			)}
-		</Card>
-	);
+    useEffect(() => {
+        if (visibleForm) {
+            setCurrent(0);
+        }
+    }, [visibleForm]);
+
+    const steps = [
+        {
+            title: intl.formatMessage({ id: 'phoibang.form.bieumau' }),
+            content: <TabBieuMauPhoiBang />,
+        },
+        {
+            title: intl.formatMessage({ id: 'phoibang.form.danhsach' }),
+            content: <TabDanhSachPhoiBang />,
+        },
+        {
+            title: intl.formatMessage({ id: 'phoibang.form.lichsu' }),
+            content: <TabLichSu />,
+        },
+    ];
+
+    return (
+        <Card
+            title={`${edit ? intl.formatMessage({ id: 'global.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'global.button.chitiet' }) : intl.formatMessage({ id: 'global.title.themmoi' })} ${intl.formatMessage({ id: 'phoibang.text.phoibang' })}`}
+        >
+            {isView ? (
+                <>
+                    <Steps 
+                        current={current} 
+						onChange={setCurrent}
+                        items={steps.map((item, index) => ({ key: index, title: item.title }))} 
+                        style={{ marginBottom: 24 }}
+                    />
+
+                    <div className="steps-content" style={{ minHeight: '200px', marginBottom: 24 }}>
+                        {steps[current].content}
+                    </div>
+
+                </>
+            ) : (
+                <TabBieuMauPhoiBang />
+            )}
+        </Card>
+    );
 };
 
 export default FormQuanLyPhoiBang;

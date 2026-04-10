@@ -3,14 +3,15 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { IColumn } from '@/components/Table/typing';
 import FormQuanLyPhoiBang from '@/pages/QuanLyPhoiBang/components/Form';
 import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
-import { DeleteOutlined, EyeOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
-import { Card, Popover, Space } from 'antd';
+import { CloseCircleOutlined, DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
+import { Card, Dropdown } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ModalNhapThongTinPhoiBang from './components/ModalNhapThongTinPhoiBang';
 
 const QuanLyPhoiBangPage = () => {
-	const { page, limit, handleView, formSubmiting, postYeuCauCapMoiModel, postYeuCauHuyBieuMauModel, getModel } =
+	const intl = useIntl();
+	const { page, limit, formSubmiting, postYeuCauCapMoiModel, postYeuCauHuyBieuMauModel, getModel, deleteModel, handleEdit, setEdit, setIsView, setRecord, setVisibleForm } =
 		useModel('vbcc.bieumauphoibang');
 	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
 	const { getModel: getPhoiBang } = useModel('vbcc.phoibang');
@@ -23,11 +24,19 @@ const QuanLyPhoiBangPage = () => {
 		visible: false,
 	});
 
+	const handleRowClick = (rec: PhoiBang.IBieuMauPhoiBang) => {
+		setRecord(rec);
+		setEdit(true);
+		setIsView(true);
+		setVisibleForm(true);
+	};
+
 	const onCell = (record: PhoiBang.IBieuMauPhoiBang) => {
 		return {
 			onClick: () => {
-				handleView(record);
+				handleRowClick(record);
 			},
+			style: { cursor: 'pointer' },
 		};
 	};
 
@@ -67,18 +76,22 @@ const QuanLyPhoiBangPage = () => {
 
 	const columns: IColumn<PhoiBang.IBieuMauPhoiBang>[] = [
 		{
-			title: 'Tên biểu mẫu',
+			title: intl.formatMessage({ id: 'phoibang.column.ten' }),
 			dataIndex: 'ten',
-			align: 'center',
 			width: 150,
+			filterType: 'string',
+			sortable: true,
+			className: 'force-left-align',
 			onCell,
 			render: (text) => text || '-',
 		},
 		{
-			title: 'Định dạng số hiệu',
+			title: intl.formatMessage({ id: 'phoibang.column.dinhdangsohieu' }),
 			dataIndex: 'dinhDangSoHieu',
-			align: 'center',
 			width: 150,
+			filterType: 'string',
+			sortable: true,
+			className: 'force-left-align',
 			onCell,
 		},
 		// {
@@ -88,56 +101,68 @@ const QuanLyPhoiBangPage = () => {
 		// 	render: (text) => dayjs(text).format('DD/MM/YYYY'),
 		// },
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'phoibang.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 200,
+			filterType: 'string',
+			sortable: true,
+			className: 'force-left-align',
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'phoibang.column.thaotac' }),
 			align: 'center',
 			width: 80,
 			render: (text, record) => {
+				const menuItems = [
+					// {
+					//     key: 'view',
+					//     icon: <EyeOutlined />,
+					//     label: 'Xem chi tiết',
+					//     onClick: () => handleView(record),
+					// },
+					{
+						key: 'capMoi',
+						icon: <PlusOutlined />,
+						label: intl.formatMessage({ id: 'phoibang.button.capmoiphoi' }),
+						disabled: formSubmiting,
+						onClick: () => handleCapMoi(record),
+					},
+					{
+						key: 'edit',
+						icon: <EditOutlined />,
+						label: intl.formatMessage({ id: 'phoibang.button.chinhsua' }),
+						disabled: formSubmiting,
+						onClick: () => handleEdit(record),
+					},
+					{
+						key: 'huy',
+						icon: <CloseCircleOutlined />,
+						label: intl.formatMessage({ id: 'phoibang.button.huyphoi' }),
+						danger: true,
+						disabled: formSubmiting,
+						onClick: () => handleHuy(record),
+					},
+					{
+						key: 'delete',
+						icon: <DeleteOutlined />,
+						label: intl.formatMessage({ id: 'phoibang.button.xoa' }),
+						danger: true,
+						disabled: formSubmiting,
+						onClick: () => deleteModel(record._id!),
+					},
+				];
+
 				return (
 					<>
-						<Popover
-							trigger={'hover'}
-							content={
-								<Space size={'small'}>
-									{/* Xem chi tiết */}
-									<ButtonExtend
-										tooltip={'Xem chi tiết biểu mẫu'}
-										icon={<EyeOutlined />}
-										type='link'
-										onClick={() => {
-											handleView(record);
-										}}
-									/>
-									{/* cấp mới */}
-									<ButtonExtend
-										tooltip={'Cấp mới biểu mẫu'}
-										loading={formSubmiting}
-										icon={<PlusOutlined />}
-										type='link'
-										onClick={() => {
-											handleCapMoi(record);
-										}}
-									/>
-									{/* hủy */}
-									<ButtonExtend
-										tooltip={'Hủy biểu mẫu'}
-										loading={formSubmiting}
-										icon={<DeleteOutlined />}
-										type='link'
-										onClick={() => {
-											handleHuy(record);
-										}}
-									/>
-								</Space>
-							}
+						<Dropdown
+							menu={{ items: menuItems }}
+							trigger={['hover']}
+							placement="bottomLeft"
 						>
 							<ButtonExtend type='link' icon={<MenuOutlined />} />
-						</Popover>
+						</Dropdown>
+
 					</>
 				);
 			},
@@ -146,7 +171,7 @@ const QuanLyPhoiBangPage = () => {
 
 	return (
 		<>
-			<Card title='Quản lý biểu mẫu phôi bằng'>
+			<Card title={intl.formatMessage({ id: 'phoibang.title' })}>
 				<TableBase
 					columns={columns}
 					Form={FormQuanLyPhoiBang}
@@ -160,8 +185,9 @@ const QuanLyPhoiBangPage = () => {
 				visible={modalConfig.visible}
 				onCancel={() => setModalConfig({ visible: false })}
 				onOk={handleModalSubmit}
-				title={modalConfig.type === 'CAP_MOI' ? 'Cấp mới biểu mẫu phôi bằng' : 'Hủy biểu mẫu phôi bằng'}
+				title={modalConfig.type === 'CAP_MOI' ? intl.formatMessage({ id: 'phoibang.modal.capmoi.title' }) : intl.formatMessage({ id: 'phoibang.modal.huy.title' })}
 				submiting={formSubmiting}
+				type={modalConfig.type}
 			/>
 		</>
 	);

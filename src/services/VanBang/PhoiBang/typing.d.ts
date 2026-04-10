@@ -7,6 +7,8 @@ declare module PhoiBang {
     soHieuVanBang: string;
     idBieuMauPhoiBang?: string;
     bieuMauPhoiBang?: IBieuMauPhoiBang;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
   }
 
   export interface IBieuMauPhoiBang {

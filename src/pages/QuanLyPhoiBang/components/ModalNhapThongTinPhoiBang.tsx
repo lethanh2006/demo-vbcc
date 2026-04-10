@@ -1,8 +1,10 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
-import { Col, Form, InputNumber, Modal, Row } from 'antd';
+import { Button, Col, Form, InputNumber, Modal, Row } from 'antd';
 import { useEffect } from 'react';
+import { useIntl, useModel } from 'umi';
 
 interface ModalNhapThongTinPhoiBangProps {
 	visible: boolean;
@@ -10,16 +12,30 @@ interface ModalNhapThongTinPhoiBangProps {
 	onOk: (values: any) => void;
 	title: string;
 	submiting?: boolean;
+	type?: 'CAP_MOI' | 'HUY';
 }
 
 const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
+	const { record, visibleForm } = useModel('vbcc.bieumauphoibang');
+	const intl = useIntl();
 	const [form] = Form.useForm();
 
+	const renderFooter = () => {
+		return [
+			<Button key="submit" type="primary" loading={props.submiting} onClick={() => form.submit()}>
+				{intl.formatMessage({ id: 'global.button.xacnhan' })}
+			</Button>,
+			<Button key="back" onClick={props.onCancel}>
+				{intl.formatMessage({ id: 'global.button.huy' })}
+			</Button>,
+		];
+	};
+
 	useEffect(() => {
-		if (!props.visible) {
-			resetFieldsForm(form);
-		}
-	}, [props.visible, form]);
+		if (!visibleForm) resetFieldsForm(form);
+		else if (record?._id) form.setFieldsValue(record);
+		else form.setFieldsValue({ ngayNhap: dayjs() });
+	}, [record?._id, visibleForm, form]);
 
 	return (
 		<Modal
@@ -29,12 +45,18 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 			onOk={() => form.submit()}
 			confirmLoading={props.submiting}
 			destroyOnClose
+			footer={renderFooter()}
 		>
-			<Form form={form} layout='vertical' onFinish={props.onOk}>
+			<Form	
+				form={form}
+				layout='vertical'
+				onFinish={props.onOk}
+				initialValues={{ ngayNhap: dayjs() }}
+			>
 				<Row gutter={[12, 0]}>
 					<Col span={12}>
 						<Form.Item
-							label='Số bắt đầu'
+							label={intl.formatMessage({ id: 'phoibang.form.sobatdau' })}
 							name='startNumber'
 							rules={[{ required: true, message: 'Vui lòng nhập số bắt đầu' }]}
 						>
@@ -43,7 +65,7 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 					</Col>
 					<Col span={12}>
 						<Form.Item
-							label='Số kết thúc'
+							label={intl.formatMessage({ id: 'phoibang.form.soketthuc' })}
 							name='endNumber'
 							dependencies={['startNumber']}
 							rules={[
@@ -69,8 +91,8 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Ngày nhập' rules={[{ required: true }]} name='ngayNhap'>
-							<MyDatePicker />
+						<Form.Item label={intl.formatMessage({ id: 'phoibang.form.ngaynhap' })} rules={[{ required: true }]} name='ngayNhap'>
+							<MyDatePicker defaultValue={dayjs()} />
 						</Form.Item>
 					</Col>
 				</Row>
