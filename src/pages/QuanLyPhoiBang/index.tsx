@@ -124,21 +124,21 @@ const QuanLyPhoiBangPage = () => {
 					{
 						key: 'capMoi',
 						icon: <PlusOutlined />,
-						label: 'Cấp mới phôi bằng',
+						label: intl.formatMessage({ id: 'phoibang.button.capmoiphoi' }),
 						disabled: formSubmiting,
 						onClick: () => handleCapMoi(record),
 					},
 					{
 						key: 'edit',
 						icon: <EditOutlined />,
-						label: 'Chỉnh sửa',
+						label: intl.formatMessage({ id: 'phoibang.button.chinhsua' }),
 						disabled: formSubmiting,
 						onClick: () => handleEdit(record),
 					},
 					{
 						key: 'huy',
 						icon: <CloseCircleOutlined />,
-						label: 'Hủy phôi bằng',
+						label: intl.formatMessage({ id: 'phoibang.button.huyphoi' }),
 						danger: true,
 						disabled: formSubmiting,
 						onClick: () => handleHuy(record),
@@ -146,7 +146,7 @@ const QuanLyPhoiBangPage = () => {
 					{
 						key: 'delete',
 						icon: <DeleteOutlined />,
-						label: 'Xóa',
+						label: intl.formatMessage({ id: 'phoibang.button.xoa' }),
 						danger: true,
 						disabled: formSubmiting,
 						onClick: () => deleteModel(record._id!),

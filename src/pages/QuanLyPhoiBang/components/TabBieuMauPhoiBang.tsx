@@ -77,7 +77,7 @@ const TabBieuMauPhoiBang = () => {
 		const pre = prefix ?? '...';
 		const suf = suffix ?? '...';
 
-		return `Mẫu xem trước: ${pre}{số thứ tự phôi}${suf}`;
+		return `${intl.formatMessage({ id: 'phoibang.text.maudemo' })} ${pre}${intl.formatMessage({ id: 'phoibang.text.sothutuphoi' })}${suf}`;
 	};
 
 	// const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
@@ -167,12 +167,12 @@ const TabBieuMauPhoiBang = () => {
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
 				<Col span={24}>
-					<Form.Item label='Tên biểu mẫu' name='ten'>
-						<Input placeholder='Nhập tên biểu mẫu phôi bằng' />
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.text.tenbieumau' })} name='ten'>
+						<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.tenbieumau' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24}>
-					<Form.Item label='Định dạng số hiệu'>
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.column.dinhdangsohieu' })}>
 						<div
 							style={{
 								display: 'flex',
@@ -183,7 +183,7 @@ const TabBieuMauPhoiBang = () => {
 							}}
 						>
 							<Form.Item name='prefix' noStyle>
-								<Input placeholder='Phần đầu (VD: BGD-)' bordered={false} style={{ flex: 1, minWidth: 0 }} />
+								<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.phandau' })} bordered={false} style={{ flex: 1, minWidth: 0 }} />
 							</Form.Item>
 							<span
 								style={{
@@ -198,10 +198,10 @@ const TabBieuMauPhoiBang = () => {
 									userSelect: 'none',
 								}}
 							>
-								{'{số thứ tự phôi}'}
+								{intl.formatMessage({ id: 'phoibang.text.sothutuphoi' })}
 							</span>
 							<Form.Item name='suffix' noStyle>
-								<Input placeholder='Phần đuôi (VD: -HN)' bordered={false} style={{ flex: 1, minWidth: 0 }} />
+								<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.phanduoi' })} bordered={false} style={{ flex: 1, minWidth: 0 }} />
 							</Form.Item>
 						</div>
 					</Form.Item>
@@ -213,20 +213,20 @@ const TabBieuMauPhoiBang = () => {
 					<>
 						<Col span={12}>
 							<Form.Item
-								label='Số bắt đầu'
+								label={intl.formatMessage({ id: 'phoibang.form.sobatdau' })}
 								name='startNumber'
-								rules={[{ required: true, message: 'Vui lòng nhập số bắt đầu' }]}
+								rules={[{ required: true, message: intl.formatMessage({ id: 'phoibang.validate.sobatdau' }) }]}
 							>
-								<InputNumber style={{ width: '100%' }} placeholder='VD: 1' min={0} />
+								<InputNumber style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.vd1' })} min={0} />
 							</Form.Item>
 						</Col>
 						<Col span={12}>
 							<Form.Item
-								label='Số kết thúc'
+								label={intl.formatMessage({ id: 'phoibang.form.soketthuc' })}
 								name='endNumber'
 								dependencies={['startNumber']}
 								rules={[
-									{ required: true, message: 'Vui lòng nhập số kết thúc' },
+									{ required: true, message: intl.formatMessage({ id: 'phoibang.validate.soketthuc' }) },
 									({ getFieldValue }: { getFieldValue: FormInstance['getFieldValue'] }) => ({
 										validator(_: any, value: any) {
 											const startNum = getFieldValue('startNumber');
@@ -239,17 +239,17 @@ const TabBieuMauPhoiBang = () => {
 											) {
 												return Promise.resolve();
 											}
-											return Promise.reject(new Error('Số kết thúc phải lớn hơn hoặc bằng số bắt đầu'));
+											return Promise.reject(new Error(intl.formatMessage({ id: 'phoibang.validate.soketthuclonhon' })));
 										},
 									}),
 								]}
 							>
-								<InputNumber style={{ width: '100%' }} placeholder='VD: 100' min={0} />
+								<InputNumber style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.vd100' })} min={0} />
 							</Form.Item>
 						</Col>
 
 						<Col span={24}>
-							<Form.Item label='Ngày nhập' rules={[{ required: true }]} name='ngayNhap'>
+							<Form.Item label={intl.formatMessage({ id: 'phoibang.form.ngaynhap' })} rules={[{ required: true }]} name='ngayNhap'>
 								<MyDatePicker />
 							</Form.Item>
 						</Col>
@@ -257,8 +257,8 @@ const TabBieuMauPhoiBang = () => {
 				)}
 
 				<Col span={24}>
-					<Form.Item label='Ghi chú' name='ghiChu'>
-						<Input.TextArea rows={2} placeholder='Nhập ghi chú' />
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.column.ghichu' })} name='ghiChu'>
+						<Input.TextArea rows={2} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.ghichu' })} />
 					</Form.Item>
 				</Col>
 			</Row>

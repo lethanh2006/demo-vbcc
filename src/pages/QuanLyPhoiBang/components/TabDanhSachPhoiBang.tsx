@@ -5,7 +5,7 @@ import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import dayjs from '@/utils/dayjs';
 import { Button, Tag } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useModel, useIntl } from 'umi';
 import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
 
 interface IOption {
@@ -24,6 +24,7 @@ const TabDanhSachPhoiBang = () => {
 	} = useModel('vbcc.bieumauphoibang');
 	const { getModel: getPhoiBang, page, limit } = useModel('vbcc.phoibang');
 	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
+	const intl = useIntl();
 
 	const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
 		visible: false,
@@ -52,7 +53,7 @@ const TabDanhSachPhoiBang = () => {
 
 	const columns: IColumn<PhoiBang.IRecord>[] = [
 		{
-			title: 'Số hiệu phôi',
+			title: intl.formatMessage({ id: 'phoibang.column.sohieuphoi' }),
 			dataIndex: 'soHieuVanBang',
 			align: 'center',
 			filterType: 'string',
@@ -60,7 +61,7 @@ const TabDanhSachPhoiBang = () => {
 			width: 150,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'phoibang.column.trangthai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			filterType: 'select',
@@ -82,14 +83,14 @@ const TabDanhSachPhoiBang = () => {
 			},
 		},
 		{
-			title: 'Ngày tạo',
+			title: intl.formatMessage({ id: 'phoibang.column.ngaytao' }),
 			dataIndex: 'createdAt',
 			align: 'center',
 			width: 150,
 			render: (text: string) => text ? dayjs(text).format('DD/MM/YYYY HH:mm') : '',
 		},
 		{
-			title: 'Ngày cập nhật',
+			title: intl.formatMessage({ id: 'phoibang.column.ngaycapnhat' }),
 			dataIndex: 'updatedAt',
 			align: 'center',
 			width: 150,
@@ -159,20 +160,20 @@ const TabDanhSachPhoiBang = () => {
 			
 			<div className='form-footer' style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 8 }}>
 				<Button type='primary' onClick={handleCapMoi}>
-					Cấp mới biểu mẫu phôi bằng
+					{intl.formatMessage({ id: 'phoibang.button.capmoibieumauphoi' })}
 				</Button>
 				<Button type='primary' onClick={handleHuy}>
-					Hủy biểu mẫu phôi bằng
+					{intl.formatMessage({ id: 'phoibang.button.huybieumauphoi' })}
 				</Button>
 				<Button onClick={() => setVisibleForm(false)}>
-					Đóng
+					{intl.formatMessage({ id: 'phoibang.button.dong' })}
 				</Button>
 			</div>
 
 			<ModalNhapThongTinPhoiBang
 				visible={modalConfig.visible}
 				type={modalConfig.type}
-				title={modalConfig.type === 'CAP_MOI' ? 'Cấp mới biểu mẫu phôi bằng' : 'Hủy biểu mẫu phôi bằng'}
+				title={modalConfig.type === 'CAP_MOI' ? intl.formatMessage({ id: 'phoibang.button.capmoibieumauphoi' }) : intl.formatMessage({ id: 'phoibang.button.huybieumauphoi' })}
 				onCancel={() => setModalConfig({ visible: false, type: undefined })}
 				onOk={handleModalSubmit}
 				submiting={submiting}

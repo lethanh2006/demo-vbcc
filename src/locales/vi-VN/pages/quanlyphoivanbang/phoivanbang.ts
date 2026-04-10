@@ -1,0 +1,53 @@
+export default {
+	'phoibang.title': 'Quản lý biểu mẫu phôi bằng',
+	'phoibang.text.phoibang': 'phôi bằng',
+
+	'phoibang.column.ten': 'Tên biểu mẫu',
+	'phoibang.column.dinhdangsohieu': 'Định dạng số hiệu',
+	'phoibang.column.ghichu': 'Ghi chú',
+	'phoibang.column.sohieuphoi': 'Số hiệu phôi',
+	'phoibang.column.thaotac': 'Thao tác',
+	'phoibang.column.trangthai': 'Trạng thái',
+	'phoibang.column.ngaytao': 'Ngày tạo',
+	'phoibang.column.ngaycapnhat': 'Ngày cập nhật',
+	'phoibang.column.phanloai': 'Phân loại',
+	'phoibang.column.sobatdau': 'Số bắt đầu',
+	'phoibang.column.soketthuc': 'Số kết thúc',
+	'phoibang.column.thoigian': 'Thời gian',
+
+	'phoibang.text.maudemo': 'Mẫu xem trước: ',
+	'phoibang.text.sothutuphoi': '{số thứ tự phôi}',
+	'phoibang.text.tenbieumau': 'Tên biểu mẫu',
+
+	'phoibang.form.bieumau': 'Biểu mẫu',
+	'phoibang.form.danhsach': 'Danh sách',
+	'phoibang.form.lichsu': 'Lịch sử',
+	'phoibang.form.sobatdau': 'Số bắt đầu',
+	'phoibang.form.soketthuc': 'Số kết thúc',
+	'phoibang.form.ngaynhap': 'Ngày nhập',
+	'phoibang.form.tenbieumau': 'Tên biểu mẫu',
+	'phoibang.form.dinhdangsohieu': 'Định dạng số hiệu',
+	'phoibang.form.ghichu': 'Ghi chú',
+
+	'phoibang.placeholder.vd1': 'VD: 1',
+	'phoibang.placeholder.vd100': 'VD: 100',
+	'phoibang.placeholder.tenbieumau': 'Nhập tên biểu mẫu phôi bằng',
+	'phoibang.placeholder.phandau': 'Phần đầu (VD: BGD-)',
+	'phoibang.placeholder.phanduoi': 'Phần đuôi (VD: -HN)',
+	'phoibang.placeholder.ghichu': 'Nhập ghi chú',
+
+	'phoibang.validate.sobatdau': 'Vui lòng nhập số bắt đầu',
+	'phoibang.validate.soketthuc': 'Vui lòng nhập số kết thúc',
+	'phoibang.validate.soketthuclonhon': 'Số kết thúc phải lớn hơn hoặc bằng số bắt đầu',
+
+	'phoibang.button.capmoiphoi': 'Cấp mới phôi bằng',
+	'phoibang.button.huyphoi': 'Hủy phôi bằng',
+	'phoibang.button.xoa': 'Xóa',
+	'phoibang.button.dong': 'Đóng',
+	'phoibang.button.chinhsua': 'Chỉnh sửa',
+	'phoibang.button.capmoibieumauphoi': 'Cấp mới biểu mẫu phôi bằng',
+	'phoibang.button.huybieumauphoi': 'Hủy biểu mẫu phôi bằng',
+
+	'phoibang.modal.capmoi.title': 'Cấp mới biểu mẫu phôi bằng',
+	'phoibang.modal.huy.title': 'Hủy biểu mẫu phôi bằng',
+};
