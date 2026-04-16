@@ -17,6 +17,7 @@ export default {
 
 	'phoibang.text.maudemo': 'Mẫu xem trước: ',
 	'phoibang.text.sothutuphoi': '{số thứ tự phôi}',
+	'phoibang.text.sokyhieuthutuphoi': 'Số ký hiệu thứ tự phôi',
 	'phoibang.text.tenbieumau': 'Tên biểu mẫu',
 
 	'phoibang.form.bieumau': 'Biểu mẫu',

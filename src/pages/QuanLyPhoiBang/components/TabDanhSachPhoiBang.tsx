@@ -54,6 +54,34 @@ const TabDanhSachPhoiBang = () => {
 
 	const columns: IColumn<PhoiBang.IRecord>[] = [
 		{
+			title: intl.formatMessage({ id: 'phoibang.text.sokyhieuthutuphoi' }),
+			dataIndex: 'soThuTuPhoi',
+			align: 'center',
+			width: 150,
+			render: (text: number, row: PhoiBang.IRecord) => {
+				if (text !== undefined && text !== null) return text;
+				
+				if (row.soHieuVanBang && record?.dinhDangSoHieu) {
+					const SO_HIEU_TOKEN = '{soHieu}';
+					const idx = record.dinhDangSoHieu.indexOf(SO_HIEU_TOKEN);
+					if (idx !== -1) {
+						const pre = record.dinhDangSoHieu.slice(0, idx);
+						const suf = record.dinhDangSoHieu.slice(idx + SO_HIEU_TOKEN.length);
+						
+						let stt = row.soHieuVanBang;
+						if (pre && stt.startsWith(pre)) {
+							stt = stt.slice(pre.length);
+						}
+						if (suf && stt.endsWith(suf)) {
+							stt = stt.slice(0, stt.length - suf.length);
+						}
+						return stt;
+					}
+				}
+				return '-';
+			}
+		},
+		{
 			title: intl.formatMessage({ id: 'phoibang.column.sohieuphoi' }),
 			dataIndex: 'soHieuVanBang',
 			align: 'center',
@@ -119,6 +147,7 @@ const TabDanhSachPhoiBang = () => {
 				ngayNhap: values?.ngayNhap,
 				ghiChu: values?.ghiChu,
 				ten: record?.ten,
+				trangThai: values?.trangThai,
 			};
 
 			if (modalConfig.type === 'CAP_MOI') {

@@ -2,7 +2,8 @@ import MyDatePicker from '@/components/MyDatePicker';
 import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
-import { Button, Col, Form, InputNumber, Modal, Row, Input } from 'antd';
+import { Button, Col, Form, InputNumber, Modal, Row, Input, Select } from 'antd';
+import { ETrangThaiPhoiBang } from '@/services/VanBang/PhoiBang/constants';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -100,6 +101,21 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 							<Input.TextArea rows={2} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.ghichu' })} />
 						</Form.Item>
 					</Col>
+					{props.type === 'HUY' && (
+						<Col span={24}>
+							<Form.Item
+								label={intl.formatMessage({ id: 'phoibang.column.trangthai' })}
+								name='trangThai'
+								rules={[{ required: true, message: 'Vui lòng chọn trạng thái hủy' }]}
+							>
+								<Select placeholder="Chọn trạng thái">
+									<Select.Option value={ETrangThaiPhoiBang.DA_TIEU_HUY}>{ETrangThaiPhoiBang.DA_TIEU_HUY}</Select.Option>
+									<Select.Option value={ETrangThaiPhoiBang.THAT_LAC}>{ETrangThaiPhoiBang.THAT_LAC}</Select.Option>
+									<Select.Option value={ETrangThaiPhoiBang.KHAC}>{ETrangThaiPhoiBang.KHAC}</Select.Option>
+								</Select>
+							</Form.Item>
+						</Col>
+					)}
 				</Row>
 			</Form>
 		</Modal>

@@ -5,6 +5,7 @@ declare module PhoiBang {
     _id: string;
     trangThai: ETrangThaiPhoiBang;
     soHieuVanBang: string;
+    soThuTuPhoi?: number;
     idBieuMauPhoiBang?: string;
     bieuMauPhoiBang?: IBieuMauPhoiBang;
     createdAt?: string | Date;
