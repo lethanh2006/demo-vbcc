@@ -45,7 +45,7 @@ const FormQuanLyPhoiBang = () => {
                         style={{ marginBottom: 24 }}
                     />
 
-                    <div className="steps-content" style={{ minHeight: '200px', marginBottom: 24 }}>
+                    <div className="steps-content" style={{ minHeight: '200px' }}>
                         {steps[current].content}
                     </div>
 
