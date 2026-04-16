@@ -257,12 +257,12 @@ const TabBieuMauPhoiBang = () => {
 				)}
 
 				<Col span={24}>
-					<Form.Item label={intl.formatMessage({ id: 'phoibang.column.ghichu' })} name='ghiChu'>
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.column.ghichu' })} name='ghiChu' style={{ marginBottom: 0 }}>
 						<Input.TextArea rows={2} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.ghichu' })} />
 					</Form.Item>
 				</Col>
 			</Row>
-			<div className='form-footer' style={{ marginTop: 24 }}>
+			<div className='form-footer' style={{ marginTop: 12, marginBottom: -12 }}>
 				<Button loading={formSubmiting} htmlType='submit' type='primary'>
 					{!edit
 						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
