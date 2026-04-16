@@ -90,6 +90,12 @@ const TabLichSu = () => {
 			render: (text: Date) => dayjs(text).format('DD/MM/YYYY'),
 			sorter: sortThoiGian,
 		},
+		{
+			title: 'Ghi chú',
+			dataIndex: 'ghiChu',
+			align: 'left',
+			width: 200,
+		},
 	];
 	return (
 		<div>

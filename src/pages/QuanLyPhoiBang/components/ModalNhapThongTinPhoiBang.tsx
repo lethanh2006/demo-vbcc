@@ -34,9 +34,11 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) form.setFieldsValue(record);
-		else form.setFieldsValue({ ngayNhap: dayjs() });
-	}, [record?._id, visibleForm, form]);
+		else if (record?._id) {
+			form.setFieldsValue(record);
+			if (props.visible) form.setFieldsValue({ ngayNhap: dayjs() });
+		} else form.setFieldsValue({ ngayNhap: dayjs() });
+	}, [record?._id, visibleForm, form, props.visible]);
 
 	return (
 		<Modal
@@ -96,11 +98,6 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 							<MyDatePicker defaultValue={dayjs()} />
 						</Form.Item>
 					</Col>
-					<Col span={24}>
-						<Form.Item label={intl.formatMessage({ id: 'phoibang.column.ghichu' })} name='ghiChu'>
-							<Input.TextArea rows={2} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.ghichu' })} />
-						</Form.Item>
-					</Col>
 					{props.type === 'HUY' && (
 						<Col span={24}>
 							<Form.Item
@@ -116,6 +113,11 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 							</Form.Item>
 						</Col>
 					)}
+					<Col span={24}>
+						<Form.Item label={intl.formatMessage({ id: 'phoibang.column.ghichu' })} name='ghiChu'>
+							<Input.TextArea rows={2} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.ghichu' })} />
+						</Form.Item>
+					</Col>
 				</Row>
 			</Form>
 		</Modal>

@@ -67,7 +67,8 @@ const TabBieuMauPhoiBang = () => {
 				endNumber: record?.soKetThuc,
 				ngayNhap: record?.ngayNhap ? dayjs(record.ngayNhap) : dayjs(),
 			});
-		}
+			if (visibleForm) form.setFieldsValue({ ngayNhap: dayjs() });
+		} else form.setFieldsValue({ ngayNhap: dayjs() });
 	}, [record?._id, visibleForm, form]);
 
 	const prefix = Form.useWatch('prefix', form);

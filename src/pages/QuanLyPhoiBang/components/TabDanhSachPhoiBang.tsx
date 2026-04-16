@@ -9,6 +9,18 @@ import { useState } from 'react';
 import { useModel, useIntl } from 'umi';
 import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
 
+const sortNgayTao = (a: PhoiBang.IRecord, b: PhoiBang.IRecord) => {
+	const timeA = a.createdAt ? dayjs(a.createdAt).valueOf() : 0;
+	const timeB = b.createdAt ? dayjs(b.createdAt).valueOf() : 0;
+	return timeA - timeB;
+};
+
+const sortNgayCapNhat = (a: PhoiBang.IRecord, b: PhoiBang.IRecord) => {
+	const timeA = a.updatedAt ? dayjs(a.updatedAt).valueOf() : 0;
+	const timeB = b.updatedAt ? dayjs(b.updatedAt).valueOf() : 0;
+	return timeA - timeB;
+};
+
 interface IOption {
 	label: string;
 	value: string | number;
@@ -116,6 +128,7 @@ const TabDanhSachPhoiBang = () => {
 			dataIndex: 'createdAt',
 			align: 'center',
 			width: 150,
+			sorter: sortNgayTao,
 			render: (text: string) => text ? dayjs(text).format('DD/MM/YYYY HH:mm') : '',
 		},
 		{
@@ -123,6 +136,7 @@ const TabDanhSachPhoiBang = () => {
 			dataIndex: 'updatedAt',
 			align: 'center',
 			width: 150,
+			sorter: sortNgayCapNhat,
 			render: (text: string) => text ? dayjs(text).format('DD/MM/YYYY HH:mm') : '',
 		},
 	];
