@@ -4,6 +4,7 @@ import { ColorTrangThaiPhoiBang, ETrangThaiPhoiBang } from '@/services/VanBang/P
 import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import dayjs from '@/utils/dayjs';
 import { Button, Tag } from 'antd';
+import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useModel, useIntl } from 'umi';
 import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
@@ -116,7 +117,7 @@ const TabDanhSachPhoiBang = () => {
 				soBatDau: values?.startNumber,
 				soKetThuc: values?.endNumber,
 				ngayNhap: values?.ngayNhap,
-				ghiChu: record?.ghiChu,
+				ghiChu: values?.ghiChu,
 				ten: record?.ten,
 			};
 
@@ -152,6 +153,14 @@ const TabDanhSachPhoiBang = () => {
 			<TableBase
 				hideCard
 				buttons={{ create: false }}
+				otherButtons={[
+					<Button key="capmoi" type='primary' icon={<PlusOutlined />} onClick={handleCapMoi}>
+						{intl.formatMessage({ id: 'phoibang.button.capmoibieumauphoi' })}
+					</Button>,
+					<Button key="huy" type='primary' danger icon={<CloseCircleOutlined />} onClick={handleHuy}>
+						{intl.formatMessage({ id: 'phoibang.button.huybieumauphoi' })}
+					</Button>,
+				]}
 				dependencies={[page, limit, record?._id]}
 				columns={columns}
 				getData={getData}
@@ -159,12 +168,6 @@ const TabDanhSachPhoiBang = () => {
 			/>
 			
 			<div className='form-footer' style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 8 }}>
-				<Button type='primary' onClick={handleCapMoi}>
-					{intl.formatMessage({ id: 'phoibang.button.capmoibieumauphoi' })}
-				</Button>
-				<Button type='primary' onClick={handleHuy}>
-					{intl.formatMessage({ id: 'phoibang.button.huybieumauphoi' })}
-				</Button>
 				<Button onClick={() => setVisibleForm(false)}>
 					{intl.formatMessage({ id: 'phoibang.button.dong' })}
 				</Button>
