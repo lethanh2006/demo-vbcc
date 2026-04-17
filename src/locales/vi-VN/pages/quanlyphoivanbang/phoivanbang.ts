@@ -28,17 +28,20 @@ export default {
 	'phoibang.form.ngaynhap': 'Ngày nhập',
 	'phoibang.form.tenbieumau': 'Tên biểu mẫu',
 	'phoibang.form.dinhdangsohieu': 'Định dạng số hiệu',
+	'phoibang.form.sokytuphoibang': 'Số ký tự phôi bằng',
 	'phoibang.form.ghichu': 'Ghi chú',
 
 	'phoibang.placeholder.vd1': 'VD: 1',
 	'phoibang.placeholder.vd100': 'VD: 100',
 	'phoibang.placeholder.tenbieumau': 'Nhập tên biểu mẫu phôi bằng',
+	'phoibang.placeholder.sokytuphoibang': 'Nhập số ký tự phôi (VD: 3)',
 	'phoibang.placeholder.phandau': 'Phần đầu (VD: BGD-)',
 	'phoibang.placeholder.phanduoi': 'Phần đuôi (VD: -HN)',
 	'phoibang.placeholder.ghichu': 'Nhập ghi chú',
 
 	'phoibang.validate.sobatdau': 'Vui lòng nhập số bắt đầu',
 	'phoibang.validate.soketthuc': 'Vui lòng nhập số kết thúc',
+	'phoibang.validate.sokytuphoibang': 'Vui lòng nhập số ký tự phôi bằng',
 	'phoibang.validate.soketthuclonhon': 'Số kết thúc phải lớn hơn hoặc bằng số bắt đầu',
 
 	'phoibang.button.capmoiphoi': 'Cấp mới phôi bằng',

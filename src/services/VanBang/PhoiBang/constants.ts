@@ -12,7 +12,6 @@ export enum ETrangThaiPhoiBang {
   DA_SU_DUNG = 'Đã sử dụng',
   DA_TIEU_HUY = 'Đã tiêu hủy',
   THAT_LAC = 'Thất lạc',
-  KHAC = 'Khác'
 }
 
 export const ColorTrangThaiPhoiBang = {
@@ -20,5 +19,4 @@ export const ColorTrangThaiPhoiBang = {
   [ETrangThaiPhoiBang.DA_SU_DUNG]: 'green',
   [ETrangThaiPhoiBang.DA_TIEU_HUY]: 'red',
   [ETrangThaiPhoiBang.THAT_LAC]: 'orange',
-  [ETrangThaiPhoiBang.KHAC]: 'gray',
 }

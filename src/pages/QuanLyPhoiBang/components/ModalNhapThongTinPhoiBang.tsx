@@ -108,7 +108,6 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 								<Select placeholder="Chọn trạng thái">
 									<Select.Option value={ETrangThaiPhoiBang.DA_TIEU_HUY}>{ETrangThaiPhoiBang.DA_TIEU_HUY}</Select.Option>
 									<Select.Option value={ETrangThaiPhoiBang.THAT_LAC}>{ETrangThaiPhoiBang.THAT_LAC}</Select.Option>
-									<Select.Option value={ETrangThaiPhoiBang.KHAC}>{ETrangThaiPhoiBang.KHAC}</Select.Option>
 								</Select>
 							</Form.Item>
 						</Col>

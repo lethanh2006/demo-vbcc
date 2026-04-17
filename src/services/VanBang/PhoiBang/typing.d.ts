@@ -16,6 +16,7 @@ declare module PhoiBang {
     _id?: string;
     ten?: string;
     dinhDangSoHieu?: string;
+    soKyTuPhoiBang?: number;
     ngayNhap?: Date;
     ghiChu?: string;
     soBatDau?: number;

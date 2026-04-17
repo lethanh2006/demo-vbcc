@@ -15,6 +15,7 @@ export interface SettingFormatPayload {
 	endNumber: number;
 	ghiChu?: string;
 	ngayNhap: Date;
+	soKyTuPhoiBang?: number;
 }
 
 const SO_HIEU_TOKEN = '{soHieu}';
@@ -66,6 +67,7 @@ const TabBieuMauPhoiBang = () => {
 				startNumber: record?.soBatDau,
 				endNumber: record?.soKetThuc,
 				ngayNhap: record?.ngayNhap ? dayjs(record.ngayNhap) : dayjs(),
+				soKyTuPhoiBang: record?.soKyTuPhoiBang,
 			});
 			if (visibleForm) form.setFieldsValue({ ngayNhap: dayjs() });
 		} else form.setFieldsValue({ ngayNhap: dayjs() });
@@ -73,12 +75,18 @@ const TabBieuMauPhoiBang = () => {
 
 	const prefix = Form.useWatch('prefix', form);
 	const suffix = Form.useWatch('suffix', form);
+	const soKyTuPhoiBang = Form.useWatch('soKyTuPhoiBang', form);
 
 	const renderPreview = () => {
 		const pre = prefix ?? '...';
 		const suf = suffix ?? '...';
-
-		return `${intl.formatMessage({ id: 'phoibang.text.maudemo' })} ${pre}${intl.formatMessage({ id: 'phoibang.text.sothutuphoi' })}${suf}`;
+		let demoNum = '1';
+		if (soKyTuPhoiBang && soKyTuPhoiBang > 0) {
+			demoNum = demoNum.padStart(soKyTuPhoiBang, '0');
+		} else {
+			demoNum = intl.formatMessage({ id: 'phoibang.text.sothutuphoi' });
+		}
+		return `${intl.formatMessage({ id: 'phoibang.text.maudemo' })} ${pre}${demoNum}${suf}`;
 	};
 
 	// const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
@@ -139,6 +147,7 @@ const TabBieuMauPhoiBang = () => {
 				ten: values?.ten,
 				dinhDangSoHieu: dinhDangSoHieuFormat,
 				ghiChu: values?.ghiChu,
+				soKyTuPhoiBang: values?.soKyTuPhoiBang,
 			};
 			putModel(record?._id!, payload, getModel)
 				.then(() => {
@@ -152,6 +161,7 @@ const TabBieuMauPhoiBang = () => {
 				soKetThuc: values?.endNumber,
 				ghiChu: values?.ghiChu,
 				ngayNhap: values?.ngayNhap,
+				soKyTuPhoiBang: values?.soKyTuPhoiBang,
 			};
 			postYeuCauCapMoiModel(payload, getModel)
 				.then(() => {
@@ -205,6 +215,11 @@ const TabBieuMauPhoiBang = () => {
 								<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.phanduoi' })} bordered={false} style={{ flex: 1, minWidth: 0 }} />
 							</Form.Item>
 						</div>
+					</Form.Item>
+				</Col>
+				<Col span={24}>
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.form.sokytuphoibang' })} name='soKyTuPhoiBang' rules={[{ required: true, message: intl.formatMessage({ id: 'phoibang.validate.sokytuphoibang' }) }]}>
+						<InputNumber style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.sokytuphoibang' })} min={1} />
 					</Form.Item>
 				</Col>
 				<Col span={24} style={{ marginBottom: 12 }}>
