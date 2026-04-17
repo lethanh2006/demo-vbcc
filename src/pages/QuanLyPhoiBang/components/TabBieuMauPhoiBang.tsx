@@ -3,8 +3,11 @@ import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
 import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import StatisticsCard from '@/components/StatisticsCard';
 import { useIntl, useModel } from 'umi';
+import { getThongKeBieuMau } from '@/services/VanBang/PhoiBang';
+import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 
 
 export interface SettingFormatPayload {
@@ -47,10 +50,13 @@ const TabBieuMauPhoiBang = () => {
 
 	const intl = useIntl();
 	const [form] = Form.useForm<SettingFormatPayload>();
+	const [thongKe, setThongKe] = useState<PhoiBang.IThongKeBieuMau | null>(null);
 
 	useEffect(() => {
-		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) {
+		if (!visibleForm) {
+			resetFieldsForm(form);
+			setThongKe(null);
+		} else if (record?._id) {
 			let prefix = undefined;
 			let suffix = undefined;
 
@@ -70,6 +76,16 @@ const TabBieuMauPhoiBang = () => {
 				soKyTuPhoiBang: record?.soKyTuPhoiBang,
 			});
 			if (visibleForm) form.setFieldsValue({ ngayNhap: dayjs() });
+
+			getThongKeBieuMau(record._id)
+				.then((res) => {
+					const data: { thongKeLichSu?: PhoiBang.IThongKeBieuMau } = res?.data?.data || res?.data || {};
+					if (data.thongKeLichSu) {
+						setThongKe(data.thongKeLichSu);
+					}
+				})
+				.catch((err) => console.log(err));
+
 		} else form.setFieldsValue({ ngayNhap: dayjs() });
 	}, [record?._id, visibleForm, form]);
 
@@ -177,6 +193,18 @@ const TabBieuMauPhoiBang = () => {
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
+				{thongKe && (
+					<Col span={24} style={{ marginBottom: 16 }}>
+						<StatisticsCard
+							title="THỐNG KÊ LỊCH SỬ"
+							data={[
+								{ title: 'Số lượng cấp mới', value: thongKe.soLanCapMoi || 0, valueColor: '#52c41a' },
+								{ title: 'Số lượng đã hủy', value: thongKe.soLanHuy || 0, valueColor: '#ff4d4f' },
+								{ title: 'Số lượng thất lạc', value: thongKe.soLanThatLac || 0, valueColor: '#faad14' },
+							]}
+						/>
+					</Col>
+				)}
 				<Col span={24}>
 					<Form.Item label={intl.formatMessage({ id: 'phoibang.text.tenbieumau' })} name='ten'>
 						<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.tenbieumau' })} />

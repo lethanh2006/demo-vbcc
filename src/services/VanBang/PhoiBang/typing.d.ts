@@ -28,4 +28,10 @@ declare module PhoiBang {
     bieuMauPhoiBangId: string
     loai: ELoaiLichSuPhoiBang;
   }
+
+  export interface IThongKeBieuMau {
+    soLanCapMoi: number;
+    soLanHuy: number;
+    soLanThatLac: number;
+  }
 }
