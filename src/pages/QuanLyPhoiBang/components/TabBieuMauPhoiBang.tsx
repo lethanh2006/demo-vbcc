@@ -196,11 +196,11 @@ const TabBieuMauPhoiBang = () => {
 				{thongKe && (
 					<Col span={24} style={{ marginBottom: 16 }}>
 						<StatisticsCard
-							title="THỐNG KÊ LỊCH SỬ"
+							title={intl.formatMessage({ id: 'phoibang.text.thongke' })}
 							data={[
-								{ title: 'Số lượng cấp mới', value: thongKe.soLanCapMoi || 0, valueColor: '#52c41a' },
-								{ title: 'Số lượng đã hủy', value: thongKe.soLanHuy || 0, valueColor: '#ff4d4f' },
-								{ title: 'Số lượng thất lạc', value: thongKe.soLanThatLac || 0, valueColor: '#faad14' },
+								{ title: intl.formatMessage({ id: 'phoibang.text.solancapmoi' }), value: thongKe.soLanCapMoi || 0, valueColor: '#52c41a' },
+								{ title: intl.formatMessage({ id: 'phoibang.text.solandahuy' }), value: thongKe.soLanHuy || 0, valueColor: '#ff4d4f' },
+								{ title: intl.formatMessage({ id: 'phoibang.text.solanthatlac' }), value: thongKe.soLanThatLac || 0, valueColor: '#faad14' },
 							]}
 						/>
 					</Col>

@@ -6,6 +6,7 @@ import { Button, Col, Form, InputNumber, Modal, Row, Input, Select } from 'antd'
 import { ETrangThaiPhoiBang } from '@/services/VanBang/PhoiBang/constants';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import rules from '@/utils/rules';
 
 interface ModalNhapThongTinPhoiBangProps {
 	visible: boolean;
@@ -61,9 +62,9 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 						<Form.Item
 							label={intl.formatMessage({ id: 'phoibang.form.sobatdau' })}
 							name='startNumber'
-							rules={[{ required: true, message: 'Vui lòng nhập số bắt đầu' }]}
+							rules={[{ required: true, message: intl.formatMessage({ id: 'phoibang.validate.sobatdau' }) }]}
 						>
-							<InputNumber style={{ width: '100%' }} placeholder='VD: 1' min={0} />
+							<InputNumber style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.vd1' })} min={0} />
 						</Form.Item>
 					</Col>
 					<Col span={12}>
@@ -72,7 +73,7 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 							name='endNumber'
 							dependencies={['startNumber']}
 							rules={[
-								{ required: true, message: 'Vui lòng nhập số kết thúc' },
+								{ required: true, message: intl.formatMessage({ id: 'phoibang.validate.soketthuc' }) },
 								({ getFieldValue }: { getFieldValue: FormInstance['getFieldValue'] }) => ({
 									validator(_: any, value: any) {
 										const startNum = getFieldValue('startNumber');
@@ -85,12 +86,12 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 										) {
 											return Promise.resolve();
 										}
-										return Promise.reject(new Error('Số kết thúc phải lớn hơn hoặc bằng số bắt đầu'));
+										return Promise.reject(new Error(intl.formatMessage({ id: 'phoibang.validate.soketthuclonhon' })));
 									},
 								}),
 							]}
 						>
-							<InputNumber style={{ width: '100%' }} placeholder='VD: 100' min={0} />
+							<InputNumber style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.vd100' })} min={0} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
@@ -102,11 +103,11 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 						<Col span={24}>
 							<Form.Item
 								label={intl.formatMessage({ id: 'phoibang.column.trangthai' })}
-								name='trangThai'
-								rules={[{ required: true, message: 'Vui lòng chọn trạng thái hủy' }]}
+								name='loai'
+								rules={[...rules.required]}
 							>
-								<Select placeholder="Chọn trạng thái">
-									<Select.Option value={ETrangThaiPhoiBang.DA_TIEU_HUY}>{ETrangThaiPhoiBang.DA_TIEU_HUY}</Select.Option>
+								<Select placeholder={intl.formatMessage({ id: 'phoibang.placeholder.trangthai' })}>
+									<Select.Option value={ETrangThaiPhoiBang.HUY}>{ETrangThaiPhoiBang.HUY}</Select.Option>
 									<Select.Option value={ETrangThaiPhoiBang.THAT_LAC}>{ETrangThaiPhoiBang.THAT_LAC}</Select.Option>
 								</Select>
 							</Form.Item>

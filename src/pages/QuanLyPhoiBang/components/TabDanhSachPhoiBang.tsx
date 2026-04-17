@@ -121,7 +121,8 @@ const TabDanhSachPhoiBang = () => {
 				ngayNhap: values?.ngayNhap,
 				ghiChu: values?.ghiChu,
 				ten: record?.ten,
-				trangThai: values?.trangThai,
+				loai: values?.loai,
+				soKyTuPhoiBang: record?.soKyTuPhoiBang,
 			};
 
 			if (modalConfig.type === 'CAP_MOI') {

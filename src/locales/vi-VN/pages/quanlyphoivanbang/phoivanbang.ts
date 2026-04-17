@@ -19,6 +19,10 @@ export default {
 	'phoibang.text.sothutuphoi': '{số thứ tự phôi}',
 	'phoibang.text.sokyhieuthutuphoi': 'Số ký hiệu thứ tự phôi',
 	'phoibang.text.tenbieumau': 'Tên biểu mẫu',
+	'phoibang.text.solancapmoi': 'Số lần cấp mới',
+	'phoibang.text.solandahuy': 'Số lần đã hủy',
+	'phoibang.text.solanthatlac': 'Số lần thất lạc',
+	'phoibang.text.thongke': 'Thống kê',
 
 	'phoibang.form.bieumau': 'Biểu mẫu',
 	'phoibang.form.danhsach': 'Danh sách',
@@ -38,6 +42,7 @@ export default {
 	'phoibang.placeholder.phandau': 'Phần đầu (VD: BGD-)',
 	'phoibang.placeholder.phanduoi': 'Phần đuôi (VD: -HN)',
 	'phoibang.placeholder.ghichu': 'Nhập ghi chú',
+	'phoibang.placeholder.trangthai': 'Chọn trạng thái',
 
 	'phoibang.validate.sobatdau': 'Vui lòng nhập số bắt đầu',
 	'phoibang.validate.soketthuc': 'Vui lòng nhập số kết thúc',
