@@ -34,4 +34,9 @@ declare module PhoiBang {
     soLanHuy: number;
     soLanThatLac: number;
   }
+
+  export interface IThongKeTrangThai {
+    trangThai: ETrangThaiPhoiBang | string;
+    soLuong: number;
+  }
 }

@@ -7,6 +7,8 @@ import { Button, Tag } from 'antd';
 import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useModel, useIntl } from 'umi';
+import StatisticsCard from '@/components/StatisticsCard';
+import { getThongKeBieuMau } from '@/services/VanBang/PhoiBang';
 import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
 
 interface IOption {
@@ -31,8 +33,22 @@ const TabDanhSachPhoiBang = () => {
 		visible: false,
 	});
 	const [submiting, setSubmiting] = useState(false);
+	const [thongKe, setThongKe] = useState<PhoiBang.IThongKeTrangThai[]>([]);
 
 	const getData = () => {
+		if (record?._id) {
+			getThongKeBieuMau(record._id)
+				.then((res) => {
+					const data: { thongKePhoiBang?: PhoiBang.IThongKeTrangThai[] } = res?.data?.data || res?.data || {};
+					if (data.thongKePhoiBang) {
+						setThongKe(data.thongKePhoiBang);
+					} else {
+						setThongKe([]);
+					}
+				})
+				.catch((err) => console.log(err));
+		}
+
 		getPhoiBang(
 			{
 				idBieuMauPhoiBang: record?._id,
@@ -152,8 +168,29 @@ const TabDanhSachPhoiBang = () => {
 		}
 	};
 
+	const renderThongKeCards = () => {
+		if (!thongKe || thongKe.length === 0) return null;
+
+		const mappedData = thongKe.map((item) => ({
+			title: item.trangThai as string,
+			value: item.soLuong,
+			valueColor: ColorTrangThaiPhoiBang[item.trangThai as keyof typeof ColorTrangThaiPhoiBang],
+		}));
+
+		return (
+			<div style={{ marginBottom: 16 }}>
+				<StatisticsCard 
+					title={intl.formatMessage({ id: 'phoibang.text.thongketrangthai' })}
+					data={mappedData}
+					colSpan={{ xs: 24, sm: 12, md: 6 }} 
+				/>
+			</div>
+		);
+	};
+
 	return (
 		<div>
+			{renderThongKeCards()}
 			<TableBase
 				hideCard
 				buttons={{ create: false }}

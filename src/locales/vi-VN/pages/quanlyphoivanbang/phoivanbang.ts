@@ -23,6 +23,7 @@ export default {
 	'phoibang.text.solandahuy': 'Số lần đã hủy',
 	'phoibang.text.solanthatlac': 'Số lần thất lạc',
 	'phoibang.text.thongke': 'Thống kê',
+	'phoibang.text.thongketrangthai': 'Thống kê theo trạng thái',
 
 	'phoibang.form.bieumau': 'Biểu mẫu',
 	'phoibang.form.danhsach': 'Danh sách',
