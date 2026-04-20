@@ -5,7 +5,7 @@ import type { FormInstance } from 'antd';
 import { Button, Col, Form, InputNumber, Modal, Row, Input, Select } from 'antd';
 import { ETrangThaiPhoiBang } from '@/services/VanBang/PhoiBang/constants';
 import { useEffect } from 'react';
-import { useIntl, useModel } from 'umi';
+import { useIntl } from 'umi';
 import rules from '@/utils/rules';
 
 interface ModalNhapThongTinPhoiBangProps {
@@ -18,9 +18,12 @@ interface ModalNhapThongTinPhoiBangProps {
 }
 
 const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
-	const { record, visibleForm } = useModel('vbcc.bieumauphoibang');
 	const intl = useIntl();
 	const [form] = Form.useForm();
+
+	useEffect(() => {
+		if (!props.visible) resetFieldsForm(form, { ngayNhap: dayjs() });
+	}, [props.visible]);
 
 	const renderFooter = () => {
 		return [
@@ -32,14 +35,6 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 			</Button>,
 		];
 	};
-
-	useEffect(() => {
-		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) {
-			form.setFieldsValue(record);
-			if (props.visible) form.setFieldsValue({ ngayNhap: dayjs() });
-		} else form.setFieldsValue({ ngayNhap: dayjs() });
-	}, [record?._id, visibleForm, form, props.visible]);
 
 	return (
 		<Modal
