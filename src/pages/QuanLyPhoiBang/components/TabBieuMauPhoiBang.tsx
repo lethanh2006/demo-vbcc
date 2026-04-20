@@ -3,11 +3,9 @@ import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import type { FormInstance } from 'antd';
 import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
-import { useEffect, useState } from 'react';
-import StatisticsCard from '@/components/StatisticsCard';
+import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import { getThongKeBieuMau } from '@/services/VanBang/PhoiBang';
-import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
+import CardThongKe from './CardThongKe';
 
 
 export interface SettingFormatPayload {
@@ -50,12 +48,11 @@ const TabBieuMauPhoiBang = () => {
 
 	const intl = useIntl();
 	const [form] = Form.useForm<SettingFormatPayload>();
-	const [thongKe, setThongKe] = useState<PhoiBang.IThongKeBieuMau | null>(null);
+
 
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-			setThongKe(null);
 		} else if (record?._id) {
 			let prefix = undefined;
 			let suffix = undefined;
@@ -76,15 +73,6 @@ const TabBieuMauPhoiBang = () => {
 				soKyTuPhoiBang: record?.soKyTuPhoiBang,
 			});
 			if (visibleForm) form.setFieldsValue({ ngayNhap: dayjs() });
-
-			getThongKeBieuMau(record._id)
-				.then((res) => {
-					const data: { thongKeLichSu?: PhoiBang.IThongKeBieuMau } = res?.data?.data || res?.data || {};
-					if (data.thongKeLichSu) {
-						setThongKe(data.thongKeLichSu);
-					}
-				})
-				.catch((err) => console.log(err));
 
 		} else form.setFieldsValue({ ngayNhap: dayjs() });
 	}, [record?._id, visibleForm, form]);
@@ -193,16 +181,9 @@ const TabBieuMauPhoiBang = () => {
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
-				{thongKe && (
+				{record?._id && (
 					<Col span={24} style={{ marginBottom: 16 }}>
-						<StatisticsCard
-							title={intl.formatMessage({ id: 'phoibang.text.thongke' })}
-							data={[
-								{ title: intl.formatMessage({ id: 'phoibang.text.solancapmoi' }), value: thongKe.soLanCapMoi || 0, valueColor: '#52c41a' },
-								{ title: intl.formatMessage({ id: 'phoibang.text.solandahuy' }), value: thongKe.soLanHuy || 0, valueColor: '#ff4d4f' },
-								{ title: intl.formatMessage({ id: 'phoibang.text.solanthatlac' }), value: thongKe.soLanThatLac || 0, valueColor: '#faad14' },
-							]}
-						/>
+						<CardThongKe bieuMauId={record._id} variant='bieu-mau' />
 					</Col>
 				)}
 				<Col span={24}>
