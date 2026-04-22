@@ -7,7 +7,7 @@ const PageCard: React.FC<PageCardProps> = ({
 	children,
 	hideInnerCard,
 	level = 1,
-	showIndicator = true,
+	showIndicator = !true,
 	...rest
 }) => {
 	// Hierarchy modifiers: card-big-title (level 1 only), highlight (level 2), normal (level 3), or standard (level 4)
@@ -18,7 +18,7 @@ const PageCard: React.FC<PageCardProps> = ({
 
 	// Indicator visibility logic for Level 1 and 2
 	const canToggleIndicator = level === 1 || level === 2;
-	const indicatorClass = canToggleIndicator && showIndicator === false ? 'hide-indicator' : '';
+	const indicatorClass = canToggleIndicator && showIndicator === true ? 'has-indicator' : '';
 
 	return (
 		<Card

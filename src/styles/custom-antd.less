@@ -4,7 +4,7 @@
 }
 
 // Mixins dùng chung – giảm lặp cho triangle indicator
-.triangle-indicator(@color: var(--color-primary); @w: 14px; @h: 10px; @side: right; @rotate: 180deg) {
+.indicator(@color: var(--color-primary); @w: 14px; @h: 10px; @side: right; @rotate: 180deg) {
 	content: '' !important;
 	position: absolute !important;
 	width: 0 !important;
@@ -243,9 +243,14 @@
 				padding-left: 0 !important;
 				display: flex;
 				align-items: center;
+			}
+		}
+
+		&.has-indicator {
+			> .ant-card-head .ant-card-head-title {
 
 				&::after {
-					.triangle-indicator();
+					.indicator();
 					left: -18px !important;
 					top: 8px !important;
 					transform: translateY(-50%) !important;
@@ -265,15 +270,21 @@
 
 			.ant-card-head-title {
 				font-size: 18px !important;
-				padding-left: 18px !important;
+				padding-left: 0 !important;
 				display: flex;
 				align-items: center;
+			}
+		}
+
+		&.has-indicator {
+			.ant-card-head .ant-card-head-title {
+				padding-left: 18px !important;
 
 				&::after {
 					left: 0 !important;
 					top: 14px !important;
 					transform: translateY(-50%) !important;
-					.triangle-indicator(@w: 10px; @h: 7px);
+					.indicator(@w: 10px; @h: 7px);
 				}
 			}
 		}
@@ -292,16 +303,6 @@
 		}
 	}
 
-	&.hide-indicator {
-		.ant-card-head .ant-card-head-title {
-			padding-left: 0 !important;
-			margin-left: 0 !important;
-
-			&::after {
-				display: none !important;
-			}
-		}
-	}
 }
 
 .ant-modal-content {
