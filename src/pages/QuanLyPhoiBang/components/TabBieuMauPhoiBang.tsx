@@ -5,6 +5,7 @@ import type { FormInstance } from 'antd';
 import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import CardThongKe from './CardThongKe';
 
 
 export interface SettingFormatPayload {
@@ -15,6 +16,7 @@ export interface SettingFormatPayload {
 	endNumber: number;
 	ghiChu?: string;
 	ngayNhap: Date;
+	soKyTuPhoiBang?: number;
 }
 
 const SO_HIEU_TOKEN = '{soHieu}';
@@ -47,9 +49,11 @@ const TabBieuMauPhoiBang = () => {
 	const intl = useIntl();
 	const [form] = Form.useForm<SettingFormatPayload>();
 
+
 	useEffect(() => {
-		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) {
+		if (!visibleForm) {
+			resetFieldsForm(form);
+		} else if (record?._id) {
 			let prefix = undefined;
 			let suffix = undefined;
 
@@ -66,18 +70,27 @@ const TabBieuMauPhoiBang = () => {
 				startNumber: record?.soBatDau,
 				endNumber: record?.soKetThuc,
 				ngayNhap: record?.ngayNhap ? dayjs(record.ngayNhap) : dayjs(),
+				soKyTuPhoiBang: record?.soKyTuPhoiBang,
 			});
-		}
+			if (visibleForm) form.setFieldsValue({ ngayNhap: dayjs() });
+
+		} else form.setFieldsValue({ ngayNhap: dayjs() });
 	}, [record?._id, visibleForm, form]);
 
 	const prefix = Form.useWatch('prefix', form);
 	const suffix = Form.useWatch('suffix', form);
+	const soKyTuPhoiBang = Form.useWatch('soKyTuPhoiBang', form);
 
 	const renderPreview = () => {
 		const pre = prefix ?? '...';
 		const suf = suffix ?? '...';
-
-		return `${intl.formatMessage({ id: 'phoibang.text.maudemo' })} ${pre}${intl.formatMessage({ id: 'phoibang.text.sothutuphoi' })}${suf}`;
+		let demoNum = '1';
+		if (soKyTuPhoiBang && soKyTuPhoiBang > 0) {
+			demoNum = demoNum.padStart(soKyTuPhoiBang, '0');
+		} else {
+			demoNum = intl.formatMessage({ id: 'phoibang.text.sothutuphoi' });
+		}
+		return `${intl.formatMessage({ id: 'phoibang.text.maudemo' })} ${pre}${demoNum}${suf}`;
 	};
 
 	// const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
@@ -138,6 +151,7 @@ const TabBieuMauPhoiBang = () => {
 				ten: values?.ten,
 				dinhDangSoHieu: dinhDangSoHieuFormat,
 				ghiChu: values?.ghiChu,
+				soKyTuPhoiBang: values?.soKyTuPhoiBang,
 			};
 			putModel(record?._id!, payload, getModel)
 				.then(() => {
@@ -151,6 +165,7 @@ const TabBieuMauPhoiBang = () => {
 				soKetThuc: values?.endNumber,
 				ghiChu: values?.ghiChu,
 				ngayNhap: values?.ngayNhap,
+				soKyTuPhoiBang: values?.soKyTuPhoiBang,
 			};
 			postYeuCauCapMoiModel(payload, getModel)
 				.then(() => {
@@ -166,6 +181,11 @@ const TabBieuMauPhoiBang = () => {
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
+				{record?._id && (
+					<Col span={24} style={{ marginBottom: 16 }}>
+						<CardThongKe bieuMauId={record._id} variant='bieu-mau' />
+					</Col>
+				)}
 				<Col span={24}>
 					<Form.Item label={intl.formatMessage({ id: 'phoibang.text.tenbieumau' })} name='ten'>
 						<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.tenbieumau' })} />
@@ -204,6 +224,11 @@ const TabBieuMauPhoiBang = () => {
 								<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.phanduoi' })} bordered={false} style={{ flex: 1, minWidth: 0 }} />
 							</Form.Item>
 						</div>
+					</Form.Item>
+				</Col>
+				<Col span={24}>
+					<Form.Item label={intl.formatMessage({ id: 'phoibang.form.sokytuphoibang' })} name='soKyTuPhoiBang' rules={[{ required: true, message: intl.formatMessage({ id: 'phoibang.validate.sokytuphoibang' }) }]}>
+						<InputNumber style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'phoibang.placeholder.sokytuphoibang' })} min={1} />
 					</Form.Item>
 				</Col>
 				<Col span={24} style={{ marginBottom: 12 }}>
@@ -262,7 +287,7 @@ const TabBieuMauPhoiBang = () => {
 					</Form.Item>
 				</Col>
 			</Row>
-			<div className='form-footer' style={{ marginTop: 24 }}>
+			<div className='form-footer'>
 				<Button loading={formSubmiting} htmlType='submit' type='primary'>
 					{!edit
 						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`

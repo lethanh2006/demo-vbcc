@@ -4,7 +4,7 @@ import { ColorLoaiLichSuPhoiBang, ELoaiLichSuPhoiBang } from '@/services/VanBang
 import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import dayjs from '@/utils/dayjs';
 import { Button, Tag } from 'antd';
-import { useModel } from 'umi';
+import { useModel, useIntl } from 'umi';
 
 const mapEnumToFilters = <T extends Record<string, string | number>>(enumObj: T): TDataOption[] => {
   return Object.values(enumObj).map((value) => ({
@@ -28,6 +28,7 @@ const sortThoiGian = (a: PhoiBang.ILichSuPhoiBang, b: PhoiBang.ILichSuPhoiBang) 
 };
 
 const TabLichSu = () => {
+	const intl = useIntl();
 	const { record, setVisibleForm } = useModel('vbcc.bieumauphoibang');
 	const { getModel, page, limit } = useModel('vbcc.lichsuphoibang');
 
@@ -53,14 +54,14 @@ const TabLichSu = () => {
 
 	const columns: IColumn<PhoiBang.ILichSuPhoiBang>[] = [
 		{
-			title: 'Số hiệu phôi',
+			title: intl.formatMessage({ id: 'phoibang.column.sohieuphoi' }),
 			dataIndex: ['bieuMauPhoiBang', 'dinhDangSoHieu'],
 			align: 'center',
 			width: 150,
 			hide: true,
 		},
 		{
-			title: 'Phân loại',
+			title: intl.formatMessage({ id: 'phoibang.column.phanloai' }),
 			dataIndex: 'loai',
 			align: 'center',
 			width: 150,
@@ -69,26 +70,32 @@ const TabLichSu = () => {
 			render: (text: ELoaiLichSuPhoiBang) => <Tag color={ColorLoaiLichSuPhoiBang[text]}>{text}</Tag>,	
 		},
 		{
-			title: 'Số bắt đầu',
+			title: intl.formatMessage({ id: 'phoibang.column.sobatdau' }),
 			dataIndex: 'soBatDau',
 			align: 'center',
 			width: 80,
 			sorter: sortSoBatDau,
 		},
 		{
-			title: 'Số kết thúc',
+			title: intl.formatMessage({ id: 'phoibang.column.soketthuc' }),
 			dataIndex: 'soKetThuc',
 			align: 'center',
 			width: 80,
 			sorter: sortSoKetThuc,
 		},
 		{
-			title: 'Thời gian',
+			title: intl.formatMessage({ id: 'phoibang.column.thoigian' }),
 			dataIndex: 'ngayNhap',
 			align: 'center',
-			width: 150,
+			width: 110,
 			render: (text: Date) => dayjs(text).format('DD/MM/YYYY'),
 			sorter: sortThoiGian,
+		},
+		{
+			title: intl.formatMessage({ id: 'phoibang.column.ghichu' }),
+			dataIndex: 'ghiChu',
+			align: 'left',
+			width: 200,
 		},
 	];
 	return (

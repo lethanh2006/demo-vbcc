@@ -8,3 +8,7 @@ export async function postYeuCauHuyBieuMau(payload: any) {
 export async function postYeuCauCapMoi(payload: any) {
 	return axios.post(`${ip3}/bieu-mau-phoi-bang/nhap`, payload);
 }
+
+export async function getThongKeBieuMau(id: string) {
+	return axios.get(`${ip3}/bieu-mau-phoi-bang/${id}/thong-ke`);
+}

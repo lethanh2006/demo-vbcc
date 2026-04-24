@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -163,6 +163,13 @@
 		icon: 'FileTextOutlined',
 		access: 'accessFilter',
 		maChucNang: 'van-bang-chung-chi|quan-ly-phoi-bang',
+	},
+	{
+		name: 'TraCuuVanBangPublic',
+		path: '/tra-cuu-van-bang',
+		component: 'VanBang/TraCuuPublic',
+		layout: false,
+		hideInMenu: true,
 	},
 	{
 		name: 'ChiTietVanBangPublic',

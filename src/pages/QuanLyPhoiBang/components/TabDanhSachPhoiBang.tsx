@@ -4,8 +4,10 @@ import { ColorTrangThaiPhoiBang, ETrangThaiPhoiBang } from '@/services/VanBang/P
 import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import dayjs from '@/utils/dayjs';
 import { Button, Tag } from 'antd';
+import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useModel, useIntl } from 'umi';
+import CardThongKe from './CardThongKe';
 import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
 
 interface IOption {
@@ -30,6 +32,7 @@ const TabDanhSachPhoiBang = () => {
 		visible: false,
 	});
 	const [submiting, setSubmiting] = useState(false);
+
 
 	const getData = () => {
 		getPhoiBang(
@@ -87,6 +90,7 @@ const TabDanhSachPhoiBang = () => {
 			dataIndex: 'createdAt',
 			align: 'center',
 			width: 150,
+			sortable: true,
 			render: (text: string) => text ? dayjs(text).format('DD/MM/YYYY HH:mm') : '',
 		},
 		{
@@ -94,6 +98,7 @@ const TabDanhSachPhoiBang = () => {
 			dataIndex: 'updatedAt',
 			align: 'center',
 			width: 150,
+			sorter: true,
 			render: (text: string) => text ? dayjs(text).format('DD/MM/YYYY HH:mm') : '',
 		},
 	];
@@ -116,8 +121,10 @@ const TabDanhSachPhoiBang = () => {
 				soBatDau: values?.startNumber,
 				soKetThuc: values?.endNumber,
 				ngayNhap: values?.ngayNhap,
-				ghiChu: record?.ghiChu,
+				ghiChu: values?.ghiChu,
 				ten: record?.ten,
+				loai: values?.loai,
+				soKyTuPhoiBang: record?.soKyTuPhoiBang,
 			};
 
 			if (modalConfig.type === 'CAP_MOI') {
@@ -149,9 +156,22 @@ const TabDanhSachPhoiBang = () => {
 
 	return (
 		<div>
+			{record?._id && (
+				<div style={{ marginBottom: 16 }}>
+					<CardThongKe bieuMauId={record._id} variant='danh-sach' />
+				</div>
+			)}
 			<TableBase
 				hideCard
 				buttons={{ create: false }}
+				otherButtons={[
+					<Button key="capmoi" type='primary' icon={<PlusOutlined />} onClick={handleCapMoi}>
+						{intl.formatMessage({ id: 'phoibang.button.capmoibieumauphoi' })}
+					</Button>,
+					<Button key="huy" type='primary' danger icon={<CloseCircleOutlined />} onClick={handleHuy}>
+						{intl.formatMessage({ id: 'phoibang.button.huybieumauphoi' })}
+					</Button>,
+				]}
 				dependencies={[page, limit, record?._id]}
 				columns={columns}
 				getData={getData}
@@ -159,12 +179,6 @@ const TabDanhSachPhoiBang = () => {
 			/>
 			
 			<div className='form-footer' style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 8 }}>
-				<Button type='primary' onClick={handleCapMoi}>
-					{intl.formatMessage({ id: 'phoibang.button.capmoibieumauphoi' })}
-				</Button>
-				<Button type='primary' onClick={handleHuy}>
-					{intl.formatMessage({ id: 'phoibang.button.huybieumauphoi' })}
-				</Button>
 				<Button onClick={() => setVisibleForm(false)}>
 					{intl.formatMessage({ id: 'phoibang.button.dong' })}
 				</Button>

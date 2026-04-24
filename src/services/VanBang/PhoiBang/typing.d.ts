@@ -5,6 +5,7 @@ declare module PhoiBang {
     _id: string;
     trangThai: ETrangThaiPhoiBang;
     soHieuVanBang: string;
+    soThuTuPhoi?: number;
     idBieuMauPhoiBang?: string;
     bieuMauPhoiBang?: IBieuMauPhoiBang;
     createdAt?: string | Date;
@@ -15,6 +16,7 @@ declare module PhoiBang {
     _id?: string;
     ten?: string;
     dinhDangSoHieu?: string;
+    soKyTuPhoiBang?: number;
     ngayNhap?: Date;
     ghiChu?: string;
     soBatDau?: number;
@@ -25,5 +27,16 @@ declare module PhoiBang {
     bieuMauPhoiBang?: IRecord;
     bieuMauPhoiBangId: string
     loai: ELoaiLichSuPhoiBang;
+  }
+
+  export interface IThongKeBieuMau {
+    soLanCapMoi: number;
+    soLanHuy: number;
+    soLanThatLac: number;
+  }
+
+  export interface IThongKeTrangThai {
+    trangThai: ETrangThaiPhoiBang | string;
+    soLuong: number;
   }
 }
