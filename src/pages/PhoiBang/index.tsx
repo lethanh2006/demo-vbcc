@@ -1,13 +1,13 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { IColumn } from '@/components/Table/typing';
-import FormQuanLyPhoiBang from '@/pages/QuanLyPhoiBang/components/Form';
+import FormQuanLyPhoiBang from '@/pages/PhoiBang/components/Form';
 import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import { CloseCircleOutlined, DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Dropdown } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalNhapThongTinPhoiBang from './components/ModalNhapThongTinPhoiBang';
+import ModalNhapThongTinPhoiBang from './components/ModalNhapThongTin';
 
 const QuanLyPhoiBangPage = () => {
 	const intl = useIntl();
@@ -71,7 +71,7 @@ const QuanLyPhoiBangPage = () => {
 				});
 			}
 			setModalConfig({ visible: false, type: undefined, activeRecord: undefined });
-		} catch (_) {}
+		} catch (_) { }
 	};
 
 	const columns: IColumn<PhoiBang.IBieuMauPhoiBang>[] = [

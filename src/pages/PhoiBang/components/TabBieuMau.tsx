@@ -5,8 +5,6 @@ import type { FormInstance } from 'antd';
 import { Alert, Button, Col, Form, Input, InputNumber, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import CardThongKe from './CardThongKe';
-
 
 export interface SettingFormatPayload {
 	ten?: string;
@@ -39,7 +37,6 @@ const TabBieuMauPhoiBang = () => {
 		getModel,
 		formSubmiting,
 		visibleForm,
-		setIsView,
 		postYeuCauCapMoiModel,
 		putModel,
 	} = useModel('vbcc.bieumauphoibang');
@@ -153,7 +150,7 @@ const TabBieuMauPhoiBang = () => {
 				ghiChu: values?.ghiChu,
 				soKyTuPhoiBang: values?.soKyTuPhoiBang,
 			};
-			putModel(record?._id!, payload, getModel)
+			putModel(record?._id!, payload, getModel, undefined, false)
 				.then(() => {
 				})
 				.catch((er) => console.log(er));
@@ -171,8 +168,6 @@ const TabBieuMauPhoiBang = () => {
 				.then(() => {
 					getLichSu();
 					getPhoiBang();
-					setVisibleForm(false);
-					setIsView(false);
 				})
 				.catch((er) => console.log(er));
 		}
@@ -181,11 +176,6 @@ const TabBieuMauPhoiBang = () => {
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
-				{record?._id && (
-					<Col span={24} style={{ marginBottom: 16 }}>
-						<CardThongKe bieuMauId={record._id} variant='bieu-mau' />
-					</Col>
-				)}
 				<Col span={24}>
 					<Form.Item label={intl.formatMessage({ id: 'phoibang.text.tenbieumau' })} name='ten'>
 						<Input placeholder={intl.formatMessage({ id: 'phoibang.placeholder.tenbieumau' })} />

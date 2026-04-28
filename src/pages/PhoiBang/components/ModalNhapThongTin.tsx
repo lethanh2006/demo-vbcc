@@ -43,7 +43,6 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 			onCancel={props.onCancel}
 			onOk={() => form.submit()}
 			confirmLoading={props.submiting}
-			destroyOnClose
 			footer={renderFooter()}
 		>
 			<Form	

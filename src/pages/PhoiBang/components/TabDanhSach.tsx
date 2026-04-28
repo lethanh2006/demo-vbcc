@@ -7,8 +7,7 @@ import { Button, Tag } from 'antd';
 import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useModel, useIntl } from 'umi';
-import CardThongKe from './CardThongKe';
-import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
+import ModalNhapThongTinPhoiBang from './ModalNhapThongTin';
 
 interface IOption {
 	label: string;
@@ -19,7 +18,6 @@ const TabDanhSachPhoiBang = () => {
 	const {
 		record,
 		setVisibleForm,
-		setIsView,
 		postYeuCauCapMoiModel,
 		postYeuCauHuyBieuMauModel,
 		getModel: getBieuMauModel,
@@ -101,6 +99,12 @@ const TabDanhSachPhoiBang = () => {
 			sorter: true,
 			render: (text: string) => text ? dayjs(text).format('DD/MM/YYYY HH:mm') : '',
 		},
+		{
+			title: intl.formatMessage({ id: 'phoibang.column.ghichu' }),
+			dataIndex: 'ghiChu',
+			align: 'left',
+			width: 200,
+		},
 	];
 
 	const handleCapMoi = () => {
@@ -132,8 +136,6 @@ const TabDanhSachPhoiBang = () => {
 					await postYeuCauCapMoiModel(payload, getBieuMauModel).then(() => {
 						if (getLichSu) getLichSu();
 						if (getPhoiBang) getPhoiBang();
-						if (setVisibleForm) setVisibleForm(false);
-						if (setIsView) setIsView(false);
 					});
 				}
 			} else if (modalConfig.type === 'HUY') {
@@ -141,8 +143,6 @@ const TabDanhSachPhoiBang = () => {
 					await postYeuCauHuyBieuMauModel(payload, getBieuMauModel).then(() => {
 						if (getLichSu) getLichSu();
 						if (getPhoiBang) getPhoiBang();
-						if (setVisibleForm) setVisibleForm(false);
-						if (setIsView) setIsView(false);
 					});
 				}
 			}
@@ -156,11 +156,6 @@ const TabDanhSachPhoiBang = () => {
 
 	return (
 		<div>
-			{record?._id && (
-				<div style={{ marginBottom: 16 }}>
-					<CardThongKe bieuMauId={record._id} variant='danh-sach' />
-				</div>
-			)}
 			<TableBase
 				hideCard
 				buttons={{ create: false }}
@@ -177,7 +172,7 @@ const TabDanhSachPhoiBang = () => {
 				getData={getData}
 				modelName='vbcc.phoibang'
 			/>
-			
+
 			<div className='form-footer' style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 8 }}>
 				<Button onClick={() => setVisibleForm(false)}>
 					{intl.formatMessage({ id: 'phoibang.button.dong' })}
