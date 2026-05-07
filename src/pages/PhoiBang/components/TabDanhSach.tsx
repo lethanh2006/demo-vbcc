@@ -5,7 +5,6 @@ import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import dayjs from '@/utils/dayjs';
 import { Button, Tag } from 'antd';
 import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { useState } from 'react';
 import { useModel, useIntl } from 'umi';
 import ModalNhapThongTinPhoiBang from './ModalNhapThongTin';
 
@@ -18,19 +17,10 @@ const TabDanhSachPhoiBang = () => {
 	const {
 		record,
 		setVisibleForm,
-		postYeuCauCapMoiModel,
-		postYeuCauHuyBieuMauModel,
-		getModel: getBieuMauModel,
+		setModalConfig,
 	} = useModel('vbcc.bieumauphoibang');
 	const { getModel: getPhoiBang, page, limit } = useModel('vbcc.phoibang');
-	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
 	const intl = useIntl();
-
-	const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
-		visible: false,
-	});
-	const [submiting, setSubmiting] = useState(false);
-
 
 	const getData = () => {
 		getPhoiBang(
@@ -75,7 +65,7 @@ const TabDanhSachPhoiBang = () => {
 				return (
 					<div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
 						{statuses.map((status, index) => (
-							<Tag key={index} color={ColorTrangThaiPhoiBang[status] || 'default'} style={{ margin: 0 }}>
+							<Tag key={index} color={ColorTrangThaiPhoiBang[status] || 'red'} style={{ margin: 0 }}>
 								{status}
 							</Tag>
 						))}
@@ -108,50 +98,11 @@ const TabDanhSachPhoiBang = () => {
 	];
 
 	const handleCapMoi = () => {
-		setModalConfig({ visible: true, type: 'CAP_MOI' });
+		setModalConfig({ visible: true, type: 'CAP_MOI', activeRecord: record });
 	};
 
 	const handleHuy = () => {
-		setModalConfig({ visible: true, type: 'HUY' });
-	};
-
-	const handleModalSubmit = async (values: any) => {
-		try {
-			setSubmiting(true);
-
-			const payload = {
-				id: record?._id,
-				dinhDangSoHieu: record?.dinhDangSoHieu,
-				soBatDau: values?.startNumber,
-				soKetThuc: values?.endNumber,
-				ngayNhap: values?.ngayNhap,
-				ghiChu: values?.ghiChu,
-				ten: record?.ten,
-				loai: values?.loai,
-				soKyTuPhoiBang: record?.soKyTuPhoiBang,
-			};
-
-			if (modalConfig.type === 'CAP_MOI') {
-				if (postYeuCauCapMoiModel) {
-					await postYeuCauCapMoiModel(payload, getBieuMauModel).then(() => {
-						if (getLichSu) getLichSu();
-						if (getPhoiBang) getPhoiBang();
-					});
-				}
-			} else if (modalConfig.type === 'HUY') {
-				if (postYeuCauHuyBieuMauModel) {
-					await postYeuCauHuyBieuMauModel(payload, getBieuMauModel).then(() => {
-						if (getLichSu) getLichSu();
-						if (getPhoiBang) getPhoiBang();
-					});
-				}
-			}
-			setModalConfig({ visible: false, type: undefined });
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setSubmiting(false);
-		}
+		setModalConfig({ visible: true, type: 'HUY', activeRecord: record });
 	};
 
 	return (
@@ -179,14 +130,7 @@ const TabDanhSachPhoiBang = () => {
 				</Button>
 			</div>
 
-			<ModalNhapThongTinPhoiBang
-				visible={modalConfig.visible}
-				type={modalConfig.type}
-				title={modalConfig.type === 'CAP_MOI' ? intl.formatMessage({ id: 'phoibang.button.capmoibieumauphoi' }) : intl.formatMessage({ id: 'phoibang.button.huybieumauphoi' })}
-				onCancel={() => setModalConfig({ visible: false, type: undefined })}
-				onOk={handleModalSubmit}
-				submiting={submiting}
-			/>
+			<ModalNhapThongTinPhoiBang />
 		</div>
 	);
 };
