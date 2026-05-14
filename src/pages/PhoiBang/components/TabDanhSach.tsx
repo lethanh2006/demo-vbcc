@@ -1,12 +1,14 @@
 import TableBase from '@/components/Table';
+import ModalExpandable from '@/components/Table/ModalExpandable';
 import { IColumn } from '@/components/Table/typing';
 import { ColorTrangThaiPhoiBang, ETrangThaiPhoiBang } from '@/services/VanBang/PhoiBang/constants';
 import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import dayjs from '@/utils/dayjs';
-import { Button, Tag } from 'antd';
+import { Button, Tag, message } from 'antd';
 import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { useModel, useIntl } from 'umi';
 import ModalNhapThongTinPhoiBang from './ModalNhapThongTin';
+import ViewPhuLucVanBang from '@/pages/VanBang/PhuLuc/components/ViewRender';
 
 interface IOption {
 	label: string;
@@ -20,6 +22,7 @@ const TabDanhSachPhoiBang = () => {
 		setModalConfig,
 	} = useModel('vbcc.bieumauphoibang');
 	const { getModel: getPhoiBang, page, limit } = useModel('vbcc.phoibang');
+	const { getOneModel: getOnePhuLuc, setRecord: setRecordPhuLuc, visibleForm, setVisibleForm: setVisiblePhuLucForm } = useModel('vbcc.phulucvanbang');
 	const intl = useIntl();
 
 	const getData = () => {
@@ -50,6 +53,31 @@ const TabDanhSachPhoiBang = () => {
 			filterType: 'string',
 			sortable: true,
 			width: 150,
+			render: (text: string, record: PhoiBang.IRecord) => {
+				if (record?.trangThai?.includes(ETrangThaiPhoiBang.DA_SU_DUNG)) {
+					return (
+						<a
+							onClick={async () => {
+								setRecordPhuLuc(undefined);
+								setVisiblePhuLucForm(true);
+								try {
+									const student = await getOnePhuLuc({ soHieuVanBang: text });
+									if (!student) {
+										setVisiblePhuLucForm(false);
+										message.warning(intl.formatMessage({ id: 'phoibang.message.khongtimthaysinhvien' }));
+									}
+								} catch (error) {
+									setVisiblePhuLucForm(false);
+									message.error(intl.formatMessage({ id: 'phoibang.message.loilaythongtin' }));
+								}
+							}}
+						>
+							{text}
+						</a>
+					);
+				}
+				return text;
+			},
 		},
 		{
 			title: intl.formatMessage({ id: 'phoibang.column.trangthai' }),
@@ -131,6 +159,16 @@ const TabDanhSachPhoiBang = () => {
 			</div>
 
 			<ModalNhapThongTinPhoiBang />
+
+			<ModalExpandable
+				title={intl.formatMessage({ id: 'sovanbang.phuluc.modal.xem' })}
+				open={visibleForm}
+				onCancel={() => setVisiblePhuLucForm(false)}
+				footer={null}
+				width={1000}
+			>
+				<ViewPhuLucVanBang />
+			</ModalExpandable>
 		</div>
 	);
 };
