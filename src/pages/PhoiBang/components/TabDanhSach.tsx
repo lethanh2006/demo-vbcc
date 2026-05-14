@@ -1,14 +1,14 @@
 import TableBase from '@/components/Table';
+import ModalExpandable from '@/components/Table/ModalExpandable';
 import { IColumn } from '@/components/Table/typing';
 import { ColorTrangThaiPhoiBang, ETrangThaiPhoiBang } from '@/services/VanBang/PhoiBang/constants';
 import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import dayjs from '@/utils/dayjs';
-import { Button, Tag } from 'antd';
+import { Button, Tag, message } from 'antd';
 import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { useState } from 'react';
 import { useModel, useIntl } from 'umi';
-import CardThongKe from './CardThongKe';
-import ModalNhapThongTinPhoiBang from './ModalNhapThongTinPhoiBang';
+import ModalNhapThongTinPhoiBang from './ModalNhapThongTin';
+import ViewPhuLucVanBang from '@/pages/VanBang/PhuLuc/components/ViewRender';
 
 interface IOption {
 	label: string;
@@ -19,20 +19,11 @@ const TabDanhSachPhoiBang = () => {
 	const {
 		record,
 		setVisibleForm,
-		setIsView,
-		postYeuCauCapMoiModel,
-		postYeuCauHuyBieuMauModel,
-		getModel: getBieuMauModel,
+		setModalConfig,
 	} = useModel('vbcc.bieumauphoibang');
 	const { getModel: getPhoiBang, page, limit } = useModel('vbcc.phoibang');
-	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
+	const { getOneModel: getOnePhuLuc, setRecord: setRecordPhuLuc, visibleForm, setVisibleForm: setVisiblePhuLucForm } = useModel('vbcc.phulucvanbang');
 	const intl = useIntl();
-
-	const [modalConfig, setModalConfig] = useState<{ visible: boolean; type?: 'CAP_MOI' | 'HUY' }>({
-		visible: false,
-	});
-	const [submiting, setSubmiting] = useState(false);
-
 
 	const getData = () => {
 		getPhoiBang(
@@ -62,6 +53,31 @@ const TabDanhSachPhoiBang = () => {
 			filterType: 'string',
 			sortable: true,
 			width: 150,
+			render: (text: string, record: PhoiBang.IRecord) => {
+				if (record?.trangThai?.includes(ETrangThaiPhoiBang.DA_SU_DUNG)) {
+					return (
+						<a
+							onClick={async () => {
+								setRecordPhuLuc(undefined);
+								setVisiblePhuLucForm(true);
+								try {
+									const student = await getOnePhuLuc({ soHieuVanBang: text });
+									if (!student) {
+										setVisiblePhuLucForm(false);
+										message.warning(intl.formatMessage({ id: 'phoibang.message.khongtimthaysinhvien' }));
+									}
+								} catch (error) {
+									setVisiblePhuLucForm(false);
+									message.error(intl.formatMessage({ id: 'phoibang.message.loilaythongtin' }));
+								}
+							}}
+						>
+							{text}
+						</a>
+					);
+				}
+				return text;
+			},
 		},
 		{
 			title: intl.formatMessage({ id: 'phoibang.column.trangthai' }),
@@ -77,7 +93,7 @@ const TabDanhSachPhoiBang = () => {
 				return (
 					<div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
 						{statuses.map((status, index) => (
-							<Tag key={index} color={ColorTrangThaiPhoiBang[status] || 'default'} style={{ margin: 0 }}>
+							<Tag key={index} color={ColorTrangThaiPhoiBang[status] || 'red'} style={{ margin: 0 }}>
 								{status}
 							</Tag>
 						))}
@@ -101,66 +117,24 @@ const TabDanhSachPhoiBang = () => {
 			sorter: true,
 			render: (text: string) => text ? dayjs(text).format('DD/MM/YYYY HH:mm') : '',
 		},
+		{
+			title: intl.formatMessage({ id: 'phoibang.column.ghichu' }),
+			dataIndex: 'ghiChu',
+			align: 'left',
+			width: 200,
+		},
 	];
 
 	const handleCapMoi = () => {
-		setModalConfig({ visible: true, type: 'CAP_MOI' });
+		setModalConfig({ visible: true, type: 'CAP_MOI', activeRecord: record });
 	};
 
 	const handleHuy = () => {
-		setModalConfig({ visible: true, type: 'HUY' });
-	};
-
-	const handleModalSubmit = async (values: any) => {
-		try {
-			setSubmiting(true);
-
-			const payload = {
-				id: record?._id,
-				dinhDangSoHieu: record?.dinhDangSoHieu,
-				soBatDau: values?.startNumber,
-				soKetThuc: values?.endNumber,
-				ngayNhap: values?.ngayNhap,
-				ghiChu: values?.ghiChu,
-				ten: record?.ten,
-				loai: values?.loai,
-				soKyTuPhoiBang: record?.soKyTuPhoiBang,
-			};
-
-			if (modalConfig.type === 'CAP_MOI') {
-				if (postYeuCauCapMoiModel) {
-					await postYeuCauCapMoiModel(payload, getBieuMauModel).then(() => {
-						if (getLichSu) getLichSu();
-						if (getPhoiBang) getPhoiBang();
-						if (setVisibleForm) setVisibleForm(false);
-						if (setIsView) setIsView(false);
-					});
-				}
-			} else if (modalConfig.type === 'HUY') {
-				if (postYeuCauHuyBieuMauModel) {
-					await postYeuCauHuyBieuMauModel(payload, getBieuMauModel).then(() => {
-						if (getLichSu) getLichSu();
-						if (getPhoiBang) getPhoiBang();
-						if (setVisibleForm) setVisibleForm(false);
-						if (setIsView) setIsView(false);
-					});
-				}
-			}
-			setModalConfig({ visible: false, type: undefined });
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setSubmiting(false);
-		}
+		setModalConfig({ visible: true, type: 'HUY', activeRecord: record });
 	};
 
 	return (
 		<div>
-			{record?._id && (
-				<div style={{ marginBottom: 16 }}>
-					<CardThongKe bieuMauId={record._id} variant='danh-sach' />
-				</div>
-			)}
 			<TableBase
 				hideCard
 				buttons={{ create: false }}
@@ -177,21 +151,24 @@ const TabDanhSachPhoiBang = () => {
 				getData={getData}
 				modelName='vbcc.phoibang'
 			/>
-			
+
 			<div className='form-footer' style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 8 }}>
 				<Button onClick={() => setVisibleForm(false)}>
 					{intl.formatMessage({ id: 'phoibang.button.dong' })}
 				</Button>
 			</div>
 
-			<ModalNhapThongTinPhoiBang
-				visible={modalConfig.visible}
-				type={modalConfig.type}
-				title={modalConfig.type === 'CAP_MOI' ? intl.formatMessage({ id: 'phoibang.button.capmoibieumauphoi' }) : intl.formatMessage({ id: 'phoibang.button.huybieumauphoi' })}
-				onCancel={() => setModalConfig({ visible: false, type: undefined })}
-				onOk={handleModalSubmit}
-				submiting={submiting}
-			/>
+			<ModalNhapThongTinPhoiBang />
+
+			<ModalExpandable
+				title={intl.formatMessage({ id: 'sovanbang.phuluc.modal.xem' })}
+				open={visibleForm}
+				onCancel={() => setVisiblePhuLucForm(false)}
+				footer={null}
+				width={1000}
+			>
+				<ViewPhuLucVanBang />
+			</ModalExpandable>
 		</div>
 	);
 };

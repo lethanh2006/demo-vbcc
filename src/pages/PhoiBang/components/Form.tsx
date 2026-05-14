@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Card, Steps } from 'antd';
 import { useIntl, useModel } from 'umi';
-import TabBieuMauPhoiBang from './TabBieuMauPhoiBang';
-import TabDanhSachPhoiBang from './TabDanhSachPhoiBang';
+import TabBieuMauPhoiBang from './TabBieuMau';
+import TabDanhSachPhoiBang from './TabDanhSach';
 import TabLichSu from './TabLichSu';
+import CardThongKe from './CardThongKe';
 
 const FormQuanLyPhoiBang = () => {
-    const { edit, isView, visibleForm } = useModel('vbcc.bieumauphoibang');
+    const { edit, isView, visibleForm, record } = useModel('vbcc.bieumauphoibang');
     const intl = useIntl();
     
     const [current, setCurrent] = useState(0);
@@ -38,6 +39,11 @@ const FormQuanLyPhoiBang = () => {
         >
             {isView ? (
                 <>
+					{record?._id && (
+						<div style={{ marginBottom: 24 }}>
+							<CardThongKe bieuMauId={record._id} />
+						</div>
+					)}
                     <Steps 
                         current={current} 
 						onChange={setCurrent}

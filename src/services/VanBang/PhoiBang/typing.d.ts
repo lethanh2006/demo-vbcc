@@ -10,6 +10,7 @@ declare module PhoiBang {
     bieuMauPhoiBang?: IBieuMauPhoiBang;
     createdAt?: string | Date;
     updatedAt?: string | Date;
+    ghiChu?: string;
   }
 
   export interface IBieuMauPhoiBang {

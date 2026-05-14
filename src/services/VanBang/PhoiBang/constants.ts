@@ -1,10 +1,12 @@
 export enum ELoaiLichSuPhoiBang {
   CAP_MOI = 'Cấp mới',
-  HUY = 'Hủy'
+  HUY = 'Hủy',
+  THAT_LAC = 'Thất lạc',
 }
 export const ColorLoaiLichSuPhoiBang = {
   [ELoaiLichSuPhoiBang.CAP_MOI]: 'blue',
   [ELoaiLichSuPhoiBang.HUY]: 'red',
+  [ELoaiLichSuPhoiBang.THAT_LAC]: 'orange',
 }
 
 export enum ETrangThaiPhoiBang {

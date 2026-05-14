@@ -10,7 +10,7 @@ import tracuupublic from './tracuupublic';
 import trangchu from './trangchu';
 import xacminhvanbang from './xacminhvanbang';
 import xulydexuat from './xulydexuat';
-import quanlyphoivanbang from './quanlyphoivanbang';
+import quanlyphoivanbang from './phoivanbang';
 
 export default {
 	...login,

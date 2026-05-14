@@ -5,51 +5,90 @@ import type { FormInstance } from 'antd';
 import { Button, Col, Form, InputNumber, Modal, Row, Input, Select } from 'antd';
 import { ETrangThaiPhoiBang } from '@/services/VanBang/PhoiBang/constants';
 import { useEffect } from 'react';
-import { useIntl } from 'umi';
+import { useIntl, useModel } from 'umi';
 import rules from '@/utils/rules';
 
-interface ModalNhapThongTinPhoiBangProps {
-	visible: boolean;
-	onCancel: () => void;
-	onOk: (values: any) => void;
-	title: string;
-	submiting?: boolean;
-	type?: 'CAP_MOI' | 'HUY';
-}
-
-const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
+const ModalNhapThongTinPhoiBang = () => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
+	const {
+		modalConfig,
+		setModalConfig,
+		formSubmiting,
+		postYeuCauCapMoiModel,
+		postYeuCauHuyBieuMauModel,
+		getModel,
+	} = useModel('vbcc.bieumauphoibang');
+	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
+	const { getModel: getPhoiBang } = useModel('vbcc.phoibang');
+
+	const { visible, type, activeRecord } = modalConfig || {};
 
 	useEffect(() => {
-		if (!props.visible) resetFieldsForm(form, { ngayNhap: dayjs() });
-	}, [props.visible]);
+		if (!visible) resetFieldsForm(form, { ngayNhap: dayjs() });
+	}, [visible, form]);
+
+	const handleCancel = () => {
+		setModalConfig({ visible: false, type: undefined, activeRecord: undefined });
+	};
+
+	const handleOk = async (values: any) => {
+		const payload = {
+			id: activeRecord?._id,
+			dinhDangSoHieu: activeRecord?.dinhDangSoHieu,
+			soBatDau: values.startNumber,
+			soKetThuc: values.endNumber,
+			ngayNhap: values.ngayNhap,
+			ghiChu: values.ghiChu !== undefined ? values.ghiChu : activeRecord?.ghiChu,
+			ten: activeRecord?.ten,
+			loai: values.loai,
+			soKyTuPhoiBang: activeRecord?.soKyTuPhoiBang,
+		};
+
+		try {
+			if (type === 'CAP_MOI') {
+				await postYeuCauCapMoiModel(payload, getModel).then(() => {
+					getLichSu();
+					getPhoiBang();
+				});
+			} else if (type === 'HUY') {
+				await postYeuCauHuyBieuMauModel(payload, getModel).then(() => {
+					getLichSu();
+					getPhoiBang();
+				});
+			}
+			handleCancel();
+		} catch (_) { }
+	};
 
 	const renderFooter = () => {
 		return [
-			<Button key="submit" type="primary" loading={props.submiting} onClick={() => form.submit()}>
+			<Button key="submit" type="primary" loading={formSubmiting} onClick={() => form.submit()}>
 				{intl.formatMessage({ id: 'global.button.xacnhan' })}
 			</Button>,
-			<Button key="back" onClick={props.onCancel}>
+			<Button key="back" onClick={handleCancel}>
 				{intl.formatMessage({ id: 'global.button.huy' })}
 			</Button>,
 		];
 	};
 
+	const title = type === 'CAP_MOI' 
+		? intl.formatMessage({ id: 'phoibang.modal.capmoi.title' }) 
+		: intl.formatMessage({ id: 'phoibang.modal.huy.title' });
+
 	return (
 		<Modal
-			title={props.title}
-			open={props.visible}
-			onCancel={props.onCancel}
+			title={title}
+			open={visible}
+			onCancel={handleCancel}
 			onOk={() => form.submit()}
-			confirmLoading={props.submiting}
-			destroyOnClose
+			confirmLoading={formSubmiting}
 			footer={renderFooter()}
 		>
 			<Form	
 				form={form}
 				layout='vertical'
-				onFinish={props.onOk}
+				onFinish={handleOk}
 				initialValues={{ ngayNhap: dayjs() }}
 			>
 				<Row gutter={[12, 0]}>
@@ -94,7 +133,7 @@ const ModalNhapThongTinPhoiBang = (props: ModalNhapThongTinPhoiBangProps) => {
 							<MyDatePicker defaultValue={dayjs()} />
 						</Form.Item>
 					</Col>
-					{props.type === 'HUY' && (
+					{type === 'HUY' && (
 						<Col span={24}>
 							<Form.Item
 								label={intl.formatMessage({ id: 'phoibang.column.trangthai' })}

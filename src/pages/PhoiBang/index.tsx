@@ -1,28 +1,17 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { IColumn } from '@/components/Table/typing';
-import FormQuanLyPhoiBang from '@/pages/QuanLyPhoiBang/components/Form';
+import FormQuanLyPhoiBang from '@/pages/PhoiBang/components/Form';
 import { PhoiBang } from '@/services/VanBang/PhoiBang/typing';
 import { CloseCircleOutlined, DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Dropdown } from 'antd';
-import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import ModalNhapThongTinPhoiBang from './components/ModalNhapThongTinPhoiBang';
+import ModalNhapThongTinPhoiBang from './components/ModalNhapThongTin';
 
 const QuanLyPhoiBangPage = () => {
 	const intl = useIntl();
-	const { page, limit, formSubmiting, postYeuCauCapMoiModel, postYeuCauHuyBieuMauModel, getModel, deleteModel, handleEdit, setEdit, setIsView, setRecord, setVisibleForm } =
+	const { page, limit, formSubmiting, setModalConfig, deleteModel, handleEdit, setEdit, setIsView, setRecord, setVisibleForm } =
 		useModel('vbcc.bieumauphoibang');
-	const { getModel: getLichSu } = useModel('vbcc.lichsuphoibang');
-	const { getModel: getPhoiBang } = useModel('vbcc.phoibang');
-
-	const [modalConfig, setModalConfig] = useState<{
-		visible: boolean;
-		type?: 'CAP_MOI' | 'HUY';
-		activeRecord?: PhoiBang.IBieuMauPhoiBang;
-	}>({
-		visible: false,
-	});
 
 	const handleRowClick = (rec: PhoiBang.IBieuMauPhoiBang) => {
 		setRecord(rec);
@@ -46,32 +35,6 @@ const QuanLyPhoiBangPage = () => {
 
 	const handleHuy = (record: PhoiBang.IBieuMauPhoiBang) => {
 		setModalConfig({ visible: true, type: 'HUY', activeRecord: record });
-	};
-
-	const handleModalSubmit = async (values: any) => {
-		const payload = {
-			id: modalConfig.activeRecord?._id,
-			dinhDangSoHieu: modalConfig.activeRecord?.dinhDangSoHieu,
-			soBatDau: values.startNumber,
-			soKetThuc: values.endNumber,
-			ngayNhap: values.ngayNhap,
-			ghiChu: modalConfig.activeRecord?.ghiChu,
-		};
-
-		try {
-			if (modalConfig.type === 'CAP_MOI') {
-				await postYeuCauCapMoiModel(payload, getModel).then(() => {
-					getLichSu();
-					getPhoiBang();
-				});
-			} else if (modalConfig.type === 'HUY') {
-				await postYeuCauHuyBieuMauModel(payload, getModel).then(() => {
-					getLichSu();
-					getPhoiBang();
-				});
-			}
-			setModalConfig({ visible: false, type: undefined, activeRecord: undefined });
-		} catch (_) {}
 	};
 
 	const columns: IColumn<PhoiBang.IBieuMauPhoiBang>[] = [
@@ -181,14 +144,7 @@ const QuanLyPhoiBangPage = () => {
 					modelName='vbcc.bieumauphoibang'
 				/>
 			</Card>
-			<ModalNhapThongTinPhoiBang
-				visible={modalConfig.visible}
-				onCancel={() => setModalConfig({ visible: false })}
-				onOk={handleModalSubmit}
-				title={modalConfig.type === 'CAP_MOI' ? intl.formatMessage({ id: 'phoibang.modal.capmoi.title' }) : intl.formatMessage({ id: 'phoibang.modal.huy.title' })}
-				submiting={formSubmiting}
-				type={modalConfig.type}
-			/>
+			<ModalNhapThongTinPhoiBang />
 		</>
 	);
 };
