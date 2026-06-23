@@ -170,6 +170,12 @@ export async function xuatVanBangQuyetDinh(idQuyetDinh: string, otherParams?: an
 	});
 }
 
+export async function exportXacNhanCapBangTotNghiep(idPhuLucVanBang: string) {
+	return axios.get(`${ip3}/phu-luc-van-bang/${idPhuLucVanBang}/export/xac-nhan-cap-bang-tot-nghiep`, {
+		responseType: 'arraybuffer',
+	});
+}
+
 export async function capPhatVanBang(idVanBang: string, payLoad: any) {
 	return axios.put(`${ip3}/phu-luc-van-bang/${idVanBang}/cap-bang`, payLoad);
 }
