@@ -159,7 +159,7 @@ export default [
 	{
 		name: 'QuanLyPhoiBang',
 		path: '/quan-ly-phoi-bang',
-		component: 'QuanLyPhoiBang',
+		component: 'PhoiBang',
 		icon: 'FileTextOutlined',
 		access: 'accessFilter',
 		maChucNang: 'van-bang-chung-chi|quan-ly-phoi-bang',

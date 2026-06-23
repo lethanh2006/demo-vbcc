@@ -145,6 +145,7 @@ export enum ESettingKey {
 	KEY = 'KEY',
 	INFO_TENANT_VBCC = 'INFO_TENANT',
 	XAC_MINH_VAN_BANG = 'XAC_MINH_VAN_BANG',
+	XAC_NHAN_CAP_BANG_TOT_NGHIEP = 'XAC_NHAN_CAP_BANG_TOT_NGHIEP',
 }
 
 /** Định dạng file */

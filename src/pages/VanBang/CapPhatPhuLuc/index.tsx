@@ -15,21 +15,27 @@ import {
 	ETrangThaiQuyetDinhTotNghiep,
 	nameTrangThaiTotNghiep,
 } from '@/services/VanBang/constant';
+import { exportXacNhanCapBangTotNghiep } from '@/services/VanBang/PhuLucVanBang';
 import { PhuLucVanBang } from '@/services/VanBang/PhuLucVanBang/typing';
 import dayjs from '@/utils/dayjs';
+import { getFilenameHeader } from '@/utils/utils';
 import {
 	CheckCircleOutlined,
 	CheckOutlined,
+	DownloadOutlined,
 	EditOutlined,
 	InfoCircleOutlined,
+	SettingOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
 import { Descriptions, Popover, Space, Tag } from 'antd';
+import fileDownload from 'js-file-download';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import PreviewIPFS from '../PhuLuc/components/Preview';
 import ViewPhuLucVanBang from '../PhuLuc/components/ViewRender';
 import SelectQuyetDinhTotNghiep from '../QuyetDinhTotNghiep/components/Select';
+import ModalCaiDatCapPhatPhuLuc from './ModalCaiDat';
 import ModalXuLyCapBang from './XuLy';
 
 const CapPhatPhuLucPage = () => {
@@ -46,6 +52,8 @@ const CapPhatPhuLucPage = () => {
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [visibleFormFile, setVisibleFormFile] = useState<boolean>(false);
 	const [visibleXuLy, setVisibleXuLy] = useState<boolean>(false);
+	const [visibleCaiDat, setVisibleCaiDat] = useState<boolean>(false);
+	const [loadingExportId, setLoadingExportId] = useState<string>();
 
 	const [trangThai, setTrangThai] = useState<{
 		title: string;
@@ -72,6 +80,15 @@ const CapPhatPhuLucPage = () => {
 		onClick: () => handleView(rec),
 		style: { cursor: 'pointer' },
 	});
+
+	const handleDownloadBieuMau = (rec: PhuLucVanBang.IRecord) => {
+		if (!rec?._id) return;
+
+		setLoadingExportId(rec._id);
+		exportXacNhanCapBangTotNghiep(rec._id)
+			.then((res) => fileDownload(res.data, getFilenameHeader(res)))
+			.finally(() => setLoadingExportId(undefined));
+	};
 
 	const columns: IColumn<PhuLucVanBang.IRecord>[] = [
 		{
@@ -259,7 +276,11 @@ const CapPhatPhuLucPage = () => {
 			dataIndex: 'signature',
 			align: 'center',
 			width: 80,
-			render: (val) => <Tag color={!!val ? ETagColor.GREEN : ETagColor.RED}>{!!val ? 'Đã ký' : 'Chưa ký'}</Tag>,
+			render: (val) => (
+				<Tag color={!!val ? ETagColor.GREEN : ETagColor.RED}>
+					{intl.formatMessage({ id: !!val ? 'capphatvanbang.tag.daky' : 'capphatvanbang.tag.chuaky' })}
+				</Tag>
+			),
 			hide: !settingVbcc?.require_signature,
 			onCell,
 		},
@@ -307,7 +328,7 @@ const CapPhatPhuLucPage = () => {
 		{
 			title: intl.formatMessage({ id: 'capphatvanbang.column.thaotac' }),
 			align: 'center',
-			width: 60,
+			width: 90,
 			fixed: 'right',
 			render: (val, rec) => {
 				return (
@@ -328,14 +349,25 @@ const CapPhatPhuLucPage = () => {
 							icon={<CheckOutlined />}
 						/>
 
+						<ButtonExtend
+							onClick={() => handleDownloadBieuMau(rec)}
+							tooltip={intl.formatMessage({ id: 'capphatvanbang.action.taibieumauxacnhan' })}
+							type='link'
+							icon={<DownloadOutlined />}
+							loading={loadingExportId === rec._id}
+						/>
+
 						{/* <ButtonExtend
 							disabled={rec?.trangThai === ETrangThaiCapBang.CHO_CAP_BANG}
 							onClick={() => {
 								setRecord(rec);
-								setTrangThai({ title: 'Chưa phát văn bằng', trangThai: ETrangThaiCapBang.CHO_CAP_BANG });
+								setTrangThai({
+									title: intl.formatMessage({ id: 'capphatvanbang.modal.title.chuaphatvanbang' }),
+									trangThai: ETrangThaiCapBang.CHO_CAP_BANG,
+								});
 								setVisibleXuLy(true);
 							}}
-							tooltip='Chưa phát bằng'
+							tooltip={intl.formatMessage({ id: 'capphatvanbang.action.chuaphatbang' })}
 							danger
 							type='link'
 							icon={<CloseOutlined />}
@@ -362,6 +394,13 @@ const CapPhatPhuLucPage = () => {
 					create: false,
 				}}
 				showModalTitle
+				cardExtra={[
+					<ButtonExtend
+						icon={<SettingOutlined />}
+						tooltip={intl.formatMessage({ id: 'capphatvanbang.action.caidat' })}
+						onClick={() => setVisibleCaiDat(true)}
+					/>,
+				]}
 			>
 				<Space wrap style={{ marginBottom: 12 }}>
 					<MyDatePicker
@@ -419,6 +458,8 @@ const CapPhatPhuLucPage = () => {
 				trangThai={trangThai?.trangThai}
 				getData={getData}
 			/>
+
+			<ModalCaiDatCapPhatPhuLuc visible={visibleCaiDat} onClose={() => setVisibleCaiDat(false)} />
 		</>
 	);
 };

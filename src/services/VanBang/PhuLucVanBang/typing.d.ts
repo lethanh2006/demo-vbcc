@@ -112,6 +112,11 @@ declare module PhuLucVanBang {
 		blockChain?: boolean;
 	};
 
+	export type TSettingXacNhanCapBangTotNghiep = {
+		_id?: string;
+		bieuMauXacNhanId?: any;
+	};
+
 	export type TTongHop = {
 		tongSoQuyetDinh: number;
 		tongSoPhuLuc: number;
