@@ -8,6 +8,8 @@ import { useState } from 'react';
 type TSettingType = Partial<{
 	[ESettingKey.KEY]: any; // Some type has `_id`
 	[ESettingKey.INFO_TENANT_VBCC]: PhuLucVanBang.TSetting;
+	[ESettingKey.XAC_MINH_VAN_BANG]: any;
+	[ESettingKey.XAC_NHAN_CAP_BANG_TOT_NGHIEP]: PhuLucVanBang.TSettingXacNhanCapBangTotNghiep;
 }>;
 
 export default () => {
