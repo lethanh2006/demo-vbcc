@@ -10,6 +10,7 @@ import tracuupublic from './tracuupublic';
 import trangchu from './trangchu';
 import xacminhvanbang from './xacminhvanbang';
 import xulydexuat from './xulydexuat';
+import quanlyphoivanbang from './phoivanbang';
 
 export default {
 	...login,
@@ -24,6 +25,7 @@ export default {
 	...tracuupublic,
 	...dotcapbang,
 	...danhmuc,
+	...quanlyphoivanbang,
 
 	'pages.trangchu.title': 'DOCUMENT MANAGEMENT',
 	'pages.trangchu.subtitle': 'COMMAND AND CONTROL SOFTWARE SYSTEM',
