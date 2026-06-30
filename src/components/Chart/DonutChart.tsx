@@ -8,7 +8,7 @@ import { type DataChartType } from '.';
 import './style.less';
 
 const DonutChart = (props: DataChartType) => {
-	const { xAxis, yAxis, height, colors, formatY, showTotal, width, otherOptions, type } = props;
+	const { xAxis, yAxis, height, colors, formatY, showTotal, width, otherOptions, type, totalValue } = props;
 	const locale = getLocale();
 	const defaultLocale = locale === 'vi-VN' ? 'vi' : 'en';
 	const options = {
